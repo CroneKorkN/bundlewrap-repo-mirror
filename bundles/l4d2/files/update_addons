@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/home/steam/steam_workshop_downloader/workshop.py -o /home/steam/steam/l4d2/left4dead2/addons 2283884609
+chown -R steam:steam /home/steam/steam/l4d2/left4dead2/addons

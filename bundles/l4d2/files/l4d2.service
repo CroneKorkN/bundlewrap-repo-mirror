@@ -1,0 +1,13 @@
+GNU nano 4.8                                                    /etc/systemd/system/l4d2-server-a.service
+[Unit]
+Description=l4d2 Server A
+After=network.target steam-update.service
+
+[Service]
+User=steam
+WorkingDirectory=/home/steam/steam/l4d2
+ExecStart=/home/steam/steam/l4d2/srcds_run -port 27001 -secure +exec server_a.cfg
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
