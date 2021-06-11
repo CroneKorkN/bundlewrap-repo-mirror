@@ -1,27 +1,21 @@
-downloads = {
-    '/usr/local/bin/gitea': {
-        'url': 'https://dl.gitea.io/gitea/{version}/gitea-{version}-linux-amd64'.format(version=node.metadata['gitea']['version']),
-        'sha256': node.metadata['gitea']['sha256'],
-        'triggers': {
-            'svc_systemd:gitea:restart',
-        },
-        'preceded_by': {
-            'action:stop_gitea',
-        },
+downloads['/usr/local/bin/gitea'] = {
+    'url': 'https://dl.gitea.io/gitea/{version}/gitea-{version}-linux-amd64'.format(version=node.metadata['gitea']['version']),
+    'sha256': node.metadata['gitea']['sha256'],
+    'triggers': {
+        'svc_systemd:gitea:restart',
+    },
+    'preceded_by': {
+        'action:stop_gitea',
     },
 }
 
-users = {
-    'gitea': {},
-}
+users['git'] = {}
 
-directories = {
-    '/var/lib/gitea': {
-        'owner': 'gitea',
-        'mode': '0700',
-        'triggers': {
-            'svc_systemd:gitea:restart',
-        },
+directories['/var/lib/gitea'] = {
+    'owner': 'git',
+    'mode': '0700',
+    'triggers': {
+        'svc_systemd:gitea:restart',
     },
 }
 
@@ -39,12 +33,11 @@ actions = {
     },
 }
 
-files = {
-    '/etc/gitea/app.ini': {
-        'content_type': 'mako',
-        'context': node.metadata['gitea'],
-        'triggers': {
-            'svc_systemd:gitea:restart',
-        },
+files['/etc/gitea/app.ini'] = {
+    'content_type': 'mako',
+    'owner': 'git',
+    'context': node.metadata['gitea'],
+    'triggers': {
+        'svc_systemd:gitea:restart',
     },
 }

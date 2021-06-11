@@ -36,8 +36,8 @@ defaults = {
                     'Service': {
                         'RestartSec': '2s',
                         'Type': 'simple',
-                        'User': 'gitea',
-                        'Group': 'gitea',
+                        'User': 'git',
+                        'Group': 'git',
                         'WorkingDirectory': '/var/lib/gitea/',
                         'ExecStart': '/usr/local/bin/gitea web -c /etc/gitea/app.ini',
                         'Restart': 'always',
@@ -77,25 +77,6 @@ def nginx(metadata):
                     },
                     'website_check_path': '/user/login',
                     'website_check_string': 'Sign In',
-                },
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'icinga2_api/gitea/services',
-)
-def icinga_check_for_new_release(metadata):
-    return {
-        'icinga2_api': {
-            'gitea': {
-                'services': {
-                    'GITEA UPDATE': {
-                        'command_on_monitored_host': '/usr/local/share/icinga/plugins/check_github_for_new_release go-gitea/gitea v{}'.format(metadata.get('gitea/version')),
-                        'vars.notification.mail': True,
-                        'check_interval': '60m',
-                    },
                 },
             },
         },
