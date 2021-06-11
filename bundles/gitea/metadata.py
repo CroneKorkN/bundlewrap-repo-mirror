@@ -36,8 +36,8 @@ defaults = {
                     'Service': {
                         'RestartSec': '2s',
                         'Type': 'simple',
-                        'User': 'git',
-                        'Group': 'git',
+                        'User': 'gitea',
+                        'Group': 'gitea',
                         'WorkingDirectory': '/var/lib/gitea/',
                         'ExecStart': '/usr/local/bin/gitea web -c /etc/gitea/app.ini',
                         'Restart': 'always',

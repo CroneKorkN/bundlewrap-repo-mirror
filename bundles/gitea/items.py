@@ -12,17 +12,12 @@ downloads = {
 }
 
 users = {
-    'git': {},
+    'gitea': {},
 }
 
 directories = {
-    '/home/git': {
-        'mode': '0755',
-        'owner': 'git',
-        'group': 'git',
-    },
     '/var/lib/gitea': {
-        'owner': 'git',
+        'owner': 'gitea',
         'mode': '0700',
         'triggers': {
             'svc_systemd:gitea:restart',

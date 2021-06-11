@@ -2,6 +2,7 @@
     'hostname': '10.0.0.2',
     'bundles': [
         'gitea',
+        'postgresql',
     ],
     'groups': [
         'debian-10',
