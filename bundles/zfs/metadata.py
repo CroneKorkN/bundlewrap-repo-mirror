@@ -27,11 +27,6 @@ defaults = {
                     'zfs_pool:',
                 },
             },
-            'parted': {
-                'needed_by': {
-                    'zfs_pool:',
-                },
-            },
         },
     },
     'zfs': {

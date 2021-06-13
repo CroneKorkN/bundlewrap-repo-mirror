@@ -26,16 +26,15 @@ svc_systemd = {
     },
 }
 
-zfs_datasets = node.metadata.get('zfs/datasets', {})
-zfs_pools = {}
+zfs_datasets = node.metadata.get('zfs/datasets')
 
-# TRIM
 for name, attrs in node.metadata.get('zfs/pools', {}).items():
     zfs_pools[name] = attrs
-    actions[f'pool_{name}_enable_trim'] = {
-       'command': f'zpool set autotrim=on {name}',
-       'unless':  f'zpool get autotrim -H -o value {name} | grep -q on',
-       'needs':   [
-           f'zfs_pool:{name}'
-       ]
-    }
+
+    # actions[f'pool_{name}_enable_trim'] = {
+    #    'command': f'zpool set autotrim=on {name}',
+    #    'unless':  f'zpool get autotrim -H -o value {name} | grep -q on',
+    #    'needs':   [
+    #        f'zfs_pool:{name}'
+    #    ]
+    # }

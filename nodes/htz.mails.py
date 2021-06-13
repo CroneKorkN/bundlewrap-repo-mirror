@@ -30,6 +30,13 @@
         'mailserver': {
             'admin_email': 'postmaster@sublimity.de',
             'hostname': 'mail.sublimity.de',
-        }, 
+        },
+        'zfs': {
+            'pools': {
+                'tank': {
+                    'device': '/dev/disk/by-id/scsi-0HC_Volume_11764264',
+                },
+            },
+        },
     },
 }

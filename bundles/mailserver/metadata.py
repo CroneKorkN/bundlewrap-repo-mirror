@@ -10,14 +10,6 @@ defaults = {
             'password': database_password,
         },
     },
-    'zfs': {
-        'datasets': {
-            'tank/vmail': {
-                'mountpoint': '/var/vmail',
-                'compression': 'on',
-            },
-        },
-    },
     'postgresql': {
         'roles': {
             'mailserver': {
@@ -27,6 +19,14 @@ defaults = {
         'databases': {
             'mailserver': {
                 'owner': 'mailserver',
+            },
+        },
+    },
+    'zfs': {
+        'datasets': {
+            'tank/vmail': {
+                'mountpoint': '/var/vmail',
+                'compression': 'on',
             },
         },
     },
