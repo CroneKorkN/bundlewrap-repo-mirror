@@ -38,6 +38,11 @@ files = {
             'svc_systemd:nginx:restart',
         },
     },
+    '/etc/nginx/fastcgi.conf': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    }, 
 }
 
 actions = {

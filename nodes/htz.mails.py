@@ -39,20 +39,28 @@
             },
         },
         'mailserver': {
+            'hostname': 'mail2.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
-            'hostname': 'mail.sublimity.de',
+        },
+        'roundcube': {
+            'product_name': 'Sublimity Mail',
+            'version': '1.4.11',
+            'installer': True,
+        },
+        'vm': {
+            'cpu': 2,
+        },
+        'wireguard': {
+            'my_ip': '172.19.136.2/22',
+            'peers': {
+                'home.server': {},
+            },
         },
         'zfs': {
             'pools': {
                 'tank': {
                     'device': '/dev/disk/by-id/scsi-0HC_Volume_11764264',
                 },
-            },
-        },
-        'wireguard': {
-            'my_ip': '172.19.136.2/22',
-            'peers': {
-                'home.server': {},
             },
         },
     },
