@@ -1,0 +1,25 @@
+[NetDev]
+Name=wg0
+Kind=wireguard
+Description=WireGuard server
+
+[WireGuard]
+PrivateKey=${privatekey}
+ListenPort=51820
+
+% for peer, config in sorted(peers.items()):
+# Peer ${peer}
+[WireGuardPeer]
+PublicKey=${config['pubkey']}
+%   if len(peers) == 1: # FIXME
+AllowedIPs=${network}
+%   else:
+AllowedIPs=${','.join(sorted(config['ips']))}
+%   endif
+PresharedKey=${config['psk']}
+%   if 'endpoint' in config:
+Endpoint=${config['endpoint']}
+%   endif
+PersistentKeepalive=30
+
+% endfor
