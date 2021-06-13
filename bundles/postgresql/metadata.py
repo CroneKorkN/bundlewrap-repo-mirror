@@ -11,6 +11,11 @@ defaults = {
         },
         'databases': {},
     },
+    'apt': {
+        'packages': {
+            'postgresql': {},
+        },
+    },
 }
 
 if node.has_bundle('zfs'):

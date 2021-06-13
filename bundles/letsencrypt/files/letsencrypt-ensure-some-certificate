@@ -1,0 +1,31 @@
+#!/bin/sh
+
+domain=$1
+just_check=$2
+
+cert_path="/var/lib/dehydrated/certs/$domain"
+
+already_exists=false
+if [ -f "$cert_path/privkey.pem" -a -f "$cert_path/fullchain.pem" -a -f "$cert_path/chain.pem" ]
+then
+    already_exists=true
+fi
+
+if [ "$just_check" = true ]
+then
+    if [ "$already_exists" = true ]
+    then
+        exit 0
+    else
+        exit 1
+    fi
+fi
+
+if [ "$already_exists" != true ]
+then
+    rm -r "$cert_path"
+    mkdir -p "$cert_path"
+    openssl req -x509 -newkey rsa:4096 -nodes -days 3650 -subj "/CN=$domain" -keyout "$cert_path/privkey.pem" -out "$cert_path/fullchain.pem"
+    chmod 0600 "$cert_path/privkey.pem"
+    cp "$cert_path/fullchain.pem" "$cert_path/chain.pem"
+fi

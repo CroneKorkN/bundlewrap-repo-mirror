@@ -1,7 +1,3 @@
-pkg_apt = {
-    'postgresql': {},
-}
-
 if node.has_bundle('zfs'):
     pkg_apt[postgresql]\
         .setdefault('needs', [])\
