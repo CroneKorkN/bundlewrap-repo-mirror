@@ -1,0 +1,5 @@
+hosts = ${host}
+dbname = ${name}
+user = ${user}
+password = ${password}
+query = SELECT 1 FROM users LEFT JOIN domains ON users.domain_id=domains.id WHERE CONCAT_WS('@', users.user, domains.name) = '%s'

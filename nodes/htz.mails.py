@@ -2,10 +2,8 @@
     'hostname': '162.55.188.157',
     'groups': [
         'debian-10',
-    ],
-    'bundles': [
-        'nginx',
-        'letsencrypt',
+        'mailserver',
+        'webserver',
     ],
     'metadata': {
         'nginx': {
