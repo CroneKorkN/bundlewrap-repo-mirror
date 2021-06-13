@@ -1,4 +1,6 @@
 assert node.has_bundle('postgresql')
+assert node.has_bundle('dovecot')
+assert node.has_bundle('letsencrypt')
 
 file_options = {
     'triggers': [
@@ -19,22 +21,22 @@ files = {
     },
     '/etc/postfix/virtual_alias_maps.cf': {
         'content_type': 'mako',
-        'context': node.metadata.get('postfix/database'),
+        'context': node.metadata.get('mailserver/database'),
         **file_options,
     },
     '/etc/postfix/virtual_mailbox_domains.cf': {
         'content_type': 'mako',
-        'context': node.metadata.get('postfix/database'),
+        'context': node.metadata.get('mailserver/database'),
         **file_options,
     },
     '/etc/postfix/virtual_mailbox_maps.cf': {
         'content_type': 'mako',
-        'context': node.metadata.get('postfix/database'),
+        'context': node.metadata.get('mailserver/database'),
         **file_options,
     },
     '/etc/postfix/virtual_redirects.cf': {
         'content_type': 'mako',
-        'context': node.metadata.get('postfix/database'),
+        'context': node.metadata.get('mailserver/database'),
         **file_options,
     },
 }

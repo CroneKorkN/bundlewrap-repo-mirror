@@ -1,8 +1,3 @@
-if node.has_bundle('zfs'):
-    pkg_apt[postgresql]\
-        .setdefault('needs', [])\
-        .append('zfs_dataset:tank/postgresql')
-
 for user, config in node.metadata.get('postgresql/roles').items():
     postgres_roles[user] = {
         'password': config['password'],

@@ -5,6 +5,9 @@
         'mailserver',
         'webserver',
     ],
+    'bundles': [
+        'zfs',
+    ],
     'metadata': {
         'nginx': {
             'vhosts': {
@@ -24,5 +27,9 @@
                 },
             },
         },
+        'mailserver': {
+            'admin_email': 'postmaster@sublimity.de',
+            'hostname': 'mail.sublimity.de',
+        }, 
     },
 }
