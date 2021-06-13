@@ -1,6 +1,8 @@
 defaults = {
     'gitea': {
         'database': {
+            'host': 'localhost',
+            'port': '5432',
             'username': 'gitea',
             'password': repo.vault.password_for('{} postgresql gitea'.format(node.name)),
             'database': 'gitea',
