@@ -1,6 +1,4 @@
-assert node.has_bundle('postfix')
-assert node.has_bundle('postgresql')
-assert node.has_bundle('letsencrypt')
+assert node.has_bundle('mailserver')
 
 directories = {
     '/etc/dovecot/ssl': {},
@@ -48,6 +46,7 @@ actions = {
 svc_systemd = {
     'dovecot': {
         'needs': {
+            'action:letsencrypt_update_certificates',
             'action:dovecot_generate_dhparam',
             'file:/etc/dovecot/dovecot.conf',
             'file:/etc/dovecot/dovecot-sql.conf',

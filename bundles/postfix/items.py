@@ -1,6 +1,4 @@
-assert node.has_bundle('postgresql')
-assert node.has_bundle('dovecot')
-assert node.has_bundle('letsencrypt')
+assert node.has_bundle('mailserver')
 
 file_options = {
     'triggers': [
