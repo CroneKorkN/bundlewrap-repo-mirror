@@ -2,7 +2,23 @@ assert node.has_bundle('mailserver')
 
 directories = {
     '/etc/dovecot/ssl': {},
+    '/var/vmail': {
+        'owner': 'vmail',
+        'group': 'vmail',
+    }
 }
+
+# groups['vmail'] = {
+#     'gid': 5000,
+# }
+# 
+# users['vmail'] = {
+#     'uid': 5000,
+#     'home': '/var/vmail',
+#     'needs': [
+#         'group:vmail',
+#     ]
+# }
 
 files = {
     '/etc/dovecot/dovecot.conf': {
