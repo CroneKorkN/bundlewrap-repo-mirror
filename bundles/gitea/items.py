@@ -2,7 +2,7 @@ version = version=node.metadata.get('gitea/version')
 
 downloads['/usr/local/bin/gitea'] = {
     'url': f'https://dl.gitea.io/gitea/{version}/gitea-{version}-linux-amd64',
-    'sha256': node.metadataget('gitea/sha256'),
+    'sha256': node.metadata.get('gitea/sha256'),
     'triggers': {
         'svc_systemd:gitea:restart',
     },

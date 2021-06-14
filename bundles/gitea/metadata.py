@@ -1,22 +1,24 @@
+database_password = repo.vault.password_for(f'{node.name} postgresql gitea')
+
 defaults = {
     'gitea': {
         'database': {
             'host': 'localhost',
             'port': '5432',
             'username': 'gitea',
-            'password': repo.vault.password_for('{} postgresql gitea'.format(node.name)),
+            'password': database_password,
             'database': 'gitea',
         },
         'app_name': 'Gitea',
-        'lfs_secret_key': repo.vault.password_for('{} gitea lfs_secret_key'.format(node.name)),
-        'security_secret_key': repo.vault.password_for('{} gitea security_secret_key'.format(node.name)),
-        'oauth_secret_key': repo.vault.password_for('{} gitea oauth_secret_key'.format(node.name)),
-        'internal_token': repo.vault.password_for('{} gitea internal_token'.format(node.name)),
+        'lfs_secret_key': repo.vault.password_for(f'{node.name} gitea lfs_secret_key', length=43),
+        'security_secret_key': repo.vault.password_for(f'{node.name} gitea security_secret_key'),
+        'oauth_secret_key': repo.vault.password_for(f'{node.name} gitea oauth_secret_key', length=43),
+        'internal_token': repo.vault.password_for(f'{node.name} gitea internal_token'),
     },
     'postgresql': {
         'roles': {
             'gitea': {
-                'password': repo.vault.password_for('{} postgresql gitea'.format(node.name)),
+                'password': database_password,
             },
         },
         'databases': {
