@@ -19,7 +19,7 @@ setup = '''
         CONSTRAINT "fk_domain"
             FOREIGN KEY("domain_id") 
                 REFERENCES domains("id"),
-        "password" varchar(255) NOT NULL,
+        "password" varchar(255) NULL,
         "redirect" varchar(255) DEFAULT NULL
     );
     CREATE UNIQUE INDEX ON users ("name", "domain_id") WHERE "redirect" IS NULL;
@@ -36,8 +36,12 @@ actions['initialize_mailserver_db'] = {
 
 # TEST
 '''
+DROP TABLE users; DROP TABLE domains;
+
 INSERT INTO domains (id, name)
 VALUES (1, 'mails2.sublimity.de');
 INSERT INTO users (id, name, domain_id, password)
 VALUES (1, 'ckn', 1, MD5('test123'));
+INSERT INTO users (id, name, domain_id, redirect)
+VALUES (1, 'weg', 1, 'irgendweo@gmail.com');
 '''
