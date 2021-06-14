@@ -43,5 +43,5 @@ VALUES (1, 'mails2.sublimity.de');
 INSERT INTO users (id, name, domain_id, password)
 VALUES (1, 'ckn', 1, MD5('test123'));
 INSERT INTO users (id, name, domain_id, redirect)
-VALUES (1, 'weg', 1, 'irgendweo@gmail.com');
+VALUES (2, 'weg', 1, 'irgendweo@gmail.com');
 '''
