@@ -4,11 +4,12 @@ defaults = {
     'mailserver': {
         'maildir': '/var/vmail',
         'database': {
-            'host': '127.0.0.1',
+            'host': 'localhost',
             'name': 'mailserver',
             'user': 'mailserver',
             'password': database_password,
         },
+        'test_password': repo.vault.password_for(f'{node.name} test_pw mailserver'),
     },
     'postgresql': {
         'roles': {

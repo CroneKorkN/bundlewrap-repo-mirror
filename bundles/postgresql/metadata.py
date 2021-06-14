@@ -4,9 +4,6 @@ defaults = {
             'root': {
                 'password': repo.vault.password_for(f'{node.name} postgresql root'),
                 'superuser': True,
-                'needs': {
-                    'svc_systemd:postgresql',
-                },
             },
         },
         'databases': {},
