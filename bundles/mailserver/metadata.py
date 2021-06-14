@@ -4,7 +4,7 @@ defaults = {
     'mailserver': {
         'maildir': '/var/vmail',
         'database': {
-            'host': 'localhost',
+            'host': '127.0.0.1', # dont use localhost
             'name': 'mailserver',
             'user': 'mailserver',
             'password': database_password,

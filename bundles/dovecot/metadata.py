@@ -4,10 +4,10 @@ defaults = {
     'apt': {
         'packages': {
             'dovecot-imapd': {},
-            'dovecot-lmtpd': {},
-            'dovecot-managesieved': {},
             'dovecot-pgsql': {},
-            'dovecot-sieve': {},
+            'dovecot-lmtpd': {},
+#            'dovecot-sieve': {},
+#            'dovecot-managesieved': {},
         },
     },
     'letsencrypt': {

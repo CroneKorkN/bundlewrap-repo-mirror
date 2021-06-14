@@ -1,6 +1,9 @@
 assert node.has_bundle('mailserver')
 
 directories = {
+    '/etc/dovecot': {
+        'purge': True,
+    },
     '/etc/dovecot/ssl': {},
     '/var/vmail': {
         'owner': 'vmail',
@@ -8,17 +11,14 @@ directories = {
     }
 }
 
-# groups['vmail'] = {
-#     'gid': 5000,
-# }
-# 
-# users['vmail'] = {
-#     'uid': 5000,
-#     'home': '/var/vmail',
-#     'needs': [
-#         'group:vmail',
-#     ]
-# }
+groups['vmail'] = {}
+
+users['vmail'] = {
+    'home': '/var/vmail',
+    'needs': [
+        'group:vmail',
+    ]
+}
 
 files = {
     '/etc/dovecot/dovecot.conf': {
@@ -43,15 +43,19 @@ files = {
             'svc_systemd:dovecot:restart',
         },
     },
+    '/etc/dovecot/dhparam.pem': {
+        'content_type': 'any',
+    },
 }
 
 actions = {
     'dovecot_generate_dhparam': {
-        'command': 'openssl dhparam -out /etc/dovecot/ssl/dhparam.pem 2048',
-        'unless': 'test -f /etc/dovecot/ssl/dhparam.pem',
+        'command': 'openssl dhparam -out /etc/dovecot/dhparam.pem 2048',
+        'unless': 'test -f /etc/dovecot/dhparam.pem',
         'cascade_skip': False,
         'needs': {
-            'pkg_apt:'
+            'pkg_apt:',
+            'directory:/etc/dovecot/ssl',
         },
         'triggers': {
             'svc_systemd:dovecot:restart',
