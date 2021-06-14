@@ -39,7 +39,7 @@ setup = f"""
     WHERE domains.name = 'example.com';
 
     INSERT INTO users (name, domain_id, redirect)
-    SELECT 'bw_test_alias', domains.id, 'irgendweo@gmail.com'
+    SELECT 'bw_test_alias', domains.id, 'somewhere@example.com'
     FROM domains
     WHERE domains.name = 'example.com';
 """
