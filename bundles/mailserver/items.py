@@ -15,10 +15,7 @@ setup = '''
     CREATE TABLE users (
         "id" BIGSERIAL PRIMARY KEY,
         "name" varchar(255) NOT NULL,
-        "domain_id" BIGSERIAL NOT NULL,
-        CONSTRAINT "fk_domain"
-            FOREIGN KEY("domain_id") 
-                REFERENCES domains("id"),
+        "domain_id" BIGSERIAL REFERENCES domains(id),
         "password" varchar(255) NULL,
         "redirect" varchar(255) DEFAULT NULL
     );
