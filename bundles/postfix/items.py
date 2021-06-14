@@ -32,11 +32,6 @@ files = {
         'context': node.metadata.get('mailserver/database'),
         **file_options,
     },
-    '/etc/postfix/virtual_redirects.cf': {
-        'content_type': 'mako',
-        'context': node.metadata.get('mailserver/database'),
-        **file_options,
-    },
 }
 
 svc_systemd['postfix'] = {

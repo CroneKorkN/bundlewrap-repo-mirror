@@ -2,4 +2,4 @@ hosts = ${host}
 dbname = ${name}
 user = ${user}
 password = ${password}
-query = SELECT 1 FROM domains WHERE name='%s'
+query = SELECT name FROM domains WHERE name='%s'

@@ -2,4 +2,4 @@ hosts = ${host}
 dbname = ${name}
 user = ${user}
 password = ${password}
-query = SELECT 1 FROM users LEFT JOIN domains ON users.domain_id=domains.id WHERE CONCAT_WS('@', users.user, domains.name) = '%s'
+query = SELECT CONCAT(users.name, '@', domains.name) AS email FROM users LEFT JOIN domains ON users.domain_id = domains.id WHERE users.name = SPLIT_PART('%s', '@', 1) AND domains.name = SPLIT_PART('%s', '@', 2)

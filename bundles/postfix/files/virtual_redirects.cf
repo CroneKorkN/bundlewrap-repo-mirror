@@ -1,5 +1,0 @@
-hosts = ${host}
-dbname = ${name}
-user = ${user}
-password = ${password}
-query = SELECT CONCAT_WS('@', users.user, domains.name) AS email FROM users JOIN domains ON users.domain_id = domains.id WHERE CONCAT_WS('@', users.user, domains.name)='%s'
