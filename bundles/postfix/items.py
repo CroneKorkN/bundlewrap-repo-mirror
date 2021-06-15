@@ -40,6 +40,13 @@ svc_systemd['postfix'] = {
     ],
 }
 
+actions['test_postfix_config'] = {
+    'command': 'false',
+    'unless': "postconf check | grep -v 'symlink leaves directory' | wc -l | grep -q '^0$'",
+    'needs': [
+        'svc_systemd:postfix',
+    ],
+}
 actions['test_virtual_mailbox_domains'] = {
     'command': 'false',
     'unless': "postmap -q example.com pgsql:/etc/postfix/virtual_mailbox_domains.cf | grep -q '^example.com$'",
