@@ -1,3 +1,6 @@
+from ipaddress import ip_interface
+
+
 @metadata_reactor.provides(
     'interfaces',
 )
@@ -14,3 +17,20 @@ def interfaces(metadata):
             },
         }
     }
+
+
+@metadata_reactor.provides(
+    'interfaces/gateway4',
+    'interfaces/gateway6',
+)
+def guess_gateway(metadata):
+    if metadata.get('network/gateway4', None):
+        return {}
+    else:
+        return {
+            'network': {
+                'gateway4': str(
+                    ip_interface(metadata.get('network/ipv4')).network[1]
+                ),
+            }
+        }
