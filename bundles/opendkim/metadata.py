@@ -15,7 +15,15 @@ defaults = {
         'domains': [],
         'keys': {},
     },
+    'dns': {
+        'mail._domainkey.mail2.sublimity.de': {
+            'TXT': [
+                
+            ]
+        }
+    }
 }
+
 
 @metadata_reactor.provides(
     'opendkim/keys'
@@ -65,4 +73,21 @@ def keys(metadata):
         'opendkim': {
             'keys': keys,
         }
+    }
+
+
+@metadata_reactor.provides(
+    'opendkim/keys'
+)
+def dns(metadata):
+    dns = {}
+    
+    for domain, keys in metadata.get('opendkim/keys').items():
+        raw_key = keys['public'].replace('ssh-rsa ', '')
+        dns[f'mail._domainkey.{domain}'] = {
+            'TXT': f'v=DKIM1; k=rsa; p={raw_key}',
+        }
+    
+    return {
+        'dns': dns,
     }
