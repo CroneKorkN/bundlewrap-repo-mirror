@@ -85,7 +85,7 @@ def dns(metadata):
     for domain, keys in metadata.get('opendkim/keys').items():
         raw_key = keys['public'].replace('ssh-rsa ', '')
         dns[f'mail._domainkey.{domain}'] = {
-            'TXT': f'v=DKIM1; k=rsa; p={raw_key}',
+            'TXT': [f'v=DKIM1; k=rsa; p={raw_key}'],
         }
     
     return {
