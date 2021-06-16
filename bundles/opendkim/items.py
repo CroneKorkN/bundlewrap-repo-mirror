@@ -13,9 +13,11 @@ users['opendkim'] = {}
 directories = {
     '/etc/opendkim': {
         **file_attributes,
+        'purge' : True,
     },
     '/etc/opendkim/keys': {
         **file_attributes,
+        'purge' : True,
     },
 }
 
