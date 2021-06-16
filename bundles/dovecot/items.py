@@ -73,3 +73,11 @@ svc_systemd = {
         },
     },
 }
+
+# fulltext search
+
+directories['/usr/local/libexec/dovecot'] = {}
+files['/usr/local/libexec/dovecot/decode2text.sh'] = {
+    'owner': 'dovecot',
+    'mode': '500',
+}
