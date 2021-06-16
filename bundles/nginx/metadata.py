@@ -1,3 +1,4 @@
+from ipaddress import ip_interface
 from bundlewrap.metadata import atomic
 
 defaults = {
@@ -11,6 +12,28 @@ defaults = {
     },
 }
 
+
+@metadata_reactor.provides(
+    'dns',
+)
+def dns(metadata):
+    dns = {}
+    
+    for config in metadata.get('nginx/vhosts', {}).values():
+        dns[config['domain']] = {}
+        
+        if metadata.get('network/ipv4'):
+            dns[config['domain']]['A'] = [
+                str(ip_interface(metadata.get('network/ipv4')).ip)
+            ]
+        if metadata.get('network/ipv6'):
+            dns[config['domain']]['AAAA'] = [
+                str(ip_interface(metadata.get('network/ipv6')).ip)
+            ]
+
+    return {
+        'dns': dns,
+    }
 
 @metadata_reactor.provides(
     'letsencrypt/domains',

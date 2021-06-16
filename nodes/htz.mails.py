@@ -1,6 +1,7 @@
 {
     'hostname': '162.55.188.157',
     'groups': [
+        'hetzner-cloud',
         'debian-10',
         'mailserver',
         'webserver',
@@ -10,29 +11,11 @@
         'zfs',
     ],
     'metadata': {
-        'opendkim': {
-            'domains': [
-                'mail2.sublimity.de',
-                # 'sublimity.de',
-                # 'freibrief.net',
-                # 'nadenau.net',
-                # 'naeder.net',
-                # 'rolfwerner.eu',
-                # 'wettengl.net',
-                # 'wingl.de',
-                # 'woodpipe.de',
-            ],
+        'network': {
+            'interface': 'eth0',
+            'ipv4': '162.55.188.157/32',
+            'ipv6': '2a01:4f8:1c1c:4121::1/64',
         },
-        'interfaces': {
-            'eth0': {
-                'ips': {
-                    '162.55.188.157',
-                    '2a01:4f8:1c1c:4121::1/64',
-                },
-                'gateway4': '172.31.1.1',
-                'gateway6': 'fe80::1',
-            },
-        }, 
         'nginx': {
             'vhosts': {
                 'nextcloud': {
@@ -54,6 +37,19 @@
         'mailserver': {
             'hostname': 'mail2.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
+        },
+        'opendkim': {
+            'domains': [
+                'mail2.sublimity.de',
+                # 'sublimity.de',
+                # 'freibrief.net',
+                # 'nadenau.net',
+                # 'naeder.net',
+                # 'rolfwerner.eu',
+                # 'wettengl.net',
+                # 'wingl.de',
+                # 'woodpipe.de',
+            ],
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
