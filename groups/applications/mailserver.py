@@ -7,6 +7,8 @@
         'php',
         'postfix',
         'postgresql',
+        'redis',
         'roundcube',
+        'rspamd',
     ],
 }

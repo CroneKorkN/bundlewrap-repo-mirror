@@ -12,6 +12,13 @@ directories = {
     '/etc/dovecot': {
         'purge': True,
     },
+    '/etc/dovecot/conf.d': {
+        'purge': True,
+        'needs': [
+            'pkg_apt:dovecot-sieve',
+            'pkg_apt:dovecot-managesieved',
+        ]
+    },
     '/etc/dovecot/ssl': {},
     '/var/vmail': {
         'owner': 'vmail',
@@ -44,6 +51,28 @@ files = {
     },
     '/etc/dovecot/dhparam.pem': {
         'content_type': 'any',
+    },
+    '/etc/dovecot/dovecot-sql.conf': {
+        'content_type': 'mako',
+        'context': node.metadata.get('mailserver/database'),
+        'needs': {
+            'pkg_apt:'
+        },
+        'triggers': {
+            'svc_systemd:dovecot:restart',
+        },
+    },
+    '/var/mail/vmail/sieve/global/learn-ham.sieve': {
+        'owner': 'nobody',
+        'group': 'nogroup',
+    },
+    '/var/mail/vmail/sieve/global/learn-spam.sieve': {
+        'owner': 'nobody',
+        'group': 'nogroup',
+    },
+    '/var/mail/vmail/sieve/global/spam-global.sieve': {
+        'owner': 'nobody',
+        'group': 'nogroup',
     },
 }
 

@@ -1,15 +1,16 @@
 defaults = {
     'apt': {
         'packages': {
-            'dovecot-imapd':      {},
-            'dovecot-pgsql':      {},
-            'dovecot-lmtpd':      {},
-#            'dovecot-sieve': {},
-#            'dovecot-managesieved': {},
+            'dovecot-imapd':        {},
+            'dovecot-pgsql':        {},
+            'dovecot-lmtpd':        {},
+            # spam filtering
+            'dovecot-sieve':        {},
+            'dovecot-managesieved': {},
             # fulltext search
-            'dovecot-fts-xapian': {}, # buster-backports
-            'poppler-utils':      {}, # pdftotext
-            'catdoc':             {}, # catdoc, catppt, xls2csv
+            'dovecot-fts-xapian':   {}, # buster-backports
+            'poppler-utils':        {}, # pdftotext
+            'catdoc':               {}, # catdoc, catppt, xls2csv
         },
     },
     'letsencrypt': {

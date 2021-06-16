@@ -3,6 +3,8 @@ assert node.has_bundle('opendkim')
 assert node.has_bundle('dovecot')
 assert node.has_bundle('letsencrypt')
 assert node.has_bundle('roundcube')
+assert node.has_bundle('rspamd')
+assert node.has_bundle('redis')
 
 from hashlib import md5
 from shlex import quote
