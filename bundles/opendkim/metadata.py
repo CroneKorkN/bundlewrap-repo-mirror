@@ -45,18 +45,20 @@ def keys(metadata):
                 )
             with open(privkey_path, 'w') as file:
                 file.write(
-                    key.private_bytes(
-                        crypto_serialization.Encoding.PEM,
-                        crypto_serialization.PrivateFormat.PKCS8,
-                        crypto_serialization.NoEncryption()
-                    ).decode()
+                    repo.vault.encrypt(
+                        key.private_bytes(
+                            crypto_serialization.Encoding.PEM,
+                            crypto_serialization.PrivateFormat.PKCS8,
+                            crypto_serialization.NoEncryption()
+                        ).decode(),
+                    )
                 )
                 
         with open(pubkey_path, 'r') as pubkey:
             with open(privkey_path, 'r') as privkey:
                 keys[domain] = {
                     'public': pubkey.read(),
-                    'private': privkey.read(),
+                    'private': repo.vault.decrypt(privkey.read()),
                 }
 
     return {
