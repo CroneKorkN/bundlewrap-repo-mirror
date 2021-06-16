@@ -1,5 +1,13 @@
 assert node.has_bundle('mailserver')
 
+groups['vmail'] = {}
+
+users['vmail'] = {
+    'home': '/var/vmail',
+    'needs': [
+        'group:vmail',
+    ],
+}
 directories = {
     '/etc/dovecot': {
         'purge': True,
@@ -9,15 +17,6 @@ directories = {
         'owner': 'vmail',
         'group': 'vmail',
     }
-}
-
-groups['vmail'] = {}
-
-users['vmail'] = {
-    'home': '/var/vmail',
-    'needs': [
-        'group:vmail',
-    ],
 }
 
 files = {
