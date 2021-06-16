@@ -17,7 +17,7 @@ users['vmail'] = {
     'home': '/var/vmail',
     'needs': [
         'group:vmail',
-    ]
+    ],
 }
 
 files = {

@@ -1,5 +1,3 @@
-from bundlewrap.metadata import atomic
-
 defaults = {
     'apt': {
         'packages': {

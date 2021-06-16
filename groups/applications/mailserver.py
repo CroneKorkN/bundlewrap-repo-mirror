@@ -1,5 +1,6 @@
 {
     'bundles': [
+        'opendkim',
         'dovecot',
         'letsencrypt',
         'mailserver',

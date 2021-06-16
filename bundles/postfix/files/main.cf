@@ -41,3 +41,9 @@ smtpd_restriction_classes = mua_sender_restrictions, mua_client_restrictions, mu
 mua_client_restrictions = permit_sasl_authenticated, reject
 mua_sender_restrictions = permit_sasl_authenticated, reject
 mua_helo_restrictions = permit_mynetworks, reject_non_fqdn_hostname, reject_invalid_hostname, permit
+
+# opendkim
+milter_protocol = 2
+milter_default_action = accept
+smtpd_milters = local:/var/run/opendkim/opendkim.sock
+non_smtpd_milters = local:/var/run/opendkim/opendkim.sock

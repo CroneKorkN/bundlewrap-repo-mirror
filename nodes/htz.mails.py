@@ -10,7 +10,19 @@
         'zfs',
     ],
     'metadata': {
-         'interfaces': {
+        'opendkim': {
+            'domains': [
+                "sublimity.de", 
+                "freibrief.net",
+                "nadenau.net",
+                "naeder.net",
+                "rolfwerner.eu",
+                "wettengl.net",
+                "wingl.de",
+                "woodpipe.de",
+            ],
+        },
+        'interfaces': {
             'eth0': {
                 'ips': {
                     '162.55.188.157',
