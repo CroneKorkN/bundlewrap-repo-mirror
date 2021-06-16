@@ -26,7 +26,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'opendkim/keys'
+    'opendkim/keys',
 )
 def keys(metadata):
     keys = {}
@@ -77,7 +77,7 @@ def keys(metadata):
 
 
 @metadata_reactor.provides(
-    'opendkim/keys'
+    'dns',
 )
 def dns(metadata):
     dns = {}
