@@ -52,29 +52,29 @@ for domain in node.metadata.get('opendkim/domains'):
     }
     files[f'/etc/opendkim/keys/{domain}/mail.private'] = {
         **file_attributes,
-        'content_type': 'any',
+        'content': node.metadata.get(f'opendkim/keys/{domain}/private'),
     }
-    files[f'/etc/opendkim/keys/{domain}/mail.txt'] = {
-        **file_attributes,
-        'content_type': 'any',
-    }
-    actions[f'generate_{domain}_dkim_key'] = {
-        'command': (
-            f'sudo --user opendkim'
-            f' opendkim-genkey'
-            f' --selector=mail'
-            f' --directory=/etc/opendkim/keys/{domain}'
-            f' --domain={domain}'
-        ),
-        'unless': f'test -f /etc/opendkim/keys/{domain}/mail.private',
-        'needs': [
-            'svc_systemd:opendkim',
-            f'directory:/etc/opendkim/keys/{domain}',
-        ],
-        'triggers': [
-            'svc_systemd:opendkim:restart',
-        ],
-    }
+    # files[f'/etc/opendkim/keys/{domain}/mail.txt'] = {
+    #     **file_attributes,
+    #     'content_type': 'any',
+    # }
+    # actions[f'generate_{domain}_dkim_key'] = {
+    #     'command': (
+    #         f'sudo --user opendkim'
+    #         f' opendkim-genkey'
+    #         f' --selector=mail'
+    #         f' --directory=/etc/opendkim/keys/{domain}'
+    #         f' --domain={domain}'
+    #     ),
+    #     'unless': f'test -f /etc/opendkim/keys/{domain}/mail.private',
+    #     'needs': [
+    #         'svc_systemd:opendkim',
+    #         f'directory:/etc/opendkim/keys/{domain}',
+    #     ],
+    #     'triggers': [
+    #         'svc_systemd:opendkim:restart',
+    #     ],
+    # }
 
 svc_systemd['opendkim'] = {
     'needs': [
