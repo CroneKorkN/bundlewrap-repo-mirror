@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+from bundlewrap.repo import Repository
+from os.path import realpath, dirname
+
+repo = Repository(dirname(dirname(realpath(__file__))))
+domains = set()
+
+for node in repo.nodes:
+    domains.update(
+        set(node.metadata.get('opendkim/domains', []))
+    )
+
+print(domains)
+
+# Do in Metaproc

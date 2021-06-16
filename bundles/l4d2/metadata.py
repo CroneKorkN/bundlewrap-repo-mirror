@@ -2,6 +2,6 @@
 def steam(metadata):
     return {
         'steam': {
-            222860: 'l4d2',
+            '222860': 'l4d2',
         },
     }
