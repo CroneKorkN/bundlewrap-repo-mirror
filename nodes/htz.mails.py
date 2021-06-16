@@ -12,14 +12,15 @@
     'metadata': {
         'opendkim': {
             'domains': [
-                "sublimity.de", 
-                "freibrief.net",
-                "nadenau.net",
-                "naeder.net",
-                "rolfwerner.eu",
-                "wettengl.net",
-                "wingl.de",
-                "woodpipe.de",
+                'mail2.sublimity.de',
+                # 'sublimity.de',
+                # 'freibrief.net',
+                # 'nadenau.net',
+                # 'naeder.net',
+                # 'rolfwerner.eu',
+                # 'wettengl.net',
+                # 'wingl.de',
+                # 'woodpipe.de',
             ],
         },
         'interfaces': {

@@ -48,16 +48,25 @@ files = {
 for domain in node.metadata.get('opendkim/domains'):
     directories[f'/etc/opendkim/keys/{domain}'] = {
         **file_attributes,
+        'purge': True,
     }
-    
+    files[f'/etc/opendkim/keys/{domain}/mail.private'] = {
+        **file_attributes,
+        'content_type': 'any',
+    }
+    files[f'/etc/opendkim/keys/{domain}/mail.txt'] = {
+        **file_attributes,
+        'content_type': 'any',
+    }
     actions[f'generate_{domain}_dkim_key'] = {
         'command': (
-            'sudo --user opendkim'
-            ' opendkim-genkey'
+            f'sudo --user opendkim'
+            f' opendkim-genkey'
+            f' --selector=mail'
             f' --directory=/etc/opendkim/keys/{domain}'
             f' --domain={domain}'
         ),
-        'unless': f'test -f /etc/opendkim/keys/{domain}/default.private',
+        'unless': f'test -f /etc/opendkim/keys/{domain}/mail.private',
         'needs': [
             'svc_systemd:opendkim',
             f'directory:/etc/opendkim/keys/{domain}',
