@@ -27,8 +27,8 @@ def keys(metadata):
         if domain in metadata.get(f'opendkim/keys'):
             continue
         
-        pubkey_path = join(repo.path, 'data', 'dkim', f'{domain}.privkey')
-        privkey_path = join(repo.path, 'data', 'dkim', f'{domain}.pubkey')
+        pubkey_path = join(repo.path, 'data', 'dkim', f'{domain}.pubkey')
+        privkey_path = join(repo.path, 'data', 'dkim', f'{domain}.privkey.enc')
         
         if not exists(pubkey_path) or not exists(privkey_path):
             key = rsa.generate_private_key(
