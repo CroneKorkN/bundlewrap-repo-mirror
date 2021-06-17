@@ -45,9 +45,8 @@ def dns(metadata):
     
     for domain in metadata.get('mailserver/domains'):
         dns[domain] = {
-            'MX': [
-                str(ip_interface(metadata.get('network/ipv4')).ip)
-            ],
+            'MX': [domain],
+            'TXT': ['v=spf1 a mx -all'],
         }
 
     return {
