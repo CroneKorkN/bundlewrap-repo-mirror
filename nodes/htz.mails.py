@@ -5,12 +5,27 @@
         'debian-10',
         'mailserver',
         'webserver',
+        'dnsserver',
     ],
     'bundles': [
         'wireguard',
         'zfs',
     ],
     'metadata': {
+        'bind': {
+            'zones': {
+                'mail2.sublimity.de': [],
+                'sublimity.de': [],
+                'freibrief.net': [],
+                'nadenau.net': [],
+                'naeder.net': [],
+                'rolfwerner.eu': [],
+                'wettengl.net': [],
+                'wingl.de': [],
+                'woodpipe.de': [],
+                'ckn.li': [],
+            },
+        },
         'network': {
             'interface': 'eth0',
             'ipv4': '162.55.188.157/32',
