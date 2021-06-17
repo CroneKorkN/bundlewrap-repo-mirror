@@ -32,20 +32,20 @@ files = {
     '/etc/opendkim/key_table': {
         'content_type': 'mako',
         'context': {
-            'domains': node.metadata.get('opendkim/domains'),
+            'domains': node.metadata.get('mailserver/domains'),
         },
         **file_attributes,
     },
     '/etc/opendkim/signing_table': {
         'content_type': 'mako',
         'context': {
-            'domains': node.metadata.get('opendkim/domains'),
+            'domains': node.metadata.get('mailserver/domains'),
         },
         **file_attributes,
     },
 }
 
-for domain in node.metadata.get('opendkim/domains'):
+for domain in node.metadata.get('mailserver/domains'):
     directories[f'/etc/opendkim/keys/{domain}'] = {
         **file_attributes,
         'purge': True,

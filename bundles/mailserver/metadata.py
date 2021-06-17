@@ -1,3 +1,5 @@
+from ipaddress import ip_interface
+
 database_password = repo.vault.password_for(f'{node.name} db mailserver')
 
 defaults = {
@@ -10,6 +12,7 @@ defaults = {
             'password': database_password,
         },
         'test_password': repo.vault.password_for(f'{node.name} test_pw mailserver'),
+        'domains': [],
     },
     'postgresql': {
         'roles': {
@@ -32,6 +35,24 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'dns',
+)
+def dns(metadata):
+    dns = {}
+    
+    for domain in metadata.get('mailserver/domains'):
+        dns[domain] = {
+            'MX': [
+                str(ip_interface(metadata.get('network/ipv4')).ip)
+            ],
+        }
+
+    return {
+        'dns': dns,
+    }
 
 @metadata_reactor.provides(
     'letsencrypt/domains',

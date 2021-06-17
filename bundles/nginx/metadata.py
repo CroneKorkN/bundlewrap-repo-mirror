@@ -1,5 +1,4 @@
 from ipaddress import ip_interface
-from bundlewrap.metadata import atomic
 
 defaults = {
     'apt': {

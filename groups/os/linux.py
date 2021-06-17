@@ -1,4 +1,7 @@
 {
+    'supergroups': [
+        'all',
+    ],
     'bundles': [
         'network',
         'systemd',

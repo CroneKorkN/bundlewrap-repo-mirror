@@ -13,7 +13,6 @@ defaults = {
         },
     },
     'opendkim': {
-        'domains': [],
         'keys': {},
     },
     'dns': {
@@ -32,7 +31,7 @@ defaults = {
 def keys(metadata):
     keys = {}
     
-    for domain in metadata.get('opendkim/domains'):
+    for domain in metadata.get('mailserver/domains'):
         if domain in metadata.get(f'opendkim/keys'):
             continue
         

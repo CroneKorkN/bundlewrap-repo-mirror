@@ -37,8 +37,6 @@
         'mailserver': {
             'hostname': 'mail2.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
-        },
-        'opendkim': {
             'domains': [
                 'mail2.sublimity.de',
                 # 'sublimity.de',
