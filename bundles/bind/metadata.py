@@ -17,7 +17,6 @@ def collect_records(metadata):
     zones = metadata.get('bind/zones')
     
     for other_node in repo.nodes:
-        print(other_node.name)
         for fqdn, records in other_node.metadata.get('dns').items():
             matching_zones = sorted(
                 filter(
