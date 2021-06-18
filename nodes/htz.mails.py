@@ -8,6 +8,7 @@
         'dnsserver',
     ],
     'bundles': [
+        'gcloud',
         'wireguard',
         'zfs',
     ],

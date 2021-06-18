@@ -1,0 +1,6 @@
+defaults = {
+    'apt': {
+        'packages': {},
+        'sources': {},
+    },
+}

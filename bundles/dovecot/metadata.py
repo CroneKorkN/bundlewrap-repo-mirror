@@ -24,5 +24,4 @@ defaults = {
             'dbuser': 'mailserver',
         },
     },
-
 }

@@ -9,6 +9,7 @@
         'postgresql': {
             'version': '11',
         },
+        'os_release': 'buster',
     }, 
     'os_version': (10,),
 }
