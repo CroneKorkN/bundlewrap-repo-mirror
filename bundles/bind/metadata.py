@@ -1,4 +1,9 @@
 defaults = {
+    'apt': {
+        'packages': {
+            'bind9': {},
+        },
+    },
     'bind': {
         'zones': {},
     },
