@@ -1,0 +1,12 @@
+$TTL 600
+@   IN  SOA     ns.sublimity.de. admin.sublimity.de. (
+        2020080302  ;Serial
+        1200        ;Refresh
+        600         ;Retry
+        1209600     ;Expire
+        600         ;Negative response caching TTL
+)
+
+% for record in records:
+${record[0].ljust(max_name)} IN ${record[1].ljust(max_type)} ${record[2]}
+% endfor
