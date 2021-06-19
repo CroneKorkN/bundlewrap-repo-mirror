@@ -20,7 +20,9 @@ gsutil ${'\\'}
     -r ${'\\'}
     -d ${'\\'}
     -e ${'\\'}
-    -x '${'|'.join(options.get('exclude', []))}' ${'\\'}
+% if options.get('exclude'):
+    -x '${'|'.join(options['exclude'])}' ${'\\'}
+% endif
     '${options['encrypted_path']}' ${'\\'}
     'gs://${bucket}/${node.name}${path}' ${'\\'}
     2>&1 | logger -st gsutil
