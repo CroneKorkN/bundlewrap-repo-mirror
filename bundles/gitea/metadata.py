@@ -51,12 +51,12 @@ defaults = {
                         'WantedBy': 'multi-user.target',
                     },
                 },
-                'needs': {
+                'needs': [
                     'action:chmod_gitea',
                     'download:/usr/local/bin/gitea',
                     'file:/etc/systemd/system/gitea.service',
                     'file:/etc/gitea/app.ini',
-                },
+                ],
             },
         },
     },
