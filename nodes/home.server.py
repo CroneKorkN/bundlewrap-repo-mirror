@@ -7,6 +7,7 @@
         'gitea',
         'postgresql',
         'wireguard',
+        'gcloud',
     ],
     'metadata': {
         'network': {
