@@ -13,7 +13,7 @@ def paths(metadata):
         'archive': {
             'paths': {
                 path: {
-                    'encrypted_path': f'/mnt/gocryptfs{path}',
+                    'encrypted_path': f'/mnt/archive.enc{path}',
                     'exclude': [
                         '^\..*',
                         '/\..*',
