@@ -4,5 +4,6 @@
     ],
     'bundles': [
         'archive',
+        'gocryptfs',
     ],
 }

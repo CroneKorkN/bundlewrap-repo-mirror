@@ -1,5 +1,5 @@
 defaults = {
-    'archive': {},
+    'gocryptfs': {},
 }
 
 
@@ -9,10 +9,8 @@ defaults = {
 def gocryptfs(metadata):
     gocryptfs = {}
     
-    for path in metadata.get('archive'):
+    for path, options in metadata.get('gocryptfs'):
         gocryptfs[path] = {
-            'mountpoint': f'/mnt/gocryptfs{path}',
-            'reverse': True,
         } 
 
     return {

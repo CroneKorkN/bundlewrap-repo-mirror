@@ -11,6 +11,7 @@
         'wireguard',
     ],
     'metadata': {
+        'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
         'network': {
             'interface': 'enp1s0f0',
             'ipv4': '10.0.0.2/24',

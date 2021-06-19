@@ -1,6 +1,7 @@
 {
     'hostname': '162.55.188.157',
     'groups': [
+        'archive',
         'hetzner-cloud',
         'debian-10',
         'mailserver',
@@ -27,6 +28,7 @@
                 'ckn.li': [],
             },
         },
+        'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
             'interface': 'eth0',
             'ipv4': '162.55.188.157/32',
