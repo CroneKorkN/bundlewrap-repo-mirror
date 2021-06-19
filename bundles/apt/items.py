@@ -1,5 +1,4 @@
-from glob import glob
-from os.path import join, basename
+from os.path import join
 
 directories = {
     '/etc/apt/sources.list.d': {
@@ -36,17 +35,15 @@ for name, content in node.metadata.get('apt/sources').items():
             'action:apt_update',
         },
     }
-    
-    matches = glob(join(repo.path, 'data', 'apt', 'keys', f'{name}.*'))
-    if matches:
-        assert len(matches) == 1
-        files[f'/etc/apt/trusted.gpg.d/{basename(matches[0])}'] = {
-            'source': matches[0],
-            'content_type': 'binary',
-            'triggers': {
-                'action:apt_update',
-            },
-        }
+
+for key in node.metadata.get('apt/keys'):
+    files[f'/etc/apt/trusted.gpg.d/{key}'] = {
+        'source': join(repo.path, 'data', 'apt', 'keys', key),
+        'content_type': 'binary',
+        'triggers': {
+            'action:apt_update',
+        },
+    }
 
 
 for package, options in node.metadata.get('apt/packages', {}).items():
