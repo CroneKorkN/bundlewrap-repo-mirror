@@ -7,7 +7,7 @@ files['/opt/archive'] = {
         'dirs': node.metadata.get('archive'),
         'bucket': node.metadata.get('gcloud/bucket'),
         'processes': 4,
-        'threads': 16,
+        'threads': 4,
     },
     'needs': [
         'bundle:gcloud',

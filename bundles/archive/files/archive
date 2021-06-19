@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ '$1' == 'perform' ]]
+if [[ "$1" == 'perform' ]]
 then
   echo 'NON-DRY RUN'
   DRY=''
@@ -22,6 +22,6 @@ gsutil ${'\\'}
     -e ${'\\'}
     -x '${'|'.join(conf['exclude'])}' ${'\\'}
     '${dir}' ${'\\'}
-    'gs://${bucket}/${node.name}${dir}'
-
+    'gs://${bucket}/${node.name}${dir}' ${'\\'}
+    2>&1 | tee | logger -t gsutil
 % endfor
