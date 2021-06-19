@@ -4,17 +4,19 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'gocryptfs',
+    'gocryptfs/paths',
 )
 def gocryptfs(metadata):
-    gocryptfs = {}
+    paths = {}
     
-    for path in metadata.get('archive'):
-        gocryptfs[path] = {
+    for path in metadata.get('archive/paths'):
+        paths[path] = {
             'mountpoint': f'/mnt/gocryptfs{path}',
             'reverse': True,
         } 
 
     return {
-        'gocryptfs': gocryptfs,
+        'gocryptfs': {
+            'paths': paths,
+        },
     }

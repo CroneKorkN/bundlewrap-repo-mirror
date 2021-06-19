@@ -20,7 +20,7 @@ gsutil ${'\\'}
     -r ${'\\'}
     -d ${'\\'}
     -e ${'\\'}
-    -x '${'|'.join(conf['exclude'])}' ${'\\'}
+    -x '${'|'.join(conf.get('exclude', []))}' ${'\\'}
     '${dir}' ${'\\'}
     'gs://${bucket}/${node.name}${dir}' ${'\\'}
     2>&1 | tee | logger -t gsutil

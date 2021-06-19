@@ -1,10 +1,12 @@
 ```
 defaults = {
     'archive': {
-        'exclude': [
-          '\.cache/',
-          '\.log$',
-        ],
+        '/var/important': {
+          'exclude': [
+            '\.cache/',
+            '\.log$',
+          ],
+        },
     },
 }
 ```

@@ -12,13 +12,7 @@ actions = {
     }, 
 }
 
-for name, service in node.metadata.get('systemd', {}).get('services', {}).items():
-    # use set() in metadata
-    for enumerator in [
-        'preceded_by', 'needs', 'needed_by', 'triggers', 'triggered_by'
-    ]:
-        assert isinstance(service.get(enumerator, set()), set)
-
+for name, service in node.metadata.get('systemd/services').items():
     # dont call a service 'service' explicitly
     if name.endswith('.service'):
         raise Exception(name)
@@ -46,7 +40,9 @@ for name, service in node.metadata.get('systemd', {}).get('services', {}).items(
     }
 
     # service depends on unit file
-    service.setdefault('needs', set()).add(f'file:{unit_path}')
+    service\
+        .setdefault('needs', [])\
+        .append(f'file:{unit_path}')
 
     # service
     svc_systemd[name] = service

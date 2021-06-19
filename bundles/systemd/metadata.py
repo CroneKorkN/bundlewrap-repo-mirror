@@ -1,0 +1,5 @@
+defaults = {
+    'systemd': {
+        'services': {},
+    }
+}
