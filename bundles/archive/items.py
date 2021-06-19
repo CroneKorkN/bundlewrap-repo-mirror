@@ -6,7 +6,7 @@ files['/opt/archive'] = {
     'content_type': 'mako',
     'mode': '700',
     'context': {
-        'dirs': node.metadata.get('archive'),
+        'paths': node.metadata.get('archive/paths'),
         'bucket': node.metadata.get('gcloud/bucket'),
         'processes': 4,
         'threads': 4,

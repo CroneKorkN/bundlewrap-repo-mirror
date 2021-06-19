@@ -9,8 +9,8 @@ else
   DRY='-n'
 fi
 
-% for dir, conf in dirs.items():
-# ${dir}
+% for path, options in paths.items():
+# ${path}
 gsutil ${'\\'}
   -m ${'\\'}
   -o 'GSUtil:parallel_process_count=${processes}' ${'\\'}
@@ -20,8 +20,8 @@ gsutil ${'\\'}
     -r ${'\\'}
     -d ${'\\'}
     -e ${'\\'}
-    -x '${'|'.join(conf.get('exclude', []))}' ${'\\'}
-    '${dir}' ${'\\'}
-    'gs://${bucket}/${node.name}${dir}' ${'\\'}
-    2>&1 | tee | logger -t gsutil
+    -x '${'|'.join(options.get('exclude', []))}' ${'\\'}
+    '${options['encrypted_path']}' ${'\\'}
+    'gs://${bucket}/${node.name}${path}' ${'\\'}
+    2>&1 | logger -st gsutil
 % endfor

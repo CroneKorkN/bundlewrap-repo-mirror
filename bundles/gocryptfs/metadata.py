@@ -77,7 +77,7 @@ def systemd(metadata):
                         'CIPHER': options["mountpoint"]
                     },
                     'ExecStart': [
-                        '/usr/bin/gocryptfs -fg -reverse -masterkey $MASTERKEY -ctlsock $SOCKET $PLAIN $CIPHER',
+                        '/usr/bin/gocryptfs -fg -plaintextnames -reverse -masterkey $MASTERKEY -ctlsock $SOCKET $PLAIN $CIPHER',
                     ],
                     'ExecStopPost': [
                         '/usr/bin/umount $CIPHER'

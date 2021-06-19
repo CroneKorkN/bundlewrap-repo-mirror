@@ -13,19 +13,3 @@ defaults = {
         }
     },
 }
-
-
-@metadata_reactor.provides(
-    'archive',
-)
-def exclude_hidden_files_from_archive(metadata):
-    return {
-        'archive': {
-            dir: {
-                'exclude': [
-                    '^\..*',
-                    '/\..*',
-                ],
-            } for dir, conf in metadata.get('archive').items()
-        }
-    }
