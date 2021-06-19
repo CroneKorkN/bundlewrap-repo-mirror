@@ -1,4 +1,9 @@
 defaults = {
+    'apt': {
+        'packages': {
+            'jq': {},
+        },
+    },
     'archive': {
         'paths': {},
     },

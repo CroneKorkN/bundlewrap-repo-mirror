@@ -1,9 +1,22 @@
 from os.path import join
+from json import dumps
 
 service_account = node.metadata.get('gcloud/service_account')
 project = node.metadata.get('gcloud/project')
 
-files[f'/root/.config/gcloud/service_account.json'] = {
+directories[f'/etc/gcloud'] = {
+    'purge': True,
+}
+
+files['/etc/gcloud/gcloud.json'] = {
+    'content': dumps(
+        node.metadata.get('gcloud'),
+        indent=4,
+        sort_keys=True
+    ),
+}
+
+files['/etc/gcloud/service_account.json'] = {
     'content': repo.vault.decrypt_file(
         join(repo.path, 'data', 'gcloud', 'service_accounts', f'{service_account}@{project}.json.enc')
     ),
@@ -14,10 +27,10 @@ files[f'/root/.config/gcloud/service_account.json'] = {
 }
 
 actions['gcloud_activate_service_account'] = {
-    'command': 'gcloud auth activate-service-account --key-file /root/.config/gcloud/service_account.json',
+    'command': 'gcloud auth activate-service-account --key-file /etc/gcloud/service_account.json',
     'unless': f"gcloud auth list | grep -q '^\*[[:space:]]*{service_account}@{project}.iam.gserviceaccount.com'",
     'needs': [
-        f'file:/root/.config/gcloud/service_account.json'
+        f'file:/etc/gcloud/service_account.json'
     ],
 }
 

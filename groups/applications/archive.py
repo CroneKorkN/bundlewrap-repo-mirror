@@ -5,5 +5,6 @@
     'bundles': [
         'archive',
         'gocryptfs',
+        'gocryptfs-inspect',
     ],
 }
