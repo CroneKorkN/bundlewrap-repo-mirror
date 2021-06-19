@@ -1,5 +1,6 @@
 assert node.has_bundle('gcloud')
 assert node.has_bundle('gocryptfs')
+assert node.has_bundle('systemd')
 
 files['/opt/archive'] = {
     'content_type': 'mako',
