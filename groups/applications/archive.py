@@ -1,0 +1,8 @@
+{
+    'supergroups': [
+        'gcloud',
+    ],
+    'bundles': [
+        'archive',
+    ],
+}

@@ -2,12 +2,13 @@
     'hostname': '10.0.0.2',
     'groups': [
         'debian-10',
+        'archive',
     ],
     'bundles': [
         'gitea',
+        'nextcloud',
         'postgresql',
         'wireguard',
-        'gcloud',
     ],
     'metadata': {
         'network': {
