@@ -12,6 +12,7 @@
         'gcloud',
         'wireguard',
         'zfs',
+        'nextcloud',
     ],
     'metadata': {
         'bind': {
@@ -67,6 +68,10 @@
                 # 'wingl.de',
                 # 'woodpipe.de',
             ],
+        },
+        'nextcloud': {
+            'version': '21.0.2',
+            'sha256': '5e5b38109a3485db5fd2d248f24478eabe6c0790ec10b030acbbee207d5511fe',
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
