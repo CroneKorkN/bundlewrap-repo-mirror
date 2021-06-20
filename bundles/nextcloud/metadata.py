@@ -27,4 +27,29 @@ defaults = {
             },
         },
     },
+    'nextcloud': {
+        'data_dir': '/var/lib/nextcloud',
+        'admin_user': 'admin',
+        'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw'),
+    },
+    'nginx': {
+        'vhosts': {
+            'nextcloud': {
+                'webroot': '/opt/nextcloud',
+                'php': True,
+            },
+        },
+    },
+    'postgresql': {
+        'roles': {
+            'nextcloud': {
+                'password': repo.vault.password_for(f'{node.name} nextcloud db pw'),
+            },
+        },
+        'databases': {
+            'nextcloud': {
+                'owner': 'nextcloud',
+            },
+        },
+    },
 }
