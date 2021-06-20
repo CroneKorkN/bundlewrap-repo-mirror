@@ -62,9 +62,10 @@ def chacha_chracter(input, choices):
 
 
 def derive_string(input, length, choices):
-    get_character = chacha_chracter(input, choices)
+    sorted_choices = bytes(sorted(choices))
+    get_character = chacha_chracter(input, sorted_choices)
     return bytes(islice(get_character, length))
 
-print(
-    derive_string(b'12344', length=100, choices=b'abcdefghijklmnopqrstuvwxyz0123456789')
-)
+# print(
+#     derive_string(b'12344', length=100, choices=b'abcdefghijklmnopqrstuvwxyz0123456789')
+# )

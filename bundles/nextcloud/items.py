@@ -88,7 +88,7 @@ actions['install_nextcloud'] = {
         data_dir=node.metadata.get('nextcloud/data_dir'),
     ),
     'unless': """
-        psql -At -d nextcloud -c "SELECT 'OK' FROM information_schema.tables WHERE table_name='users' AND table_schema='public'" | grep -q "^OK$"
+        psql -At -d nextcloud -c "SELECT 'OK' FROM information_schema.tables WHERE table_name='oc_users' AND table_schema='public'" | grep -q "^OK$"
     """,
     'needs': [
         'postgres_db:nextcloud',
@@ -125,9 +125,9 @@ files['/opt/nextcloud/config/config.php'] = {
 
 actions['upgrade_nextcloud'] = {
     'command': occ('upgrade'),
-    'unless': occ('status') + ' | grep -q "installed: true"',
-    'needs': [
-        'file:/opt/nextcloud/config/config.php',
+    'triggered': True,
+    'triggered_by': [
+        f'action:extract_nextcloud',
     ],
 }
 
