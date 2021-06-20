@@ -49,12 +49,28 @@ actions['chown_/opt/nextcloud/config'] = {
     ],
 }
 
+files['/opt/nextcloud/config/config.php'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
+    'mode': '0770',
+    'needs': [
+        'action:extract_nextcloud',
+    ],
+}
+
 directories[node.metadata.get('nextcloud/data_dir')] = {
     'owner': 'www-data',
     'group': 'www-data',
     'mode': '0770',
 }
 
+actions['set_nextcloud_uninstalled'] = {
+    'command': """sed -i "/installed/d" /opt/nextcloud/config/config.php""",
+    'triggered': True,
+    'needs': [
+        'file:/opt/nextcloud/config/config.php',
+    ],
+}
 actions['install_nextcloud'] = {
     'command': occ(
         'maintenance:install',
@@ -68,18 +84,21 @@ actions['install_nextcloud'] = {
         admin_pass=node.metadata.get('nextcloud/admin_pass'),
         data_dir=node.metadata.get('nextcloud/data_dir'),
     ),
-    'unless': occ('status') + ' | grep -q "installed: true"',
+    'unless': """
+        psql -At -d nextcloud -c "SELECT 'OK' FROM information_schema.tables WHERE table_name='oc_users' AND table_schema='public'" | grep -q "^OK$"
+    """,
     'needs': [
         f"directory:{node.metadata.get('nextcloud/data_dir')}",
         'directory:/opt/nextcloud',
         'directory:/opt/nextcloud/config',
         'directory:/opt/nextcloud/apps',
+        'file:/opt/nextcloud/config/config.php',
         'action:chown_/opt/nextcloud/config',
         'action:chown_/opt/nextcloud/apps',
         'action:extract_nextcloud',
     ],
     'preceded_by': [
-        f'download:/tmp/nextcloud-{version}.tar.bz2',
+        f'action:set_nextcloud_uninstalled',
     ],
 }
 
