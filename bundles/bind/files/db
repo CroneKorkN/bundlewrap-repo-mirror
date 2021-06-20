@@ -17,9 +17,9 @@ ${record['name'].ljust(column_width('name', records))} \
 IN \
 ${record['type'].ljust(column_width('type', records))} \
     % if record['type'] == 'TXT':
-      "${part}"
+"${part}"
     % else:
-      ${part}
+${part}
     % endif
   % endfor
 % endfor
