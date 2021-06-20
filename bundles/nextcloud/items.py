@@ -16,10 +16,15 @@ downloads[f'/tmp/nextcloud-{version}.tar.bz2'] = {
     'sha256': node.metadata.get('nextcloud/sha256'),
     'triggered': True,
 }
+actions['delete_nextcloud'] = {
+    'command': f'rm -rf /opt/nextcloud/*',
+    'triggered': True,
+}
 actions['extract_nextcloud'] = {
     'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --strip 1 -C /opt/nextcloud nextcloud',
     'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
     'preceded_by': [
+        'action:delete_nextcloud',
         f'download:/tmp/nextcloud-{version}.tar.bz2',
     ],
     'needs': [
@@ -27,47 +32,27 @@ actions['extract_nextcloud'] = {
     ],
 }
 
-# DIRECTORIES
+# DIRECTORIES, FILES AND SYMLINKS
 
 directories['/opt/nextcloud'] = {}
 directories['/opt/nextcloud/config'] = {
     'owner': 'www-data',
     'group': 'www-data',
-    'mode': '0770',
     'needs': [
-        'action:extract_nextcloud',
-    ],
-}
-directories['/opt/nextcloud/apps'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-    'needs': [
-        'action:extract_nextcloud',
+        'action:delete_nextcloud',
     ],
 }
 directories['/var/lib/nextcloud'] = {
     'owner': 'www-data',
     'group': 'www-data',
-    'mode': '0770',
 }
-actions['chown_/opt/nextcloud/apps'] = {
-    'command': 'chown -R www-data:www-data /opt/nextcloud/apps',
-    'unless': '! stat -c "%U:%G" /opt/nextcloud/apps/* | grep -vq www-data:www-data',
-    'needs': [
-        'action:extract_nextcloud',
-    ],
-}
-
-# SETUP
-
-files['/opt/nextcloud/config/config.php'] = {
-    'content_type': 'any',
+directories['/var/lib/nextcloud/.apps'] = {
     'owner': 'www-data',
     'group': 'www-data',
-    'mode': '640',
-    'needs': [
-        'action:extract_nextcloud',
-    ],
+}
+directories['/var/lib/nextcloud/.cache'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
 }
 files['/opt/nextcloud/config/managed.config.php'] = {
     'content_type': 'mako',
@@ -78,9 +63,21 @@ files['/opt/nextcloud/config/managed.config.php'] = {
         'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
     },
     'needs': [
-        'action:extract_nextcloud',
+        'action:delete_nextcloud',
+        'directory:/opt/nextcloud/config',
     ],
 }
+actions['symlink_/opt/nextcloud/userapps'] = {
+    'command': f'ln -s /var/lib/nextcloud/.apps /opt/nextcloud/userapps && chown www-data:www-data /opt/nextcloud/userapps',
+    'unless': 'readlink /opt/nextcloud/userapps | grep -q /var/lib/nextcloud/.apps',
+    'needs': [
+        'action:delete_nextcloud',
+        'directory:/var/lib/nextcloud/.apps',
+    ],
+}
+
+# SETUP
+
 actions['install_nextcloud'] = {
     'command': occ(
         'maintenance:install',
@@ -96,15 +93,15 @@ actions['install_nextcloud'] = {
     ),
     'unless': occ('status') + ' | grep -q "installed: true"',
     'needs': [
-        'postgres_db:nextcloud',
-        f"directory:/var/lib/nextcloud",
         'directory:/opt/nextcloud',
         'directory:/opt/nextcloud/config',
-        'directory:/opt/nextcloud/apps',
-        'action:chown_/opt/nextcloud/apps',
-        'action:extract_nextcloud',
-        'file:/opt/nextcloud/config/config.php',
+        'directory:/var/lib/nextcloud',
+        'directory:/var/lib/nextcloud/.apps',
+        'directory:/var/lib/nextcloud/.cache',
         'file:/opt/nextcloud/config/managed.config.php',
+        'action:extract_nextcloud',
+        'action:symlink_/opt/nextcloud/userapps',
+        'postgres_db:nextcloud',
     ],
 }
 

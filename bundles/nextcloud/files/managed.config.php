@@ -8,4 +8,12 @@ $CONFIG = array (
   'dbtype' => 'pgsql',
   'datadirectory' => '/var/lib/nextcloud',
   'dbport' => '5432',
+  'apps_paths' => [
+    [
+      'path'=> '/var/lib/nextcloud/.apps',
+      'url' => '/userapps',
+      'writable' => true,
+    ],
+  ],
+  'cache_path' => '/var/lib/nextcloud/.cache',
 );
