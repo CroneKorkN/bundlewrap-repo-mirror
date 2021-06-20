@@ -99,9 +99,9 @@ actions['install_nextcloud'] = {
     ),
     'unless': occ('status') + ' | grep -q "installed: true"',
     'needs': [
+        'directory:/etc/nextcloud',
         'directory:/opt/nextcloud',
         'directory:/var/lib/nextcloud',
-        'directory:/etc/nextcloud',
         'directory:/var/lib/nextcloud/.apps',
         'directory:/var/lib/nextcloud/.cache',
         'file:/etc/nextcloud/managed.config.php',
