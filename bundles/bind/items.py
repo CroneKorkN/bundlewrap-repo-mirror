@@ -53,6 +53,7 @@ svc_systemd['bind9'] = {}
 
 actions['named-checkconf'] = {
     'command': 'named-checkconf -z',
+    'unless': 'named-checkconf -z',
     'needs': [
         'svc_systemd:bind9',
     ]

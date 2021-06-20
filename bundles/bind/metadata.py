@@ -19,12 +19,12 @@ defaults = {
 def dns(metadata):
     return {
         'dns': {
-            'ns.sublimity.de': {
+            metadata.get('bind/domain'): {
                 'A': [
-                    str(ip_interface(metadata.get('network/ipv4')).ip)
+                    str(ip_interface(metadata.get('network/ipv4')).ip),
                 ],
                 'AAAA': [
-                    str(ip_interface(metadata.get('network/ipv6')).ip)
+                    str(ip_interface(metadata.get('network/ipv6')).ip),
                 ]
             },
         },
