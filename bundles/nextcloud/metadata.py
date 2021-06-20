@@ -30,6 +30,11 @@ defaults = {
             },
         },
     },
+    'backup': {
+        'files': [
+            '/etc/nextcloud/config.php',
+        ],
+    },
     'nextcloud': {
         'admin_user': 'admin',
         'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw'),
@@ -54,19 +59,11 @@ defaults = {
             },
         },
     },
-}
-
-
-@metadata_reactor.provides(
-    'nextcloud/instance_id',
-)
-def instance_id(metadata):
-    return {
-        'nextcloud': {
-            'instance_id': repo.libs.derive_string.derive_string(
-                UUID(metadata.get('id')).bytes,
-                length=12,
-                choices=(string.ascii_lowercase + string.digits).encode(),
-            ).decode(),
+    'zfs': {
+        'datasets': {
+            'tank/nexcloud': {
+                'mountpoint': '/var/lib/nextcloud',
+            },
         },
-    }
+    },
+}
