@@ -33,10 +33,17 @@ directories['/opt/nextcloud'] = {}
 directories['/opt/nextcloud/config'] = {
     'owner': 'www-data',
     'group': 'www-data',
+    'mode': '0770',
+    'needs': [
+        'action:extract_nextcloud',
+    ],
 }
 directories['/opt/nextcloud/apps'] = {
     'owner': 'www-data',
     'group': 'www-data',
+    'needs': [
+        'action:extract_nextcloud',
+    ],
 }
 directories['/var/lib/nextcloud'] = {
     'owner': 'www-data',
@@ -119,5 +126,6 @@ actions['nextcloud_add_missing_inidces'] = {
     'triggered': True,
     'triggered_by': [
         f'action:extract_nextcloud',
+        f'action:upgrade_nextcloud',
     ],
 }
