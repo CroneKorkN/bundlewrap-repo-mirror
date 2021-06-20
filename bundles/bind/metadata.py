@@ -38,7 +38,7 @@ def collect_records(metadata):
                     zones\
                         .setdefault(zone, [])\
                         .append(
-                            (name, type, value)
+                            {'name': name, 'type': type, 'value': value}
                         )
     
     return {

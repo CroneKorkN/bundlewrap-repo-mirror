@@ -1,0 +1,17 @@
+$TTL 600
+@   IN  SOA     ns.sublimity.de. admin.sublimity.de. (
+        2020080302  ;Serial
+        1200        ;Refresh
+        600         ;Retry
+        1209600     ;Expire
+        600         ;Negative response caching TTL
+)
+
+% for record in sorted(records, key=lambda r: (r['name'], r['type'], r['value'])):
+  % for part in (record['value'][i:i+256] for i in range(0, len(record['value']), 255)):
+${record['name'].ljust(column_width('name', records))} \
+IN \
+${record['type'].ljust(column_width('type', records))} \
+"${part}"
+  % endfor
+% endfor
