@@ -21,27 +21,25 @@ actions['delete_nextcloud'] = {
     'triggered': True,
 }
 actions['extract_nextcloud'] = {
-    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --strip 1 -C /opt/nextcloud nextcloud',
+    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --skip-old-files --strip 1 -C /opt/nextcloud nextcloud',
     'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
     'preceded_by': [
         'action:delete_nextcloud',
         f'download:/tmp/nextcloud-{version}.tar.bz2',
     ],
     'needs': [
+        'action:symlink_/opt/nextcloud/config',
         'directory:/opt/nextcloud',
     ],
 }
 
 # DIRECTORIES, FILES AND SYMLINKS
 
-directories['/opt/nextcloud'] = {}
-directories['/opt/nextcloud/config'] = {
+directories['/etc/nextcloud'] = {
     'owner': 'www-data',
     'group': 'www-data',
-    'needs': [
-        'action:delete_nextcloud',
-    ],
 }
+directories['/opt/nextcloud'] = {}
 directories['/var/lib/nextcloud'] = {
     'owner': 'www-data',
     'group': 'www-data',
@@ -54,7 +52,7 @@ directories['/var/lib/nextcloud/.cache'] = {
     'owner': 'www-data',
     'group': 'www-data',
 }
-files['/opt/nextcloud/config/managed.config.php'] = {
+files['/etc/nextcloud/managed.config.php'] = {
     'content_type': 'mako',
     'owner': 'www-data',
     'group': 'www-data',
@@ -63,8 +61,16 @@ files['/opt/nextcloud/config/managed.config.php'] = {
         'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
     },
     'needs': [
+        'directory:/opt/nextcloud',
         'action:delete_nextcloud',
-        'directory:/opt/nextcloud/config',
+    ],
+}
+actions['symlink_/opt/nextcloud/config'] = {
+    'command': f'ln -s /etc/nextcloud /opt/nextcloud/config && chown www-data:www-data /opt/nextcloud/config',
+    'unless': 'readlink /opt/nextcloud/config | grep -q /etc/nextcloud',
+    'needs': [
+        'action:delete_nextcloud',
+        'directory:/etc/nextcloud',
     ],
 }
 actions['symlink_/opt/nextcloud/userapps'] = {
@@ -94,13 +100,14 @@ actions['install_nextcloud'] = {
     'unless': occ('status') + ' | grep -q "installed: true"',
     'needs': [
         'directory:/opt/nextcloud',
-        'directory:/opt/nextcloud/config',
         'directory:/var/lib/nextcloud',
+        'directory:/etc/nextcloud',
         'directory:/var/lib/nextcloud/.apps',
         'directory:/var/lib/nextcloud/.cache',
-        'file:/opt/nextcloud/config/managed.config.php',
+        'file:/etc/nextcloud/managed.config.php',
         'action:extract_nextcloud',
         'action:symlink_/opt/nextcloud/userapps',
+        'action:symlink_/opt/nextcloud/config',
         'postgres_db:nextcloud',
     ],
 }
