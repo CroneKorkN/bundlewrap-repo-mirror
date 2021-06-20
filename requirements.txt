@@ -1,2 +1,3 @@
 bundlewrap>=4.8.0
+pycryptodome
 PyNaCl
