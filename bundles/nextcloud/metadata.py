@@ -31,7 +31,6 @@ defaults = {
         },
     },
     'nextcloud': {
-        'data_dir': '/var/lib/nextcloud',
         'admin_user': 'admin',
         'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw'),
     },

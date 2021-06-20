@@ -9,24 +9,13 @@ def occ(command, *args, **kwargs):
 
 version = node.metadata.get('nextcloud/version')
 
-# FILES AND FOLDERS
+# DOWNLOAD
 
 downloads[f'/tmp/nextcloud-{version}.tar.bz2'] = {
     'url': f'https://download.nextcloud.com/server/releases/nextcloud-{version}.tar.bz2',
     'sha256': node.metadata.get('nextcloud/sha256'),
     'triggered': True,
 }
-
-directories['/opt/nextcloud'] = {}
-directories['/opt/nextcloud/config'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-}
-directories['/opt/nextcloud/apps'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-}
-
 actions['extract_nextcloud'] = {
     'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --strip 1 -C /opt/nextcloud nextcloud',
     'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
@@ -38,6 +27,22 @@ actions['extract_nextcloud'] = {
     ],
 }
 
+# DIRECTORIES
+
+directories['/opt/nextcloud'] = {}
+directories['/opt/nextcloud/config'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
+}
+directories['/opt/nextcloud/apps'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
+}
+directories['/var/lib/nextcloud'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
+    'mode': '0770',
+}
 actions['chown_/opt/nextcloud/apps'] = {
     'command': 'chown -R www-data:www-data /opt/nextcloud/apps',
     'unless': '! stat -c "%U:%G" /opt/nextcloud/apps/* | grep -vq www-data:www-data',
@@ -45,35 +50,30 @@ actions['chown_/opt/nextcloud/apps'] = {
         'action:extract_nextcloud',
     ],
 }
-actions['chown_/opt/nextcloud/config'] = {
-    'command': 'chown -R www-data:www-data /opt/nextcloud/config',
-    'unless': '! stat -c "%U:%G" /opt/nextcloud/config/* | grep -vq www-data:www-data',
+
+# SETUP
+
+files['/opt/nextcloud/config/config.php'] = {
+    'content_type': 'any',
+    'owner': 'www-data',
+    'group': 'www-data',
+    'mode': '640',
     'needs': [
         'action:extract_nextcloud',
     ],
 }
-
-directories[node.metadata.get('nextcloud/data_dir')] = {
+files['/opt/nextcloud/config/managed.config.php'] = {
+    'content_type': 'mako',
     'owner': 'www-data',
     'group': 'www-data',
-    'mode': '0770',
+    'mode': '640',
+    'context': {
+        'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
+    },
+    'needs': [
+        'action:extract_nextcloud',
+    ],
 }
-
-# SETUP
-
-with open(join(repo.path, 'bundles', 'nextcloud', 'files', 'config.php')) as file:
-    content = Template(file.read()).render(
-        setup=True,
-        instance_id=node.metadata.get('nextcloud/instance_id'),
-    )
-    actions['nextcloud_config_for_install'] = {
-        'command': f'echo {quote(content)} > /opt/nextcloud/config/config.php && chown www-data:www-data /opt/nextcloud/config/config.php',
-        'needs': [
-            'action:extract_nextcloud',
-        ],
-        'triggered': True,
-    }
-
 actions['install_nextcloud'] = {
     'command': occ(
         'maintenance:install',
@@ -85,39 +85,19 @@ actions['install_nextcloud'] = {
         database_pass=node.metadata.get('postgresql/roles/nextcloud/password'),
         admin_user='admin',
         admin_pass=node.metadata.get('nextcloud/admin_pass'),
-        data_dir=node.metadata.get('nextcloud/data_dir'),
+        data_dir='/var/lib/nextcloud',
     ),
-    'unless': """
-        psql -At -d nextcloud -c "SELECT 'OK' FROM information_schema.tables WHERE table_name='oc_users' AND table_schema='public'" | grep -q "^OK$"
-    """,
+    'unless': occ('status') + ' | grep -q "installed: true"',
     'needs': [
         'postgres_db:nextcloud',
-        f"directory:{node.metadata.get('nextcloud/data_dir')}",
+        f"directory:/var/lib/nextcloud",
         'directory:/opt/nextcloud',
         'directory:/opt/nextcloud/config',
         'directory:/opt/nextcloud/apps',
-        'action:chown_/opt/nextcloud/config',
         'action:chown_/opt/nextcloud/apps',
         'action:extract_nextcloud',
-    ],
-    'preceded_by': [
-        'action:nextcloud_config_for_install',
-    ],
-}
-
-files['/opt/nextcloud/config/config.php'] = {
-    'content_type': 'mako',
-    'context': {
-        'setup': False,
-        'version': version,
-        'instance_id': node.metadata.get('nextcloud/instance_id'),
-        'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
-    },
-    'owner': 'www-data',
-    'group': 'www-data',
-    'mode': '0770',
-    'needs': [
-        'action:install_nextcloud',
+        'file:/opt/nextcloud/config/config.php',
+        'file:/opt/nextcloud/config/managed.config.php',
     ],
 }
 
@@ -125,9 +105,9 @@ files['/opt/nextcloud/config/config.php'] = {
 
 actions['upgrade_nextcloud'] = {
     'command': occ('upgrade'),
-    'triggered': True,
-    'triggered_by': [
-        f'action:extract_nextcloud',
+    'unless': occ('status') + f' | grep -q "versionstring: {version}"',
+    'needs': [
+        'action:install_nextcloud',
     ],
 }
 
