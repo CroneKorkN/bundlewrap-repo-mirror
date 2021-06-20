@@ -13,9 +13,13 @@ $TTL 600
 
 % for record in sorted(records, key=lambda r: (r['name'], r['type'], r['value'])):
   % for part in (record['value'][i:i+255] for i in range(0, len(record['value']), 255)):
-${record['name'].rjust(column_width('name', records))} \
+${record['name'].ljust(column_width('name', records))} \
 IN \
 ${record['type'].ljust(column_width('type', records))} \
-"${part}"
+    % if record['type'] == 'TXT':
+      "${part}"
+    % else:
+      ${part}
+    % endif
   % endfor
 % endfor

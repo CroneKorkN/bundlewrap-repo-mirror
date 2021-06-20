@@ -1,0 +1,8 @@
+% for zone in zones:
+zone "${zone}" {
+        type master;
+        file "/var/lib/bind/db.${zone}";
+};
+% endfor
+
+// include "/etc/bind/zones.rfc1918";

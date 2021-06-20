@@ -15,6 +15,7 @@
     ],
     'metadata': {
         'bind': {
+            'domain': 'ns.sublimity.de',
             'zones': {
                 'mail2.sublimity.de': [],
                 'sublimity.de': [],

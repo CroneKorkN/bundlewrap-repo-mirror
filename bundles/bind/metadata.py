@@ -1,3 +1,6 @@
+from ipaddress import ip_interface
+
+
 defaults = {
     'apt': {
         'packages': {
@@ -13,19 +16,37 @@ defaults = {
 @metadata_reactor.provides(
     'bind/zones',
 )
+def dns(metadata):
+    return {
+        'dns': {
+            'ns.sublimity.de': {
+                'A': [
+                    str(ip_interface(metadata.get('network/ipv4')).ip)
+                ],
+                'AAAA': [
+                    str(ip_interface(metadata.get('network/ipv6')).ip)
+                ]
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'bind/zones',
+)
 def collect_records(metadata):
-    zones = metadata.get('bind/zones')
+    zones = {}
     
     for other_node in repo.nodes:
         for fqdn, records in other_node.metadata.get('dns').items():
             matching_zones = sorted(
                 filter(
                     lambda potential_zone: fqdn.endswith(potential_zone),
-                    zones
+                    metadata.get('bind/zones').keys()
                 ),
                 key=len,
             )
-            
+
             if matching_zones:
                 zone = matching_zones[0]
             else:
@@ -44,5 +65,20 @@ def collect_records(metadata):
     return {
         'bind': {
             'zones': zones,
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'bind/zones',
+)
+def ns_records(metadata):
+    return {
+        'bind': {
+            'zones': {
+                zone: [
+                    {'name': '', 'type': 'NS', 'value': f"{metadata.get('bind/domain')}."},
+                ] for zone in metadata.get('bind/zones').keys()
+            },
         },
     }
