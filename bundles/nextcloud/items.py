@@ -21,7 +21,7 @@ actions['delete_nextcloud'] = {
     'triggered': True,
 }
 actions['extract_nextcloud'] = {
-    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --exclude "^config" --strip 1 -C /opt/nextcloud nextcloud',
+    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --skip-old-files --strip 1 -C /opt/nextcloud nextcloud',
     'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
     'preceded_by': [
         'action:delete_nextcloud',
@@ -43,6 +43,7 @@ directories['/opt/nextcloud'] = {}
 directories['/var/lib/nextcloud'] = {
     'owner': 'www-data',
     'group': 'www-data',
+    'mode': '770',
 }
 directories['/var/lib/nextcloud/.apps'] = {
     'owner': 'www-data',
