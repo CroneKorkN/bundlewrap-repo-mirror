@@ -3,7 +3,7 @@
 FILENAME=$1
 TMPFILE=$(mktemp /tmp/archive_file.XXXXXXXXXX)
 BUCKET=$(cat /etc/gcloud/gcloud.json | jq -r .bucket)
-NODE=$(cat /etc/archive/archive.json | jq -r .node_name)
+NODE=$(cat /etc/archive/archive.json | jq -r .node_id)
 MASTERKEY=$(cat /etc/gocryptfs/masterkey)
 
 gsutil cat "gs://$BUCKET/$NODE$FILENAME" > "$TMPFILE"

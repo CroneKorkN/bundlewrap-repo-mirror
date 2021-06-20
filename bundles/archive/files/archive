@@ -24,6 +24,6 @@ gsutil ${'\\'}
     -x '${'|'.join(options['exclude'])}' ${'\\'}
 % endif
     '${options['encrypted_path']}' ${'\\'}
-    'gs://${bucket}/${node.name}${path}' ${'\\'}
+    'gs://${bucket}/${node_id}${path}' ${'\\'}
     2>&1 | logger -st gsutil
 % endfor

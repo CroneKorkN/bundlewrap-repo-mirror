@@ -11,7 +11,7 @@ directories['/etc/archive'] = {}
 files['/etc/archive/archive.json'] = {
     'content': dumps(
         {
-            'node_name': node.name,
+            'node_id': node.metadata.get('id'),
             **node.metadata.get('archive'),
         },
         indent=4,
@@ -23,6 +23,7 @@ files['/opt/archive/archive'] = {
     'content_type': 'mako',
     'mode': '700',
     'context': {
+        'node_id': node.metadata.get('id'),
         'paths': node.metadata.get('archive/paths'),
         'bucket': node.metadata.get('gcloud/bucket'),
         'processes': 4,

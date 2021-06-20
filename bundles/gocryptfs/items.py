@@ -31,6 +31,9 @@ files['/etc/gocryptfs/gocryptfs.conf'] = {
 
 for path, options in node.metadata.get('gocryptfs/paths').items():
     directories[options['mountpoint']] = {
+        'preceded_by': [
+            f'svc_systemd:gocryptfs-{options["id"]}:stop',
+        ],
         'needed_by': [
             f'svc_systemd:gocryptfs-{options["id"]}',
         ],
