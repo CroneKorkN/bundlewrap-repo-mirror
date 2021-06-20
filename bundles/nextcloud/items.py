@@ -17,7 +17,7 @@ downloads[f'/tmp/nextcloud-{version}.tar.bz2'] = {
     'triggered': True,
 }
 actions['delete_nextcloud'] = {
-    'command': 'find /opt/nextcloud -maxdepth 1 ! -path /opt/nextcloud ! -name config ! -name userapps -exec rm -rf {} \;',
+    'command': 'rm -rf /opt/nextcloud/*',
     'triggered': True,
 }
 actions['extract_nextcloud'] = {
