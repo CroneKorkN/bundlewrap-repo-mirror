@@ -10,6 +10,12 @@ directories = {
             'action:apt_update',
         },
     },
+    '/etc/apt/trusted.gpg.d': {
+        'purge': True,
+        'triggers': {
+            'action:apt_update',
+        },
+    },
 } 
 
 files = {
@@ -38,18 +44,11 @@ for source_string in node.metadata.get('apt/sources'):
         .add(source)
 
 for host, sources in hosts.items():
-    matches = glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))
-    if matches:
-        path = f'/etc/apt/trusted.gpg.d/{basename(matches[0])}'
-        files[path] = {
-            'source': join(repo.path, 'data', 'apt', 'keys', basename(matches[0])),
-            'content_type': 'binary',
-            'triggers': {
-                'action:apt_update',
-            },
-        }
-        for source in sources:
-            source.options['signed-by'] = [path]
+    keyfile = basename(glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))[0])
+    destination_path = f'/etc/apt/trusted.gpg.d/{keyfile}'
+
+    for source in sources:
+        source.options['signed-by'] = [destination_path]
 
     files[f'/etc/apt/sources.list.d/{host}.list'] = {
         'content': '\n'.join(
@@ -62,6 +61,13 @@ for host, sources in hosts.items():
         },
     }
     
+    files[destination_path] = {
+        'source': join(repo.path, 'data', 'apt', 'keys', keyfile),
+        'content_type': 'binary',
+        'triggers': {
+            'action:apt_update',
+        },
+    }
 
 
 for package, options in node.metadata.get('apt/packages', {}).items():
