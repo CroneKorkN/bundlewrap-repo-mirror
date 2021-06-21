@@ -9,7 +9,7 @@ class AptSource():
     def __init__(self, string):
         if search(r'\[.*\]', string):
             self.options = {
-                k:v.split('=') for k,v in (
+                k:v.split(',') for k,v in (
                     e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
                 )
             }

@@ -16,7 +16,7 @@ directories = {
             'action:apt_update',
         },
     },
-} 
+}
 
 files = {
     '/etc/apt/sources.list': {
