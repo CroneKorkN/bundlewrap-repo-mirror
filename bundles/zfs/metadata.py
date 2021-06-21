@@ -8,6 +8,12 @@ defaults = {
                     'pkg_apt:zfs-dkms',
                 },
             },
+            'parted':{
+                'needed_by': {
+                    'pkg_apt:zfs-zed',
+                    'pkg_apt:zfsutils-linux',
+                },
+            },
             'zfs-dkms': {
                 'needed_by': {
                     'pkg_apt:zfs-zed',
