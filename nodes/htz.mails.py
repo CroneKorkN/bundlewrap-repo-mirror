@@ -13,6 +13,7 @@
         'wireguard',
         'zfs',
         'nextcloud',
+        'influxdb2',
     ],
     'metadata': {
         'bind': {
