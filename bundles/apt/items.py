@@ -38,6 +38,19 @@ for source_string in node.metadata.get('apt/sources'):
         .add(source)
 
 for host, sources in hosts.items():
+    matches = glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))
+    if matches:
+        path = f'/etc/apt/trusted.gpg.d/{basename(matches[0])}'
+        files[path] = {
+            'source': join(repo.path, 'data', 'apt', 'keys', basename(matches[0])),
+            'content_type': 'binary',
+            'triggers': {
+                'action:apt_update',
+            },
+        }
+        for source in sources:
+            source.options['signed-by'] = [path]
+
     files[f'/etc/apt/sources.list.d/{host}.list'] = {
         'content': '\n'.join(
             str(source) for source in sorted(sources)
@@ -49,15 +62,6 @@ for host, sources in hosts.items():
         },
     }
     
-    matches = glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))
-    if matches:
-        files[f'/etc/apt/trusted.gpg.d/{basename(matches[0])}'] = {
-            'source': join(repo.path, 'data', 'apt', 'keys', basename(matches[0])),
-            'content_type': 'binary',
-            'triggers': {
-                'action:apt_update',
-            },
-        }
 
 
 for package, options in node.metadata.get('apt/packages', {}).items():
