@@ -31,15 +31,17 @@ actions = {
 
 hosts = {}
 
-for source in node.metadata.get('apt/sources'):
-    host = repo.libs.apt.AptSource(source).url.hostname
+for source_string in node.metadata.get('apt/sources'):
+    source = repo.libs.apt.AptSource(source_string)
     hosts\
-        .setdefault(host, set())\
+        .setdefault(source.url.hostname, set())\
         .add(source)
 
 for host, sources in hosts.items():
     files[f'/etc/apt/sources.list.d/{host}.list'] = {
-        'content': '\n'.join(sorted(sources)).format(
+        'content': '\n'.join(
+            str(source) for source in sorted(sources)
+        ).format(
             release=node.metadata.get('os_release')
         ),
         'triggers': {
