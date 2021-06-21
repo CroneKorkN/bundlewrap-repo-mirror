@@ -32,7 +32,7 @@ actions = {
 hosts = {}
 
 for source in node.metadata.get('apt/sources'):
-    host = urlparse(source.split()[1]).hostname
+    host = repo.libs.apt.AptSource(source).url.hostname
     hosts\
         .setdefault(host, set())\
         .add(source)

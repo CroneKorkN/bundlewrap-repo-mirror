@@ -1,15 +1,18 @@
 # https://manpages.debian.org/jessie/apt/sources.list.5.de.html
 from urllib.parse import urlparse
-from re import search, sub
+from re import match, search, sub
 
 
 class AptSource():
     def __init__(self, string):
-        self.options = {
-            k:v.split('=') for k,v in (
-                e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
-            )
-        }
+        if match(r'\[.*\]', string):
+            self.options = {
+                k:v.split('=') for k,v in (
+                    e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
+                )
+            }
+        else:
+            self.options = {}
         parts = sub(r'\[.*\]', '', string).split()
         self.type = parts[0]
         self.url = urlparse(parts[1])
