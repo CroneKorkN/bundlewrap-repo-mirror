@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PATH=$1
+SERVER=$(jq -r .server < /etc/backup/config.json)
+
+if zfs list -H -o mountpoint | grep -q "$PATH"
+then
+  TYPE=zfs
+elif test -d "$PATH"
+then
+  TYPE=directory
+elif test -f "$PATH"
+then
+  TYPE=file
+else
+  echo "UNKNOWN TYPE: $PATH"
+  exit 1
+fi

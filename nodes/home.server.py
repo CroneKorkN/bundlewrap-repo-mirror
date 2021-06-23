@@ -22,6 +22,7 @@
             'domain': 'git.sublimity.de',
         },
         'wireguard': {
+            # iptables -t nat -A POSTROUTING -o enp1s0f0 -j MASQUERADE
             'my_ip': '172.19.136.1/22',
             'peers': {
                 'htz.mails': {},

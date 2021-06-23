@@ -11,10 +11,11 @@ ListenPort=51820
 # Peer ${peer}
 [WireGuardPeer]
 PublicKey=${config['pubkey']}
+AllowedIPs=0.0.0.0/0
 %   if len(peers) == 1: # FIXME
-AllowedIPs=${network}
+#AllowedIPs=${network}
 %   else:
-AllowedIPs=${','.join(sorted(config['ips']))}
+#AllowedIPs=${','.join(sorted(config['ips']))}
 %   endif
 PresharedKey=${config['psk']}
 %   if 'endpoint' in config:
