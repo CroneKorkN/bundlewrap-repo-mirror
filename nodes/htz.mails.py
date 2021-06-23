@@ -9,11 +9,10 @@
         'dnsserver',
     ],
     'bundles': [
-        'gcloud',
         'wireguard',
+        'nextcloud', #TEMP
+        'influxdb2', #TEMP
         'zfs',
-        'nextcloud',
-        'influxdb2',
     ],
     'metadata': {
         'bind': {

@@ -5,6 +5,11 @@ defaults = {
             'postfix-pgsql': {},
         }
     },
+    'backup': {
+        'paths': [
+            '/var/vmail',
+        ],
+    },
     'letsencrypt': {
         'reload_after': {
             'postfix',

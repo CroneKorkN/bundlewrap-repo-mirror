@@ -31,7 +31,7 @@ defaults = {
         },
     },
     'backup': {
-        'files': [
+        'paths': [
             '/etc/nextcloud/config.php',
         ],
     },
@@ -61,7 +61,7 @@ defaults = {
     },
     'zfs': {
         'datasets': {
-            'tank/nexcloud': {
+            'tank/nextcloud': {
                 'mountpoint': '/var/lib/nextcloud',
             },
         },

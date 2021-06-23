@@ -54,3 +54,17 @@ def dataset_defaults(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'backup/paths'
+)
+def backup(metadata):
+    return {
+        'backup': {
+            'paths': [
+                options['mountpoint'] for options in metadata.get('zfs/datasets').values()
+                    if options.get('backup', True)
+            ],
+        },
+    }

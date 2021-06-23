@@ -1,4 +1,14 @@
 defaults = {
+    'apt': {
+        'packages': {
+            'postgresql': {},
+        },
+    },
+    'backup': {
+        'paths': [
+            '/var/lib/postgresql',
+        ],
+    },
     'postgresql': {
         'roles': {
             'root': {
@@ -7,11 +17,6 @@ defaults = {
             },
         },
         'databases': {},
-    },
-    'apt': {
-        'packages': {
-            'postgresql': {},
-        },
     },
 }
 

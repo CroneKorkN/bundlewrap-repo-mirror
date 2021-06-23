@@ -60,6 +60,13 @@ defaults = {
             },
         },
     },
+    'zfs': {
+        'datasets': {
+            'tank/gitea': {
+                'mountpoint': '/var/lib/gitea',
+            },
+        },
+    },
 }
 
 
