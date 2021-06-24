@@ -1,7 +1,8 @@
-% for i, (segment, options) in enumerate(data.items()):
-% if i > 0:
+from mako.template import Template
 
-% endif
+template = '''
+% for i, (segment, options) in enumerate(data.items()):
+
 [${segment}]
 %     for option, value in options.items():
 %         if isinstance(value, dict):
@@ -17,3 +18,7 @@ ${option}=${value}
 %         endif
 %     endfor
 % endfor
+'''
+
+def generate_unitfile(data):
+    return Template(template).render(data=data).lstrip()

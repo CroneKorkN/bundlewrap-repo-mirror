@@ -28,12 +28,8 @@ for name, service in node.metadata.get('systemd/services').items():
     # create unit file
     unit_path = f'/etc/systemd/system/{name}.service'
     files[unit_path] = {
-        'source':       'unitfile',
-        'content_type': 'mako',
-        'context':      {
-            'data': content_data,
-        },
-        'triggers':     [
+        'content': repo.libs.systemd.generate_unitfile(content_data),
+        'triggers': [
             'action:systemd-reload',
             f'svc_systemd:{name}:restart',
         ],

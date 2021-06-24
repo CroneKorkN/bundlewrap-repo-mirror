@@ -82,6 +82,7 @@
             'cpu': 2,
         },
         'wireguard': {
+            # ip r add 10.0.0.0/24 via 172.19.136.2 dev wg0
             'my_ip': '172.19.136.2/22',
             'peers': {
                 'home.server': {},
