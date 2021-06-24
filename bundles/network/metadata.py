@@ -2,24 +2,36 @@ from ipaddress import ip_interface
 
 
 @metadata_reactor.provides(
-    'interfaces',
+    'systemd-networkd/networks',
 )
 def interfaces(metadata):
-    interface = {
-        'ips': [],
+    network = {
+        'Match': {
+            'Name': metadata.get('network/interface'),
+        },
+        'Network': {
+            'DHCP': 'no',
+            'IPv6AcceptRA': 'no',
+        }
     }
     
-    if metadata.get('network/ipv4', None):
-        interface['ips'].append(metadata.get('network/ipv4'))
-        interface['gateway4'] = metadata.get('network/gateway4')
-    
-    if metadata.get('network/ipv6', None):
-        interface['ips'].append(metadata.get('network/ipv6'))
-        interface['gateway6'] = metadata.get('network/gateway6')
+    for i in [4, 6]:
+        if metadata.get(f'network/ipv{i}', None):
+            network.update({
+                f'Address#ipv{i}': {
+                    'Address': metadata.get(f'network/ipv{i}'),
+                },
+                f'Route#ipv{i}': {
+                    'Gateway': metadata.get(f'network/gateway{i}'),
+                    'GatewayOnlink': 'yes',
+                }
+            })
     
     return {
-        'interfaces': {
-            metadata.get('network/interface'): interface,
+        'systemd-networkd': {
+            'networks': {
+                metadata.get('network/interface'): network,
+            }
         }
     }
 

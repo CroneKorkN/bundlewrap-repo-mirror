@@ -16,22 +16,6 @@ directories = {
     },
 }
 
-for interface, config in node.metadata['interfaces'].items():
-    files[f'/etc/systemd/network/{interface}.network'] = {
-        'source': 'interface.network',
-        'content_type': 'mako',
-        'context': {
-            'interface': interface,
-            'config': config,
-        },
-        'needed_by': {
-            'svc_systemd:systemd-networkd',
-        },
-        'triggers': {
-            'svc_systemd:systemd-networkd:restart',
-        },
-    }
-
 for type, path in {
     'networks': '/etc/systemd/network/{}.network',
     'netdevs': '/etc/systemd/network/{}.netdev',
