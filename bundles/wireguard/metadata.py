@@ -1,4 +1,4 @@
-from ipaddress import ip_network
+from ipaddress import ip_network, ip_interface
 
 from bundlewrap.exceptions import NoSuchNode
 from bundlewrap.metadata import atomic
@@ -14,6 +14,70 @@ defaults = {
         'privatekey': repo.libs.keys.gen_privkey(repo, f'{node.name} wireguard privatekey'),
     },
 }
+
+
+@metadata_reactor.provides(
+    'systemd-networkd/networks',
+)
+def systemd_networkd_networks(metadata):
+    return {
+        'systemd-networkd': {
+            'networks': {
+                'wg0': {
+                    'Match': {
+                        'Name': 'wg0',
+                    },
+                    'Address': {
+                        'Address': metadata.get('wireguard/my_ip'),
+                    },
+                    'Route': {
+                        'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
+                        'GatewayOnlink': 'yes',
+                    },
+                    'Network': {
+                        'DHCP': 'no',
+                        'IPv6AcceptRA': 'no',
+                    },
+                },
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'systemd-networkd/netdevs',
+)
+def systemd_networkd_netdevs(metadata):
+    wg0 = {
+        'NetDev': {
+            'Name': 'wg0',
+            'Kind': 'wireguard',
+            'Description': 'WireGuard server',
+        },
+        'WireGuard': {
+            'PrivateKey': metadata.get('wireguard/privatekey'),
+            'ListenPort': 51820,
+        },
+    }
+    
+    for name, config in metadata.get('wireguard/peers').items():
+        wg0.update({
+            f'WireGuardPeer#{name}': {
+                'Endpoint': config['endpoint'],
+                'PublicKey': config['pubkey'],
+                'PresharedKey': config['psk'],
+                'AllowedIPs': '0.0.0.0/0', # FIXME
+                'PersistentKeepalive': 30,
+            }
+        })
+    
+    return {
+        'systemd-networkd': {
+            'netdevs': {
+                'wg0': wg0,
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(
@@ -92,49 +156,5 @@ def peer_ips_and_endpoints(metadata):
     return {
         'wireguard': {
             'peers': peers,
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'interfaces/wg0/ips',
-)
-def interface_ips(metadata):
-    return {
-        'interfaces': {
-            'wg0': {
-                'ips': {
-                    metadata.get('wireguard/my_ip'),
-                },
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'interfaces/wg0/routes',
-)
-def routes(metadata):
-    network = ip_network(metadata.get('wireguard/my_ip'), strict=False)
-    ips = {
-        f'{network.network_address}/{network.prefixlen}',
-    }
-    routes = {}
-
-    for _, peer_config in metadata.get('wireguard/peers', {}).items():
-        for ip in peer_config['ips']:
-            ips.add(ip)
-
-    if '0.0.0.0/0' in ips:
-        ips.remove('0.0.0.0/0')
-
-    for ip in repo.libs.tools.remove_more_specific_subnets(ips):
-        routes[ip] = {}
-
-    return {
-        'interfaces': {
-            'wg0': {
-                'routes': routes,
-            },
         },
     }

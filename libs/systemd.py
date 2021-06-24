@@ -1,9 +1,12 @@
 from mako.template import Template
 
 template = '''
-% for i, (segment, options) in enumerate(data.items()):
+% for segment, options in data.items():
 
-[${segment}]
+%     if '#' in segment:
+# ${segment.split('#', 2)[1]}
+%     endif
+[${segment.split('#')[0]}]
 %     for option, value in options.items():
 %         if isinstance(value, dict):
 %             for k, v in value.items():
@@ -13,8 +16,8 @@ ${option}=${k}=${v}
 %             for item in sorted(value):
 ${option}=${item}
 %             endfor
-%         elif isinstance(value, str):
-${option}=${value}
+%         else:
+${option}=${str(value)}
 %         endif
 %     endfor
 % endfor
