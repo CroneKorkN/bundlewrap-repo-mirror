@@ -11,7 +11,7 @@ defaults = {
         },
     },
     'wireguard': {
-        'privatekey': repo.libs.keys.gen_privkey(repo, f'{node.name} wireguard privatekey'),
+        'privatekey': repo.vault.random_bytes_as_base64_for(f'{node.name} wireguard privatekey'),
     },
 }
 
@@ -85,74 +85,24 @@ def systemd_networkd_netdevs(metadata):
 @metadata_reactor.provides(
     'wireguard/peers',
 )
-def peer_psks(metadata):
+def peer_keys(metadata):
     peers = {}
 
     for peer_name in metadata.get('wireguard/peers', {}):
-        peers[peer_name] = {}
-
-        if node.name < peer_name:
-            peers[peer_name] = {
-                'psk': repo.vault.random_bytes_as_base64_for(f'{node.name} wireguard {peer_name}'),
-            }
-        else:
-            peers[peer_name] = {
-                'psk': repo.vault.random_bytes_as_base64_for(f'{peer_name} wireguard {node.name}'),
-            }
-
-    return {
-        'wireguard': {
-            'peers': peers,
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/peers',
-)
-def peer_pubkeys(metadata):
-    peers = {}
-
-    for peer_name in metadata.get('wireguard/peers', {}):
-        try:
-            rnode = repo.get_node(peer_name)
-        except NoSuchNode:
-            continue
-
+        peer_node = repo.get_node(peer_name)
+        
+        first, second = sorted([node.name, peer_name])
+        psk = repo.vault.random_bytes_as_base64_for(f'{first} wireguard {second}')
+        
+        pubkey = repo.libs.keys.get_pubkey_from_privkey(
+            f'{peer_name} wireguard pubkey',
+            peer_node.metadata.get('wireguard/privatekey'),
+        )
+        
         peers[peer_name] = {
-            'pubkey': repo.libs.keys.get_pubkey_from_privkey(
-                repo,
-                f'{rnode.name} wireguard pubkey',
-                rnode.metadata.get('wireguard/privatekey'),
-            ),
-        }
-
-    return {
-        'wireguard': {
-            'peers': peers,
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/peers',
-)
-def peer_ips_and_endpoints(metadata):
-    peers = {}
-
-    for peer_name in metadata.get('wireguard/peers', {}):
-        try:
-            rnode = repo.get_node(peer_name)
-        except NoSuchNode:
-            continue
-
-        ips = rnode.metadata.get('wireguard/subnets', set())
-        ips.add(rnode.metadata.get('wireguard/my_ip').split('/')[0])
-        ips = repo.libs.tools.remove_more_specific_subnets(ips)
-
-        peers[rnode.name] = {
-            'endpoint': '{}:51820'.format(rnode.metadata.get('wireguard/external_hostname', rnode.hostname)),
-            'ips': ips,
+            'psk': psk,
+            'pubkey': pubkey,
+            'endpoint': f'{peer_node.hostname}:51820',
         }
 
     return {
