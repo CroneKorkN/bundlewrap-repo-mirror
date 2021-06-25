@@ -24,6 +24,16 @@ def zfs(metadata):
                 'mountpoint': f"/mnt/backups/{other_node.metadata.get('id')}",
                 'backup': False,
             }
+            
+            if other_node.has_bundle('zfs'):
+                for path in other_node.metadata.get('backup/paths'):
+                    for dataset, config in other_node.metadata.get('zfs/datasets').items():
+                        if path == config.get('mountpoint'):
+                            datasets[f"tank/{other_node.metadata.get('id')}/{dataset}"] = {
+                                'mountpoint': 'none',
+                                'backup': False,
+                            }
+
 
     return {
         'zfs': {
