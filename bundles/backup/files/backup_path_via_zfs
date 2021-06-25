@@ -34,11 +34,11 @@ fi
 
 if [[ "$?" == "0" ]]
 then
-  echo "SUCCESS"
   zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
   zfs destroy "$source_dataset@$new_bookmark"
+  echo "SUCCESS"
 else
-  echo "ERROR"
   zfs destroy "$source_dataset@$new_bookmark"
+  echo "ERROR"
   exit 99
 fi

@@ -29,6 +29,7 @@ defaults = {
                 },
             },
             'zfsutils-linux': {
+                'backports': True,
                 'needed_by': {
                     'pkg_apt:zfs-zed',
                     'zfs_dataset:',

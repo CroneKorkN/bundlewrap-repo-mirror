@@ -33,10 +33,10 @@ for name, config in node.metadata.get('zfs/datasets', {}).items():
 for name, config in node.metadata.get('zfs/pools', {}).items():
     zfs_pools[name] = config
 
-    # actions[f'pool_{name}_enable_trim'] = {
-    #    'command': f'zpool set autotrim=on {name}',
-    #    'unless':  f'zpool get autotrim -H -o value {name} | grep -q on',
-    #    'needs':   [
-    #        f'zfs_pool:{name}'
-    #    ]
-    # }
+    actions[f'pool_{name}_enable_trim'] = {
+       'command': f'zpool set autotrim=on {name}',
+       'unless':  f'zpool get autotrim -H -o value {name} | grep -q on',
+       'needs':   [
+           f'zfs_pool:{name}'
+       ]
+    }
