@@ -78,6 +78,9 @@
             'version': '1.4.11',
             'installer': True,
         },
+        'users': {
+            'test': {},
+        },
         'vm': {
             'cpu': 2,
         },

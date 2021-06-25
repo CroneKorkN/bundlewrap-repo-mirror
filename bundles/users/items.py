@@ -1,35 +1,29 @@
-from os.path import join, exists
+for group, config in node.metadata.get('groups', {}).items():
+    groups[group] = config
 
-for group, attrs in node.metadata.get('groups', {}).items():
-    groups[group] = attrs
-
-for username, attrs in node.metadata['users'].items():
-    home = attrs.get('home', '/home/{}'.format(username))
-
-    user = users.setdefault(username, {})
-
-    user['home'] = home
-    user['shell'] = attrs.get('shell', '/bin/bash')
-
-    if 'password' in attrs:
-        user['password'] = attrs['password']
-    else:
-        user['password_hash'] = 'x' if node.use_shadow_passwords else '*'
-
-    if 'groups' in attrs:
-        user['groups'] = attrs['groups']
-
-    directories[home] = {
-        'owner': username,
-        'mode': attrs.get('home-mode', '0700'),
+for name, config in node.metadata.get('users').items():
+    users[name] = {
+        k:v for k,v in config.items() if k in [
+            "full_name", "gid", "groups", "home", "password_hash", "shell", "uid", 
+        ]
     }
 
-    if 'ssh_pubkey' in attrs:
-        files[home + '/.ssh/authorized_keys'] = {
-            'content': '\n'.join(sorted(attrs['ssh_pubkey'])) + '\n',
-            'owner': username,
-            'mode': '0600',
-        }
+    directories[config['home']] = {
+        'owner': name,
+    }
 
-    elif not attrs.get('do_not_remove_authorized_keys_from_home', False):
-        files[home + '/.ssh/authorized_keys'] = {'delete': True}
+    files[f"{config['home']}/.ssh/id_{config['keytype']}"] = {
+        'content': config['privkey'],
+        'owner': name,
+        'mode': '0600',
+    }
+    files[f"{config['home']}/.ssh/id_{config['keytype']}.pub"] = {
+        'content': config['pubkey'],
+        'owner': name,
+        'mode': '0600',
+    }
+    files[config['home'] + '/.ssh/authorized_keys'] = {
+        'content': '\n'.join(sorted(config['authorized_keys'])),
+        'owner': name,
+        'mode': '0600',
+    }
