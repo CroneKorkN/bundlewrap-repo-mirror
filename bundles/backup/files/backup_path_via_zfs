@@ -26,7 +26,7 @@ zfs snap $source_dataset@$new_bookmark
 if zfs list -t bookmark -H -o name | grep '#auto-backup' | wc -l | grep -q "^0$"
 then
   echo "INITIAL BACKUP"
-  zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv $target_dataset
+  zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv -F $target_dataset
 else
   echo "INCREMENTAL BACKUP"
   last_bookmark=$(zfs list -t bookmark -H -o name | sort | tail -1 | cut -d '#' -f 2)
