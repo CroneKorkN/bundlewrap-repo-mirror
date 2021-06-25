@@ -14,12 +14,6 @@ new_bookmark="auto-backup_$(date +"%Y-%m-%d_%H:%M:%S")"
 
 echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $TARGET_DATASET"
 
-# if ! $SSH zfs list -t filesystem -H -o name | grep -q "^$TARGET_DATASET$"
-# then
-#   echo "CREATING TARGET DATASET..."
-#   $ssh sudo zfs create -p -o mountpoint=none "$target_dataset"
-# fi
-
 zfs snap $source_dataset@$new_bookmark
 
 if zfs list -t bookmark -H -o name | grep '#auto-backup' | wc -l | grep -q "^0$"
