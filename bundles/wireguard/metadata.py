@@ -36,6 +36,8 @@ def systemd_networkd_networks(metadata):
                     },
                     'Network': {
                         'DHCP': 'no',
+                        'IPForward': 'yes',
+                        'IPMasquerade': 'yes',
                         'IPv6AcceptRA': 'no',
                     },
                 },

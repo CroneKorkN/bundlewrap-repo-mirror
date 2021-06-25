@@ -1,12 +1,12 @@
 {
     'hostname': '10.0.0.2',
     'groups': [
-        'debian-10',
         'archive',
+        'debian-10',
+#        'nextcloud',
     ],
     'bundles': [
         'gitea',
-        'nextcloud',
         'postgresql',
         'wireguard',
     ],
@@ -27,6 +27,6 @@
             'peers': {
                 'htz.mails': {},
             },
-        }, 
+        },
     },
 }

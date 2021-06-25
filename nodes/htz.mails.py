@@ -88,6 +88,16 @@
                 'home.server': {},
             },
         },
+        'systemd-networkd': {
+            'networks': {
+                'wg0': {
+                    'Route#10.0.0.0/24': {
+                        'Gateway': '172.19.136.2',
+                        'Destination': '10.0.0.0/24',
+                    },
+                },
+            },
+        },
         'zfs': {
             'pools': {
                 'tank': {
