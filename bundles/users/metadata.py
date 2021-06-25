@@ -21,6 +21,9 @@ def user(metadata):
             'authorized_keys': []
         }
 
+        if not 'full_name' in config:
+            users[name]['full_name'] = name
+
         if not 'home' in config:
             users[name]['home'] = f'/home/{name}'
 

@@ -10,6 +10,7 @@ for name, config in node.metadata.get('users').items():
 
     directories[config['home']] = {
         'owner': name,
+        'mode': '700',
     }
 
     files[f"{config['home']}/.ssh/id_{config['keytype']}"] = {
