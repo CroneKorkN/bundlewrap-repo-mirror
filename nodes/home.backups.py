@@ -9,6 +9,9 @@
     ],
     'metadata': {
         'id': '9cf52515-63a1-4659-a8ec-6c3c881727e5',
+        'backup-server': {
+            'hostname': 'backups.sublimity.de',
+        },
         'network': {
             'interface': 'enp1s0',
             'ipv4': '10.0.0.5/24',

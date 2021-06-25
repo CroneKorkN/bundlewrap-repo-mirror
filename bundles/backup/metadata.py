@@ -8,7 +8,4 @@ defaults = {
         'server': None,
         'paths': [],
     },
-    'users': {
-        'backup': {},
-    },
 }

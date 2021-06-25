@@ -18,7 +18,7 @@ def generate_ad25519_key_pair(secret):
         '-----BEGIN OPENSSH PRIVATE KEY-----',
         b64encode(deterministic_bytes).decode(),
         '-----END OPENSSH PRIVATE KEY-----',
-    ])
+    ]) + '\n'
 
     public_key = privkey_bytes.public_key().public_bytes(
         encoding=serialization.Encoding.OpenSSH,
