@@ -85,16 +85,12 @@
             # ip r add 10.0.0.0/24 via 172.19.136.2 dev wg0
             'my_ip': '172.19.136.2/22',
             'peers': {
-                'home.server': {},
-            },
-        },
-        'systemd-networkd': {
-            'networks': {
-                'wg0': {
-                    'Route#10.0.0.0/24': {
-                        'Gateway': '172.19.136.2',
-                        'Destination': '10.0.0.0/24',
-                    },
+                'home.server': {
+                    'route': [
+                        '10.0.0.0/24',
+                        '10.0.2.0/24',
+                        '10.0.9.0/24',
+                    ]
                 },
             },
         },

@@ -20,27 +20,38 @@ defaults = {
     'systemd-networkd/networks',
 )
 def systemd_networkd_networks(metadata):
+    wg0 = {
+        'Match': {
+            'Name': 'wg0',
+        },
+        'Address': {
+            'Address': metadata.get('wireguard/my_ip'),
+        },
+        'Route': {
+            'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
+            'GatewayOnlink': 'yes',
+        },
+        'Network': {
+            'DHCP': 'no',
+            'IPForward': 'yes',
+            'IPMasquerade': 'yes',
+            'IPv6AcceptRA': 'no',
+        },
+    }
+
+    for peer in metadata.get('wireguard/peers').values():
+        for route in peer.get('route', []):
+            wg0.update({
+                f'Route#{route}': {
+                    'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
+                    'Destination': route,
+                }
+            })
+
     return {
         'systemd-networkd': {
             'networks': {
-                'wg0': {
-                    'Match': {
-                        'Name': 'wg0',
-                    },
-                    'Address': {
-                        'Address': metadata.get('wireguard/my_ip'),
-                    },
-                    'Route': {
-                        'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
-                        'GatewayOnlink': 'yes',
-                    },
-                    'Network': {
-                        'DHCP': 'no',
-                        'IPForward': 'yes',
-                        'IPMasquerade': 'yes',
-                        'IPv6AcceptRA': 'no',
-                    },
-                },
+                'wg0': wg0,
             },
         },
     }
