@@ -10,9 +10,16 @@ ssh="ssh -o StrictHostKeyChecking=no backup-receiver@$server"
 
 source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
 target_dataset="tank/$uuid/$source_dataset"
+target_dataset_parent=$(echo $target_dataset | rev | cut -d / -f 2- | rev)
 new_bookmark="auto-backup_$(date +"%Y-%m-%d_%H:%M:%S")"
 
 echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $TARGET_DATASET"
+
+if ! $ssh sudo zfs list -t filesystem -H -o name | grep -q "^$target_dataset_parent$"
+then
+  echo "CREATING PARENT DATASET..."
+  $ssh sudo zfs create -p -o mountpoint=none "$target_dataset_parent"
+fi
 
 zfs snap $source_dataset@$new_bookmark
 
