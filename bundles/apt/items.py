@@ -16,6 +16,12 @@ directories = {
             'action:apt_update',
         },
     },
+    '/etc/apt/preferences.d': {
+        'purge': True,
+        'triggers': {
+            'action:apt_update',
+        },
+    },
 }
 
 files = {
@@ -82,4 +88,10 @@ for package, options in node.metadata.get('apt/packages', {}).items():
                 f"Pin: release a={node.metadata.get('os_release')}-backports",
                 f"Pin-Priority: 900",
             ]),
+            'needed_by': [
+                f'pkg_apt:{package}',
+            ],
+            'triggers': {
+                'action:apt_update',
+            },
         }
