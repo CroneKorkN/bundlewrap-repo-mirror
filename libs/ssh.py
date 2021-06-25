@@ -24,4 +24,5 @@ def generate_ad25519_key_pair(secret):
         encoding=serialization.Encoding.OpenSSH,
         format=serialization.PublicFormat.OpenSSH,
     ).decode()
+    
     return (deterministic_privatekey, public_key)
