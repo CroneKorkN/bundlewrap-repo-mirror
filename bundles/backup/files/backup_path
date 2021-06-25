@@ -1,11 +1,37 @@
 #!/bin/bash
 
+set -e
+set -x
+
 PATH=$1
-SERVER=$(jq -r .server < /etc/backup/config.json)
+SERVER=$(jq -r .server_hostname < /etc/backup/config.json)
+UUID=$(jq -r .client_uuid < /etc/backup/config.json)
+
+echo "BACKUP - PATH: $PATH, SERVER: $SERVER, UUID: $UUID"
 
 if zfs list -H -o mountpoint | grep -q "$PATH"
 then
-  TYPE=zfs
+  SOURCE_DATASET=$(zfs list -H -o mountpoint,name | grep -P "^$PATH\t" | cut -d $'\t' -f 2)
+  SOURCE_DATASET_STRIPPED=$(echo $SOURCE_DATASET | cut -f / -d 2-)
+  TARGET_DATASET="tank/$UUID/$DATASET_NAME"
+  SSH="ssh backup-receiver@$SERVER"
+  DATE=$(date +"%Y-%m-%d_%H:%M:%S")
+  BOOKMARK="ATUO_BACKUP_$DATE"
+  echo "BACKUP ZFS DATASET - SOURCE_DATASET: $SOURCE_DATASET, TARGET_DATASET: $TARGET_DATASET"
+
+  if ! $SSH zfs list -t filesystem -H -o name | grep -q "^$TARGET_DATASET$"
+  then
+    echo "CREATING TARGET DATASET..."
+    zfs create -p -o mountpoint=none "$TARGET_DATASET"
+  fi
+
+  zfs snap $SOURCE_DATASET@$BOOKMARK
+  zfs bookmark $SOURCE_DATASET@$BOOKMARK $SOURCE_DATASET\#$BOOKMARK
+  zfs destroy $SOURCE_DATASET@$BOOKMARK
+  
+
+
+  zfs send -i tank/nextcloud@test1 tank/nextcloud@test2 | ssh backup-receiver@$SERVER sudo zfs recv tank/nextcloud
 elif test -d "$PATH"
 then
   TYPE=directory
