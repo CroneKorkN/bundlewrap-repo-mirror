@@ -1,0 +1,6 @@
+{
+    'bundles': [
+        'backup-server',
+        'zfs',
+    ],
+}

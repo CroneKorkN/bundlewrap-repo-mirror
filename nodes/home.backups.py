@@ -2,6 +2,7 @@
     'hostname': '10.0.0.5',
     'groups': [
         'debian-10',
+        'backup-server',
     ],
     'bundles': [
         'zfs',

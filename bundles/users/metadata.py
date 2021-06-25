@@ -30,10 +30,7 @@ def user(metadata):
         if not 'shell' in config:
             users[name]['shell'] = '/bin/bash'
             
-        if not 'password_hash' in config:
-            users[name]['password_hash'] = 'x' if node.use_shadow_passwords else '*'
-
-        if not 'privkey' in users[name]:
+        if not 'privkey' in users[name] and not 'pubkey' in users[name]:
             privkey, pubkey = repo.libs.ssh.generate_ad25519_key_pair(
                 b64decode(str(repo.vault.random_bytes_as_base64_for(metadata.get('id'), length=32)))
             )

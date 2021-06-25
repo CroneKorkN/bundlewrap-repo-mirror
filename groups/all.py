@@ -5,7 +5,7 @@
     ],
     'metadata': {
         'backup': {
-            'server': 'backups.sublimity.de',
+            'server': 'home.backups',
         },
         'dns': {},
         'users': {
