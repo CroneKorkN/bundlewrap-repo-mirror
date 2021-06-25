@@ -70,5 +70,16 @@ for host, sources in hosts.items():
     }
 
 
-for package, options in node.metadata.get('apt/packages', {}).items():
+for package, options in node.metadata.get('apt/packages', {}).items():    
     pkg_apt[package] = options
+
+    if options.get('backports', None):
+        pkg_apt[package].pop('backports')
+
+        files[f'/etc/apt/preferences.d/{package}'] = {
+            'content': '\n'.join([
+                f"Package: {package}",
+                f"Pin: release a={node.metadata.get('os_release')}-backports",
+                f"Pin-Priority: 900",
+            ]),
+        }

@@ -15,12 +15,14 @@ defaults = {
                 },
             },
             'zfs-dkms': {
+                'backports': True,
                 'needed_by': {
                     'pkg_apt:zfs-zed',
                     'pkg_apt:zfsutils-linux',
                 },
             },
             'zfs-zed': {
+                'backports': True,
                 'needed_by': {
                     'zfs_dataset:',
                     'zfs_pool:',
