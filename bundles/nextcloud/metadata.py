@@ -63,6 +63,9 @@ defaults = {
         'datasets': {
             'tank/nextcloud': {
                 'mountpoint': '/var/lib/nextcloud',
+                'needed_by': [
+                    'bundle:nextcloud',
+                ],
             },
         },
     },

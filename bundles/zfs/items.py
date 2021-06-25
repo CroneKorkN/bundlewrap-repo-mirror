@@ -26,10 +26,12 @@ svc_systemd = {
     },
 }
 
-zfs_datasets = node.metadata.get('zfs/datasets')
+for name, config in node.metadata.get('zfs/datasets', {}).items():
+    zfs_datasets[name] = config
+    zfs_datasets[name].pop('backup', None)
 
-for name, attrs in node.metadata.get('zfs/pools', {}).items():
-    zfs_pools[name] = attrs
+for name, config in node.metadata.get('zfs/pools', {}).items():
+    zfs_pools[name] = config
 
     # actions[f'pool_{name}_enable_trim'] = {
     #    'command': f'zpool set autotrim=on {name}',

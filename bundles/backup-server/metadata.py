@@ -10,6 +10,29 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'zfs/datasets'
+)
+def zfs(metadata):
+    datasets = {}
+    
+    for other_node in repo.nodes:
+        if (
+            other_node.has_bundle('backup') and
+            other_node.metadata.get('backup/server') == node.name
+        ):
+            datasets[f"tank/{other_node.metadata.get('id')}/fs"] = {
+                'mountpoint': f"/mnt/backups/{other_node.metadata.get('id')}",
+                'backup': False,
+            }
+
+    return {
+        'zfs': {
+            'datasets': datasets,
+        },
+    }
+
+
+@metadata_reactor.provides(
     'dns'
 )
 def dns(metadata):

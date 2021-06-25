@@ -1,6 +1,7 @@
 defaults = {
     'apt': {
         'packages': {
+            'jq': {},
             'rsync': {},
         },
     },

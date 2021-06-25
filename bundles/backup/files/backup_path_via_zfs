@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+set -x
+
+path=$1
+uuid=$(jq -r .client_uuid < /etc/backup/config.json)
+server=$(jq -r .server_hostname < /etc/backup/config.json)
+ssh="ssh -o StrictHostKeyChecking=no backup-receiver@$server"
+
+source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
+target_dataset="tank/$uuid/$source_dataset"
+new_bookmark="auto-backup_$(date +"%Y-%m-%d_%H:%M:%S")"
+
+echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $TARGET_DATASET"
+
+# if ! $SSH zfs list -t filesystem -H -o name | grep -q "^$TARGET_DATASET$"
+# then
+#   echo "CREATING TARGET DATASET..."
+#   $ssh sudo zfs create -p -o mountpoint=none "$target_dataset"
+# fi
+
+zfs snap $source_dataset@$new_bookmark
+
+if zfs list -t bookmark -H -o name | grep '#auto-backup' | wc -l | grep -q "^0$"
+then
+  echo "INITIAL BACKUP"
+  zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv $target_dataset
+else
+  echo "INCREMENTAL BACKUP"
+  last_bookmark=$(zfs list -t bookmark -H -o name | sort | tail -1 | cut -d '#' -f 2)
+  zfs send -v -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv $target_dataset
+fi
+
+if [[ "$?" == "0" ]]
+then
+  echo "SUCCESS"
+  zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
+  zfs destroy "$source_dataset@$new_bookmark"
+else
+  echo "ERROR"
+  zfs destroy "$source_dataset@$new_bookmark"
+  exit 99
+fi

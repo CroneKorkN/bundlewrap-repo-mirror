@@ -14,6 +14,10 @@ def create(node, path, options):
             option_list.append("-o {}={}".format(quote(option), quote(value)))
     option_args = " ".join(option_list)
 
+    print("zfs create {} {}".format(
+        option_args,
+        quote(path),
+    ))
     node.run(
         "zfs create {} {}".format(
             option_args,
