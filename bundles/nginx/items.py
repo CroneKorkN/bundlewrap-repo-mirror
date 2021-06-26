@@ -69,6 +69,7 @@ for vhost, config in node.metadata.get('nginx/vhosts', {}).items():
             'create_access_log': config.get('access_log', node.metadata.get('nginx/access_log', False)),
             'php_version': node.metadata.get('php/version', ''),
             'vhost': vhost,
+            'nameservers': node.metadata.get('nameservers'),
             **config,
         },
         'needs': set(),

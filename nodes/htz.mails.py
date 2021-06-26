@@ -19,7 +19,6 @@
         'bind': {
             'domain': 'ns.sublimity.de',
             'zones': {
-                'mail2.sublimity.de': [],
                 'sublimity.de': [],
                 'freibrief.net': [],
                 'nadenau.net': [],
@@ -70,7 +69,7 @@
             },
         },
         'mailserver': {
-            'hostname': 'mail2.sublimity.de',
+            'hostname': 'mail.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
             'domains': [
                 'mail3.sublimity.de',

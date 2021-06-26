@@ -8,6 +8,9 @@
             'server': 'home.backups',
         },
         'dns': {},
+        'nameservers': [
+            '10.0.10.2',
+        ],
         'users': {
             'root': {
                 'authorized_keys': [
