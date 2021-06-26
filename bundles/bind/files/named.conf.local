@@ -1,8 +1,13 @@
-% for zone in zones:
-zone "${zone}" {
-        type master;
-        file "/var/lib/bind/db.${zone}";
+% for view in views:
+view "${view['name']}" {
+  match-clients {${' '.join(f'{e}; ' for e in view['acl'])}};
+  % for zone in zones:
+  zone "${zone}" {
+    type master;
+    file "/var/lib/bind/${view['name']}/db.${zone}";
+  };
+  % endfor
+  include "/etc/bind/named.conf.default-zones";
+  include "/etc/bind/zones.rfc1918";
 };
 % endfor
-
-include "/etc/bind/zones.rfc1918";

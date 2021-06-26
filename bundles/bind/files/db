@@ -1,6 +1,6 @@
 <%!
 def column_width(column, table):
-    return max(map(lambda row: len(row[column]), table)) if table else 0
+    return max(map(lambda row: len(row[column]), table)) if table else 0    
 %>\
 $TTL 600
 @   IN  SOA        ns.sublimity.de. admin.sublimity.de. (
@@ -15,9 +15,9 @@ $TTL 600
 ${(record['name'] or '@').ljust(column_width('name', records))} \
 IN \
 ${record['type'].ljust(column_width('type', records))} \
-  % if record['type'] == 'TXT':
+    % if record['type'] == 'TXT':
 (${' '.join('"'+record['value'][i:i+255]+'"' for i in range(0, len(record['value']), 255))})
-  % else:
+    % else:
 ${record['value']}
-  % endif
+    % endif
 % endfor
