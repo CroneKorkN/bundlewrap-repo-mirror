@@ -1,7 +1,19 @@
 % for view in views:
+acl "${view['name']}" {
+  ${' '.join(f'{e};' for e in view['acl'])}
+};
+% endfor
+
+% for view in views:
 view "${view['name']}" {
-  match-clients {${' '.join(f'{e}; ' for e in view['acl'])}};
+  match-clients { ${view['name']}; };
   recursion yes;
+  forward only;
+  forwarders {
+    1.1.1.1;
+    9.9.9.9;
+    8.8.8.8;
+  };
   % for zone in zones:
   zone "${zone}" {
     type master;
