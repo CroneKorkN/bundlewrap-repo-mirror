@@ -29,13 +29,13 @@ fi
 
 zfs snap "$source_dataset@$new_bookmark"
 
-if zfs list -t bookmark -H -o name | grep "#$bookmark_prefix" | wc -l | grep -q "^0$"
+if zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | wc -l | grep -q "^0$"
 then
   echo "INITIAL BACKUP"
   zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv -F "$target_dataset"
 else
   echo "INCREMENTAL BACKUP"
-  last_bookmark=$(zfs list -t bookmark -H -o name | grep "#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
+  last_bookmark=$(zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
   [[ -z "$last_bookmark" ]] && echo "ERROR - last_bookmark is empty" && exit 98
   zfs send -v -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv "$target_dataset"
 fi
