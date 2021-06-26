@@ -1,6 +1,7 @@
 {
     'dummy': True,
     'groups': [
+        'backup',
         'debian-10',
     ],
     'bundles': [

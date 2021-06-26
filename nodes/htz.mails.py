@@ -2,6 +2,7 @@
     'hostname': '162.55.188.157',
     'groups': [
         'archive',
+        'backup',
         'hetzner-cloud',
         'debian-10',
         'mailserver',
@@ -108,6 +109,7 @@
                         '10.0.9.0/24',
                     ]
                 },
+                'netcup.secondary': {},
             },
         },
         'zfs': {

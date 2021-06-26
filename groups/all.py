@@ -1,12 +1,8 @@
 {
     'bundles': [
-        'backup',
         'users',
     ],
     'metadata': {
-        'backup': {
-            'server': 'home.backups',
-        },
         'dns': {},
         'nameservers': [
             '10.0.10.2',

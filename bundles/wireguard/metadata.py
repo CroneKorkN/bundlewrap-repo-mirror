@@ -7,7 +7,12 @@ from bundlewrap.metadata import atomic
 defaults = {
     'apt': {
         'packages': {
-            'wireguard': {},
+            'wireguard': {
+                'backports': True,
+                'triggers': [
+                    'svc_systemd:systemd-networkd:restart',
+                ],
+            },
         },
     },
     'wireguard': {

@@ -11,7 +11,13 @@ ssh="ssh -o StrictHostKeyChecking=no backup-receiver@$server"
 source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
 target_dataset="tank/$uuid/$source_dataset"
 target_dataset_parent=$(echo $target_dataset | rev | cut -d / -f 2- | rev)
-new_bookmark="auto-backup_$(date +"%Y-%m-%d_%H:%M:%S")"
+bookmark_prefix="auto-backup_"
+new_bookmark="$bookmark_prefix$(date +"%Y-%m-%d_%H:%M:%S")"
+
+for var in path uuid server ssh source_dataset target_dataset target_dataset_parent new_bookmark
+do
+  [[ -z "${!var}" ]] && echo "ERROR - $var is empty" && exit 97
+done
 
 echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $TARGET_DATASET"
 
@@ -21,16 +27,17 @@ then
   $ssh sudo zfs create -p -o mountpoint=none "$target_dataset_parent"
 fi
 
-zfs snap $source_dataset@$new_bookmark
+zfs snap "$source_dataset@$new_bookmark"
 
-if zfs list -t bookmark -H -o name | grep '#auto-backup' | wc -l | grep -q "^0$"
+if zfs list -t bookmark -H -o name | grep "#$bookmark_prefix" | wc -l | grep -q "^0$"
 then
   echo "INITIAL BACKUP"
-  zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv -F $target_dataset
+  zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv -F "$target_dataset"
 else
   echo "INCREMENTAL BACKUP"
-  last_bookmark=$(zfs list -t bookmark -H -o name | sort | tail -1 | cut -d '#' -f 2)
-  zfs send -v -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv $target_dataset
+  last_bookmark=$(zfs list -t bookmark -H -o name | grep "#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
+  [[ -z "$last_bookmark" ]] && echo "ERROR - last_bookmark is empty" && exit 98
+  zfs send -v -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv "$target_dataset"
 fi
 
 if [[ "$?" == "0" ]]
