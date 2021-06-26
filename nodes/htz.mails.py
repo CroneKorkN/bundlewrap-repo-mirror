@@ -41,9 +41,15 @@
             },
         },
         'network': {
-            'interface': 'eth0',
-            'ipv4': '162.55.188.157/32',
-            'ipv6': '2a01:4f8:1c1c:4121::1/64',
+            'internal': {
+                'interface': 'ens10',
+                'ipv4': '10.0.10.2/32',
+            },
+            'external': {
+                'interface': 'eth0',
+                'ipv4': '162.55.188.157/32',
+                'ipv6': '2a01:4f8:1c1c:4121::2/64',
+            }
         },
         'nginx': {
             'vhosts': {

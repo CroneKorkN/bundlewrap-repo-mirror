@@ -1,37 +1,43 @@
 from ipaddress import ip_interface
 
+defaults = {
+    'network': {
+    }
+}
+
 
 @metadata_reactor.provides(
     'systemd-networkd/networks',
 )
-def interfaces(metadata):
-    network = {
-        'Match': {
-            'Name': metadata.get('network/interface'),
-        },
-        'Network': {
-            'DHCP': 'no',
-            'IPv6AcceptRA': 'no',
-        }
-    }
+def systemd_networkd(metadata):
+    units = {}
     
-    for i in [4, 6]:
-        if metadata.get(f'network/ipv{i}', None):
-            network.update({
-                f'Address#ipv{i}': {
-                    'Address': metadata.get(f'network/ipv{i}'),
-                },
-                f'Route#ipv{i}': {
-                    'Gateway': metadata.get(f'network/gateway{i}'),
-                    'GatewayOnlink': 'yes',
-                }
-            })
+    for type, network in metadata.get('network').items():
+        units[type] = {
+            'Match': {
+                'Name': network['interface'],
+            },
+            'Network': {
+                'DHCP': 'no',
+                'IPv6AcceptRA': 'no',
+            }
+        }
+        
+        for i in [4, 6]:
+            if network.get(f'ipv{i}', None):
+                units[type].update({
+                    f'Address#ipv{i}': {
+                        'Address': network[f'ipv{i}'],
+                    },
+                    f'Route#ipv{i}': {
+                        'Gateway': network[f'gateway{i}'],
+                        'GatewayOnlink': 'yes',
+                    }
+                })
     
     return {
         'systemd-networkd': {
-            'networks': {
-                metadata.get('network/interface'): network,
-            }
+            'networks': units,
         }
     }
 
@@ -41,13 +47,19 @@ def interfaces(metadata):
     'network/gateway6',
 )
 def guess_gateway(metadata):
-    if metadata.get('network/gateway4', None):
-        return {}
-    else:
-        return {
-            'network': {
-                'gateway4': str(
-                    ip_interface(metadata.get('network/ipv4')).network[1]
-                ),
-            }
-        }
+    networks = {}
+    
+    for type, network in metadata.get('network').items():
+        if not network.get('gateway4', None):
+            if ip_interface(network['ipv4']).network.prefixlen == 32:
+                networks[type] = {
+                    'gateway4': str(ip_interface(network['ipv4']).network[0]),
+                }
+            else:
+                networks[type] = {
+                    'gateway4': str(ip_interface(network['ipv4']).network[1]),
+                }
+    
+    return {
+        'network': networks,
+    }

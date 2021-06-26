@@ -13,8 +13,10 @@
             'hostname': 'backups.sublimity.de',
         },
         'network': {
-            'interface': 'enp1s0',
-            'ipv4': '10.0.0.5/24',
+            'internal': {
+                'interface': 'enp1s0',
+                'ipv4': '10.0.0.5/24',
+            },
         },
         'zfs': {
             'pools': {

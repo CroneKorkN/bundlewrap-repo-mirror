@@ -19,16 +19,18 @@ def dns(metadata):
     dns = {}
     
     for config in metadata.get('nginx/vhosts', {}).values():
-        dns[config['domain']] = {}
-        
-        if metadata.get('network/ipv4'):
-            dns[config['domain']]['A'] = [
-                str(ip_interface(metadata.get('network/ipv4')).ip)
-            ]
-        if metadata.get('network/ipv6'):
-            dns[config['domain']]['AAAA'] = [
-                str(ip_interface(metadata.get('network/ipv6')).ip)
-            ]
+        dns[config['domain']] = {
+            'A': [
+                str(ip_interface(network['ipv4']).ip)
+                    for network in metadata.get('network').values()
+                    if 'ipv4' in network
+            ],
+            'AAAA': [
+                str(ip_interface(network['ipv6']).ip)
+                    for network in metadata.get('network').values()
+                    if 'ipv6' in network
+            ],
+        }
 
     return {
         'dns': dns,
