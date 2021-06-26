@@ -18,6 +18,26 @@ files['/etc/default/bind9'] = {
     ],
 }
 
+files['/etc/bind/named.conf'] = {
+    'owner': 'root',
+    'group': 'bind',
+    'needed_by': [
+        'svc_systemd:bind9',
+    ],
+    'triggers': [
+        'svc_systemd:bind9:restart',
+    ],
+}
+files['/etc/bind/named.conf.options'] = {
+    'owner': 'root',
+    'group': 'bind',
+    'needed_by': [
+        'svc_systemd:bind9',
+    ],
+    'triggers': [
+        'svc_systemd:bind9:restart',
+    ],
+}
 files['/etc/bind/named.conf.local'] = {
     'content_type': 'mako',
     'context': {

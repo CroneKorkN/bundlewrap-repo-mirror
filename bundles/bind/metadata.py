@@ -46,9 +46,8 @@ def collect_records(metadata):
                 ),
                 key=len,
             )
-
             if matching_zones:
-                zone = matching_zones[0]
+                zone = matching_zones[-1]
             else:
                 continue
 
@@ -77,7 +76,7 @@ def ns_records(metadata):
         'bind': {
             'zones': {
                 zone: [
-                    {'name': '', 'type': 'NS', 'value': f"{metadata.get('bind/domain')}."},
+                    {'name': '@', 'type': 'NS', 'value': f"{metadata.get('bind/domain')}."},
                 ] for zone in metadata.get('bind/zones').keys()
             },
         },

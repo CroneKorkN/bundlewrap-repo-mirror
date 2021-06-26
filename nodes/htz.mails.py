@@ -15,6 +15,7 @@
         'zfs',
     ],
     'metadata': {
+        'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'bind': {
             'domain': 'ns.sublimity.de',
             'zones': {
@@ -28,9 +29,17 @@
                 'wingl.de': [],
                 'woodpipe.de': [],
                 'ckn.li': [],
+                'islamicstate.eu': [],
             },
         },
-        'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
+        'dns': {
+            'islamicstate.eu': {
+                'A': ['1.2.3.4'],
+            },
+            'test.islamicstate.eu': {
+                'AAAA': ['::1337'],
+            },
+        },
         'network': {
             'interface': 'eth0',
             'ipv4': '162.55.188.157/32',
@@ -58,7 +67,8 @@
             'hostname': 'mail2.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
             'domains': [
-                'mail2.sublimity.de',
+                'mail3.sublimity.de',
+                'islamicstate.eu',
                 # 'sublimity.de',
                 # 'freibrief.net',
                 # 'nadenau.net',
@@ -77,9 +87,6 @@
             'product_name': 'Sublimity Mail',
             'version': '1.4.11',
             'installer': True,
-        },
-        'users': {
-            'test': {},
         },
         'vm': {
             'cpu': 2,

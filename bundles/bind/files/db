@@ -5,21 +5,19 @@ def column_width(column, table):
 $TTL 600
 @   IN  SOA        ns.sublimity.de. admin.sublimity.de. (
         2020080302 ;Serial
-        1200       ;Refresh
-        600        ;Retry
+        600       ;Refresh
+        300        ;Retry
         1209600    ;Expire
-        600        ;Negative response caching TTL
+        300        ;Negative response caching TTL
 )
 
 % for record in sorted(records, key=lambda r: (r['name'], r['type'], r['value'])):
-  % for part in (record['value'][i:i+255] for i in range(0, len(record['value']), 255)):
-${record['name'].ljust(column_width('name', records))} \
+${(record['name'] or '@').ljust(column_width('name', records))} \
 IN \
 ${record['type'].ljust(column_width('type', records))} \
-    % if record['type'] == 'TXT':
-"${part}"
-    % else:
-${part}
-    % endif
-  % endfor
+  % if record['type'] == 'TXT':
+(${' '.join('"'+record['value'][i:i+255]+'"' for i in range(0, len(record['value']), 255))})
+  % else:
+${record['value']}
+  % endif
 % endfor

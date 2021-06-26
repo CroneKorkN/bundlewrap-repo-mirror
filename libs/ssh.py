@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives import serialization
 
 
-def generate_ad25519_key_pair(secret):
+def generate_ed25519_key_pair(secret):
     privkey_bytes = Ed25519PrivateKey.from_private_bytes(secret)
     
     nondeterministic_privatekey = privkey_bytes.private_bytes(

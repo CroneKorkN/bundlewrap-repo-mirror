@@ -5,4 +5,4 @@ zone "${zone}" {
 };
 % endfor
 
-// include "/etc/bind/zones.rfc1918";
+include "/etc/bind/zones.rfc1918";
