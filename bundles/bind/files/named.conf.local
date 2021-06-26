@@ -1,6 +1,7 @@
 % for view in views:
 view "${view['name']}" {
   match-clients {${' '.join(f'{e}; ' for e in view['acl'])}};
+  recursion yes;
   % for zone in zones:
   zone "${zone}" {
     type master;

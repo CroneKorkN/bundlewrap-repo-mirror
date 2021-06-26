@@ -23,11 +23,20 @@
             'sha256': '0d11d87ce60d5d98e22fc52f2c8c6ba2b54b14f9c26c767a46bf102c381ad128',
             'domain': 'git.sublimity.de',
         },
+        'users': {
+            'root': {
+                'shell': '/usr/bin/zsh',
+            },
+        },
         'wireguard': {
             # iptables -t nat -A POSTROUTING -o enp1s0f0 -j MASQUERADE
             'my_ip': '172.19.136.1/22',
             'peers': {
-                'htz.mails': {},
+                'htz.mails': {
+                    'route': [
+                        '10.0.10.0/24',
+                    ],
+                },
             },
         },
     },

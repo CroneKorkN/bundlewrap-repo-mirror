@@ -1,4 +1,5 @@
 {
+    'dummy': True,
     'groups': [
         'debian-10',
     ],
