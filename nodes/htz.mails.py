@@ -94,7 +94,8 @@
             'installer': True,
         },
         'vm': {
-            'cpu': 2,
+            'cores': 2,
+            'ram': 8096,
         },
         'wireguard': {
             # ip r add 10.0.0.0/24 via 172.19.136.2 dev wg0

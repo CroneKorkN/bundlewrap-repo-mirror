@@ -1,7 +1,7 @@
 version = node.metadata.get('php/version')
 
 php_ini_context = {
-    'num_cpus': node.metadata.get('vm/cpu'),
+    'num_cpus': node.metadata.get('vm/cores'),
     'post_max_size': node.metadata.get('php/post_max_size', 10),
 }
 

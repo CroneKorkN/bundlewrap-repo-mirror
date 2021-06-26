@@ -25,3 +25,13 @@ defaults = {
         },
     },
 }
+
+@metadata_reactor.provides(
+    'dovecot/indexer_ram',
+)
+def indexer_ram(metadata):
+    return {
+        'dovecot': {
+            'indexer_ram': str(metadata.get('vm/ram')//2)+ 'M',
+        },
+    }

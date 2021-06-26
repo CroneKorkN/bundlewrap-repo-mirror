@@ -31,6 +31,7 @@ files = {
         'content_type': 'mako',
         'context': {
             'admin_email': node.metadata.get('mailserver/admin_email'),
+            'indexer_ram': node.metadata.get('dovecot/indexer_ram'),
         },
         'needs': {
             'pkg_apt:'
