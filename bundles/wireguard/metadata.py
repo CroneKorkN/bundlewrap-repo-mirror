@@ -32,24 +32,28 @@ def systemd_networkd_networks(metadata):
         'Address': {
             'Address': metadata.get('wireguard/my_ip'),
         },
-        'Route': {
-            'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
-            'GatewayOnlink': 'yes',
-        },
         'Network': {
             'DHCP': 'no',
             'IPForward': 'yes',
-            'IPMasquerade': 'yes',
+            #'IPMasquerade': 'yes',
             'IPv6AcceptRA': 'no',
         },
     }
 
-    for peer in metadata.get('wireguard/peers').values():
-        for route in peer.get('route', []):
+    for peer, config in metadata.get('wireguard/peers').items():
+        wg0.update({
+            f'Route#{peer}': {
+                'Destination': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
+                'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
+                'GatewayOnlink': 'yes',
+            }
+        })
+        for route in config.get('route', []):
             wg0.update({
-                f'Route#{route}': {
-                    'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
+                f'Route#{peer}_{route}': {
                     'Destination': route,
+                    'Gateway': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
+                    'GatewayOnlink': 'yes',
                 }
             })
 
