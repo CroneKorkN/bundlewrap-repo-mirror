@@ -31,7 +31,7 @@
             },
         },
         'wireguard': {
-            'my_ip': '172.19.136.1/22',
+            'my_ip': '172.30.0.1/24',
             'peers': {
                 'htz.mails': {
                     'route': [

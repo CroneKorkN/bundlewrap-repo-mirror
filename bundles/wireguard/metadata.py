@@ -7,11 +7,11 @@ from bundlewrap.metadata import atomic
 defaults = {
     'apt': {
         'packages': {
-            'linux-headers-generic': {},
+            'linux-headers-amd64': {},
             'wireguard': {
                 'backports': True,
                 'needs': [
-                    'pkg_apt:linux-headers-generic',
+                    'pkg_apt:linux-headers-amd64',
                 ],
                 'triggers': [
                     'svc_systemd:systemd-networkd:restart',
@@ -29,12 +29,16 @@ defaults = {
     'systemd-networkd/networks',
 )
 def systemd_networkd_networks(metadata):
-    wg0 = {
+    network = {
         'Match': {
             'Name': 'wg0',
         },
         'Address': {
             'Address': metadata.get('wireguard/my_ip'),
+        },
+        'Route': {
+            'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
+            'GatewayOnlink': 'yes',
         },
         'Network': {
             'DHCP': 'no',
@@ -45,15 +49,15 @@ def systemd_networkd_networks(metadata):
     }
 
     for peer, config in metadata.get('wireguard/peers').items():
-        wg0.update({
-            f'Route#{peer}': {
-                'Destination': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
-                'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
-                'GatewayOnlink': 'yes',
-            }
-        })
+        # network.update({
+        #     f'Route#{peer}': {
+        #         'Destination': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
+        #         'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
+        #         'GatewayOnlink': 'yes',
+        #     }
+        # })
         for route in config.get('route', []):
-            wg0.update({
+            network.update({
                 f'Route#{peer}_{route}': {
                     'Destination': route,
                     'Gateway': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
@@ -64,7 +68,7 @@ def systemd_networkd_networks(metadata):
     return {
         'systemd-networkd': {
             'networks': {
-                'wg0': wg0,
+                'wireguard': network,
             },
         },
     }
@@ -74,7 +78,7 @@ def systemd_networkd_networks(metadata):
     'systemd-networkd/netdevs',
 )
 def systemd_networkd_netdevs(metadata):
-    wg0 = {
+    netdev = {
         'NetDev': {
             'Name': 'wg0',
             'Kind': 'wireguard',
@@ -87,7 +91,7 @@ def systemd_networkd_netdevs(metadata):
     }
     
     for name, config in metadata.get('wireguard/peers').items():
-        wg0.update({
+        netdev.update({
             f'WireGuardPeer#{name}': {
                 'Endpoint': config['endpoint'],
                 'PublicKey': config['pubkey'],
@@ -100,7 +104,7 @@ def systemd_networkd_netdevs(metadata):
     return {
         'systemd-networkd': {
             'netdevs': {
-                'wg0': wg0,
+                'wireguard': netdev,
             },
         },
     }

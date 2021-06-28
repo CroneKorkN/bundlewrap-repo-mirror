@@ -102,7 +102,7 @@
         },
         'wireguard': {
             # ip r add 10.0.0.0/24 via 172.19.136.2 dev wg0
-            'my_ip': '172.19.136.2/22',
+            'my_ip': '172.30.0.2/24',
             'peers': {
                 'home.server': {
                     'route': [
@@ -112,9 +112,6 @@
                     ],
                 },
                 'netcup.secondary': {
-                    'route': [
-                        '46.38.240.0/22',
-                    ],
                 },
             },
         },

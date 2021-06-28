@@ -18,7 +18,8 @@
             },
         },
         'wireguard': {
-            'my_ip': '172.19.136.3/22',
+            # 172.19.136.0/22 dev wg0 proto kernel scope link src 172.19.136.3
+            'my_ip': '172.30.0.3/24',
             'peers': {
                 'htz.mails': {
                     'route': [
