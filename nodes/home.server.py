@@ -17,6 +17,7 @@
             'internal': {
                 'interface': 'enp1s0f0',
                 'ipv4': '10.0.0.2/24',
+                'gateway4': '10.0.0.1',
             },
         },
         'gitea': {
