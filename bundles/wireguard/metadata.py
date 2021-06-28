@@ -7,8 +7,12 @@ from bundlewrap.metadata import atomic
 defaults = {
     'apt': {
         'packages': {
+            'linux-headers-generic': {},
             'wireguard': {
                 'backports': True,
+                'needs': [
+                    'pkg_apt:linux-headers-generic',
+                ],
                 'triggers': [
                     'svc_systemd:systemd-networkd:restart',
                 ],
