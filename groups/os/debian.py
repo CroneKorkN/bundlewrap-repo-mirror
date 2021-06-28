@@ -13,6 +13,9 @@
                 'deb http://security.debian.org/debian-security {release}/updates main contrib non-free',
                 'deb http://deb.debian.org/debian {release}-backports main contrib non-free',
             ],
+            'packages': {
+                'mtr-tiny': {},
+            },
         },
     },
     'os': 'debian',
