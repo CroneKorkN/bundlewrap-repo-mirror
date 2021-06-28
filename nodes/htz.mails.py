@@ -43,7 +43,7 @@
         'network': {
             'internal': {
                 'interface': 'ens10',
-                'ipv4': '10.0.10.2/32',
+                'ipv4': '10.0.10.2/24',
             },
             'external': {
                 'interface': 'eth0',
