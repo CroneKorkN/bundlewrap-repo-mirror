@@ -8,8 +8,10 @@
     ],
     'bundles': [
         'gitea',
+        'influxdb2',
         'postgresql',
         'wireguard',
+        'zfs',
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
@@ -25,6 +27,9 @@
             'sha256': '0d11d87ce60d5d98e22fc52f2c8c6ba2b54b14f9c26c767a46bf102c381ad128',
             'domain': 'git.sublimity.de',
         },
+        'influxdb': {
+            'hostname': 'influxdb.sublimity.de',
+        },
         'users': {
             'root': {
                 'shell': '/usr/bin/zsh',
@@ -37,6 +42,16 @@
                     'route': [
                         '10.0.10.0/24',
                         '10.0.11.0/24',
+                    ],
+                },
+            },
+        },
+        'zfs': {
+            'pools': {
+                'tank': {
+                    'mirrors': [
+                        '/dev/disk/by-partlabel/zfs-data-1',
+                        '/dev/disk/by-partlabel/zfs-data-2',
                     ],
                 },
             },
