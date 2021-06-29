@@ -43,19 +43,11 @@ def systemd_networkd_networks(metadata):
         'Network': {
             'DHCP': 'no',
             'IPForward': 'yes',
-            #'IPMasquerade': 'yes',
             'IPv6AcceptRA': 'no',
         },
     }
 
     for peer, config in metadata.get('wireguard/peers').items():
-        # network.update({
-        #     f'Route#{peer}': {
-        #         'Destination': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
-        #         'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
-        #         'GatewayOnlink': 'yes',
-        #     }
-        # })
         for route in config.get('route', []):
             network.update({
                 f'Route#{peer}_{route}': {
