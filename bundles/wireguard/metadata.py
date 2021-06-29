@@ -90,13 +90,16 @@ def systemd_networkd_netdevs(metadata):
         },
     }
     
-    for name, config in metadata.get('wireguard/peers').items():
+    for peer, config in metadata.get('wireguard/peers').items():
         netdev.update({
-            f'WireGuardPeer#{name}': {
+            f'WireGuardPeer#{peer}': {
                 'Endpoint': config['endpoint'],
                 'PublicKey': config['pubkey'],
                 'PresharedKey': config['psk'],
-                'AllowedIPs': '0.0.0.0/0', # FIXME
+                'AllowedIPs': ', '.join([
+                    str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
+                    *config.get('route', []),
+                ]), # FIXME
                 'PersistentKeepalive': 30,
             }
         })
