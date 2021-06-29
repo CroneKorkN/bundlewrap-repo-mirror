@@ -13,13 +13,12 @@ defaults = {
         'port': '8200',
         'username': 'admin',
         'org': 'default',
-        'org': 'default',
         'bucket': 'default',
         'config': {
             'bolt-path': '/var/lib/influxdb/influxd.bolt',
             'engine-path': '/var/lib/influxdb/engine',
             'reporting-disabled': True,
-            'http-bind-address': ':8200'
+            'http-bind-address': ':8200',
         },
     },
     'zfs': {
@@ -37,8 +36,8 @@ defaults = {
 def admin_password(metadata):
     return {
         'influxdb': {
-            'password': repo.vault.password_for(f"{node.metadata.get('id')} influxdb admin"),
-            'token': repo.vault.random_bytes_as_base64_for(f"{node.metadata.get('id')} influxdb default token", length=64),
+            'password': repo.vault.password_for(f"{metadata.get('id')} influxdb admin"),
+            'admin_token': repo.vault.random_bytes_as_base64_for(f"{metadata.get('id')} influxdb default token", length=64),
         },
     }
 

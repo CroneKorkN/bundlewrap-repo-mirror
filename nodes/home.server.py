@@ -29,6 +29,7 @@
         },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',
+            'client_token': '!decrypt:encrypt$gAAAAABg25z8fEYjuRkhg4XuYMtJsPO5SaqlexuricXPZAzZ51_iQtPe5v7S503hMFdZ7j-XQUP6Q2y3ovbzhouRYeRZy1W020csOOtBcH08X-ya9cCAOCMnJdujg0MVakxPJhNPa5Ip5XsI4Bjb0EcftNDayQWQsZw1vFHBHllD-ALTisoCdbImD6a1iT4NuT57JGydbWGW',
         },
         'users': {
             'root': {

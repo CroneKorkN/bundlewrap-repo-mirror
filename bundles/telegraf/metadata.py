@@ -67,7 +67,7 @@ def influxdb(metadata):
                 'outputs': {
                     'influxdb_v2': [{
                         'urls': [influxdb_server_url],
-                        'token': str(influxdb_node.metadata.get('influxdb/token')),
+                        'token': str(influxdb_node.metadata.get(f'influxdb/client_token')),
                         'organization': influxdb_node.metadata.get('influxdb/org'),
                         'bucket': influxdb_node.metadata.get('influxdb/bucket'),
                     }]
