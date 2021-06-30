@@ -68,11 +68,6 @@ symlinks = {
 }
 
 files = {
-    # '/opt/nextcloud/core/shipped.json': {
-    #     'needs': [
-    #         'action:extract_nextcloud',
-    #     ],
-    # },
     '/etc/nextcloud/CAN_INSTALL': {
         'content': '',
         'owner': 'www-data',
