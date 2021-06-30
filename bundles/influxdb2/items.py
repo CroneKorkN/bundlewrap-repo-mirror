@@ -28,7 +28,7 @@ svc_systemd['influxdb'] = {
 }
 
 actions['wait_for_influxdb_start'] = {
-    'command': 'sleep 10',
+    'command': 'sleep 15',
     'triggered': True,
     'triggered_by': [
         'svc_systemd:influxdb',
