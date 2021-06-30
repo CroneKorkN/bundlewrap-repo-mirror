@@ -4,97 +4,86 @@ from shlex import quote
 from os.path import join
 from mako.template import Template
 
-def occ(command, *args, **kwargs):
-    return f"""sudo -u www-data php /opt/nextcloud/occ {command} {' '.join(args)} {' '.join(f'--{name.replace("_", "-")}' + (f'={value}' if value else '') for name, value in kwargs.items())}"""
+print(f"v{node.metadata.get('nextcloud/version')}")
 
-version = node.metadata.get('nextcloud/version')
 
-# DOWNLOAD
-
-downloads[f'/tmp/nextcloud-{version}.tar.bz2'] = {
-    'url': f'https://download.nextcloud.com/server/releases/nextcloud-{version}.tar.bz2',
-    'sha256': node.metadata.get('nextcloud/sha256'),
-    'triggered': True,
-}
-actions['delete_nextcloud'] = {
-    'command': 'rm -rf /opt/nextcloud/*',
-    'triggered': True,
-}
-actions['extract_nextcloud'] = {
-    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --skip-old-files --strip 1 -C /opt/nextcloud nextcloud',
-    'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
-    'preceded_by': [
-        'action:delete_nextcloud',
-        f'download:/tmp/nextcloud-{version}.tar.bz2',
-    ],
-    'needs': [
-        'action:symlink_/opt/nextcloud/config',
-        'directory:/opt/nextcloud',
-    ],
-}
-
-# DIRECTORIES, FILES AND SYMLINKS
-
-directories['/etc/nextcloud'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-}
-directories['/opt/nextcloud'] = {}
-directories['/var/lib/nextcloud'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-    'mode': '770',
-}
-directories['/var/lib/nextcloud/.apps'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-}
-directories['/var/lib/nextcloud/.cache'] = {
-    'owner': 'www-data',
-    'group': 'www-data',
-}
-files['/etc/nextcloud/CAN_INSTALL'] = {
-    'content': '',
-    'owner': 'www-data',
-    'group': 'www-data',
-    'mode': '640',
-    'needs': [
-        'directory:/etc/nextcloud',
-    ],
-}
-files['/etc/nextcloud/managed.config.php'] = {
-    'content_type': 'mako',
-    'owner': 'www-data',
-    'group': 'www-data',
-    'mode': '640',
-    'context': {
-        'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
+directories = {
+    '/opt/nextcloud': {},
+    '/etc/nextcloud': {
+        'owner': 'www-data',
     },
-    'needs': [
-        'directory:/etc/nextcloud',
-    ],
+    '/var/lib/nextcloud': {
+        'owner': 'www-data',
+        'mode': '770',
+    },
+    '/var/lib/nextcloud/.apps': {
+        'owner': 'www-data',
+    },
+    '/var/lib/nextcloud/.cache': {
+        'owner': 'www-data',
+    },
 }
-actions['symlink_/opt/nextcloud/config'] = {
-    'command': f'ln -s /etc/nextcloud /opt/nextcloud/config && chown www-data:www-data /opt/nextcloud/config',
-    'unless': 'readlink /opt/nextcloud/config | grep -q /etc/nextcloud',
-    'needs': [
-        'action:delete_nextcloud',
-        'directory:/etc/nextcloud',
-    ],
+
+git_deploy = {
+    '/opt/nextcloud': {
+        'repo': 'git://github.com/nextcloud/server.git',
+        'rev': f"v{node.metadata.get('nextcloud/version')}",
+        'needs': {
+            'directory:/opt/nextcloud',
+        },
+    },
+    '/opt/nextcloud/3rdparty': {
+        'repo': 'git://github.com/nextcloud/3rdparty.git',
+        'rev': f"v{node.metadata.get('nextcloud/version')}",
+        'needs': {
+            'git_deploy:/opt/nextcloud',
+        },
+    },
 }
-actions['symlink_/opt/nextcloud/userapps'] = {
-    'command': f'ln -s /var/lib/nextcloud/.apps /opt/nextcloud/userapps && chown www-data:www-data /opt/nextcloud/userapps',
-    'unless': 'readlink /opt/nextcloud/userapps | grep -q /var/lib/nextcloud/.apps',
-    'needs': [
-        'action:delete_nextcloud',
-        'directory:/var/lib/nextcloud/.apps',
-    ],
+
+symlinks = {
+    '/opt/nextcloud/config': {
+        'target': '/etc/nextcloud',
+        'owner': 'www-data',
+        'needs': [
+            'git_deploy:/opt/nextcloud',
+        ],
+    },
+    '/opt/nextcloud/userapps': {
+        'target': '/var/lib/nextcloud/.apps',
+        'owner': 'www-data',
+        'needs': [
+            'git_deploy:/opt/nextcloud',
+        ],
+    },
+}
+
+files = {
+    '/etc/nextcloud/CAN_INSTALL': {
+        'content': '',
+        'owner': 'www-data',
+        'mode': '640',
+        'needs': [
+            'directory:/etc/nextcloud',
+        ],
+    },
+    '/etc/nextcloud/managed.config.php': {
+        'content_type': 'mako',
+        'owner': 'www-data',
+        'mode': '640',
+        'context': {
+            'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
+        },
+        'needs': [
+            'directory:/etc/nextcloud',
+        ],
+    },
 }
 
 # SETUP
 
 actions['install_nextcloud'] = {
-    'command': occ(
+    'command': repo.libs.nextcloud.occ(
         'maintenance:install',
         no_interaction=None,
         database='pgsql',
@@ -106,18 +95,19 @@ actions['install_nextcloud'] = {
         admin_pass=node.metadata.get('nextcloud/admin_pass'),
         data_dir='/var/lib/nextcloud',
     ),
-    'unless': occ('status') + ' | grep -q "installed: true"',
+    'unless': repo.libs.nextcloud.occ('status') + ' | grep -q "installed: true"',
     'needs': [
         'directory:/etc/nextcloud',
         'directory:/opt/nextcloud',
         'directory:/var/lib/nextcloud',
         'directory:/var/lib/nextcloud/.apps',
         'directory:/var/lib/nextcloud/.cache',
+        'symlink:/opt/nextcloud/config',
+        'symlink:/opt/nextcloud/userapps',
+        'git_deploy:/opt/nextcloud',
+        'git_deploy:/opt/nextcloud/3rdparty',
         'file:/etc/nextcloud/CAN_INSTALL',
         'file:/etc/nextcloud/managed.config.php',
-        'action:extract_nextcloud',
-        'action:symlink_/opt/nextcloud/userapps',
-        'action:symlink_/opt/nextcloud/config',
         'postgres_db:nextcloud',
     ],
 }
@@ -125,21 +115,20 @@ actions['install_nextcloud'] = {
 # UPGRADE
 
 actions['upgrade_nextcloud'] = {
-    'command': occ('upgrade'),
-    'unless': occ('status') + f' | grep -q "versionstring: {version}"',
+    'command': repo.libs.nextcloud.occ('upgrade'),
+    'unless': repo.libs.nextcloud.occ('status') + f' | grep -q "versionstring: {node.metadata.get("nextcloud/version")}"',
     'needs': [
         'action:install_nextcloud',
     ],
 }
 
 actions['nextcloud_add_missing_inidces'] = {
-    'command': occ('db:add-missing-indices'),
+    'command': repo.libs.nextcloud.occ('db:add-missing-indices'),
     'needs': [
         'action:upgrade_nextcloud',
     ],
     'triggered': True,
     'triggered_by': [
-        f'action:extract_nextcloud',
-        f'action:upgrade_nextcloud',
+        f'git_deploy:/opt/nextcloud',
     ],
 }

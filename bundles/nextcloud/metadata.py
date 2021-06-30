@@ -39,14 +39,6 @@ defaults = {
         'admin_user': 'admin',
         'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw'),
     },
-    'nginx': {
-        'vhosts': {
-            'nextcloud': {
-                'webroot': '/opt/nextcloud',
-                'php': True,
-            },
-        },
-    },
     'postgresql': {
         'roles': {
             'nextcloud': {
@@ -70,3 +62,19 @@ defaults = {
         },
     },
 }
+
+# @metadata_reactor.provides(
+#     'nginx/vhosts/nextcloud/domain',
+# )
+# def nginx(metadata):
+#     return {
+#         'nginx': {
+#             'vhosts': {
+#                 'nextcloud': {
+#                     'domain': metadata.get('nextcloud/domain'),
+#                     'webroot': '/opt/nextcloud',
+#                     'php': True,
+#                 },
+#             },
+#         },
+#     }

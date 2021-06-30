@@ -11,10 +11,15 @@
         'dnsserver',
     ],
     'bundles': [
+        'nextcloud',
         'wireguard',
         'zfs',
     ],
     'metadata': {
+        'nextcloud': {
+            'domain': 'cloud.sublimity.de',
+            'version': '21.0.0',
+        },
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'bind': {
             'domain': 'ns.sublimity.de',
@@ -85,10 +90,6 @@
                 # 'wingl.de',
                 # 'woodpipe.de',
             ],
-        },
-        'nextcloud': {
-            'version': '21.0.2',
-            'sha256': '5e5b38109a3485db5fd2d248f24478eabe6c0790ec10b030acbbee207d5511fe',
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
