@@ -4,23 +4,25 @@ from shlex import quote
 from os.path import join
 from mako.template import Template
 
-print(f"v{node.metadata.get('nextcloud/version')}")
-
 
 directories = {
     '/opt/nextcloud': {},
     '/etc/nextcloud': {
         'owner': 'www-data',
+        'group': 'www-data',
     },
     '/var/lib/nextcloud': {
         'owner': 'www-data',
+        'group': 'www-data',
         'mode': '770',
     },
     '/var/lib/nextcloud/.apps': {
         'owner': 'www-data',
+        'group': 'www-data',
     },
     '/var/lib/nextcloud/.cache': {
         'owner': 'www-data',
+        'group': 'www-data',
     },
 }
 
@@ -45,6 +47,7 @@ symlinks = {
     '/opt/nextcloud/config': {
         'target': '/etc/nextcloud',
         'owner': 'www-data',
+        'group': 'www-data',
         'needs': [
             'git_deploy:/opt/nextcloud',
         ],
@@ -52,6 +55,7 @@ symlinks = {
     '/opt/nextcloud/userapps': {
         'target': '/var/lib/nextcloud/.apps',
         'owner': 'www-data',
+        'group': 'www-data',
         'needs': [
             'git_deploy:/opt/nextcloud',
         ],
@@ -59,9 +63,15 @@ symlinks = {
 }
 
 files = {
+    # '/opt/nextcloud/core/shipped.json': {
+    #     'needs': [
+    #         'git_deploy:/opt/nextcloud',
+    #     ],
+    # },
     '/etc/nextcloud/CAN_INSTALL': {
         'content': '',
         'owner': 'www-data',
+        'group': 'www-data',
         'mode': '640',
         'needs': [
             'directory:/etc/nextcloud',
@@ -70,6 +80,7 @@ files = {
     '/etc/nextcloud/managed.config.php': {
         'content_type': 'mako',
         'owner': 'www-data',
+        'group': 'www-data',
         'mode': '640',
         'context': {
             'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
@@ -116,7 +127,7 @@ actions['install_nextcloud'] = {
 
 actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
-    'unless': repo.libs.nextcloud.occ('status') + f' | grep -q "versionstring: {node.metadata.get("nextcloud/version")}"',
+    'unless': "! " + repo.libs.nextcloud.occ('status') + ' | grep -q "Nextcloud or one of the apps require upgrade"',
     'needs': [
         'action:install_nextcloud',
     ],
