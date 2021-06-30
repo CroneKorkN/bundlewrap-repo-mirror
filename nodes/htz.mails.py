@@ -18,7 +18,8 @@
     'metadata': {
         'nextcloud': {
             'domain': 'cloud.sublimity.de',
-            'version': '20.0.10',
+            'version': '20.0.5',
+            'sha256': '5e5b38109a3485db5fd2d248f24478eabe6c0790ec10b030acbbee207d5511fe',
         },
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'bind': {

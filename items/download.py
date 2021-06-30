@@ -22,6 +22,7 @@ class Download(Item):
     ITEM_ATTRIBUTES = {
         'url': "",
         'sha256': "",
+        'sha256_url': "",
         'verifySSL': True,
         'decompress': None,
     }
@@ -62,15 +63,6 @@ class Download(Item):
                 url=quote(self.attributes['url'])
             ))
 
-            # check hash
-            sha256 = self.__hash_remote_file(self.name)
-
-            if sha256 != self.attributes['sha256']:
-                # unlink file
-                self.node.run("rm -rf -- {}".format(quote(self.name)))
-
-                return False
-
     def cdict(self):
         """This is how the world should be"""
         cdict = {
@@ -88,14 +80,19 @@ class Download(Item):
         else:
             sdict = {
                 'type': 'download',
-                'sha256': self.__hash_remote_file(self.name)
             }
+            if 'sha256' in self.attributes:
+                sdict['sha256'] = self.attributes['sha256']
+            elif 'sha256_url' in self.attributes:
+                sdict['sha256'] = force_text(
+                    self.node.run(f"curl -L -s -- {quote(self.attributes['sha256_url'])}").stdout
+                ).strip().split()[0]
 
         return sdict
 
     @classmethod
     def validate_attributes(cls, bundle, item_id, attributes):
-        if 'sha256' not in attributes:
+        if 'sha256' not in attributes and 'sha256_url' not in attributes:
             raise BundleError(_(
                 "at least one hash must be set on {item} in bundle '{bundle}'"
             ).format(

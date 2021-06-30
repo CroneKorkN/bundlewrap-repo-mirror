@@ -4,6 +4,7 @@ from shlex import quote
 from os.path import join
 from mako.template import Template
 
+version = node.metadata.get('nextcloud/version')
 
 directories = {
     '/opt/nextcloud': {},
@@ -26,21 +27,25 @@ directories = {
     },
 }
 
-git_deploy = {
-    '/opt/nextcloud': {
-        'repo': 'git://github.com/nextcloud/server.git',
-        'rev': f"v{node.metadata.get('nextcloud/version')}",
-        'needs': {
-            'directory:/opt/nextcloud',
-        },
-    },
-    '/opt/nextcloud/3rdparty': {
-        'repo': 'git://github.com/nextcloud/3rdparty.git',
-        'rev': f"v{node.metadata.get('nextcloud/version')}",
-        'needs': {
-            'git_deploy:/opt/nextcloud',
-        },
-    },
+downloads[f'/tmp/nextcloud-{version}.tar.bz2'] = {
+    'url': f'https://download.nextcloud.com/server/releases/nextcloud-{version}.tar.bz2',
+    'sha256_url': f'https://download.nextcloud.com/server/releases/nextcloud-{version}.tar.bz2.sha256',
+    'triggered': True,
+}
+actions['delete_nextcloud'] = {
+    'command': 'rm -rf /opt/nextcloud/{.*,*}',
+    'triggered': True,
+}
+actions['extract_nextcloud'] = {
+    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --skip-old-files --strip 1 -C /opt/nextcloud nextcloud',
+    'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
+    'preceded_by': [
+        'action:delete_nextcloud',
+        f'download:/tmp/nextcloud-{version}.tar.bz2',
+    ],
+    'needs': [
+        'directory:/opt/nextcloud',
+    ],
 }
 
 symlinks = {
@@ -49,7 +54,7 @@ symlinks = {
         'owner': 'www-data',
         'group': 'www-data',
         'needs': [
-            'git_deploy:/opt/nextcloud',
+            'action:extract_nextcloud',
         ],
     },
     '/opt/nextcloud/userapps': {
@@ -57,7 +62,7 @@ symlinks = {
         'owner': 'www-data',
         'group': 'www-data',
         'needs': [
-            'git_deploy:/opt/nextcloud',
+            'action:extract_nextcloud',
         ],
     },
 }
@@ -65,7 +70,7 @@ symlinks = {
 files = {
     # '/opt/nextcloud/core/shipped.json': {
     #     'needs': [
-    #         'git_deploy:/opt/nextcloud',
+    #         'action:extract_nextcloud',
     #     ],
     # },
     '/etc/nextcloud/CAN_INSTALL': {
@@ -115,8 +120,7 @@ actions['install_nextcloud'] = {
         'directory:/var/lib/nextcloud/.cache',
         'symlink:/opt/nextcloud/config',
         'symlink:/opt/nextcloud/userapps',
-        'git_deploy:/opt/nextcloud',
-        'git_deploy:/opt/nextcloud/3rdparty',
+        'action:extract_nextcloud',
         'file:/etc/nextcloud/CAN_INSTALL',
         'file:/etc/nextcloud/managed.config.php',
         'postgres_db:nextcloud',
@@ -140,6 +144,6 @@ actions['nextcloud_add_missing_inidces'] = {
     ],
     'triggered': True,
     'triggered_by': [
-        f'git_deploy:/opt/nextcloud',
+        f'action:extract_nextcloud',
     ],
 }
