@@ -84,8 +84,9 @@ class Download(Item):
             if 'sha256' in self.attributes:
                 sdict['sha256'] = self.attributes['sha256']
             elif 'sha256_url' in self.attributes:
+                sha256_url = self.attributes['sha256_url'].format(url=self.attributes['url'])
                 sdict['sha256'] = force_text(
-                    self.node.run(f"curl -L -s -- {quote(self.attributes['sha256_url'])}").stdout
+                    self.node.run(f"curl -L -s -- {quote(sha256_url)}").stdout
                 ).strip().split()[0]
 
         return sdict

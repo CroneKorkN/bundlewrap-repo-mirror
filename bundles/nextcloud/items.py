@@ -17,7 +17,7 @@ directories = {
         'group': 'www-data',
         'mode': '770',
     },
-    '/var/lib/nextcloud/.apps': {
+    '/var/lib/nextcloud/.userapps': {
         'owner': 'www-data',
         'group': 'www-data',
     },
@@ -29,15 +29,15 @@ directories = {
 
 downloads[f'/tmp/nextcloud-{version}.tar.bz2'] = {
     'url': f'https://download.nextcloud.com/server/releases/nextcloud-{version}.tar.bz2',
-    'sha256_url': f'https://download.nextcloud.com/server/releases/nextcloud-{version}.tar.bz2.sha256',
+    'sha256_url': '{url}.sha256',
     'triggered': True,
 }
 actions['delete_nextcloud'] = {
-    'command': 'rm -rf /opt/nextcloud/{.*,*}',
+    'command': 'rm -rf /opt/nextcloud/*',
     'triggered': True,
 }
 actions['extract_nextcloud'] = {
-    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --skip-old-files --strip 1 -C /opt/nextcloud nextcloud',
+    'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --strip 1 -C /opt/nextcloud nextcloud',
     'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
     'preceded_by': [
         'action:delete_nextcloud',
@@ -58,7 +58,7 @@ symlinks = {
         ],
     },
     '/opt/nextcloud/userapps': {
-        'target': '/var/lib/nextcloud/.apps',
+        'target': '/var/lib/nextcloud/.userapps',
         'owner': 'www-data',
         'group': 'www-data',
         'needs': [
@@ -116,7 +116,7 @@ actions['install_nextcloud'] = {
         'directory:/etc/nextcloud',
         'directory:/opt/nextcloud',
         'directory:/var/lib/nextcloud',
-        'directory:/var/lib/nextcloud/.apps',
+        'directory:/var/lib/nextcloud/.userapps',
         'directory:/var/lib/nextcloud/.cache',
         'symlink:/opt/nextcloud/config',
         'symlink:/opt/nextcloud/userapps',
