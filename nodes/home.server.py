@@ -11,6 +11,7 @@
         'grafana',
         'influxdb2',
         'postgresql',
+        'redis',
         'wireguard',
         'zfs',
     ],
