@@ -1,0 +1,6 @@
+export ZSH=~/.zsh/oh-my-zsh
+ZSH_THEME=bw
+plugins=(
+  zsh-autosuggestions
+)
+source $ZSH/oh-my-zsh.sh

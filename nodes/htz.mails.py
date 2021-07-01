@@ -12,13 +12,14 @@
     ],
     'bundles': [
         'nextcloud',
+        'oh-my-zsh',
         'wireguard',
         'zfs',
     ],
     'metadata': {
         'nextcloud': {
             'domain': 'cloud.sublimity.de',
-            'version': '20.0.0',
+            'version': '21.0.0',
         },
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'bind': {
