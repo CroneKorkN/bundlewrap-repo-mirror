@@ -9,7 +9,7 @@ defaults = {
         'packages': {
             'linux-headers-amd64': {},
             'wireguard': {
-                'backports': True,
+                'backports': node.os_version < (11,),
                 'needs': [
                     'pkg_apt:linux-headers-amd64',
                 ],

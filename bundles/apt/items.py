@@ -79,9 +79,7 @@ for host, sources in hosts.items():
 for package, options in node.metadata.get('apt/packages', {}).items():    
     pkg_apt[package] = options
 
-    if options.get('backports', None):
-        pkg_apt[package].pop('backports')
-
+    if pkg_apt[package].pop('backports', False):
         files[f'/etc/apt/preferences.d/{package}'] = {
             'content': '\n'.join([
                 f"Package: {package}",
