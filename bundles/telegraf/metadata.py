@@ -54,22 +54,17 @@ defaults = {
     'telegraf/config/outputs/influxdb_v2',
 )
 def influxdb(metadata):
-    influxdb_node = repo.get_node(metadata.get('telegraf/influxdb_node'))
-
-    influxdb_server_url = "http://{hostname}:{port}".format(
-        hostname=influxdb_node.metadata.get('influxdb/hostname'),
-        port=influxdb_node.metadata.get('influxdb/port'),
-    )
+    influxdb_metadata = repo.get_node(metadata.get('telegraf/influxdb_node')).metadata.get('influxdb')
 
     return {
         'telegraf': {
             'config': {
                 'outputs': {
                     'influxdb_v2': [{
-                        'urls': [influxdb_server_url],
-                        'token': str(influxdb_node.metadata.get(f'influxdb/client_token')),
-                        'organization': influxdb_node.metadata.get('influxdb/org'),
-                        'bucket': influxdb_node.metadata.get('influxdb/bucket'),
+                        'urls': [f"http://{influxdb_metadata['hostname']}:{influxdb_metadata['port']}"],
+                        'token': str(influxdb_metadata['writeonly_token']),
+                        'organization': influxdb_metadata['org'],
+                        'bucket': influxdb_metadata['bucket'],
                     }]
                 },
             },

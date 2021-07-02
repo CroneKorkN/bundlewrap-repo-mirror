@@ -31,10 +31,13 @@
         },
         'grafana': {
             'hostname': 'grafana.sublimity.de',
+            'influxdb_node': 'home.server',
         },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',
-            'client_token': '!decrypt:encrypt$gAAAAABg25z8fEYjuRkhg4XuYMtJsPO5SaqlexuricXPZAzZ51_iQtPe5v7S503hMFdZ7j-XQUP6Q2y3ovbzhouRYeRZy1W020csOOtBcH08X-ya9cCAOCMnJdujg0MVakxPJhNPa5Ip5XsI4Bjb0EcftNDayQWQsZw1vFHBHllD-ALTisoCdbImD6a1iT4NuT57JGydbWGW',
+            'admin_token': '!decrypt:encrypt$gAAAAABg3z5PcaLYmUpcElJ07s_G-iYwnS8d532TcR8xUYbZfttT-B736zgR6J726mzKAFNYlIfJ7amNLIzi2ETDH5TAXWsOiAKpX8WC_dPBAvG3uXGtcPYENjdeuvllSagZzPt0hCIZQZXg--Z_YvzaX9VzNrVAgGD-sXQnghN5_Vhf9gVxxwP---VB_6iNlsf61Nc4axoS',
+            'readonly_token': '!decrypt:encrypt$gAAAAABg3z1-0hnUdzsfivocxhJm58YnPLn96OUvnHiPaehdRhKd6TZBgEPc5YyR07t2-GEUfOvEwoie-O6QsVhWYxrwxNTBXux_iUSx7W6e-fLQA_3MgWf5G97q_3kx_wCgQ6V0iKRyxH988TpNSMACfS4WhCXdSes1CaMpic4VV3S3ox_gCrSHxO7yVXQkJDnOW0MixY5T',
+            'writeonly_token': '!decrypt:encrypt$gAAAAABg3z6fGrOy2tNdo03RoYAXmpJoJYkfhBfpblPh_wxYfqmdjtABaD7XyV9mSh9xl8oWQlTAtCk9KndVCDQy7BJ-ju7S3HCKJ0k244Y5YKxUnQtqt9fc9nnm8XD-NOJqLKyfy0QhL_I8dFT02pygoJeCUR5NkZcTKf6julb-iGXI6vWcQgolJTYrW643pHObd-Z-vIEl',
         },
         'users': {
             'root': {

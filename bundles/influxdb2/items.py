@@ -64,10 +64,14 @@ files['/root/.influxdbv2/configs'] = {
     ],
 }
 
-actions['create_influxdb_client_token'] = {
-    'command': 'influx auth create --description client_token --write-buckets --read-telegrafs',
-    'unless': """influx auth list --json | jq -r '.[] | select (.description == "client_token") | .token' | wc -l | grep -q ^1$""",
-    'needs': [
-        'file:/root/.influxdbv2/configs',
-    ],
-}
+for description, permissions in {
+    'readonly': '--read-buckets',
+    'writeonly': '--write-buckets --read-telegrafs',
+}.items():
+    actions[f'influxdb_{description}_token'] = {
+        'command': f'influx auth create --description {description} {permissions}',
+        'unless': f'''influx auth list --json | jq -r '.[] | select (.description == "{description}") | .token' | wc -l | grep -q ^1$''',
+        'needs': [
+            'file:/root/.influxdbv2/configs',
+        ],
+    }
