@@ -23,10 +23,9 @@
                 'showPoints': 'never',
                 'pointSize': 5,
                 'stacking': {
-                    'mode': 'normal',
+                    'mode': 'none',
                     'group': 'A'
                 },
-#                'axisPlacement': 'hidden',
                 'axisLabel': '',
                 'scaleDistribution': {
                     'type': 'linear'
@@ -46,22 +45,8 @@
             'color': {
                 'mode': 'palette-classic',
             },
-            'thresholds': {
-                'mode': 'percentage',
-                'steps': [
-                    {
-                        'color': 'green',
-                        'value': None,
-                    },
-                    {
-                        'color': 'dark-red',
-                        'value': 80,
-                    },
-                ],
-            },
             'mappings': [],
             'displayName': '${__field.name}',
-            'unit': 'percent',
         },
         'overrides': [],
     },

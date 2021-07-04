@@ -1,7 +1,7 @@
 from tomlkit import dumps
 
 files['/etc/telegraf/telegraf.conf'] = {
-    'content': dumps(node.metadata.get('telegraf/config')),
+    'content': dumps(node.metadata.get('telegraf/config'), sort_keys=True),
     'triggers': [
         'svc_systemd:telegraf:restart',
     ],

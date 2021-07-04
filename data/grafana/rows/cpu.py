@@ -15,6 +15,8 @@
                 'function': 'mean',
             },
         },
+        'min': 0,
+        'max': 100,
     },
     'load': {
         'stacked': False,

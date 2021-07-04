@@ -112,10 +112,17 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
             if 'display_name' in panel_config:
                 panel['fieldConfig']['defaults']['displayName'] = '${'+panel_config['display_name']+'}'
 
-            if panel_config.get('stacked', False):
+            if panel_config.get('stacked'):
                 panel['fieldConfig']['defaults']['custom']['stacking']['mode'] = 'normal'
-            else:
-                panel['fieldConfig']['defaults']['custom']['stacking']['mode'] = 'none'
+
+            if 'unit' in panel_config:
+                panel['fieldConfig']['defaults']['unit'] = panel_config['unit']
+
+            if 'min' in panel_config:
+                panel['fieldConfig']['defaults']['min'] = panel_config['min']
+            if 'max' in panel_config:
+                panel['fieldConfig']['defaults']['max'] = panel_config['max']
+
             
             for query_name, query_config in panel_config['queries'].items():
                 panel['targets'].append({
@@ -123,6 +130,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                     'query': flux_template.render(
                         bucket=bucket,
                         host=monitored_node.name,
+                        negative=query_config.get('negative', False),
                         filters={
                             'host': monitored_node.name,
                             **query_config['filters'],

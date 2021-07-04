@@ -44,12 +44,14 @@ defaults = {
                 'processes': [{}],
                 'swap': [{}],
                 'system': [{}],
+                'net': [{}],
             },
         },
     },
     'grafana_rows': [
         'cpu',
         'disk_io',
+        'net_io',
     ],
 }
 

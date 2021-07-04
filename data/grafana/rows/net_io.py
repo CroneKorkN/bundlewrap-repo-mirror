@@ -1,34 +1,34 @@
 {
-    'read': {
+    'in': {
         'stacked': True,
         'queries': {
-            'usage': {
+            'in': {
                 'filters': {
-                    '_measurement': 'diskio',
+                    '_measurement': 'net',
                     '_field': [
-                        'read_bytes',
+                        'bytes_recv',
                     ],
                 },
                 'function': 'derivative',
             },
         },
         'unit': 'decbytes',
-        'display_name': '__field.labels.name'
+        'display_name': '__field.labels.interface'
     },
-    'write': {
+    'out': {
         'stacked': True,
         'queries': {
-            'load': {
+            'out': {
                 'filters': {
-                    '_measurement': 'diskio',
+                    '_measurement': 'net',
                     '_field': [
-                        'write_bytes',
+                        'bytes_sent',
                     ],
                 },
                 'function': 'derivative',
             },
         },
         'unit': 'decbytes',
-        'display_name': '__field.labels.name'
+        'display_name': '__field.labels.interface'
     },
 }

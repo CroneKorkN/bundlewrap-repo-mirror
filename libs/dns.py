@@ -1,3 +1,5 @@
+from ipaddress import ip_interface
+
 def get_a_records(metadata):
     return {
         'A': [
