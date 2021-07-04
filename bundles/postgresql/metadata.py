@@ -1,3 +1,5 @@
+root_password = repo.vault.password_for(f'{node.name} postgresql root')
+
 defaults = {
     'apt': {
         'packages': {
@@ -12,12 +14,13 @@ defaults = {
     'postgresql': {
         'roles': {
             'root': {
-                'password': repo.vault.password_for(f'{node.name} postgresql root'),
+                'password': root_password,
                 'superuser': True,
             },
         },
         'databases': {},
     },
+    'grafana_rows': [],
 }
 
 if node.has_bundle('zfs'):
@@ -25,6 +28,24 @@ if node.has_bundle('zfs'):
         'datasets': {
             'tank/postgresql': {
                 'mountpoint': '/var/lib/postgresql',
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'telegraf/config/inputs/postgresql',
+)
+def telegraf(metadata):
+    return {
+        'telegraf': {
+            'config': {
+                'inputs': {
+                    'postgresql': [{
+                        'address': f'postgres://root:{root_password}@localhost:5432/postgres',
+                        'databases': sorted(list(node.metadata.get('postgresql/databases').keys())),
+                    }],
+                },
             },
         },
     }

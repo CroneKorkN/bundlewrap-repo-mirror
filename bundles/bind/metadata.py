@@ -10,6 +10,17 @@ defaults = {
     'bind': {
         'zones': {},
     },
+    'telegraf': {
+        'config': {
+            'inputs': {
+                'bind': [{
+                    'urls': ['http://localhost:8053/xml/v3'],
+                    'gather_memory_contexts': False,
+                    'gather_views': True,
+                }],
+            },
+        },
+    },
 }
 
 
