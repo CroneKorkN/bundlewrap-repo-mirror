@@ -1,5 +1,6 @@
 {
 #  "id": 1,
+#  "title": "some dashboard",
   "annotations": {
     "list": [
       {
@@ -58,7 +59,6 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "New dashboard Copy",
   "uid": "IBPgYBznk",
   "version": 15
 }

@@ -86,6 +86,7 @@ bucket = repo.get_node(node.metadata.get('grafana/influxdb_node')).metadata.get(
 for dashboard_id, (node_name, panels) in enumerate(node.metadata.get('grafana/dashboards').items(), start=1):
     dashboard = deepcopy(dashboard_template)
     dashboard['id'] = dashboard_id
+    dashboard['title'] = node_name
     
     for panel_id, (panel_name, panel_config) in enumerate(panels.items(), start=1):
         panel = deepcopy(panel_template)
@@ -93,13 +94,14 @@ for dashboard_id, (node_name, panels) in enumerate(node.metadata.get('grafana/da
         panel['title'] = panel_name
         
         for target_name, target_config in panel_config.items():
+            print(target_name, target_config)
             panel['targets'].append({
                 'refId': target_name,
                 'query': flux_template.render(
                     bucket=bucket,
                     host=node_name,
                     field=target_name,
-                    filters=target_config,
+                    filters=target_config['filter'],
                 ).strip()
             })
             
