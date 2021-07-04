@@ -3,6 +3,7 @@
     'groups': [
         'debian-10',
         'backup-server',
+        'monitored',
     ],
     'bundles': [
         'zfs',
