@@ -17,4 +17,20 @@
         },
         'unit': 'decbytes',
     },
+    'swp': {
+        'stacked': True,
+        'queries': {
+            'memory': {
+                'filters': {
+                    '_measurement': 'mem',
+                    '_field': [
+                        'swap_cached',
+                        'swap_free',
+                    ],
+                },
+                'function': 'mean',
+            },
+        },
+        'unit': 'decbytes',
+    },
 }

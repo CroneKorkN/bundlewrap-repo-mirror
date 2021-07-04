@@ -104,7 +104,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
         for panel_in_row, (panel_name, panel_config) in enumerate(row.items()):
             panel = deepcopy(panel_template)
             panel['id'] = next(panel_id)
-            panel['title'] = panel_name
+            panel['title'] = f'{row_name} {panel_name}'
             panel['gridPos']['w'] = 24 // len(row)
             panel['gridPos']['x'] = (24 // len(row)) * panel_in_row
             panel['gridPos']['y'] = (row_id - 1) * panel['gridPos']['h']
