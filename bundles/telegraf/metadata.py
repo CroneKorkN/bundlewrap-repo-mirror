@@ -47,6 +47,10 @@ defaults = {
             },
         },
     },
+    'grafana_rows': [
+        'cpu',
+        'disk_io',
+    ],
 }
 
 

@@ -6,6 +6,7 @@ from shlex import quote
 from copy import deepcopy
 import yaml
 import json
+from itertools import count
 
 svc_systemd['grafana-server'] = {
     'needs': [
@@ -93,30 +94,39 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
     dashboard = deepcopy(dashboard_template)
     dashboard['id'] = dashboard_id
     dashboard['title'] = monitored_node.name
+    panel_id = count()
+
     
-    for panel_id, input_name in enumerate(sorted(monitored_node.metadata.get('telegraf/config/inputs')), start=1):
-        panel = deepcopy(panel_template)
-        panel['id'] = panel_id
-        panel['title'] = input_name
-        panel['gridPos']['y'] = (panel_id - 1) * panel['gridPos']['h']
+    for row_id, row_name in enumerate(sorted(monitored_node.metadata.get('grafana_rows'))):
+        with open(repo.path.join([f'data/grafana/rows/{row_name}.py'])) as file:
+            row = eval(file.read())
         
-        with open(repo.path.join([f'data/grafana/panels/{input_name}.py'])) as file:
-            panel_config = eval(file.read())
-        
-        for target_id, target in enumerate(panel_config.get('targets', []), start=1):
-            panel['targets'].append({
-                'refId': f'{input_name}_{target_id}',
-                'query': flux_template.render(
-                    bucket=bucket,
-                    host=monitored_node.name,
-                    filters={
-                        'host': monitored_node.name,
-                        **target,
-                    },
-                ).strip()
-            })
+        for panel_in_row, (panel_name, panel_config) in enumerate(row.items()):
+            panel = deepcopy(panel_template)
+            panel['id'] = next(panel_id)
+            panel['title'] = panel_name
+            panel['gridPos']['w'] = 24 // len(row)
+            panel['gridPos']['x'] = (24 // len(row)) * panel_in_row
+            panel['gridPos']['y'] = (row_id - 1) * panel['gridPos']['h']
             
-        dashboard['panels'].append(panel)
+            if 'display_name' in panel_config:
+                panel['fieldConfig']['defaults']['displayName'] = '${'+panel_config['display_name']+'}'
+            
+            for query_name, query_config in panel_config['queries'].items():
+                panel['targets'].append({
+                    'refId': query_name,
+                    'query': flux_template.render(
+                        bucket=bucket,
+                        host=monitored_node.name,
+                        filters={
+                            'host': monitored_node.name,
+                            **query_config['filters'],
+                        },
+                        function=query_config.get('function', None),
+                    ).strip()
+                })
+                
+            dashboard['panels'].append(panel)
     
     files[f'/var/lib/grafana/dashboards/{monitored_node.name}.json'] = {
         'content': json.dumps(dashboard, sort_keys=True, indent=4),

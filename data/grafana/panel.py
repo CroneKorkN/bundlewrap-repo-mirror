@@ -2,10 +2,10 @@
 #    'id': 1,
 #    'title': 'TBD',
     "gridPos": {
-        "x": 0,
+#        "x": 0,
 #        "y": 0,
-        "h": 5,
-        "w": 24
+        "h": 8,
+#        "w": 24
     },
     'type': 'timeseries',
     'transformations': [],
@@ -26,7 +26,7 @@
                     'mode': 'normal',
                     'group': 'A'
                 },
-                'axisPlacement': 'hidden',
+#                'axisPlacement': 'hidden',
                 'axisLabel': '',
                 'scaleDistribution': {
                     'type': 'linear'
@@ -67,7 +67,7 @@
     },
     'options': {
         'tooltip': {
-            'mode': 'none',
+            'mode': 'single',
         },
         'legend': {
             'displayMode': 'list',
