@@ -142,7 +142,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
             dashboard['panels'].append(panel)
     
     files[f'/var/lib/grafana/dashboards/{monitored_node.name}.json'] = {
-        'content': json.dumps(dashboard, sort_keys=True, indent=4),
+        'content': json.dumps(dashboard, indent=4),
         'triggers': [
             'svc_systemd:grafana-server:restart',
         ]
