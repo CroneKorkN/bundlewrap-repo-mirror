@@ -38,6 +38,13 @@ defaults = {
             },
         },
     },
+    'telegraf': {
+        'config': {
+            'inputs': {
+                'zfs': [{}],
+            },
+        },
+    },
     'zfs': {
         'datasets': {},
         'pools': {},

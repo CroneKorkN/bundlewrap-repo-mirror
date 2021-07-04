@@ -18,14 +18,14 @@ defaults = {
                 'metric_batch_size': 1000,
                 'metric_buffer_limit': 10000,
                 'omit_hostname': False,
-                'round_interval': True
+                'round_interval': True,
             },
             'inputs': {
                 'cpu': [{
                     'collect_cpu_time': False,
                     'percpu': True,
                     'report_active': False,
-                    'totalcpu': True
+                    'totalcpu': True,
                 }],
                 'disk': [{
                     'ignore_fs': [
@@ -35,7 +35,7 @@ defaults = {
                         'iso9660',
                         'overlay',
                         'aufs',
-                        'squashfs'
+                        'squashfs',
                     ],
                 }],
                 'diskio': [{}],
