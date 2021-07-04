@@ -5,6 +5,7 @@
         'backup',
         'debian-10',
 #        'nextcloud',
+        'monitored',
     ],
     'bundles': [
         'gitea',

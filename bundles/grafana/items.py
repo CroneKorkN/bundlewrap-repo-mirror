@@ -4,9 +4,9 @@ assert node.has_bundle('postgresql')
 from mako.template import Template
 from shlex import quote
 from copy import deepcopy
+from itertools import count
 import yaml
 import json
-from itertools import count
 
 svc_systemd['grafana-server'] = {
     'needs': [
@@ -94,8 +94,8 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
     dashboard = deepcopy(dashboard_template)
     dashboard['id'] = dashboard_id
     dashboard['title'] = monitored_node.name
+    dashboard['uid'] = monitored_node.metadata.get('id')
     panel_id = count(start=1)
-
     
     for row_id, row_name in enumerate(sorted(monitored_node.metadata.get('grafana_rows')), start=1):
         with open(repo.path.join([f'data/grafana/rows/{row_name}.py'])) as file:

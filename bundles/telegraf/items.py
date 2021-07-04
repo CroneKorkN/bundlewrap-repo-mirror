@@ -10,5 +10,6 @@ files['/etc/telegraf/telegraf.conf'] = {
 svc_systemd['telegraf'] = {
     'needs': [
         'file:/etc/telegraf/telegraf.conf',
+        'pkg_apt:telegraf',
     ],
 }

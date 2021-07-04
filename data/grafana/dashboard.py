@@ -1,6 +1,7 @@
 {
 #  "id": 1,
 #  "title": "some dashboard",
+#  "uid": "IBPgYBznk",
   "annotations": {
     "list": [
       {
@@ -17,7 +18,6 @@
   "editable": True,
   "gnetId": None,
   "graphTooltip": 0,
-  "iteration": 1625410820978,
   "links": [],
   "panels": [],
   "refresh": False,
@@ -33,6 +33,5 @@
   },
   "timepicker": {},
   "timezone": "",
-  "uid": "IBPgYBznk",
   "version": 15
 }
