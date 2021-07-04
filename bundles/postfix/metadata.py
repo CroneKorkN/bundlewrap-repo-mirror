@@ -15,4 +15,11 @@ defaults = {
             'postfix',
         }, 
     },
+    'telegraf': {
+        'config': {
+            'inputs': {
+                'postfix': [{}],
+            },
+        },
+    },
 }
