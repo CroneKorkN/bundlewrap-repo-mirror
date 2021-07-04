@@ -83,31 +83,42 @@ with open(repo.path.join([f'data/grafana/flux.mako'])) as file:
 
 bucket = repo.get_node(node.metadata.get('grafana/influxdb_node')).metadata.get('influxdb/bucket')
 
-for dashboard_id, (node_name, panels) in enumerate(node.metadata.get('grafana/dashboards').items(), start=1):
+monitored_nodes = [
+    other_node
+        for other_node in repo.nodes
+        if other_node.metadata.get('telegraf/influxdb_node', None) == node.metadata.get('grafana/influxdb_node')
+]
+
+for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
     dashboard = deepcopy(dashboard_template)
     dashboard['id'] = dashboard_id
-    dashboard['title'] = node_name
+    dashboard['title'] = monitored_node.name
     
-    for panel_id, (panel_name, panel_config) in enumerate(panels.items(), start=1):
+    for panel_id, input_name in enumerate(sorted(monitored_node.metadata.get('telegraf/config/inputs')), start=1):
         panel = deepcopy(panel_template)
         panel['id'] = panel_id
-        panel['title'] = panel_name
+        panel['title'] = input_name
+        panel['gridPos']['y'] = (panel_id - 1) * panel['gridPos']['h']
         
-        for target_name, target_config in panel_config.items():
-            print(target_name, target_config)
+        with open(repo.path.join([f'data/grafana/panels/{input_name}.py'])) as file:
+            panel_config = eval(file.read())
+        
+        for target_id, target in enumerate(panel_config.get('targets', []), start=1):
             panel['targets'].append({
-                'refId': target_name,
+                'refId': f'{input_name}_{target_id}',
                 'query': flux_template.render(
                     bucket=bucket,
-                    host=node_name,
-                    field=target_name,
-                    filters=target_config['filter'],
+                    host=monitored_node.name,
+                    filters={
+                        'host': monitored_node.name,
+                        **target,
+                    },
                 ).strip()
             })
             
         dashboard['panels'].append(panel)
     
-    files[f'/var/lib/grafana/dashboards/{node_name}.json'] = {
+    files[f'/var/lib/grafana/dashboards/{monitored_node.name}.json'] = {
         'content': json.dumps(dashboard, sort_keys=True, indent=4),
         'triggers': [
             'svc_systemd:grafana-server:restart',

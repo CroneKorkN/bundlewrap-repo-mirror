@@ -31,7 +31,6 @@ defaults = {
                 'allow_signup': False,
             },
         },
-        'dashboards': {},
         'datasources': {},
     },
     'postgresql': {
@@ -54,26 +53,6 @@ defaults = {
         },
     },
 }
-
-
-@metadata_reactor.provides(
-    'grafana/dashboards',
-)
-def dashboards(metadata):
-    dashboards = {}
-    
-    for monitored_node in repo.nodes:
-        if monitored_node.metadata.get('telegraf/influxdb_node', None) == metadata.get('grafana/influxdb_node'):
-            for telegraf_input in monitored_node.metadata.get('telegraf/config/inputs'):
-                with open(repo.path.join([f'data/grafana/panels/{telegraf_input}.py'])) as file:
-                    dashboards.setdefault(monitored_node.name, {})[telegraf_input] = \
-                        eval(Template(file.read()).render(metadata=monitored_node.metadata))
-
-    return {
-        'grafana': {
-            'dashboards': dashboards,
-        }
-    }
 
 
 @metadata_reactor.provides(

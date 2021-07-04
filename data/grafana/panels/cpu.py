@@ -1,20 +1,14 @@
 {
-    'usage_system': {
-        'filter': {
+    'stacked': True,
+    'targets': [
+        {
             '_measurement': 'cpu',
             'cpu': 'cpu-total',
+            '_field': [
+                'usage_iowait',
+                'usage_system',
+                'usage_user',
+            ],
         },
-    },
-    'usage_iowait': {
-        'filter': {
-            '_measurement': 'cpu',
-            'cpu': 'cpu-total',
-        },
-    },
-    'usage_user': {
-        'filter': {
-            '_measurement': 'cpu',
-            'cpu': 'cpu-total',
-        },
-    },
+    ],
 }

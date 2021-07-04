@@ -25,37 +25,11 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "allValue": None,
-        "current": {
-          "isNone": True,
-          "selected": False,
-          "text": "None",
-          "value": ""
-        },
-        "datasource": None,
-        "definition": "",
-        "description": None,
-        "error": None,
-        "hide": 0,
-        "includeAll": False,
-        "label": None,
-        "multi": False,
-        "name": "query0",
-        "options": [],
-        "query": "",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": False,
-        "sort": 0,
-        "type": "query"
-      }
-    ]
+    "list": [],
   },
   "time": {
-    "from": "2021-07-01T19:00:00.201Z",
-    "to": "2021-07-01T19:03:10.018Z"
+    "from": "now-6h",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",

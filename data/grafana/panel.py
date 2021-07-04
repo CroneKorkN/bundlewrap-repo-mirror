@@ -1,6 +1,12 @@
 {
 #    'id': 1,
 #    'title': 'TBD',
+    "gridPos": {
+        "x": 0,
+#        "y": 0,
+        "h": 5,
+        "w": 24
+    },
     'type': 'timeseries',
     'transformations': [],
     'description': '',
