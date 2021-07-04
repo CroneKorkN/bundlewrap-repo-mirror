@@ -1,6 +1,6 @@
 {
     'usage': {
-        'stacked': True,
+        'stacked': False,
         'queries': {
             'usage': {
                 'filters': {

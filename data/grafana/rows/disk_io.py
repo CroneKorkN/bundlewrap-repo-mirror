@@ -15,7 +15,7 @@
         'display_name': '__field.labels.name'
     },
     'write': {
-        'stacked': False,
+        'stacked': True,
         'queries': {
             'load': {
                 'filters': {

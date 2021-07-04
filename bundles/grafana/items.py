@@ -94,10 +94,10 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
     dashboard = deepcopy(dashboard_template)
     dashboard['id'] = dashboard_id
     dashboard['title'] = monitored_node.name
-    panel_id = count()
+    panel_id = count(start=1)
 
     
-    for row_id, row_name in enumerate(sorted(monitored_node.metadata.get('grafana_rows'))):
+    for row_id, row_name in enumerate(sorted(monitored_node.metadata.get('grafana_rows')), start=1):
         with open(repo.path.join([f'data/grafana/rows/{row_name}.py'])) as file:
             row = eval(file.read())
         
@@ -111,6 +111,11 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
             
             if 'display_name' in panel_config:
                 panel['fieldConfig']['defaults']['displayName'] = '${'+panel_config['display_name']+'}'
+
+            if panel_config.get('stacked', False):
+                panel['fieldConfig']['defaults']['custom']['stacking']['mode'] = 'normal'
+            else:
+                panel['fieldConfig']['defaults']['custom']['stacking']['mode'] = 'none'
             
             for query_name, query_config in panel_config['queries'].items():
                 panel['targets'].append({
