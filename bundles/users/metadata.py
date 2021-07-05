@@ -16,17 +16,14 @@ def authorized_usersuser(metadata):
     users = {}
 
     for name, config in metadata.get('users').items():
+        users[name] = {
+            'authorized_keys': [],
+        }
         for authorized_user in config.get('authorized_users', []):
             authorized_user_name, authorized_user_node = authorized_user.split('@')
-            users\
-                .setdefault(name, {})\
-                .setdefault('authorized_keys', [])\
-                .append(
-                    repo\
-                        .get_node(authorized_user_node)\
-                        .metadata\
-                        .get(f'users/{authorized_user_name}/pubkey')
-                )
+            users[name]['authorized_keys'].append(
+                repo.get_node(authorized_user_node).metadata.get(f'users/{authorized_user_name}/pubkey')
+            )
     return {
         'users': users,
     }
