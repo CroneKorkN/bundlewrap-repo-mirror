@@ -5,13 +5,3 @@ defaults = {
         }
     }
 }
-
-@metadata_reactor.provides(
-    'users'
-)
-def users(metadata):
-    return {
-        'users': {
-            'user'
-        }
-    }

@@ -12,7 +12,6 @@
     ],
     'bundles': [
         'nextcloud',
-        'oh-my-zsh',
         'wireguard',
         'zfs',
     ],

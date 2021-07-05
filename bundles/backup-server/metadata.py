@@ -53,7 +53,6 @@ def dns(metadata):
     }
 
 
-
 @metadata_reactor.provides(
     'users/backup-receiver/authorized_keys'
 )

@@ -1,6 +1,7 @@
 {
     'bundles': [
         'users',
+        'zsh',
     ],
     'metadata': {
         'dns': {},
