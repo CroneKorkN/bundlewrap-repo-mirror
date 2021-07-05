@@ -16,6 +16,12 @@
         'zfs',
     ],
     'metadata': {
+        'systemd-timers': {
+            'test1': {
+                'when': 'weekly',
+                'command': '/bin/ls',
+            },
+        },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
             'version': '21.0.0',

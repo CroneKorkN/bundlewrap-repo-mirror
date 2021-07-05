@@ -6,5 +6,6 @@
         'network',
         'systemd',
         'systemd-networkd',
+        'systemd-timers',
     ],
 }
