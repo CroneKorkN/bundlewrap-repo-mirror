@@ -20,14 +20,6 @@ defaults = {
             'php-zip': {},
         },
     },
-    'nginx': {
-        'vhosts': {
-            'roundcube': {
-                'webroot': '/opt/roundcube',
-                'php': True,
-            },
-        },
-    },
     'roundcube': {
         'database': {
             'provider': 'pgsql',
@@ -57,14 +49,19 @@ defaults = {
 }
 
 @metadata_reactor.provides(
-    'nginx/vhosts/roundcube/domain'
+    'nginx/vhosts'
 )
-def domain(metadata):
+def vhost(metadata):
     return {
         'nginx': {
             'vhosts': {
-                'roundcube': {
-                    'domain': metadata.get('mailserver/hostname'),
+                metadata.get('mailserver/hostname'): {
+                    'root': '/opt/roundcube',
+                    'location ~ \.php$': {
+                        'include': 'fastcgi.conf',
+                        'fastcgi_split_path_info': '^(.+\.php)(/.+)$',
+                        'fastcgi_pass': f"unix:/run/php/php{metadata.get('php/version')}-fpm.sock",
+                    },
                 },
             },
         },
