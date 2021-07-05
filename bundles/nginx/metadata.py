@@ -47,8 +47,27 @@ defaults = {
             },
         },
         'vhosts': {},
+        'includes': {},
     },
 }
+
+@metadata_reactor.provides(
+    'nginx/includes/php',
+)
+def php(metadata):
+    return {
+        'nginx': {
+            'includes': {
+                'php': {
+                    'location ~ \.php$': {
+                        'include': 'fastcgi.conf',
+                        'fastcgi_split_path_info': '^(.+\.php)(/.+)$',
+                        'fastcgi_pass': f"unix:/run/php/php{metadata.get('php/version')}-fpm.sock",
+                    },
+                },
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(

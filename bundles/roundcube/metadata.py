@@ -57,11 +57,9 @@ def vhost(metadata):
             'vhosts': {
                 metadata.get('mailserver/hostname'): {
                     'root': '/opt/roundcube',
-                    'location ~ \.php$': {
-                        'include': 'fastcgi.conf',
-                        'fastcgi_split_path_info': '^(.+\.php)(/.+)$',
-                        'fastcgi_pass': f"unix:/run/php/php{metadata.get('php/version')}-fpm.sock",
-                    },
+                    'include': [
+                        'php.conf',
+                    ],
                 },
             },
         },

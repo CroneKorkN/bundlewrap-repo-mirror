@@ -28,6 +28,12 @@ files = {
             'svc_systemd:nginx:restart',
         },
     }, 
+    '/etc/nginx/sites-available': {
+        'delete': True,
+    },
+    '/etc/nginx/sites-enabled': {
+        'delete': True,
+    },
 }
 
 actions = {
@@ -46,6 +52,18 @@ svc_systemd = {
     },
 }
 
+for name, config in node.metadata.get('nginx/includes').items():
+    files[f'/etc/nginx/{name}.conf'] = {
+        'content': repo.libs.nginx.render_config(config),
+        'needed_by': {
+            'svc_systemd:nginx',
+            'svc_systemd:nginx:restart',
+        },
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    }
+    
 for name, config in {
     **node.metadata.get('nginx/default_vhosts'),
     **node.metadata.get('nginx/vhosts'),

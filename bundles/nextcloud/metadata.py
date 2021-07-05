@@ -63,18 +63,20 @@ defaults = {
     },
 }
 
-# @metadata_reactor.provides(
-#     'nginx/vhosts/nextcloud/domain',
-# )
-# def nginx(metadata):
-#     return {
-#         'nginx': {
-#             'vhosts': {
-#                 'nextcloud': {
-#                     'domain': metadata.get('nextcloud/domain'),
-#                     'webroot': '/opt/nextcloud',
-#                     'php': True,
-#                 },
-#             },
-#         },
-#     }
+
+@metadata_reactor.provides(
+    'nginx/vhosts'
+)
+def vhost(metadata):
+    return {
+        'nginx': {
+            'vhosts': {
+                metadata.get('nextcloud/hostname'): {
+                    'root': '/opt/nextcloud',
+                    'include': [
+                        'php.conf',
+                    ],
+                },
+            },
+        },
+    }
