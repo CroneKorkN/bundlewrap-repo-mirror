@@ -24,5 +24,5 @@ for name, config in node.metadata.get('users').items():
     }
 
     users[name] = config
-    for option in ['authorized_keys', 'privkey', 'pubkey', 'keytype']:
+    for option in ['authorized_keys', 'authorized_users', 'privkey', 'pubkey', 'keytype']:
         users[name].pop(option, None)

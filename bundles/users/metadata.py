@@ -12,6 +12,29 @@ defaults = {
 @metadata_reactor.provides(
     'users',
 )
+def authorized_usersuser(metadata):
+    users = {}
+
+    for name, config in metadata.get('users').items():
+        for authorized_user in config.get('authorized_users', []):
+            authorized_user_name, authorized_user_node = authorized_user.split('@')
+            users\
+                .setdefault(name, {})\
+                .setdefault('authorized_keys', [])\
+                .append(
+                    repo\
+                        .get_node(authorized_user_node)\
+                        .metadata\
+                        .get(f'users/{authorized_user_name}/pubkey')
+                )
+    return {
+        'users': users,
+    }
+
+
+@metadata_reactor.provides(
+    'users',
+)
 def user(metadata):
     users = {}
 

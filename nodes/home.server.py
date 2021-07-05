@@ -11,6 +11,7 @@
         'gitea',
         'grafana',
         'influxdb2',
+        'mirror',
         'postgresql',
         'redis',
         'wireguard',
@@ -18,6 +19,12 @@
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
+        'mirror': {
+            'certs': {
+                'from': '10.0.10.2:/var/lib/dehydrated/certs',
+                'to': '/var/lib/dehydrated/certs',
+            },
+        },
         'network': {
             'internal': {
                 'interface': 'enp1s0f0',

@@ -102,6 +102,13 @@
             'version': '1.4.11',
             'installer': True,
         },
+        'users': {
+            'root': {
+                'authorized_users': [
+                    'root@home.server',
+                ],
+            },
+        },
         'vm': {
             'cores': 2,
             'ram': 8096,
