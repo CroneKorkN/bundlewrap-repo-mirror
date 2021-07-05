@@ -12,7 +12,7 @@ defaults = {
 @metadata_reactor.provides(
     'users',
 )
-def authorized_usersuser(metadata):
+def authorized_users(metadata):
     users = {}
 
     for name, config in metadata.get('users').items():

@@ -63,24 +63,6 @@
                 'gateway6': 'fe80::1',
             }
         },
-        # 'nginx': {
-        #     'vhosts': {
-        #         'nextcloud': {
-        #             'domain': 'test.ckn.li',
-        #             'ssl': 'letsencrypt',
-        #             'letsencrypt': {
-        #                 'active': True,
-        #                 'force_ssl': False,
-        #             },
-        #             'proxy': {
-        #                 '/': {
-        #                     'target':   'https://mail.sublimity.de:443',
-        #                     'websocket': True,
-        #                 },
-        #             },
-        #         },
-        #     },
-        # },
         'mailserver': {
             'hostname': 'mail.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
