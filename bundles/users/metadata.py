@@ -29,9 +29,11 @@ def authorized_users(metadata):
     }
 
 
-@metadata_reactor.provides(
-    'users',
-)
+# FIXME: bw bug?
+# @metadata_reactor.provides(
+#     'users',
+# )
+@metadata_reactor
 def user(metadata):
     users = {}
 
