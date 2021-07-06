@@ -65,7 +65,6 @@ svc_systemd = {
 
 
 for name, config in node.metadata.get('nginx/vhosts').items():
-    print(name)
     files[f'/etc/nginx/sites/{name}'] = {
         'content': Template(filename=join(repo.path, 'data', config['content'])).render(
             server_name=name,

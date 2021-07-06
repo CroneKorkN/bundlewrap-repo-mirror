@@ -53,7 +53,7 @@
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
-            'version': '21.0.1',
+            'version': '21.0.3',
         },
         'users': {
             'root': {
