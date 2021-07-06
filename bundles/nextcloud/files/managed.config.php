@@ -21,4 +21,5 @@ $CONFIG = array (
     ],
   ],
   "cache_path" => "/var/lib/nextcloud/.cache",
+  "upgrade.disable-web" => true,
 );

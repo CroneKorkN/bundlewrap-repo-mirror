@@ -68,15 +68,6 @@ symlinks = {
 }
 
 files = {
-    '/etc/nextcloud/CAN_INSTALL': {
-        'content': '',
-        'owner': 'www-data',
-        'group': 'www-data',
-        'mode': '640',
-        'needs': [
-            'directory:/etc/nextcloud',
-        ],
-    },
     '/etc/nextcloud/managed.config.php': {
         'content_type': 'mako',
         'owner': 'www-data',
@@ -116,7 +107,6 @@ actions['install_nextcloud'] = {
         'symlink:/opt/nextcloud/config',
         'symlink:/opt/nextcloud/userapps',
         'action:extract_nextcloud',
-        'file:/etc/nextcloud/CAN_INSTALL',
         'file:/etc/nextcloud/managed.config.php',
         'postgres_db:nextcloud',
     ],
