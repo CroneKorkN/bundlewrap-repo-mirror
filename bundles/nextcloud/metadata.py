@@ -13,6 +13,7 @@ defaults = {
             'php-cli': {},
             'php-cgi': {},
             'php-zip': {},
+            'php-pgsql': {},
         },
     },
     'archive': {

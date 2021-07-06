@@ -28,6 +28,7 @@ if node.has_bundle('zfs'):
         'datasets': {
             'tank/postgresql': {
                 'mountpoint': '/var/lib/postgresql',
+#                'recordsize': '16384',
             },
         },
     }
