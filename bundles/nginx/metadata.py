@@ -52,9 +52,9 @@ defaults = {
 }
 
 @metadata_reactor.provides(
-    'nginx/includes/php',
+    'nginx/includes',
 )
-def php(metadata):
+def includes(metadata):
     return {
         'nginx': {
             'includes': {

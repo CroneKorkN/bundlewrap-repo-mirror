@@ -1,5 +1,7 @@
 assert node.has_bundle('nginx')
 
+delegated = 'delegate_to_node' in node.metadata.get('letsencrypt')
+
 directories = {
     '/etc/dehydrated/conf.d': {},
     '/var/lib/dehydrated/acme-challenges': {},
@@ -29,6 +31,7 @@ files = {
 actions['letsencrypt_update_certificates'] = {
     'command': 'dehydrated --cron --accept-terms --challenge http-01',
     'triggered': True,
+    'skip': delegated,
     'needs': {
         'svc_systemd:nginx',
     },
