@@ -1,6 +1,0 @@
-#!/usr/bin/env python3
-
-from bundlewrap.repo import Repository
-from os.path import realpath, dirname
-
-repo = Repository(dirname(dirname(realpath(__file__))))

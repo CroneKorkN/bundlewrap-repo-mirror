@@ -1,7 +1,6 @@
 {
     'bundles': [
         'users',
-        'backup',
     ],
     'metadata': {
         'backup': {
