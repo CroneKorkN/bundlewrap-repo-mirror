@@ -1,7 +1,3 @@
-from base64 import b64decode
-
-
-
 @metadata_reactor.provides(
     'users',
 )
