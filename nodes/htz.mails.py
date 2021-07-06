@@ -85,19 +85,15 @@
                     'content': 'nginx/proxy_pass.conf',
                     'context': {
                         'target': 'https://cloud.sublimity.de:443',
-                    }
-                }
-            }
-        },
-        'nginx': {
-            'vhosts': {
+                    },
+                },
                 'git.sublimity.de': {
                     'content': 'nginx/proxy_pass.conf',
                     'context': {
                         'target': 'https://git.sublimity.de:443',
-                    }
-                }
-            }
+                    },
+                },
+            },
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
