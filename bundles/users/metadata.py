@@ -1,7 +1,7 @@
 @metadata_reactor.provides(
     'users',
 )
-def user(metadata):
+def users(metadata):
     users = {}
 
     for name, config in metadata.get('users').items():

@@ -1,6 +1,4 @@
-@metadata_reactor.provides(
-    'users/backup-receiver/authorized_keys'
-)
+@metadata_reactor
 def backup_authorized_keys(metadata):
     for other_node in repo.nodes:
         if other_node.metadata.get('backup/server') == node.name:
