@@ -1,13 +1,5 @@
 from base64 import b64decode
 
-defaults = {
-    'users': {
-        'root': {
-            'home': '/root',
-        },
-    },
-}
-
 
 @metadata_reactor.provides(
     'users',
