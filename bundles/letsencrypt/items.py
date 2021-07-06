@@ -34,10 +34,10 @@ actions['letsencrypt_update_certificates'] = {
     },
 }
 
-for domain, _ in node.metadata.get('letsencrypt/domains').items():
-    actions['letsencrypt_ensure-some-certificate_{}'.format(domain)] = {
-        'command': '/etc/dehydrated/letsencrypt-ensure-some-certificate {}'.format(domain),
-        'unless': '/etc/dehydrated/letsencrypt-ensure-some-certificate {} true'.format(domain),
+for domain in node.metadata.get('letsencrypt/domains').keys():
+    actions[f'letsencrypt_ensure-some-certificate_{domain}'] = {
+        'command': f'/etc/dehydrated/letsencrypt-ensure-some-certificate {domain}',
+        'unless': f'/etc/dehydrated/letsencrypt-ensure-some-certificate {domain} true',
         'needs': {
             'file:/etc/dehydrated/letsencrypt-ensure-some-certificate',
         },

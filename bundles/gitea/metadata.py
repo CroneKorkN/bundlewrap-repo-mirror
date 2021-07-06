@@ -74,20 +74,13 @@ defaults = {
     'nginx/vhosts',
 )
 def nginx(metadata):
-    if not node.has_bundle('nginx'):
-        raise DoNotRunAgain
-
     return {
         'nginx': {
             'vhosts': {
                 metadata.get('gitea/domain'): {
-                    'proxy': {
-                        '/': {
-                            'target': 'http://127.0.0.1:22000',
-                        },
+                    'location /': {
+                        'proxy_pass': 'http://127.0.0.1:3500',
                     },
-                    'website_check_path': '/user/login',
-                    'website_check_string': 'Sign In',
                 },
             },
         },
