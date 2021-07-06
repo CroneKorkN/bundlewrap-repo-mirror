@@ -13,6 +13,9 @@ for name, user_config in node.metadata.get('users').items():
         },
         join(user_config['home'], '.zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions'): {
             'owner': name,
+            'needs': [
+                f"git_deploy:{join(user_config['home'], '.zsh/oh-my-zsh')}",
+            ]
         },
     }
     
