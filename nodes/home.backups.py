@@ -1,5 +1,4 @@
 {
-    'hostname': '10.0.0.5',
     'bundles': [
         'backup-server',
     ],

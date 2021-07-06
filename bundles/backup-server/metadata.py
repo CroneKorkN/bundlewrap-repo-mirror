@@ -1,6 +1,3 @@
-from ipaddress import ip_interface
-
-
 @metadata_reactor.provides(
     'users/backup-receiver/authorized_keys'
 )
