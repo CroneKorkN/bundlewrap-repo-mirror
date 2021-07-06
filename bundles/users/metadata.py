@@ -6,9 +6,7 @@ def user(metadata):
 
     for name, config in metadata.get('users').items():
         users[name] = {
-            'authorized_keys': [],
-            'privkey': '111',
-            'privkey': 'pubkey',
+            'pubkey': '222',
         }
     
     return {
