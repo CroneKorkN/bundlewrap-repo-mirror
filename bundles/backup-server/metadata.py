@@ -1,13 +1,5 @@
 from ipaddress import ip_interface
 
-defaults = {
-    'users': {
-        'backup-receiver': {
-            'authorized_keys': [],
-        },
-    },
-}
-
 
 @metadata_reactor.provides(
     'users/backup-receiver/authorized_keys'
