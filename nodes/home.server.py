@@ -4,7 +4,7 @@
         'archive',
         'backup',
         'debian-10',
-#        'nextcloud',
+        'nextcloud',
         'monitored',
         'webserver',
     ],

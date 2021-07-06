@@ -78,9 +78,10 @@ def nginx(metadata):
         'nginx': {
             'vhosts': {
                 metadata.get('gitea/domain'): {
-                    'location /': {
-                        'proxy_pass': 'http://127.0.0.1:3500',
-                    },
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'http://127.0.0.1:3500',
+                    }
                 },
             },
         },

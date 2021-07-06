@@ -73,10 +73,10 @@ def vhost(metadata):
         'nginx': {
             'vhosts': {
                 metadata.get('nextcloud/hostname'): {
-                    'root': '/opt/nextcloud',
-                    'include': [
-                        'php.conf',
-                    ],
+                    'content': 'nextcloud/vhost.conf',
+                    'context': {
+                        'root': '/opt/nextcloud',
+                    },
                 },
             },
         },

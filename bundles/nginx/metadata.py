@@ -7,26 +7,6 @@ defaults = {
         },
     },
     'nginx': {
-        'config': {
-            'user': 'www-data',
-            'worker_processes': 10,
-            'pid': '/var/run/nginx.pid',
-            'events': {
-                'worker_connections': 768,
-            },
-            'http': {
-                'include': [
-                    '/etc/nginx/mime.types',
-                    '/etc/nginx/sites/*',
-                ],
-                'default_type': 'application/octet-stream',
-                'sendfile': 'on',
-                'tcp_nopush': 'on',
-                'server_names_hash_bucket_size': 128,
-                'access_log': '/var/log/nginx/access.log',
-                'error_log': '/var/log/nginx/error.log',
-            },
-        },
         'default_vhosts': {
             '80': {
                 'listen': [
@@ -46,7 +26,14 @@ defaults = {
                'stub_status': '',
             },
         },
-        'vhosts': {},
+        'vhosts': {
+            # '80': {
+            #     'content': 'nginx/80.conf',
+            # },
+            # 'stub_status': {
+            #     'content': 'nginx/stub_status.conf',
+            # },
+        },
         'includes': {},
     },
 }

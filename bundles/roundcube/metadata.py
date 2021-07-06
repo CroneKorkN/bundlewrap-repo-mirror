@@ -56,10 +56,10 @@ def vhost(metadata):
         'nginx': {
             'vhosts': {
                 metadata.get('mailserver/hostname'): {
-                    'root': '/opt/roundcube',
-                    'include': [
-                        'php.conf',
-                    ],
+                    'content': 'nginx/php.conf',
+                    'context': {
+                        'root': '/opt/roundcube',
+                    },
                 },
             },
         },

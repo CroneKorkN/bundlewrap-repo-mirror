@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+from mako.template import Template
+from os.path import join
 
 directories = {
     '/etc/nginx/sites': {
@@ -17,13 +19,22 @@ directories = {
 }
 
 files = {
-     '/etc/nginx/nginx.conf': {
-        'content': repo.libs.nginx.render_config(node.metadata.get('nginx/config')),
+    '/etc/nginx/nginx.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
     }, 
     '/etc/nginx/fastcgi.conf': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    }, 
+    '/etc/nginx/sites/80.conf': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    }, 
+    '/etc/nginx/sites/stub_status.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
@@ -52,26 +63,14 @@ svc_systemd = {
     },
 }
 
-for name, config in node.metadata.get('nginx/includes').items():
-    files[f'/etc/nginx/{name}.conf'] = {
-        'content': repo.libs.nginx.render_config(config),
-        'needed_by': {
-            'svc_systemd:nginx',
-            'svc_systemd:nginx:restart',
-        },
-        'triggers': {
-            'svc_systemd:nginx:restart',
-        },
-    }
-    
-for name, config in {
-    **node.metadata.get('nginx/default_vhosts'),
-    **node.metadata.get('nginx/vhosts'),
-}.items():
+
+for name, config in node.metadata.get('nginx/vhosts').items():
+    print(name)
     files[f'/etc/nginx/sites/{name}'] = {
-        'content': repo.libs.nginx.render_config({
-            'server': config,
-        }),
+        'content': Template(filename=join(repo.path, 'data', config['content'])).render(
+            server_name=name,
+            **config.get('context', {}),
+        ),
         'needs': [],
         'needed_by': {
             'svc_systemd:nginx',
