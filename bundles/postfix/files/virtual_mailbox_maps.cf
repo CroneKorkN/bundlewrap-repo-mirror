@@ -1,5 +1,0 @@
-hosts = ${host}
-dbname = ${name}
-user = ${user}
-password = ${password}
-query = SELECT CONCAT(users.name, '@', domains.name) AS email FROM users LEFT JOIN domains ON users.domain_id = domains.id WHERE redirect IS NULL AND users.name = '%u' AND domains.name = '%d'

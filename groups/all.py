@@ -1,13 +1,12 @@
 {
     'bundles': [
         'users',
-        'zsh',
+        'backup',
     ],
     'metadata': {
-        'dns': {},
-        'nameservers': [
-            '10.0.10.2',
-        ],
+        'backup': {
+            'server': 'home.backups',
+        },
         'users': {
             'root': {
                 'shell': '/usr/bin/zsh',

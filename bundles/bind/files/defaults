@@ -1,2 +1,0 @@
-RESOLVCONF=no
-OPTIONS="-u bind"

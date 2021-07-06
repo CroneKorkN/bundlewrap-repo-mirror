@@ -1,5 +1,0 @@
-hosts = ${host}
-dbname = ${name}
-user = ${user}
-password = ${password}
-query = SELECT name FROM domains WHERE name='%s'

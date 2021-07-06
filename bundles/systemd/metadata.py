@@ -1,5 +1,0 @@
-defaults = {
-    'systemd': {
-        'services': {},
-    }
-}
