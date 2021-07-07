@@ -24,7 +24,9 @@ defaults = {
     'zfs': {
         'datasets': {
             'tank/influxdb': {
-                'mountpoint': '/var/lib/influxdb'
+                'mountpoint': '/var/lib/influxdb',
+                'recordsize': '8192',
+                'atime': 'off',
             },
         },
     },
