@@ -1,12 +1,10 @@
+from ipaddress import ip_interface
+
 defaults = {
     'apt': {
         'packages': {
             'dehydrated': {},
         },
-    },
-    'cron': {
-        'letsencrypt_renew': '{} 4 * * *    root    /usr/bin/dehydrated --cron --accept-terms --challenge http-01 > /dev/null'.format((node.magic_number % 60)),
-        'letsencrypt_cleanup': '{} 4 * * 0    root    /usr/bin/dehydrated --cleanup > /dev/null'.format((node.magic_number % 60)),
     },
     'letsencrypt': {
         'domains': {},
@@ -17,6 +15,34 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'systemd-timers/letsencrypt',
+    'mirror/certs',
+)
+def renew(metadata):
+    delegated_node = metadata.get('letsencrypt/delegate_to_node', False)
+    
+    if delegated_node:
+        delegated_ip = ip_interface(repo.get_node(delegated_node).metadata.get('network/internal/ipv4')).ip
+        return {
+            'mirror': {
+                'certs': {
+                    'from': f"{delegated_ip}:/var/lib/dehydrated/certs",
+                    'to': '/var/lib/dehydrated',
+                },
+            },
+        }
+    else:
+        return {
+            'systemd-timers': {
+                'letsencrypt': {
+                    'command': '/usr/bin/dehydrated --cron --accept-terms --challenge http-01 && /usr/bin/dehydrated --cleanup',
+                    'when': 'daily',
+                },
+            },
+        }
 
 
 @metadata_reactor.provides(
