@@ -11,7 +11,8 @@ defaults = {
             'php-intl': {},
             'php-mail-mime': {},
             'php-mbstring': {},
-            'php-net-idna2': {},
+            # FIXME: not available in bullseye?
+            # 'php-net-idna2': {}, 
             'php-net-smtp': {},
             'php-net-socket': {},
             'php-pear': {},

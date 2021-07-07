@@ -1,5 +1,18 @@
 from bundlewrap.utils.dicts import merge_dict
 
+directories = {
+    '/var/lib/postgresql': {
+        'owner': 'postgres',
+        'group': 'postgres',
+        'needs': [
+            'zfs_dataset:tank/postgresql',
+        ],
+        'needed_by': [
+            'svc_systemd:postgresql',
+        ],
+    }
+}
+
 
 svc_systemd['postgresql'] = {
     'needs': [

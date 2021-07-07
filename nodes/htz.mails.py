@@ -4,7 +4,7 @@
 #        'archive',
         'backup',
         'hetzner-cloud',
-        'debian-10',
+        'debian-11',
         'mailserver',
         'monitored',
         'webserver',
@@ -65,12 +65,14 @@
                     'context': {
                         'target': 'https://cloud.sublimity.de:443',
                     },
+                    'internal_dns': False,
                 },
                 'git.sublimity.de': {
                     'content': 'nginx/proxy_pass.conf',
                     'context': {
                         'target': 'https://git.sublimity.de:443',
                     },
+                    'internal_dns': False,
                 },
             },
         },

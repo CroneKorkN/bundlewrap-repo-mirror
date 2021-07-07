@@ -90,8 +90,8 @@ def vhosts(metadata):
 def dns(metadata):
     return {
         'dns': {
-            domain: repo.libs.dns.get_a_records(metadata)
-                for domain in metadata.get('nginx/vhosts')
+            domain: repo.libs.dns.get_a_records(metadata, internal=config.get('internal_dns', True))
+                for domain, config in metadata.get('nginx/vhosts').items()
         },
     }
 

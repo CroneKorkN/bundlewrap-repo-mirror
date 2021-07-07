@@ -23,6 +23,9 @@ files['/etc/default/bind9'] = {
 files['/etc/bind/named.conf'] = {
     'owner': 'root',
     'group': 'bind',
+    'needs': [
+        'pkg_apt:bind9',
+    ],
     'needed_by': [
         'svc_systemd:bind9',
     ],
