@@ -60,6 +60,7 @@ def dataset_defaults(metadata):
             'datasets': {
                 name: {
                     'compression': 'lz4',
+                    'relatime': 'on',
                 } for name, config in metadata.get('zfs/datasets').items()
             },
         },

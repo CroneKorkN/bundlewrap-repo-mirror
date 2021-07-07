@@ -70,12 +70,14 @@ class ZFSDataset(Item):
     BUNDLE_ATTRIBUTE_NAME = "zfs_datasets"
     ITEM_ATTRIBUTES = {
         'atime': None,
+        'relatime': None,
         'acltype': None,
         'compression': None,
         'mountpoint': None,
         'quota': None,
         'recordsize': None,
         'dedup': None,
+        'logbias': None,
     }
     ITEM_TYPE_NAME = "zfs_dataset"
 
