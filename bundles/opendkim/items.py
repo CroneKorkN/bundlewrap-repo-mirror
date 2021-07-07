@@ -7,7 +7,6 @@ file_attributes = {
     ],
 }
 
-groups['opendkim'] = {}
 users['opendkim'] = {}
 
 directories = {

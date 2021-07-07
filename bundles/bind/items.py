@@ -33,6 +33,9 @@ files['/etc/bind/named.conf'] = {
 files['/etc/bind/named.conf.options'] = {
     'owner': 'root',
     'group': 'bind',
+    'needs': [
+        'pkg_apt:bind9',
+    ],
     'needed_by': [
         'svc_systemd:bind9',
     ],
@@ -70,6 +73,9 @@ files['/etc/bind/named.conf.local'] = {
     },
     'owner': 'root',
     'group': 'bind',
+    'needs': [
+        'pkg_apt:bind9',
+    ],
     'needed_by': [
         'svc_systemd:bind9',
     ],

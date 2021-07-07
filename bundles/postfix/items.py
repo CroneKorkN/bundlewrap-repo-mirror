@@ -1,11 +1,14 @@
 assert node.has_bundle('mailserver')
 
 file_options = {
-    'triggers': [
-        'svc_systemd:postfix:restart',
+    'needs': [
+        'pkg_apt:postfix',
     ],
     'needed_by': [
         'svc_systemd:postfix',
+    ],
+    'triggers': [
+        'svc_systemd:postfix:restart',
     ],
 }
 

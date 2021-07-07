@@ -1,9 +1,30 @@
 assert node.has_bundle('php')
 assert node.has_bundle('mailserver')
 
+directories = {
+    '/opt/roundcube': {
+        'owner': 'www-data',
+    },
+    '/opt/roundcube/logs': {
+        'owner': 'www-data',
+        'needs': [
+            'git_deploy:/opt/roundcube',
+        ],
+    },
+    '/opt/roundcube/temp': {
+        'owner': 'www-data',
+        'needs': [
+            'git_deploy:/opt/roundcube',
+        ],
+    }
+}
+
 git_deploy['/opt/roundcube'] = {
     'repo': "https://github.com/roundcube/roundcubemail.git",
     'rev': node.metadata.get('roundcube/version'),
+    'needs': [
+        'directory:/opt/roundcube',
+    ],
 }
 
 files['/opt/roundcube/config/config.inc.php'] = {
@@ -15,19 +36,6 @@ files['/opt/roundcube/config/config.inc.php'] = {
         'database': node.metadata.get('roundcube/database'),
         'plugins': node.metadata.get('roundcube/plugins'),
     },
-    'needs': [
-        'git_deploy:/opt/roundcube',
-    ],
-}
-
-directories['/opt/roundcube/logs'] = {
-    'owner': 'www-data',
-    'needs': [
-        'git_deploy:/opt/roundcube',
-    ],
-}
-directories['/opt/roundcube/temp'] = {
-    'owner': 'www-data',
     'needs': [
         'git_deploy:/opt/roundcube',
     ],

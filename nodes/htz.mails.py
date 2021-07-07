@@ -1,7 +1,7 @@
 {
     'hostname': '162.55.188.157',
     'groups': [
-        'archive',
+#        'archive',
         'backup',
         'hetzner-cloud',
         'debian-10',
@@ -11,21 +11,10 @@
         'dnsserver',
     ],
     'bundles': [
-#        'nextcloud',
         'wireguard',
         'zfs',
     ],
     'metadata': {
-        'systemd-timers': {
-            'test1': {
-                'when': 'weekly',
-                'command': '/bin/ls',
-            },
-        },
-        'nextcloud': {
-            'hostname': 'cloud.sublimity.de',
-            'version': '21.0.0',
-        },
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'bind': {
             'hostname': 'ns.sublimity.de',
@@ -40,14 +29,6 @@
                 'woodpipe.de': [],
                 'ckn.li': [],
                 'islamicstate.eu': [],
-            },
-        },
-        'dns': {
-            'islamicstate.eu': {
-                'A': ['1.2.3.4'],
-            },
-            'test.islamicstate.eu': {
-                'AAAA': ['::1337'],
             },
         },
         'network': {
@@ -67,8 +48,6 @@
             'hostname': 'mail.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
             'domains': [
-                'mail3.sublimity.de',
-                'islamicstate.eu',
                 # 'sublimity.de',
                 # 'freibrief.net',
                 # 'nadenau.net',
@@ -115,7 +94,6 @@
             'ram': 8096,
         },
         'wireguard': {
-            # ip r add 10.0.0.0/24 via 172.19.136.2 dev wg0
             'my_ip': '172.30.0.1/24',
             'peers': {
                 'home.server': {
@@ -135,7 +113,7 @@
         'zfs': {
             'pools': {
                 'tank': {
-                    'device': '/dev/disk/by-id/scsi-0HC_Volume_11764264',
+                    'device': '/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0-0-0-0-part2',
                 },
             },
         },
