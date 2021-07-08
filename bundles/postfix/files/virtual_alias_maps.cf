@@ -2,4 +2,4 @@ hosts = ${host}
 dbname = ${name}
 user = ${user}
 password = ${password}
-query = SELECT redirect FROM users LEFT JOIN domains ON users.domain_id = domains.id WHERE redirect IS NOT NULL AND users.name = '%u' AND domains.name = '%d'
+query = SELECT redirect FROM users LEFT JOIN domains ON users.domain_id = domains.id WHERE redirect IS NOT NULL AND domains.name = '%d' AND (users.name = '%u' OR users.name IS null)

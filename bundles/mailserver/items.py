@@ -32,6 +32,9 @@ setup = f"""
     ALTER TABLE users
     	ADD CONSTRAINT no_password_for_redirects
         CHECK (redirect IS null OR password IS null);
+    ALTER TABLE users
+    	ADD CONSTRAINT name_is_not_empty_string
+        CHECK (name <> '');
 
     -- OWNERSHIPS
     
