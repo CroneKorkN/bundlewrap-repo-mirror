@@ -20,6 +20,7 @@ directories = {
 
 files = {
     '/etc/nginx/nginx.conf': {
+        'content_type': 'mako',
         'triggers': {
             'svc_systemd:nginx:restart',
         },
