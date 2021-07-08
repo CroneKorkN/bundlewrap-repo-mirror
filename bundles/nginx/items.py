@@ -15,7 +15,9 @@ directories = {
             'svc_systemd:nginx:restart',
         },
     },
-    '/var/www': {},
+    '/var/www': {
+        'owner': 'www-data',
+    },
 }
 
 files = {

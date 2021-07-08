@@ -19,6 +19,9 @@ defaults = {
             'php-pgsql': {},
             'php-xml': {},
             'php-zip': {},
+            'php-curl': {},
+            'php-gd': {},
+            'composer': {},
         },
     },
     'roundcube': {
@@ -33,7 +36,7 @@ defaults = {
             'managesieve',
             'password',
         ],
-        'des_key': repo.vault.password_for(f'{node.name} roundcube des_key'),
+        'des_key': repo.vault.password_for(f'{node.name} roundcube des_key', length=24),
     },
     'postgresql': {
         'roles': {
@@ -57,7 +60,7 @@ def vhost(metadata):
         'nginx': {
             'vhosts': {
                 metadata.get('mailserver/hostname'): {
-                    'content': 'nginx/php.conf',
+                    'content': 'roundcube/vhost.conf',
                     'context': {
                         'root': '/opt/roundcube',
                     },

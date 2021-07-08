@@ -20,10 +20,13 @@ directories = {
 }
 
 git_deploy['/opt/roundcube'] = {
-    'repo': "https://github.com/roundcube/roundcubemail.git",
+    'repo': "git://github.com/roundcube/roundcubemail.git",
     'rev': node.metadata.get('roundcube/version'),
     'needs': [
         'directory:/opt/roundcube',
+    ],
+    'triggers': [
+        'action:composer_install',
     ],
 }
 
@@ -39,4 +42,9 @@ files['/opt/roundcube/config/config.inc.php'] = {
     'needs': [
         'git_deploy:/opt/roundcube',
     ],
+}
+
+actions['composer_install'] = {
+    'command': "cp /opt/roundcube/composer.json-dist /opt/roundcube/composer.json && su www-data -s /bin/bash -c '/usr/bin/composer -d /opt/roundcube install'",
+    'triggered': True,
 }
