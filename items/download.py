@@ -20,14 +20,16 @@ class Download(Item):
         "pkg_zypper:",
     ]
     ITEM_ATTRIBUTES = {
-        'url': "",
-        'sha256': "",
-        'sha256_url': "",
+        'url': None,
+        'sha256': None,
+        'sha256_url': None,
+        'gpg_signature_url': None,
+        'gpg_pubkey_url': None,
         'verifySSL': True,
         'decompress': None,
     }
     ITEM_TYPE_NAME = "download"
-    REQUIRED_ATTRIBUTES = []
+    REQUIRED_ATTRIBUTES = ['url']
 
     def __repr__(self):
         return "<Download name:{}>".format(self.name)
@@ -67,8 +69,14 @@ class Download(Item):
         """This is how the world should be"""
         cdict = {
             'type': 'download',
-            'sha256': self.attributes['sha256'],
         }
+
+        if self.attributes.get('sha256'):
+            cdict['sha256'] = self.attributes['sha256']
+        elif self.attributes.get('gpg_signature_url'):
+            cdict['verified'] = True
+        else:
+            raise
 
         return cdict
 
@@ -81,19 +89,35 @@ class Download(Item):
             sdict = {
                 'type': 'download',
             }
-            if 'sha256' in self.attributes:
+            if self.attributes.get('sha256'):
                 sdict['sha256'] = self.attributes['sha256']
-            elif 'sha256_url' in self.attributes:
-                sha256_url = self.attributes['sha256_url'].format(url=self.attributes['url'])
+            elif self.attributes.get('sha256_url'):
+                full_sha256_url = self.attributes['sha256_url'].format(url=self.attributes['url'])
                 sdict['sha256'] = force_text(
-                    self.node.run(f"curl -L -s -- {quote(sha256_url)}").stdout
+                    self.node.run(f"curl -sL -- {quote(full_sha256_url)}").stdout
                 ).strip().split()[0]
-
+            elif self.attributes.get('gpg_signature_url'):
+                full_signature_url = self.attributes['gpg_signature_url'].format(url=self.attributes['url'])
+                signature_path = f'{self.name}.signature'
+                
+                self.node.run(f"curl -sSL {self.attributes['gpg_pubkey_url']} | gpg --import -")
+                self.node.run(f"curl -L {full_signature_url} -o {quote(signature_path)}")
+                gpg_output = self.node.run(f"gpg --verify {quote(signature_path)} {quote(self.name)}").stderr
+                
+                if b'Good signature' in gpg_output:
+                    sdict['verified'] = True
+                else:
+                    sdict['verified'] = False
+                    
         return sdict
 
     @classmethod
     def validate_attributes(cls, bundle, item_id, attributes):
-        if 'sha256' not in attributes and 'sha256_url' not in attributes:
+        if (
+            'sha256' not in attributes and
+            'sha256_url' not in attributes and
+            'gpg_signature_url'not in attributes
+        ):
             raise BundleError(_(
                 "at least one hash must be set on {item} in bundle '{bundle}'"
             ).format(

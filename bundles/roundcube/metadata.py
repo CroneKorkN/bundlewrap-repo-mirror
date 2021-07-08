@@ -22,6 +22,7 @@ defaults = {
             'php-curl': {},
             'php-gd': {},
             'composer': {},
+            'php-ldap': {},
         },
     },
     'roundcube': {
