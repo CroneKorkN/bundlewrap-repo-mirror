@@ -1,5 +1,6 @@
 {
     'bundles': [
+        'sudo',
         'users',
         'zsh',
     ],

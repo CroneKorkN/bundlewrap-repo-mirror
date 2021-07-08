@@ -51,6 +51,9 @@ defaults = {
             },
         },
     },
+    'sudoers': {
+        'www-data': ['/usr/bin/doveadm pw -s ARGON2ID'],
+    },
 }
 
 @metadata_reactor.provides(
