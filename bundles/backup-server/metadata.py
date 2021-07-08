@@ -31,9 +31,10 @@ def zfs(metadata):
                         if path == config.get('mountpoint'):
                             datasets[f"tank/{other_node.metadata.get('id')}/{dataset}"] = {
                                 'mountpoint': 'none',
+                                'readonly': 'on',
                                 'backup': False,
                             }
-
+                            continue
 
     return {
         'zfs': {

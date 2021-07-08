@@ -78,6 +78,7 @@ class ZFSDataset(Item):
         'recordsize': None,
         'dedup': None,
         'logbias': None,
+        'readonly': None,
     }
     ITEM_TYPE_NAME = "zfs_dataset"
 
