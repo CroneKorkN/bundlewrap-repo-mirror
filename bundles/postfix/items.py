@@ -15,6 +15,9 @@ file_options = {
 files = {
     '/etc/postfix/main.cf': {
         'content_type': 'mako',
+        'context': {
+            'hostname': node.metadata.get('mailserver/hostname'),
+        },
         **file_options,
     },
     '/etc/postfix/master.cf': {

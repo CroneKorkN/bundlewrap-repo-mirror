@@ -46,7 +46,7 @@ $config['default_host'] = 'localhost';
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = '';
+$config['smtp_server'] = 'tls://localhost';
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
