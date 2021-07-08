@@ -31,6 +31,20 @@
                 'islamicstate.eu': [],
             },
         },
+        'dns': {
+            'ckn.li': {
+                'A': ['162.55.188.157'],
+                'AAAA': ['2a01:4f8:1c1c:4121::2'],
+            }
+        },
+        'letsencrypt': {
+            'domains': {
+                'ckn.li': {},
+                'sublimity.de': {},
+                'freibrief.net': {},
+                'naeder.net': {},
+            },
+        },
         'network': {
             'internal': {
                 'interface': 'ens10',

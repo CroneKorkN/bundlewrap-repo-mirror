@@ -45,7 +45,7 @@ def dns(metadata):
     
     for domain in metadata.get('mailserver/domains'):
         dns[domain] = {
-            'MX': [f'5 {domain}.'],
+            'MX': [f"5 {metadata.get('mailserver/hostname')}."],
             'TXT': ['v=spf1 a mx -all'],
         }
 
