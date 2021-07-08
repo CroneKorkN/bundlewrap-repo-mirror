@@ -53,18 +53,30 @@ actions['chown_roundcube'] = {
 }
 
 
-files['/opt/roundcube/config/config.inc.php'] = {
-    'content_type': 'mako',
-    'context': {
-        'installer': node.metadata.get('roundcube/installer'),
-        'product_name': node.metadata.get('roundcube/product_name'),
-        'des_key': node.metadata.get('roundcube/des_key'),
-        'database': node.metadata.get('roundcube/database'),
-        'plugins': node.metadata.get('roundcube/plugins'),
+files = {
+    '/opt/roundcube/config/config.inc.php': {
+        'content_type': 'mako',
+        'context': {
+            'installer': node.metadata.get('roundcube/installer'),
+            'product_name': node.metadata.get('roundcube/product_name'),
+            'des_key': node.metadata.get('roundcube/des_key'),
+            'database': node.metadata.get('roundcube/database'),
+            'plugins': node.metadata.get('roundcube/plugins'),
+        },
+        'needs': [
+            'action:chown_roundcube',
+        ],
     },
-    'needs': [
-        'action:chown_roundcube',
-    ],
+    '/opt/roundcube/plugins/password/config.inc.php': {
+        'source': 'password.config.inc.php',
+        'content_type': 'mako',
+        'context': {
+            'mailserver_db_password': node.metadata.get('mailserver/database/password'),
+        },
+        'needs': [
+            'action:chown_roundcube',
+        ],
+    },
 }
 
 actions['composer_install'] = {
