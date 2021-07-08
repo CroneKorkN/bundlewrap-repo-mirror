@@ -20,12 +20,18 @@ setup = f"""
 
     CREATE TABLE users (
         "id" BIGSERIAL PRIMARY KEY,
-        "name" varchar(255) NOT NULL,
+        "name" varchar(255) NULL,
         "domain_id" BIGSERIAL REFERENCES domains(id),
         "password" varchar(255) NULL,
         "redirect" varchar(255) DEFAULT NULL
     );
     CREATE UNIQUE INDEX ON users ("name", "domain_id") WHERE "redirect" IS NULL;
+    ALTER TABLE users
+    	ADD CONSTRAINT name_unless_redirect
+        CHECK (name IS NOT null OR redirect IS NOT null);
+    ALTER TABLE users
+    	ADD CONSTRAINT no_password_for_redirects
+        CHECK (redirect IS null OR password IS null);
 
     -- OWNERSHIPS
     
