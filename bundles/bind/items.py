@@ -1,4 +1,5 @@
 from ipaddress import ip_address
+from datetime import datetime
 
 directories[f'/var/lib/bind'] = {
     'purge': True,
@@ -123,6 +124,7 @@ for view in views:
             'content_type': 'mako',
             'context': {
                 'view': view['name'],
+                'serial': datetime.now().strftime('%Y%m%d%H'),
                 'records': list(filter(
                     lambda record: use_record(record, records, view['name']),
                     records
