@@ -77,3 +77,12 @@ $config['plugins'] = array(${', '.join(f'"{plugin}"' for plugin in plugins)});
 // the default locale setting (leave empty for auto-detection)
 // RFC1766 formatted language name like en_US, de_DE, de_CH, fr_FR, pt_BR
 $config['language'] = 'de_DE';
+
+
+// https://serverfault.com/a/991304
+$config['smtp_conn_options'] = array(
+   'ssl' => array(
+   'verify_peer' => false,
+   'verify_peer_name' => false,
+  ),
+);
