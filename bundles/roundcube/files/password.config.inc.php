@@ -46,11 +46,11 @@ $config['password_force_new_user'] = false;
 // Possible options: des-crypt, ext-des-crypt, md5-crypt, blowfish-crypt,
 // sha256-crypt, sha512-crypt, md5, sha, smd5, ssha, ssha512, samba, ad, dovecot, clear.
 // For details see password::hash_password() method.
-$config['password_algorithm'] = 'md5';
+$config['password_algorithm'] = 'sha512-crypt';
 
 // Password prefix (e.g. {CRYPT}, {SHA}) for passwords generated
 // using password_algorithm above. Default: empty.
-$config['password_algorithm_prefix'] = '';
+$config['password_algorithm_prefix'] = '{SHA512-CRYPT}';
 
 // Path for dovecotpw/doveadm-pw (if not in the $PATH).
 // Used for password_algorithm = 'dovecot'.
@@ -135,7 +135,7 @@ $config['password_db_dsn'] = 'pgsql://mailserver:${mailserver_db_password}@local
 //      %q is replaced with the hashed password before the change
 // Escaping of macros is handled by this module.
 // Default: "SELECT update_passwd(%c, %u)"
-$config['password_query'] = "UPDATE users SET password=MD5(%p) FROM domains WHERE domains.id = domain_id AND domains.name = %d AND users.name = %l";
+$config['password_query'] = "UPDATE users SET password=%P FROM domains WHERE domains.id = domain_id AND domains.name = %d AND users.name = %l";
 
 // By default the crypt() function which is used to create the %c
 // parameter uses the md5 algorithm (deprecated, use %P).
