@@ -39,6 +39,7 @@ def systemd_networkd_networks(metadata):
         'Route': {
             'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
             'GatewayOnlink': 'yes',
+            'PreferredSource': str(ip_interface(metadata.get('network/internal/ipv4')).ip),
         },
         'Network': {
             'DHCP': 'no',
@@ -54,6 +55,7 @@ def systemd_networkd_networks(metadata):
                     'Destination': route,
                     'Gateway': str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
                     'GatewayOnlink': 'yes',
+                    'PreferredSource': str(ip_interface(metadata.get('network/internal/ipv4')).ip),
                 }
             })
 

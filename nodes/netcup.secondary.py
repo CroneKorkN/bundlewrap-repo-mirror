@@ -18,7 +18,7 @@
             },
             'internal': {
                 'interface': 'eth1',
-                'ipv4': '10.0.11.2',
+                'ipv4': '10.0.11.2/24',
             },
         },
         'wireguard': {
