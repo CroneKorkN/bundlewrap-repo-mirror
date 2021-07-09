@@ -1,12 +1,11 @@
 #!/bin/bash
 
-set -e
-set -x
+set -exu
 
 path=$1
 uuid=$(jq -r .client_uuid < /etc/backup/config.json)
 server=$(jq -r .server_hostname < /etc/backup/config.json)
-ssh="ssh -o StrictHostKeyChecking=no backup-receiver@$server"
+ssh="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 backup-receiver@$server"
 
 source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
 target_dataset="tank/$uuid/$source_dataset"
@@ -16,10 +15,12 @@ new_bookmark="$bookmark_prefix$(date +"%Y-%m-%d_%H:%M:%S")"
 
 for var in path uuid server ssh source_dataset target_dataset target_dataset_parent new_bookmark
 do
-  [[ -z "${!var}" ]] && echo "ERROR - $var is empty" && exit 97
+  [[ -z "${!var}" ]] && echo "ERROR - $var is empty" && exit 96
 done
 
-echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $TARGET_DATASET"
+$ssh true || (echo "ERROR - cant ssh connect to $server" && exit 97)
+
+echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $target_dataset"
 
 if ! $ssh sudo zfs list -t filesystem -H -o name | grep -q "^$target_dataset_parent$"
 then

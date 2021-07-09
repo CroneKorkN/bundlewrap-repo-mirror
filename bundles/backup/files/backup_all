@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for path in $(jq -r '.paths | .[]' < /etc/backup/config.json)
+do
+  /opt/backup/backup_path "$path"
+done

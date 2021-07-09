@@ -4,7 +4,7 @@ path=$1
 
 if zfs list -H -o mountpoint | grep -q "$path"
 then
-  /opt/backuo/backup_path_via_zfs "$path"
+  /opt/backup/backup_path_via_zfs "$path"
 elif test -d "$path"
 then
   /opt/backuo/backup_path_via_rsync "$path"
