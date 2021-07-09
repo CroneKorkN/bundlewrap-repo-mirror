@@ -6,6 +6,9 @@ defaults = {
             'authorized_keys': [],
         },
     },
+    'sudoers': {
+        'backup-receiver': ['ALL'],
+    }
 }
 
 
