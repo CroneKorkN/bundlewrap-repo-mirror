@@ -92,6 +92,13 @@
                     },
                     'internal_dns': False,
                 },
+                'grafana.sublimity.de': {
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'https://grafana.sublimity.de:443',
+                    },
+                    'internal_dns': False,
+                },
             },
         },
         'roundcube': {
