@@ -129,6 +129,7 @@ for view in views:
                     lambda record: use_record(record, records, view['name']),
                     records
                 )),
+                'hostname': node.metadata.get('bind/hostname'),
             },
             'needs': [
                 f"directory:/var/lib/bind/{view['name']}",
