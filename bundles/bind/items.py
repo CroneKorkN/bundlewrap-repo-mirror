@@ -107,7 +107,7 @@ files['/etc/bind/named.conf.local'] = {
     ],
 }
 
-def use_record(record, records, view):
+def record_matches_view(record, records, view):
     if record['type'] in ['A', 'AAAA']:
         if view == 'external':
             # no internal addresses in external view
@@ -152,7 +152,7 @@ for view in views:
                 'view': view['name'],
                 'serial': datetime.now().strftime('%Y%m%d%H'),
                 'records': list(filter(
-                    lambda record: use_record(record, records, view['name']),
+                    lambda record: record_matches_view(record, records, view['name']),
                     unique_records
                 )),
                 'hostname': node.metadata.get('bind/hostname'),
