@@ -29,6 +29,7 @@
                 'woodpipe.de': [],
                 'ckn.li': [],
                 'islamicstate.eu': [],
+                'hausamsilberberg.de': [],
             },
         },
         'dns': {
@@ -96,6 +97,20 @@
                     'content': 'nginx/proxy_pass.conf',
                     'context': {
                         'target': 'https://grafana.sublimity.de:443',
+                    },
+                    'internal_dns': False,
+                },
+                'influxdb.sublimity.de': {
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'https://influxdb.sublimity.de:443',
+                    },
+                    'internal_dns': False,
+                },
+                'hausamsilberberg.de': {
+                    'content': 'nginx/redirect.conf',
+                    'context': {
+                        'target': 'https://www.internationaler-bund.de/standort/204516',
                     },
                     'internal_dns': False,
                 },

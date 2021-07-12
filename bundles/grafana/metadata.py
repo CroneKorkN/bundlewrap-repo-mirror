@@ -96,12 +96,30 @@ def datasource_key_to_name(metadata):
     }
 
 
+# @metadata_reactor.provides(
+#     'dns',
+# )
+# def dns(metadata):
+#     return {
+#         'dns': {
+#             metadata.get('grafana/hostname'): repo.libs.dns.get_a_records(metadata),
+#         }
+#     }
+
+
 @metadata_reactor.provides(
-    'dns',
+    'nginx/vhosts',
 )
-def dns(metadata):
+def nginx(metadata):
     return {
-        'dns': {
-            metadata.get('grafana/hostname'): repo.libs.dns.get_a_records(metadata),
-        }
+        'nginx': {
+            'vhosts': {
+                metadata.get('grafana/hostname'): {
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'http://127.0.0.1:8300',
+                    }
+                },
+            },
+        },
     }
