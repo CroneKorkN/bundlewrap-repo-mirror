@@ -44,15 +44,15 @@ def admin_password(metadata):
     }
 
 
-# @metadata_reactor.provides(
-#     'dns',
-# )
-# def dns(metadata):
-#     return {
-#         'dns': {
-#             metadata.get('influxdb/hostname'): repo.libs.dns.get_a_records(metadata),
-#         }
-#     }
+@metadata_reactor.provides(
+    'dns',
+)
+def dns(metadata):
+    return {
+        'dns': {
+            metadata.get('influxdb/hostname'): repo.libs.dns.get_a_records(metadata),
+        }
+    }
 
 
 @metadata_reactor.provides(

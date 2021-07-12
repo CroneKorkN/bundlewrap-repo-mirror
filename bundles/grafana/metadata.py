@@ -96,15 +96,15 @@ def datasource_key_to_name(metadata):
     }
 
 
-# @metadata_reactor.provides(
-#     'dns',
-# )
-# def dns(metadata):
-#     return {
-#         'dns': {
-#             metadata.get('grafana/hostname'): repo.libs.dns.get_a_records(metadata),
-#         }
-#     }
+@metadata_reactor.provides(
+    'dns',
+)
+def dns(metadata):
+    return {
+        'dns': {
+            metadata.get('grafana/hostname'): repo.libs.dns.get_a_records(metadata),
+        }
+    }
 
 
 @metadata_reactor.provides(

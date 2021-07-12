@@ -137,6 +137,13 @@ for view in views:
     }
 
     for zone, records in zones.items():
+        unique_records = [
+            dict(record_tuple)
+                for record_tuple in set(
+                    tuple(record.items()) for record in records
+                )
+        ]
+        
         files[f"/var/lib/bind/{view['name']}/db.{zone}"] = {
             'group': 'bind',
             'source': 'db',
@@ -146,7 +153,7 @@ for view in views:
                 'serial': datetime.now().strftime('%Y%m%d%H'),
                 'records': list(filter(
                     lambda record: use_record(record, records, view['name']),
-                    records
+                    unique_records
                 )),
                 'hostname': node.metadata.get('bind/hostname'),
             },
