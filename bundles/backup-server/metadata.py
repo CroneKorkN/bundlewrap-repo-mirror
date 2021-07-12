@@ -23,11 +23,19 @@ def zfs(metadata):
             other_node.has_bundle('backup') and
             other_node.metadata.get('backup/server') == node.name
         ):
+            # container
+            datasets[f"tank/{other_node.metadata.get('id')}"] = {
+                'mountpoint': 'none',
+                'readonly': 'on',
+                'backup': False,
+            }
+            # for rsync backups
             datasets[f"tank/{other_node.metadata.get('id')}/fs"] = {
                 'mountpoint': f"/mnt/backups/{other_node.metadata.get('id')}",
                 'backup': False,
             }
             
+            # for zfs send/recv
             if other_node.has_bundle('zfs'):
                 for path in other_node.metadata.get('backup/paths'):
                     for dataset, config in other_node.metadata.get('zfs/datasets').items():

@@ -4,11 +4,12 @@
     ],
     'bundles': [
         'hostname',
+        'hosts',
         'network',
+        'ssh',
         'systemd',
         'systemd-networkd',
         'systemd-timers',
-        'hosts',
     ],
     'metadata': {
         'hosts': {

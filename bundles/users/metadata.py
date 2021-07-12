@@ -4,6 +4,7 @@ defaults = {
     'users': {
         'root': {
             'home': '/root',
+            'password': repo.vault.password_for(f'{node.name} user root'),
         },
     },
 }
@@ -29,12 +30,10 @@ def authorized_users(metadata):
     }
 
 
-# FIXME: bw bug?
-# @metadata_reactor.provides(
-#     'users',
-# )
-@metadata_reactor
-def user(metadata):
+@metadata_reactor.provides(
+    'users',
+)
+def user_defaults(metadata):
     users = {}
 
     for name, config in metadata.get('users').items():

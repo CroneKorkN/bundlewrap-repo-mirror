@@ -9,6 +9,10 @@
     ],
     'metadata': {
         'id': '890848b2-a900-4f74-ad5b-b811fbb4f0bc',
+        'postfix': {
+            'master_node': 'htz.mails',
+            'hostname': 'mail2.sublimity.de',
+        },
         'network': {
             'external': {
                 'interface': 'eth0',
