@@ -74,7 +74,8 @@ def backup(metadata):
     return {
         'backup': {
             'paths': [
-                options['mountpoint'] for options in metadata.get('zfs/datasets').values()
+                options['mountpoint']
+                    for options in metadata.get('zfs/datasets').values()
                     if options.get('backup', True)
             ],
         },

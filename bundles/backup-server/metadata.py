@@ -1,6 +1,11 @@
 from ipaddress import ip_interface
 
 defaults = {
+    'apt': {
+        'packages': {
+            'rsync': {},
+        },
+    },
     'users': {
         'backup-receiver': {
             'authorized_keys': [],
@@ -32,6 +37,7 @@ def zfs(metadata):
             # for rsync backups
             datasets[f"tank/{other_node.metadata.get('id')}/fs"] = {
                 'mountpoint': f"/mnt/backups/{other_node.metadata.get('id')}",
+                'readonly': 'off',
                 'backup': False,
             }
             
