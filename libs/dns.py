@@ -4,10 +4,10 @@ def get_a_records(metadata, internal=True, external=True):
     networks = metadata.get('network')
     
     if not internal:
-        networks.pop('internal')
+        networks.pop('internal', None)
 
     if not external:
-        networks.pop('external')
+        networks.pop('external', None)
     
     return {
         'A': [

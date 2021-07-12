@@ -3,6 +3,7 @@
         'all',
     ],
     'bundles': [
+        'hostname',
         'network',
         'systemd',
         'systemd-networkd',
