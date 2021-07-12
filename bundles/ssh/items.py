@@ -4,4 +4,8 @@ files['/etc/ssh/sshd_config'] = {
     ],
 }
 
-svc_systemd['ssh'] = {}
+svc_systemd['ssh'] = {
+    'needs': [
+        'tag:ssh_users',
+    ],
+}
