@@ -5,10 +5,10 @@ def column_width(column, table):
 $TTL 600
 @   IN  SOA        ${hostname}. admin.${hostname}. (
         2021070821 ;Serial
-        600        ;Refresh
-        300        ;Retry
+        3600       ;Refresh
+        200        ;Retry
         1209600    ;Expire
-        300        ;Negative response caching TTL
+        900        ;Negative response caching TTL
 )
 
 % for record in sorted(records, key=lambda r: (r['name'], r['type'], r['value'])):

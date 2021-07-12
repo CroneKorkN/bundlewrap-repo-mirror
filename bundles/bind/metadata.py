@@ -81,6 +81,7 @@ def ns_records(metadata):
             'zones': {
                 zone: [
                     {'name': '@', 'type': 'NS', 'value': f"{metadata.get('bind/hostname')}."},
+                    {'name': '@', 'type': 'NS', 'value': f"{metadata.get('bind/secondary_hostname')}."},
                 ] for zone in metadata.get('bind/zones').keys()
             },
         },
