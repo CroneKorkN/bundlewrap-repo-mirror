@@ -9,6 +9,7 @@ defaults = {
     },
     'bind': {
         'zones': {},
+        'slaves': {},
     },
     'telegraf': {
         'config': {
@@ -22,6 +23,17 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'bind/type',
+)
+def type(metadata):
+    return {
+        'bind': {
+            'type': 'slave' if metadata.get('bind/master_node', None) else 'master',
+        }
+    }
 
 
 @metadata_reactor.provides(
@@ -39,6 +51,9 @@ def dns(metadata):
     'bind/zones',
 )
 def collect_records(metadata):
+    if metadata.get('bind/type') == 'slave':
+        return {}
+    
     zones = {}
     
     for other_node in repo.nodes:
@@ -76,13 +91,41 @@ def collect_records(metadata):
     'bind/zones',
 )
 def ns_records(metadata):
+    if metadata.get('bind/type') == 'slave':
+        return {}
+
+    nameservers = [
+        node.metadata.get('bind/hostname'),
+        *[
+            repo.get_node(slave).metadata.get('bind/hostname')
+                for slave in node.metadata.get('bind/slaves')
+        ]
+    ]
     return {
         'bind': {
             'zones': {
                 zone: [
-                    {'name': '@', 'type': 'NS', 'value': f"{metadata.get('bind/hostname')}."},
-                    {'name': '@', 'type': 'NS', 'value': f"{metadata.get('bind/secondary_hostname')}."},
+                    {'name': '@', 'type': 'NS', 'value': f"{nameserver}."}
+                        for nameserver in nameservers
                 ] for zone in metadata.get('bind/zones').keys()
             },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'bind/slaves',
+)
+def slaves(metadata):
+    if metadata.get('bind/type') == 'slave':
+        return {}
+    
+    return {
+        'bind': {
+            'slaves': [
+                other_node.name
+                    for other_node in repo.nodes
+                    if other_node.has_bundle('bind') and other_node.metadata.get('bind/master_node', None) == node.name
+            ],
         },
     }

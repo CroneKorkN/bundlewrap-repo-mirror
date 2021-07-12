@@ -2,6 +2,7 @@
     'hostname': '46.38.240.85',
     'groups': [
         'debian-10',
+        'dnsserver',
     ],
     'bundles': [
         'wireguard',
@@ -20,6 +21,10 @@
                 'interface': 'eth1',
                 'ipv4': '10.0.11.2/24',
             },
+        },
+        'bind': {
+            'master_node': 'htz.mails',
+            'hostname': 'second.resolver.name',
         },
         'wireguard': {
             'my_ip': '172.30.0.3/24',

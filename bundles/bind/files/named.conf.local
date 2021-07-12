@@ -27,7 +27,10 @@ view "${view['name']}" {
 
   % for zone in zones:
   zone "${zone}" {
-    type master;
+    type ${type};
+% if type == 'slave':
+    masters { ${master_ip}; };
+% endif
     file "/var/lib/bind/${view['name']}/db.${zone}";
   };
   % endfor

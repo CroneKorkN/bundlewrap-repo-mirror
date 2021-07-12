@@ -7,4 +7,10 @@ options {
 
   max-cache-size 30%;
   querylog yes;
+
+% if type == 'master':
+  notify yes;
+  also-notify { ${' '.join([f'{ip};' for ip in slave_ips])} };
+  allow-transfer { ${' '.join([f'{ip};' for ip in slave_ips])} };
+% endif
 };

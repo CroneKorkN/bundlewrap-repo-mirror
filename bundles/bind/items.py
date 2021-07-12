@@ -1,5 +1,17 @@
-from ipaddress import ip_address
+from ipaddress import ip_address, ip_interface
 from datetime import datetime
+
+if node.metadata.get('bind/type') == 'master':
+    zones = node.metadata.get('bind/zones')
+    master_ip = None
+    slave_ips = [
+        ip_interface(repo.get_node(slave).metadata.get('network/external/ipv4')).ip
+            for slave in node.metadata.get('bind/slaves')
+    ]
+else:
+    zones = repo.get_node(node.metadata.get('bind/master_node')).metadata.get('bind/zones')
+    master_ip = ip_interface(repo.get_node(node.metadata.get('bind/master_node')).metadata.get('network/external/ipv4')).ip
+    slave_ips = []
 
 directories[f'/var/lib/bind'] = {
     'purge': True,
@@ -35,6 +47,11 @@ files['/etc/bind/named.conf'] = {
     ],
 }
 files['/etc/bind/named.conf.options'] = {
+    'content_type': 'mako',
+    'context': {
+        'type': node.metadata.get('bind/type'),
+        'slave_ips': sorted(slave_ips),
+    },
     'owner': 'root',
     'group': 'bind',
     'needs': [
@@ -72,8 +89,10 @@ views = [
 files['/etc/bind/named.conf.local'] = {
     'content_type': 'mako',
     'context': {
+        'type': node.metadata.get('bind/type'),
+        'master_ip': master_ip,
         'views': views,
-        'zones': sorted(node.metadata.get('bind/zones')),
+        'zones': sorted(zones),
     },
     'owner': 'root',
     'group': 'bind',
@@ -117,7 +136,7 @@ for view in views:
         ],
     }
 
-    for zone, records in node.metadata.get('bind/zones').items():
+    for zone, records in zones.items():
         files[f"/var/lib/bind/{view['name']}/db.{zone}"] = {
             'group': 'bind',
             'source': 'db',
