@@ -15,6 +15,19 @@
     ],
     'metadata': {
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
+        'network': {
+            'internal': {
+                'interface': 'ens10',
+                'ipv4': '10.0.10.2/24',
+            },
+            'external': {
+                'interface': 'eth0',
+                'ipv4': '162.55.188.157/32',
+                'ipv6': '2a01:4f8:1c1c:4121::2/64',
+                'gateway4': '172.31.1.1',
+                'gateway6': 'fe80::1',
+            }
+        },
         'bind': {
             'hostname': 'resolver.name',
             'zones': {
@@ -47,19 +60,6 @@
                 'sublimity.de': {},
                 'freibrief.net': {},
             },
-        },
-        'network': {
-            'internal': {
-                'interface': 'ens10',
-                'ipv4': '10.0.10.2/24',
-            },
-            'external': {
-                'interface': 'eth0',
-                'ipv4': '162.55.188.157/32',
-                'ipv6': '2a01:4f8:1c1c:4121::2/64',
-                'gateway4': '172.31.1.1',
-                'gateway6': 'fe80::1',
-            }
         },
         'mailserver': {
             'hostname': 'mail.sublimity.de',
@@ -156,11 +156,6 @@
                 'tank': {
                     'device': '/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0-0-0-0-part2',
                 },
-            },
-        },
-        'archive': {
-            'paths': {
-                '/var/test': {},
             },
         },
     },
