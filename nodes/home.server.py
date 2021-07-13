@@ -2,11 +2,7 @@
     'hostname': '10.0.0.2',
     'groups': [
 #        'archive',
-        'backup',
         'debian-10',
-        'nextcloud',
-        'monitored',
-        'webserver',
     ],
     'bundles': [
         'gitea',
@@ -43,7 +39,6 @@
             'writeonly_token': '!decrypt:encrypt$gAAAAABg3z6fGrOy2tNdo03RoYAXmpJoJYkfhBfpblPh_wxYfqmdjtABaD7XyV9mSh9xl8oWQlTAtCk9KndVCDQy7BJ-ju7S3HCKJ0k244Y5YKxUnQtqt9fc9nnm8XD-NOJqLKyfy0QhL_I8dFT02pygoJeCUR5NkZcTKf6julb-iGXI6vWcQgolJTYrW643pHObd-Z-vIEl',
         },
         'letsencrypt': {
-            'delegate_to_node': 'htz.mails',
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
@@ -61,12 +56,6 @@
         'wireguard': {
             'my_ip': '172.30.0.2/24',
             'peers': {
-                'htz.mails': {
-                    'route': [
-                        '10.0.10.0/24',
-                        '10.0.11.0/24',
-                    ],
-                },
             },
         },
         'zfs': {
