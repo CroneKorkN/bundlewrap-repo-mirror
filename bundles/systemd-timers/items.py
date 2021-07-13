@@ -1,3 +1,7 @@
+# svc_systemd['cron'] = {
+#     'enabled': False,
+# }
+
 for name, config in node.metadata.get('systemd-timers').items():
     files[f'/etc/systemd/system/{name}.timer'] = {
         'content': repo.libs.systemd.generate_unitfile({
@@ -6,6 +10,7 @@ for name, config in node.metadata.get('systemd-timers').items():
             },
             'Timer': {
                 'OnCalendar': config['when'],
+                'Persistent': config.get('persistent', False),
                 'Unit': f'{name}.service',
             },
             'Install': {
