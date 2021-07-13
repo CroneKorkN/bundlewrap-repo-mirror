@@ -12,21 +12,26 @@ for name, unit in node.metadata.get('systemd/units').items():
     extension = name.split('.')[-1]
 
     if extension in ['netdev', 'network']:
-        files[f'/etc/systemd/network/{name}'] = {
-            'content': repo.libs.systemd.generate_unitfile(unit),
+        path = f'/etc/systemd/network/{name}'
+        dependencies = {
             'triggers': [
                 'svc_systemd:systemd-networkd:restart',
             ],
         }
     elif extension in ['timer', 'service']:
-        files[f'/etc/systemd/system/{name}'] = {
-            'content': repo.libs.systemd.generate_unitfile(unit),
+        path = f'/etc/systemd/system/{name}'
+        dependencies = {
             'triggers': [
                 "action:systemd-reload",
             ],
         }
     else:
         raise Exception(f'unknown unit extension: "{extension}"')
+
+    files[path] = {
+        'content': repo.libs.systemd.generate_unitfile(unit),
+        **dependencies,
+    }
 
 for name, config in node.metadata.get('systemd/services').items():
     svc_systemd[name] = merge_dict(config, {

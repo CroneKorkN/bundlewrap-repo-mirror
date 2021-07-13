@@ -1,7 +1,7 @@
 from mako.template import Template
 
 template = '''
-% for segment, options in data.items():
+% for segment, options in sorted(data.items()):
 
 %     if '#' in segment:
 # ${segment.split('#', 2)[1]}
