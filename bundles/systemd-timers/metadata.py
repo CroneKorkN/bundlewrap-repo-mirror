@@ -22,9 +22,6 @@ def systemd(metadata):
                     'Persistent': config.get('persistent', False),
                     'Unit': f'{name}.service',
                 },
-                'Install': {
-                    'WantedBy': 'multi-user.target',
-                },
             }, 
             f'{name}.service': {
                 'Unit':{
