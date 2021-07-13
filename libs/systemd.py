@@ -1,7 +1,7 @@
 from mako.template import Template
 
 template = '''
-% for segment, options in sorted(data.items()):
+% for segment, options in data.items():
 
 %     if '#' in segment:
 # ${segment.split('#', 2)[1]}
@@ -23,5 +23,21 @@ ${option}=${str(value)}
 % endfor
 '''
 
+order = [
+    'Unit',
+    'Timer',
+    'Service',
+    'Install',
+]
+
+def segment_order(segment):
+    return (
+        order.index(segment[0]) if segment[0] in order else float('inf'),
+        segment[0]
+    )
+
 def generate_unitfile(data):
-    return Template(template).render(data=data).lstrip()
+    return Template(template).render(
+        data=dict(sorted(data.items(), key=segment_order)),
+        order=order
+    ).lstrip()
