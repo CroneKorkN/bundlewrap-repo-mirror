@@ -26,7 +26,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'systemd-networkd/networks',
+    'systemd/units',
 )
 def systemd_networkd_networks(metadata):
     network = {
@@ -60,16 +60,18 @@ def systemd_networkd_networks(metadata):
             })
 
     return {
-        'systemd-networkd': {
-            'networks': {
-                'wireguard': network,
+        'systemd': {
+            'units': {
+                'wireguard.network': {
+                    'content': network,
+                },
             },
         },
     }
 
 
 @metadata_reactor.provides(
-    'systemd-networkd/netdevs',
+    'systemd/units',
 )
 def systemd_networkd_netdevs(metadata):
     netdev = {
@@ -99,9 +101,11 @@ def systemd_networkd_netdevs(metadata):
         })
     
     return {
-        'systemd-networkd': {
-            'netdevs': {
-                'wireguard': netdev,
+        'systemd': {
+            'units': {
+                'wireguard.netdev': {
+                    'content': netdev,
+                },
             },
         },
     }

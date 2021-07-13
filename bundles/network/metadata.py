@@ -7,31 +7,33 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'systemd-networkd/networks',
+    'systemd/units',
 )
-def systemd_networkd(metadata):
+def units(metadata):
     units = {}
     
     for type, network in metadata.get('network').items():
-        units[type] = {
-            'Match': {
-                'Name': network['interface'],
-            },
-            'Network': {
-                'DHCP': 'no',
-                'IPv6AcceptRA': 'no',
+        units[f'{type}.network'] = {
+            'content': {
+                'Match': {
+                    'Name': network['interface'],
+                },
+                'Network': {
+                    'DHCP': 'no',
+                    'IPv6AcceptRA': 'no',
+                }
             }
         }
         
         for i in [4, 6]:
             if network.get(f'ipv{i}', None):
-                units[type].update({
+                units[f'{type}.network']['content'].update({
                     f'Address#ipv{i}': {
                         'Address': network[f'ipv{i}'],
                     },
                 })
                 if f'gateway{i}' in network:
-                    units[type].update({
+                    units[f'{type}.network']['content'].update({
                         f'Route#ipv{i}': {
                             'Gateway': network[f'gateway{i}'],
                             'GatewayOnlink': 'yes',
@@ -40,7 +42,7 @@ def systemd_networkd(metadata):
 
     
     return {
-        'systemd-networkd': {
-            'networks': units,
+        'systemd': {
+            'units': units,
         }
     }

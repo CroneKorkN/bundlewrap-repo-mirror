@@ -28,8 +28,8 @@ defaults = {
         },
     },
     'systemd': {
-        'services': {
-            'gitea': {
+        'units': {
+            'gitea.service': {
                 'content': {
                     'Unit': {
                         'Description': 'gitea',
@@ -51,12 +51,13 @@ defaults = {
                         'WantedBy': 'multi-user.target',
                     },
                 },
-                'needs': [
-                    'action:chmod_gitea',
-                    'download:/usr/local/bin/gitea',
-                    'file:/etc/systemd/system/gitea.service',
-                    'file:/etc/gitea/app.ini',
-                ],
+                'item': {
+                    'needs': [
+                        'action:chmod_gitea',
+                        'download:/usr/local/bin/gitea',
+                        'file:/etc/gitea/app.ini',
+                    ],
+                },
             },
         },
     },

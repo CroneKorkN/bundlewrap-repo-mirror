@@ -4,7 +4,7 @@ downloads['/usr/local/bin/gitea'] = {
     'url': f'https://dl.gitea.io/gitea/{version}/gitea-{version}-linux-amd64',
     'sha256': node.metadata.get('gitea/sha256'),
     'triggers': {
-        'svc_systemd:gitea:restart',
+        'svc_systemd:gitea.service:restart',
     },
     'preceded_by': {
         'action:stop_gitea',
@@ -17,7 +17,7 @@ directories['/var/lib/gitea'] = {
     'owner': 'git',
     'mode': '0700',
     'triggers': {
-        'svc_systemd:gitea:restart',
+        'svc_systemd:gitea.service:restart',
     },
 }
 
@@ -40,6 +40,6 @@ files['/etc/gitea/app.ini'] = {
     'owner': 'git',
     'context': node.metadata['gitea'],
     'triggers': {
-        'svc_systemd:gitea:restart',
+        'svc_systemd:gitea.service:restart',
     },
 }
