@@ -7,15 +7,18 @@ defaults = {
 
 
 # create a svc_sytemd item for each .service and .timer unit
-@metadata_reactor#.provides(
-#    'systemd/services',
-#)
+@metadata_reactor.provides(
+    'systemd/services',
+)
 def unit_services(metadata):
     services = {}
+    
     
     for name, config in metadata.get('systemd/units').items():
         if name.split('.')[-1] not in ['timer', 'service']:
             continue
+        
+        print(name)
         
         services[name] = config['item']
         services[name].setdefault('needs', []).append(f"file:{config['path']}")
@@ -32,10 +35,12 @@ def unit_services(metadata):
     'systemd/units',
 )
 def unit_defaults(metadata):
+    
     units = {}
     
     for name in metadata.get('systemd/units').keys():
         extension = name.split('.')[-1]
+        print('----------------', name)
 
         if extension in ['netdev', 'network']:
             units[name] = {
