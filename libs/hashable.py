@@ -1,7 +1,9 @@
+import json
+
 class hdict(dict):
     def __hash__(self):
-        return hash(tuple(sorted(self.items())))
+        return hash(json.dumps(self, sorted=True))
 
 class hlist(list):
     def __hash__(self):
-        return hash(tuple(sorted(self)))
+        return hash(json.dumps(self, sorted=True))

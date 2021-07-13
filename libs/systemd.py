@@ -7,7 +7,7 @@ template = '''
 # ${segment.split('#', 2)[1]}
 %     endif
 [${segment.split('#')[0]}]
-%     for option, value in options.items():
+%     for option, value in sorted(options.items()):
 %         if isinstance(value, dict):
 %             for k, v in value.items():
 ${option}=${k}=${v}
