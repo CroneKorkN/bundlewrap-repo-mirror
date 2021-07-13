@@ -34,10 +34,10 @@ for path, options in node.metadata.get('gocryptfs/paths').items():
         'owner': None,
         'group': None,
         'mode': None,
-        'preceded_by': [
+        'preceded_by': {
             f'svc_systemd:gocryptfs-{options["id"]}:stop',
-        ],
-        'needed_by': [
+        },
+        'needed_by': {
             f'svc_systemd:gocryptfs-{options["id"]}',
-        ],
+        },
     }

@@ -103,10 +103,10 @@ def dataset_defaults(metadata):
 def backup(metadata):
     return {
         'backup': {
-            'paths': [
+            'paths': {
                 options['mountpoint']
                     for options in metadata.get('zfs/datasets').values()
                     if options.get('backup', True)
-            ],
+            },
         },
     }

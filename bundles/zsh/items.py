@@ -13,9 +13,9 @@ for name, user_config in node.metadata.get('users').items():
         },
         join(user_config['home'], '.zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions'): {
             'owner': name,
-            'needs': [
+            'needs': {
                 f"git_deploy:{join(user_config['home'], '.zsh/oh-my-zsh')}",
-            ]
+            },
         },
     }
     
@@ -38,9 +38,9 @@ for name, user_config in node.metadata.get('users').items():
         },
         join(user_config['home'], '.zsh/oh-my-zsh/themes/bw.zsh-theme'): {
             'owner': name,
-            'needs': [
+            'needs': {
                 f"git_deploy:{join(user_config['home'], '.zsh/oh-my-zsh')}",
-            ]
+            },
         },
     }
     

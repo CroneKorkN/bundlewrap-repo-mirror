@@ -1,6 +1,6 @@
 {
-    'bundles': [
+    'bundles': {
         'nextcloud',
         'php',
-    ],
+    },
 }

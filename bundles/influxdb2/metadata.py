@@ -5,9 +5,9 @@ defaults = {
         'packages': {
             'influxdb2': {},
         },
-        'sources': [
+        'sources': {
             'deb https://repos.influxdata.com/debian {release} stable',
-        ],
+        },
     },
     'influxdb': {
         'port': '8200',

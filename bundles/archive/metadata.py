@@ -19,10 +19,10 @@ def paths(metadata):
             'paths': {
                 path: {
                     'encrypted_path': f'/mnt/archive.enc{path}',
-                    'exclude': [
+                    'exclude': {
                         '^\..*',
                         '/\..*',
-                    ],
+                    },
                 } for path in metadata.get('archive/paths')
             },
         }

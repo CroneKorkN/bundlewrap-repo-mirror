@@ -10,10 +10,10 @@ directories = {
     },
     '/etc/dovecot/conf.d': {
         'purge': True,
-        'needs': [
+        'needs': {
             'pkg_apt:dovecot-sieve',
             'pkg_apt:dovecot-managesieved',
-        ]
+        },
     },
     '/etc/dovecot/ssl': {},
     '/var/vmail': {

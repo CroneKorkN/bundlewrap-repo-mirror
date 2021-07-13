@@ -30,7 +30,7 @@ actions = {
 svc_systemd = {
     'zfs-zed': {
         'needs': {
-            'pkg_apt:zfs-zed'
+            'pkg_apt:zfs-zed',
         },
     },
 }
@@ -45,7 +45,7 @@ for name, config in node.metadata.get('zfs/pools', {}).items():
     actions[f'pool_{name}_enable_trim'] = {
        'command': f'zpool set autotrim=on {name}',
        'unless':  f'zpool get autotrim -H -o value {name} | grep -q on',
-       'needs':   [
-           f'zfs_pool:{name}'
-       ]
+       'needs':   {
+           f'zfs_pool:{name}',
+       },
     }

@@ -11,25 +11,25 @@ for name, config in node.metadata.get('users').items():
         'content': config['privkey'] + '\n',
         'owner': name,
         'mode': '0600',
-        'tags': [
+        'tags': {
             'ssh_users',
-        ],
+        },
     }
     files[f"{config['home']}/.ssh/id_{config['keytype']}.pub"] = {
         'content': config['pubkey'] + '\n',
         'owner': name,
         'mode': '0600',
-        'tags': [
+        'tags': {
             'ssh_users',
-        ],
+        },
     }
     files[config['home'] + '/.ssh/authorized_keys'] = {
         'content': '\n'.join(sorted(config['authorized_keys'])) + '\n',
         'owner': name,
         'mode': '0600',
-        'tags': [
+        'tags': {
             'ssh_users',
-        ],
+        },
     }
 
     users[name] = config

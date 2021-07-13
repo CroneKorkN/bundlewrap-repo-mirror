@@ -4,32 +4,32 @@ directories = {
     '/var/lib/postgresql': {
         'owner': 'postgres',
         'group': 'postgres',
-        'needs': [
+        'needs': {
             'zfs_dataset:tank/postgresql',
-        ],
-        'needed_by': [
+        },
+        'needed_by': {
             'svc_systemd:postgresql',
-        ],
+        },
     }
 }
 
 
 svc_systemd['postgresql'] = {
-    'needs': [
+    'needs': {
         'pkg_apt:postgresql',
-    ],
+    },
 }
 
 for user, config in node.metadata.get('postgresql/roles').items():
     postgres_roles[user] = merge_dict(config, {
-        'needs': [
+        'needs': {
             'svc_systemd:postgresql',
-        ],
+        },
     })
 
 for database, config in node.metadata.get('postgresql/databases').items():
     postgres_dbs[database] = merge_dict(config, {
-        'needs': [
+        'needs': {
             'svc_systemd:postgresql',
-        ],
+        },
     })

@@ -91,9 +91,9 @@ for package, options in node.metadata.get('apt/packages', {}).items():
                 f"Pin: release a={node.metadata.get('os_release')}-backports",
                 f"Pin-Priority: 900",
             ]),
-            'needed_by': [
+            'needed_by': {
                 f'pkg_apt:{package}',
-            ],
+            },
             'triggers': {
                 'action:apt_update',
             },

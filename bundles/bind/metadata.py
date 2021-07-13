@@ -123,10 +123,10 @@ def slaves(metadata):
     
     return {
         'bind': {
-            'slaves': [
+            'slaves': {
                 other_node.name
                     for other_node in repo.nodes
                     if other_node.has_bundle('bind') and other_node.metadata.get('bind/master_node', None) == node.name
-            ],
+            },
         },
     }

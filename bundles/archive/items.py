@@ -29,9 +29,9 @@ files['/opt/archive/archive'] = {
         'processes': 4,
         'threads': 4,
     },
-    'needs': [
+    'needs': {
         'bundle:gcloud',
-    ],
+    },
 }
     
 files['/opt/archive/get_file'] = {

@@ -6,9 +6,9 @@ defaults = {
         }
     },
     'backup': {
-        'paths': [
+        'paths': {
             '/var/vmail',
-        ],
+        },
     },
     'letsencrypt': {
         'reload_after': {

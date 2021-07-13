@@ -1,18 +1,17 @@
 {
     'hostname': '162.55.188.157',
-    'groups': [
+    'groups': {
         'backup',
-        'hetzner-cloud',
         'debian-11',
         'mailserver',
         'monitored',
         'webserver',
         'dnsserver',
-    ],
-    'bundles': [
+    },
+    'bundles': {
         'wireguard',
         'zfs',
-    ],
+    },
     'metadata': {
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
@@ -46,12 +45,12 @@
         },
         'dns': {
             'ckn.li': {
-                'A': ['162.55.188.157'],
-                'AAAA': ['2a01:4f8:1c1c:4121::2'],
+                'A': {'162.55.188.157'},
+                'AAAA': {'2a01:4f8:1c1c:4121::2'},
             },
             'freibrief.net': {
-                'A': ['162.55.188.157'],
-                'AAAA': ['2a01:4f8:1c1c:4121::2'],
+                'A': {'162.55.188.157'},
+                'AAAA': {'2a01:4f8:1c1c:4121::2'},
             },
         },
         'letsencrypt': {
@@ -64,7 +63,7 @@
         'mailserver': {
             'hostname': 'mail.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
-            'domains': [
+            'domains': {
                 'ckn.li',
                 'sublimity.de',
                 'freibrief.net',
@@ -74,7 +73,7 @@
                 'wettengl.net',
                 'wingl.de',
                 'woodpipe.de',
-            ],
+            },
         },
         'nginx': {
             'vhosts': {
@@ -122,12 +121,12 @@
         },
         'users': {
             'root': {
-                'authorized_users': [
+                'authorized_users': {
                     'root@home.server',
-                ],
-                'authorized_keys': [
+                },
+                'authorized_keys': {
                     'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHMKTJLw6Cb+MLt+9JFOkuo2QBpuA8EoTKOFpb3IFQHEq19YLMzOhcErWmzaRfiCnILhnwTQz0njS+n9Qu4aghk= root@mail.sublimity.de'
-                ],
+                },
             },
         },
         'vm': {
@@ -138,16 +137,16 @@
             'my_ip': '172.30.0.1/24',
             'peers': {
                 'home.server': {
-                    'route': [
+                    'route': {
                         '10.0.0.0/24',
                         '10.0.2.0/24',
                         '10.0.9.0/24',
-                    ],
+                    },
                 },
                 'netcup.secondary': {
-                    'route': [
+                    'route': {
                         '10.0.11.0/24',
-                    ],
+                    },
                 },
             },
         },

@@ -21,23 +21,23 @@ files['/etc/gcloud/service_account.json'] = {
         join(repo.path, 'data', 'gcloud', 'service_accounts', f'{service_account}@{project}.json.enc')
     ),
     'mode': '500',
-    'needs': [
+    'needs': {
         'pkg_apt:google-cloud-sdk',
-    ],
+    },
 }
 
 actions['gcloud_activate_service_account'] = {
     'command': 'gcloud auth activate-service-account --key-file /etc/gcloud/service_account.json',
     'unless': f"gcloud auth list | grep -q '^\*[[:space:]]*{service_account}@{project}.iam.gserviceaccount.com'",
-    'needs': [
+    'needs': {
         f'file:/etc/gcloud/service_account.json'
-    ],
+    },
 }
 
 actions['gcloud_select_project'] = {
     'command': f"gcloud config set project '{project}'",
     'unless': f"gcloud config get-value project | grep -q '^{project}$'",
-    'needs': [
+    'needs': {
         f'action:gcloud_activate_service_account'
-    ],
+    },
 }

@@ -9,15 +9,15 @@ directories = {
     },
     '/opt/roundcube/logs': {
         'owner': 'www-data',
-        'needs': [
+        'needs': {
             'action:extract_roundcube',
-        ],
+        },
     },
     '/opt/roundcube/temp': {
         'owner': 'www-data',
-        'needs': [
+        'needs': {
             'action:extract_roundcube',
-        ],
+        },
     }
 }
 
@@ -39,13 +39,13 @@ actions['extract_roundcube'] = {
         'action:delete_roundcube',
         f'download:/tmp/roundcube-{version}.tar.gz',
     ],
-    'needs': [
+    'needs': {
         'directory:/opt/roundcube',
-    ],
-    'triggers': [
+    },
+    'triggers': {
         'action:chown_roundcube',
         'action:composer_install',
-    ],
+    },
 }
 actions['chown_roundcube'] = {
     'command': 'chown -R www-data /opt/roundcube',
@@ -63,9 +63,9 @@ files = {
             'database': node.metadata.get('roundcube/database'),
             'plugins': node.metadata.get('roundcube/plugins'),
         },
-        'needs': [
+        'needs': {
             'action:chown_roundcube',
-        ],
+        },
     },
     '/opt/roundcube/plugins/password/config.inc.php': {
         'source': 'password.config.inc.php',
@@ -73,16 +73,16 @@ files = {
         'context': {
             'mailserver_db_password': node.metadata.get('mailserver/database/password'),
         },
-        'needs': [
+        'needs': {
             'action:chown_roundcube',
-        ],
+        },
     },
 }
 
 actions['composer_install'] = {
     'command': "cp /opt/roundcube/composer.json-dist /opt/roundcube/composer.json && su www-data -s /bin/bash -c '/usr/bin/composer -d /opt/roundcube install'",
     'triggered': True,
-    'needs': [
+    'needs': {
         'action:chown_roundcube',
-    ],
+    },
 }

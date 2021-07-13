@@ -10,12 +10,12 @@ defaults = {
             'linux-headers-amd64': {},
             'wireguard': {
                 'backports': node.os_version < (11,),
-                'needs': [
+                'needs': {
                     'pkg_apt:linux-headers-amd64',
-                ],
-                'triggers': [
+                },
+                'triggers': {
                     'svc_systemd:systemd-networkd:restart',
-                ],
+                },
             },
         },
     },

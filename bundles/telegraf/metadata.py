@@ -3,11 +3,11 @@ defaults = {
         'packages': {
             'telegraf': {},
         },
-        'sources': [
+        'sources': {
             # FIXME
             # 'deb https://repos.influxdata.com/debian {release} stable',
             'deb https://repos.influxdata.com/debian buster stable',
-        ],
+        },
     },
     'telegraf': {
         'config': {

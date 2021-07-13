@@ -1,7 +1,7 @@
 {
-    'bundles': [
+    'bundles': {
         'gcloud',
-    ],
+    },
     'metadata': {
         'gcloud': {
             'service_account': 'backup',

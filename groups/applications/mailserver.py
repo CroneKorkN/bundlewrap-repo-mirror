@@ -1,5 +1,5 @@
 {
-    'bundles': [
+    'bundles': {
         'opendkim',
         'dovecot',
         'letsencrypt',
@@ -11,5 +11,5 @@
         'redis',
         'roundcube',
         'rspamd',
-    ],
+    },
 }

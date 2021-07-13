@@ -5,6 +5,6 @@ defaults = {
         },
     },
     'sudoers': {
-        'root': ['ALL'],
+        'root': {'ALL'},
     },
 }

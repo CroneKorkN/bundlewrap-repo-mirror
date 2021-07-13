@@ -8,7 +8,7 @@ defaults = {
     },
     'users': {
         'backup-receiver': {
-            'authorized_keys': [],
+            'authorized_keys': set(),
         },
     },
     'sudoers': {

@@ -1,15 +1,14 @@
 from ipaddress import ip_interface
 
 defaults = {
-    'network': {
-    }
+    'network': {},
 }
 
 
 @metadata_reactor.provides(
     'systemd/units',
 )
-def units(metadata):
+def network_units(metadata):
     units = {}
     
     for type, network in metadata.get('network').items():

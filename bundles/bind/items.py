@@ -15,36 +15,36 @@ else:
 
 directories[f'/var/lib/bind'] = {
     'purge': True,
-    'needed_by': [
+    'needed_by': {
         'svc_systemd:bind9',
-    ],
-    'triggers': [
+    },
+    'triggers': {
         'svc_systemd:bind9:restart',
-    ],
+    },
 }
 
 files['/etc/default/bind9'] = {
     'source': 'defaults',
-    'needed_by': [
+    'needed_by': {
         'svc_systemd:bind9',
-    ],
-    'triggers': [
+    },
+    'triggers': {
         'svc_systemd:bind9:restart',
-    ],
+    },
 }
 
 files['/etc/bind/named.conf'] = {
     'owner': 'root',
     'group': 'bind',
-    'needs': [
+    'needs': {
         'pkg_apt:bind9',
-    ],
-    'needed_by': [
+    },
+    'needed_by': {
         'svc_systemd:bind9',
-    ],
-    'triggers': [
+    },
+    'triggers': {
         'svc_systemd:bind9:restart',
-    ],
+    },
 }
 files['/etc/bind/named.conf.options'] = {
     'content_type': 'mako',
@@ -54,15 +54,15 @@ files['/etc/bind/named.conf.options'] = {
     },
     'owner': 'root',
     'group': 'bind',
-    'needs': [
+    'needs': {
         'pkg_apt:bind9',
-    ],
-    'needed_by': [
+    },
+    'needed_by': {
         'svc_systemd:bind9',
-    ],
-    'triggers': [
+    },
+    'triggers': {
         'svc_systemd:bind9:restart',
-    ],
+    },
 }
 
 views = [
@@ -96,15 +96,15 @@ files['/etc/bind/named.conf.local'] = {
     },
     'owner': 'root',
     'group': 'bind',
-    'needs': [
+    'needs': {
         'pkg_apt:bind9',
-    ],
-    'needed_by': [
+    },
+    'needed_by': {
         'svc_systemd:bind9',
-    ],
-    'triggers': [
+    },
+    'triggers': {
         'svc_systemd:bind9:restart',
-    ],
+    },
 }
 
 def record_matches_view(record, records, view):
@@ -128,12 +128,12 @@ def record_matches_view(record, records, view):
 for view in views:
     directories[f"/var/lib/bind/{view['name']}"] = {
         'purge': True,
-        'needed_by': [
+        'needed_by': {
             'svc_systemd:bind9',
-        ],
-        'triggers': [
+        },
+        'triggers': {
             'svc_systemd:bind9:restart',
-        ],
+        },
     }
 
     for zone, records in zones.items():
@@ -157,15 +157,15 @@ for view in views:
                 )),
                 'hostname': node.metadata.get('bind/hostname'),
             },
-            'needs': [
+            'needs': {
                 f"directory:/var/lib/bind/{view['name']}",
-            ],
-            'needed_by': [
+            },
+            'needed_by': {
                 'svc_systemd:bind9',
-            ],
-            'triggers': [
+            },
+            'triggers': {
                 'svc_systemd:bind9:restart',
-            ],
+            },
         }
 
 svc_systemd['bind9'] = {}
@@ -173,7 +173,7 @@ svc_systemd['bind9'] = {}
 actions['named-checkconf'] = {
     'command': 'named-checkconf -z',
     'unless': 'named-checkconf -z',
-    'needs': [
+    'needs': {
         'svc_systemd:bind9',
-    ]
+    },
 }

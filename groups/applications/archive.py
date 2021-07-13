@@ -1,10 +1,10 @@
 {
-    'supergroups': [
+    'supergroups': {
         'gcloud',
-    ],
-    'bundles': [
+    },
+    'bundles': {
         'archive',
         'gocryptfs',
         'gocryptfs-inspect',
-    ],
+    },
 }

@@ -1,13 +1,13 @@
 {
     'hostname': '10.0.0.2',
-    'groups': [
+    'groups': {
         'backup',
         'debian-10',
         'nextcloud',
         'monitored',
         'webserver',
-    ],
-    'bundles': [
+    },
+    'bundles': {
         'gitea',
         'grafana',
         'influxdb2',
@@ -16,7 +16,7 @@
         'redis',
         'wireguard',
         'zfs',
-    ],
+    },
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
         'network': {
@@ -61,20 +61,20 @@
             'my_ip': '172.30.0.2/24',
             'peers': {
                 'htz.mails': {
-                    'route': [
+                    'route': {
                         '10.0.10.0/24',
                         '10.0.11.0/24',
-                    ],
+                    },
                 },
             },
         },
         'zfs': {
             'pools': {
                 'tank': {
-                    'mirrors': [
+                    'mirrors': [[
                         '/dev/disk/by-partlabel/zfs-data-1',
                         '/dev/disk/by-partlabel/zfs-data-2',
-                    ],
+                    ]],
                 },
             },
         },

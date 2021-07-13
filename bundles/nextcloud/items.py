@@ -39,13 +39,13 @@ actions['delete_nextcloud'] = {
 actions['extract_nextcloud'] = {
     'command': f'tar xfvj /tmp/nextcloud-{version}.tar.bz2 --strip 1 -C /opt/nextcloud nextcloud',
     'unless': f"""php -r 'include "/opt/nextcloud/version.php"; echo "$OC_VersionString";' | grep -q '^{version}$'""",
-    'preceded_by': [
+    'preceded_by': {
         'action:delete_nextcloud',
         f'download:/tmp/nextcloud-{version}.tar.bz2',
-    ],
-    'needs': [
+    },
+    'needs': {
         'directory:/opt/nextcloud',
-    ],
+    },
 }
 
 symlinks = {
@@ -53,17 +53,17 @@ symlinks = {
         'target': '/etc/nextcloud',
         'owner': 'www-data',
         'group': 'www-data',
-        'needs': [
+        'needs': {
             'action:extract_nextcloud',
-        ],
+        },
     },
     '/opt/nextcloud/userapps': {
         'target': '/var/lib/nextcloud/.userapps',
         'owner': 'www-data',
         'group': 'www-data',
-        'needs': [
+        'needs': {
             'action:extract_nextcloud',
-        ],
+        },
     },
 }
 
@@ -76,9 +76,9 @@ files = {
         'context': {
             'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
         },
-        'needs': [
+        'needs': {
             'directory:/etc/nextcloud',
-        ],
+        },
     },
 }
 
@@ -98,7 +98,7 @@ actions['install_nextcloud'] = {
         data_dir='/var/lib/nextcloud',
     ),
     'unless': repo.libs.nextcloud.occ('status') + ' | grep -q "installed: true"',
-    'needs': [
+    'needs': {
         'directory:/etc/nextcloud',
         'directory:/opt/nextcloud',
         'directory:/var/lib/nextcloud',
@@ -109,7 +109,7 @@ actions['install_nextcloud'] = {
         'action:extract_nextcloud',
         'file:/etc/nextcloud/managed.config.php',
         'postgres_db:nextcloud',
-    ],
+    },
 }
 
 # UPGRADE
@@ -117,18 +117,18 @@ actions['install_nextcloud'] = {
 actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
     'unless': "! " + repo.libs.nextcloud.occ('status') + ' | grep -q "Nextcloud or one of the apps require upgrade"',
-    'needs': [
+    'needs': {
         'action:install_nextcloud',
-    ],
+    },
 }
 
 actions['nextcloud_add_missing_inidces'] = {
     'command': repo.libs.nextcloud.occ('db:add-missing-indices'),
-    'needs': [
+    'needs': {
         'action:upgrade_nextcloud',
-    ],
+    },
     'triggered': True,
-    'triggered_by': [
+    'triggered_by': {
         f'action:extract_nextcloud',
-    ],
+    },
 }

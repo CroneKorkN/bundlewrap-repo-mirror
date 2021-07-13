@@ -1,12 +1,12 @@
 {
     'hostname': '46.38.240.85',
-    'groups': [
+    'groups': {
         'debian-10',
         'dnsserver',
-    ],
-    'bundles': [
+    },
+    'bundles': {
         'wireguard',
-    ],
+    },
     'metadata': {
         'id': '890848b2-a900-4f74-ad5b-b811fbb4f0bc',
         'network': {
@@ -34,12 +34,12 @@
             'my_ip': '172.30.0.3/24',
             'peers': {
                 'htz.mails': {
-                    'route': [
+                    'route': {
                         '10.0.0.0/24',
                         '10.0.2.0/24',
                         '10.0.9.0/24',
                         '10.0.10.0/24',
-                    ],
+                    },
                 },
             },
         },

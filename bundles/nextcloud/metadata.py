@@ -19,7 +19,7 @@ defaults = {
     'archive': {
         'paths': {
             '/var/lib/nextcloud': {
-                'exclude': [
+                'exclude': {
                     '^appdata_',
                     '^updater-',
                     '^nextcloud\.log',
@@ -27,7 +27,7 @@ defaults = {
                     '^[^/]+/cache',
                     '^[^/]+/files_versions',
                     '^[^/]+/files_trashbin',
-                ],
+                },
             },
         },
     },
@@ -56,9 +56,9 @@ defaults = {
         'datasets': {
             'tank/nextcloud': {
                 'mountpoint': '/var/lib/nextcloud',
-                'needed_by': [
+                'needed_by': {
                     'bundle:nextcloud',
-                ],
+                },
             },
         },
     },

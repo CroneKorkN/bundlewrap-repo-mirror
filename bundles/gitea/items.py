@@ -45,9 +45,9 @@ files['/etc/gitea/app.ini'] = {
 }
 
 svc_systemd['gitea'] = {
-    'needs': [
+    'needs': {
         'action:chmod_gitea',
         'download:/usr/local/bin/gitea',
         'file:/etc/gitea/app.ini',
-    ],
+    },
 }

@@ -14,16 +14,16 @@ for name, unit in node.metadata.get('systemd/units').items():
     if extension in ['netdev', 'network']:
         path = f'/etc/systemd/network/{name}'
         dependencies = {
-            'triggers': [
+            'triggers': {
                 'svc_systemd:systemd-networkd:restart',
-            ],
+            },
         }
     elif extension in ['timer', 'service']:
         path = f'/etc/systemd/system/{name}'
         dependencies = {
-            'triggers': [
+            'triggers': {
                 "action:systemd-reload",
-            ],
+            },
         }
 
     files[path] = {
@@ -33,7 +33,7 @@ for name, unit in node.metadata.get('systemd/units').items():
 
 for name, config in node.metadata.get('systemd/services').items():
     svc_systemd[name] = merge_dict(config, {
-        'needs': [
+        'needs': {
             'action:systemd-reload',
-        ],
+        },
     })

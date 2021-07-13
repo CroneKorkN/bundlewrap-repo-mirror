@@ -73,7 +73,7 @@ for name, config in node.metadata.get('nginx/vhosts').items():
             server_name=name,
             **config.get('context', {}),
         ),
-        'needs': [],
+        'needs': set(),
         'needed_by': {
             'svc_systemd:nginx',
             'svc_systemd:nginx:restart',
@@ -84,6 +84,6 @@ for name, config in node.metadata.get('nginx/vhosts').items():
     }
     
     if name in node.metadata.get('letsencrypt/domains'):
-        files[f'/etc/nginx/sites/{name}']['needs'].append(
+        files[f'/etc/nginx/sites/{name}']['needs'].add(
             f'action:letsencrypt_ensure-some-certificate_{name}',
         )

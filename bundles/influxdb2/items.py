@@ -4,9 +4,9 @@ from shlex import quote
 directories['/var/lib/influxdb'] = {
     'owner': 'influxdb',
     'group': 'influxdb',
-    'needs': [
+    'needs': {
         'zfs_dataset:tank/influxdb',
-    ],
+    },
 }
 
 directories['/etc/influxdb'] = {
@@ -14,26 +14,26 @@ directories['/etc/influxdb'] = {
 }
 files['/etc/influxdb/config.toml'] = {
     'content': dumps(node.metadata.get('influxdb/config')),
-    'triggers': [
+    'triggers': {
         'svc_systemd:influxdb:restart',
-    ]
+    },
 }
 
 svc_systemd['influxdb'] = {
-    'needs': [
+    'needs': {
         'directory:/var/lib/influxdb',
         'file:/etc/influxdb/config.toml',
         'pkg_apt:influxdb2',
-    ]
+    },
 }
 
 actions['wait_for_influxdb_start'] = {
     'command': 'sleep 15',
     'triggered': True,
-    'triggered_by': [
+    'triggered_by': {
         'svc_systemd:influxdb',
         'svc_systemd:influxdb:restart',
-    ]
+    },
 }
 
 actions['setup_influxdb'] = {
@@ -45,9 +45,9 @@ actions['setup_influxdb'] = {
         token=str(node.metadata.get('influxdb/admin_token')),
     ),
     'unless': 'influx bucket list',
-    'needs': [
+    'needs': {
         'action:wait_for_influxdb_start',
-    ],
+    },
 }
 
 files['/root/.influxdbv2/configs'] = {
@@ -59,9 +59,9 @@ files['/root/.influxdbv2/configs'] = {
             'active': True,
         },
     }),
-    'needs': [
+    'needs': {
         'action:setup_influxdb',
-    ],
+    },
 }
 
 for description, permissions in {
@@ -71,7 +71,7 @@ for description, permissions in {
     actions[f'influxdb_{description}_token'] = {
         'command': f'influx auth create --description {description} {permissions}',
         'unless': f'''influx auth list --json | jq -r '.[] | select (.description == "{description}") | .token' | wc -l | grep -q ^1$''',
-        'needs': [
+        'needs': {
             'file:/root/.influxdbv2/configs',
-        ],
+        },
     }

@@ -52,7 +52,7 @@ defaults = {
         },
     },
     'sudoers': {
-        'www-data': ['/usr/bin/doveadm pw -s ARGON2ID'],
+        'www-data': {'/usr/bin/doveadm pw -s ARGON2ID'},
     },
 }
 

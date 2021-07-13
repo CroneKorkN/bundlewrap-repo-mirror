@@ -9,9 +9,9 @@ import yaml
 import json
 
 svc_systemd['grafana-server'] = {
-    'needs': [
+    'needs': {
         'pkg_apt:grafana',
-    ],
+    },
 }
 
 admin_password = node.metadata.get('grafana/config/security/admin_password')
@@ -25,10 +25,8 @@ actions['reset_grafana_admin_password'] = {
 }
 
 directories = {
-    '/etc/grafana': {
-    },
-    '/etc/grafana/provisioning': {
-    },
+    '/etc/grafana': {},
+    '/etc/grafana/provisioning': {},
     '/etc/grafana/provisioning/datasources': {
         'purge': True,
     },
@@ -42,18 +40,18 @@ directories = {
 files = {
     '/etc/grafana/grafana.ini': {
         'content': repo.libs.ini.dumps(node.metadata.get('grafana/config')),
-        'triggers': [
+        'triggers': {
             'svc_systemd:grafana-server:restart',
-        ],
+        },
     },
     '/etc/grafana/provisioning/datasources/managed.yaml': {
         'content': yaml.dump({
             'apiVersion': 1,
             'datasources': list(node.metadata.get('grafana/datasources').values()),
         }),
-        'triggers': [
+        'triggers': {
             'svc_systemd:grafana-server:restart',
-        ],
+        },
     },
     '/etc/grafana/provisioning/dashboards/managed.yaml': {
         'content': yaml.dump({
@@ -67,9 +65,9 @@ files = {
                 },
             }],
         }),
-        'triggers': [
+        'triggers': {
             'svc_systemd:grafana-server:restart',
-        ],
+        },
     },
 }
 
@@ -143,8 +141,8 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
     
     files[f'/var/lib/grafana/dashboards/{monitored_node.name}.json'] = {
         'content': json.dumps(dashboard, indent=4),
-        'triggers': [
+        'triggers': {
             'svc_systemd:grafana-server:restart',
-        ]
+        },
     }
         

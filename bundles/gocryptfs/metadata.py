@@ -76,12 +76,12 @@ def systemd(metadata):
                         'PLAIN': path,
                         'CIPHER': options["mountpoint"]
                     },
-                    'ExecStart': [
+                    'ExecStart': {
                         '/usr/bin/gocryptfs -fg -plaintextnames -reverse -masterkey $MASTERKEY -ctlsock $SOCKET $PLAIN $CIPHER',
-                    ],
-                    'ExecStopPost': [
+                    },
+                    'ExecStopPost': {
                         '/usr/bin/umount $CIPHER'
-                    ],
+                    },
                 },
             },
             'needs': [
