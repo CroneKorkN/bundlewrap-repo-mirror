@@ -62,9 +62,7 @@ def systemd_networkd_networks(metadata):
     return {
         'systemd': {
             'units': {
-                'wireguard.network': {
-                    'content': network,
-                },
+                'wireguard.network':  network,
             },
         },
     }
@@ -103,9 +101,7 @@ def systemd_networkd_netdevs(metadata):
     return {
         'systemd': {
             'units': {
-                'wireguard.netdev': {
-                    'content': netdev,
-                },
+                'wireguard.netdev':  netdev,
             },
         },
     }

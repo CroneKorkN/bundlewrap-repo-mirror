@@ -4,53 +4,42 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'systemd/units',
     'systemd/services',
 )
-def timers(metadata):
+def systemd(metadata):
+    units = {}
+    services = {}
+
+    for name, config in metadata.get('systemd-timers').items():
+        units.update({
+            f'{name}.timer': {
+                'Unit':{
+                    'Description': f'{name} timer',
+                },
+                'Timer': {
+                    'OnCalendar': config['when'],
+                    'Persistent': config.get('persistent', False),
+                    'Unit': f'{name}.service',
+                },
+                'Install': {
+                    'WantedBy': 'multi-user.target',
+                },
+            }, 
+            f'{name}.service': {
+                'Unit':{
+                    'Description': f'{name} timer service',
+                },
+                'Service': {
+                    'ExecStart': config['command'],
+                },
+            },
+        })
+        services[f'{name}.timer'] = {}
+        
     return {
         'systemd': {
-            'units': {
-                f'{name}.timer': {
-                    'content': {
-                        'Unit':{
-                            'Description': f'{name} timer',
-                        },
-                        'Timer': {
-                            'OnCalendar': config['when'],
-                            'Persistent': config.get('persistent', False),
-                            'Unit': f'{name}.service',
-                        },
-                        'Install': {
-                            'WantedBy': 'multi-user.target',
-                        }
-                    },
-                } for name, config in metadata.get('systemd-timers').items()
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'systemd/services',
-)
-def services(metadata):
-    return {
-        'systemd': {
-            'units': {
-                f'{name}.service': {
-                    'content': {
-                        'Unit':{
-                            'Description': f'{name} timer service',
-                        },
-                        'Service': {
-                            'ExecStart': config['command'],
-                        },
-                    },
-                    'item': {
-                        'enabled': False,
-                        'running': False,
-                    },
-                } for name, config in metadata.get('systemd-timers').items()
-            },
+            'units': units,
+            'services': services,
         },
     }

@@ -30,33 +30,24 @@ defaults = {
     'systemd': {
         'units': {
             'gitea.service': {
-                'content': {
-                    'Unit': {
-                        'Description': 'gitea',
-                        'After': 'syslog.target',
-                        'After': 'network.target',
-                        'Requires': 'postgresql.service',
-                    },
-                    'Service': {
-                        'RestartSec': '2s',
-                        'Type': 'simple',
-                        'User': 'git',
-                        'Group': 'git',
-                        'WorkingDirectory': '/var/lib/gitea/',
-                        'ExecStart': '/usr/local/bin/gitea web -c /etc/gitea/app.ini',
-                        'Restart': 'always',
-                        'Environment': 'USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/gitea',
-                    },
-                    'Install': {
-                        'WantedBy': 'multi-user.target',
-                    },
+                'Unit': {
+                    'Description': 'gitea',
+                    'After': 'syslog.target',
+                    'After': 'network.target',
+                    'Requires': 'postgresql.service',
                 },
-                'item': {
-                    'needs': [
-                        'action:chmod_gitea',
-                        'download:/usr/local/bin/gitea',
-                        'file:/etc/gitea/app.ini',
-                    ],
+                'Service': {
+                    'RestartSec': '2s',
+                    'Type': 'simple',
+                    'User': 'git',
+                    'Group': 'git',
+                    'WorkingDirectory': '/var/lib/gitea/',
+                    'ExecStart': '/usr/local/bin/gitea web -c /etc/gitea/app.ini',
+                    'Restart': 'always',
+                    'Environment': 'USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/gitea',
+                },
+                'Install': {
+                    'WantedBy': 'multi-user.target',
                 },
             },
         },

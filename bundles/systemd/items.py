@@ -1,5 +1,4 @@
-timezone = node.metadata.get('timezone', 'UTC')
-keymap = node.metadata.get('keymap', 'de')
+from bundlewrap.utils.dicts import merge_dict
 
 actions = {
      'systemd-reload': {
@@ -9,15 +8,29 @@ actions = {
     }, 
 }
 
-for name, config in node.metadata.get('systemd/units').items():
-    files[config['path']] = {
-        'content': repo.libs.systemd.generate_unitfile(config['content']),
-        **config['item'],
-    }
-    files[config['path']].setdefault('triggers', []).append("action:systemd-reload")
+for name, unit in node.metadata.get('systemd/units').items():
+    extension = name.split('.')[-1]
+
+    if extension in ['netdev', 'network']:
+        files[f'/etc/systemd/network/{name}'] = {
+            'content': repo.libs.systemd.generate_unitfile(unit),
+            'triggers': [
+                'svc_systemd:systemd-networkd:restart',
+            ],
+        }
+    elif extension in ['timer', 'service']:
+        files[f'/etc/systemd/system/{name}'] = {
+            'content': repo.libs.systemd.generate_unitfile(unit),
+            'triggers': [
+                "action:systemd-reload",
+            ],
+        }
+    else:
+        raise Exception(f'unknown unit extension: "{extension}"')
 
 for name, config in node.metadata.get('systemd/services').items():
-    svc_systemd[name] = {
-        **config,
-    }
-    svc_systemd[name].setdefault('needs', []).append("action:systemd-reload")
+    svc_systemd[name] = merge_dict(config, {
+        'needs': [
+            'action:systemd-reload',
+        ],
+    })

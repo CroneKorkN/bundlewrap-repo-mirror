@@ -6,8 +6,4 @@ defaults = {
             },
         },
     },
-    'systemd-networkd': {
-        'netdevs': {},
-        'networks': {},
-    },
 }

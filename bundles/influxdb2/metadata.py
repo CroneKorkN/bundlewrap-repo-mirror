@@ -34,6 +34,7 @@ defaults = {
 
 @metadata_reactor.provides(
     'influxdb/password',
+    'influxdb/admin_token',
 )
 def admin_password(metadata):
     return {
