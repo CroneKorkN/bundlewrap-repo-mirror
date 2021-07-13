@@ -20,7 +20,7 @@ defaults = {
         },
         'databases': {},
     },
-    'grafana_rows': {},
+    'grafana_rows': set(),
 }
 
 if node.has_bundle('zfs'):
