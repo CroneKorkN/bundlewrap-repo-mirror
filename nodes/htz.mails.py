@@ -1,7 +1,6 @@
 {
     'hostname': '162.55.188.157',
     'groups': [
-#        'archive',
         'backup',
         'hetzner-cloud',
         'debian-11',
