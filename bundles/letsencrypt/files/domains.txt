@@ -1,3 +1,0 @@
-% for domain, aliases in sorted(node.metadata.get('letsencrypt/domains', {}).items()):
-${domain} ${' '.join(sorted(aliases))}
-% endfor

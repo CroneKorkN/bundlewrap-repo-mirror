@@ -1,3 +1,0 @@
-% for domain in domains:
-*@${domain} mail._domainkey.${domain}
-% endfor
