@@ -28,9 +28,9 @@ def unit_services(metadata):
 
 
 # add defaults to units
-@metadata_reactor#.provides(
-#    'systemd/units',
-#)
+@metadata_reactor.provides(
+    'systemd/units',
+)
 def unit_defaults(metadata):
     units = {}
     
