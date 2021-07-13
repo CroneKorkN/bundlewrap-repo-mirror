@@ -41,6 +41,8 @@ actions = {
     },
 }
 
+# group sources by apt server hostname
+
 hosts = {}
 
 for source_string in node.metadata.get('apt/sources'):
@@ -48,6 +50,8 @@ for source_string in node.metadata.get('apt/sources'):
     hosts\
         .setdefault(source.url.hostname, set())\
         .add(source)
+
+# create sources lists and keyfiles
 
 for host, sources in hosts.items():
     keyfile = basename(glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))[0])
@@ -75,6 +79,7 @@ for host, sources in hosts.items():
         },
     }
 
+# create backport pinnings
 
 for package, options in node.metadata.get('apt/packages', {}).items():    
     pkg_apt[package] = options
