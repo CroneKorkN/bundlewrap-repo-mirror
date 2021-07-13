@@ -25,8 +25,6 @@ for name, unit in node.metadata.get('systemd/units').items():
                 "action:systemd-reload",
             ],
         }
-    else:
-        raise Exception(f'unknown unit extension: "{extension}"')
 
     files[path] = {
         'content': repo.libs.systemd.generate_unitfile(unit),
