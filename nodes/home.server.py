@@ -5,13 +5,6 @@
         'debian-10',
     ],
     'bundles': [
-        'gitea',
-        'grafana',
-        'influxdb2',
-        'mirror',
-        'postgresql',
-        'redis',
-        'wireguard',
         'zfs',
     ],
     'metadata': {
