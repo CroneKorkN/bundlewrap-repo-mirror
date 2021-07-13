@@ -18,7 +18,7 @@ def unit_services(metadata):
             continue
         
         services[name] = config['item']
-        services[name].setdefault('needs', []).append(f"file:{config.get('path')}")
+        services[name].setdefault('needs', []).append(f"file:{config['path']}")
 
     return {
         'systemd': {
