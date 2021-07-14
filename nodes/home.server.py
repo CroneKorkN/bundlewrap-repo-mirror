@@ -71,10 +71,10 @@
         'zfs': {
             'pools': {
                 'tank': {
-                    'mirrors': [
+                    'mirrors': [[
                         '/dev/disk/by-partlabel/zfs-data-1',
                         '/dev/disk/by-partlabel/zfs-data-2',
-                    ],
+                    ]],
                 },
             },
         },
