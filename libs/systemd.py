@@ -9,7 +9,7 @@ template = '''
 [${segment.split('#')[0]}]
 %     for option, value in sorted(options.items()):
 %         if isinstance(value, dict):
-%             for k, v in value.items():
+%             for k, v in sorted(value.items()):
 ${option}=${k}=${v}
 %             endfor
 %         elif isinstance(value, (list, set, tuple)):

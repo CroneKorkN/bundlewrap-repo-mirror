@@ -90,10 +90,10 @@ def systemd_networkd_netdevs(metadata):
                 'Endpoint': config['endpoint'],
                 'PublicKey': config['pubkey'],
                 'PresharedKey': config['psk'],
-                'AllowedIPs': ', '.join([
+                'AllowedIPs': ', '.join(sorted([
                     str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).ip),
                     *config.get('route', []),
-                ]), # FIXME
+                ])), # FIXME
                 'PersistentKeepalive': 30,
             }
         })
