@@ -1,5 +1,10 @@
+hostname = '.'.join([*reversed(node.name.split('.')), 'ckn', 'li'])
+
 defaults = {
-    'hostname': '.'.join([*reversed(node.name.split('.')), 'ckn', 'li']),
+    'hostname': hostname,
+    'hosts': {
+        '127.0.0.1': [hostname],
+    },
 }
 
 
