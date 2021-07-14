@@ -1,5 +1,4 @@
 from ipaddress import ip_interface
-hdict, hlist = repo.libs.hashable.hdict, repo.libs.hashable.hlist
 
 
 defaults = {
@@ -76,9 +75,9 @@ def collect_records(metadata):
             for type, values in records.items():
                 for value in values:
                     zones\
-                        .setdefault(zone, set())\
-                        .add(
-                            hdict({'name': name, 'type': type, 'value': value})
+                        .setdefault(zone, [])\
+                        .append(
+                            {'name': name, 'type': type, 'value': value}
                         )
     
     return {
@@ -105,10 +104,10 @@ def ns_records(metadata):
     return {
         'bind': {
             'zones': {
-                zone: {
-                    hdict({'name': '@', 'type': 'NS', 'value': f"{nameserver}."})
+                zone: [
+                    {'name': '@', 'type': 'NS', 'value': f"{nameserver}."}
                         for nameserver in nameservers
-                } for zone in metadata.get('bind/zones').keys()
+                ] for zone in metadata.get('bind/zones').keys()
             },
         },
     }
