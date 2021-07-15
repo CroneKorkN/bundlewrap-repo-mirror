@@ -10,6 +10,7 @@
         'dnsserver',
     ],
     'bundles': [
+        'islamicstate.eu',
         'wireguard',
         'zfs',
     ],
