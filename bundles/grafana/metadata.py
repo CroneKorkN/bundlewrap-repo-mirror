@@ -7,9 +7,9 @@ defaults = {
         'packages': {
             'grafana': {},
         },
-        'sources': [
+        'sources': {
             'deb https://packages.grafana.com/oss/deb stable main',
-        ],
+        },
     },
     'grafana': {
         'config': {

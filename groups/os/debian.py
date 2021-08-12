@@ -7,11 +7,11 @@
     ],
     'metadata': {
         'apt': {
-            'sources': [
+            'sources': {
                 'deb http://deb.debian.org/debian {release} main non-free contrib',
                 'deb http://deb.debian.org/debian {release}-updates main contrib non-free',
                 'deb http://deb.debian.org/debian {release}-backports main contrib non-free',
-            ],
+            },
             'packages': {
                 'mtr-tiny': {},
             },

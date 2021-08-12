@@ -4,9 +4,9 @@
     ],
     'metadata': {
         'apt': {
-            'sources': [
+            'sources': {
                 'deb http://security.debian.org/debian-security {release}/updates main contrib non-free',
-            ],
+            },
         },
         'php': {
             'version': '7.3',

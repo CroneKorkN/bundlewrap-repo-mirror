@@ -1,6 +1,6 @@
 defaults = {
     'apt': {
         'packages': {},
-        'sources': [],
+        'sources': set(),
     },
 }

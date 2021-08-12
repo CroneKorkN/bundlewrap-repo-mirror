@@ -7,8 +7,8 @@ defaults = {
             'google-cloud-sdk': {},
             'python3-crcmod': {},
         },
-        'sources': [
+        'sources': {
             'deb https://packages.cloud.google.com/apt cloud-sdk main',
-        ],
+        },
     },
 }
