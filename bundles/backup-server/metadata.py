@@ -8,7 +8,7 @@ defaults = {
     },
     'users': {
         'backup-receiver': {
-            'authorized_keys': [],
+            'authorized_keys': set(),
         },
     },
     'sudoers': {
@@ -78,12 +78,12 @@ def backup_authorized_keys(metadata):
     return {
         'users': {
             'backup-receiver': {
-                'authorized_keys': [
+                'authorized_keys': {
                     other_node.metadata.get('users/root/pubkey')
                         for other_node in repo.nodes
                         if other_node.has_bundle('backup')
                         and other_node.metadata.get('backup/server') == node.name
-                ],
+                },
             },
         },
     }

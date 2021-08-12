@@ -126,9 +126,9 @@
                 'authorized_users': [
                     'root@home.server',
                 ],
-                'authorized_keys': [
+                'authorized_keys': {
                     'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHMKTJLw6Cb+MLt+9JFOkuo2QBpuA8EoTKOFpb3IFQHEq19YLMzOhcErWmzaRfiCnILhnwTQz0njS+n9Qu4aghk= root@mail.sublimity.de'
-                ],
+                },
             },
         },
         'vm': {

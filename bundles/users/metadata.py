@@ -18,11 +18,11 @@ def authorized_users(metadata):
 
     for name, config in metadata.get('users').items():
         users[name] = {
-            'authorized_keys': [],
+            'authorized_keys': set(),
         }
         for authorized_user in config.get('authorized_users', []):
             authorized_user_name, authorized_user_node = authorized_user.split('@')
-            users[name]['authorized_keys'].append(
+            users[name]['authorized_keys'].add(
                 repo.get_node(authorized_user_node).metadata.get(f'users/{authorized_user_name}/pubkey')
             )
     return {
@@ -38,7 +38,7 @@ def user_defaults(metadata):
 
     for name, config in metadata.get('users').items():
         users[name] = {
-            'authorized_keys': [],
+            'authorized_keys': set(),
         }
 
         if not 'full_name' in config:
