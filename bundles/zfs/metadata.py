@@ -3,11 +3,11 @@
 defaults = {
     'apt': {
         'packages': {
-            'linux-headers-amd64': {
-                'needed_by': {
-                    'pkg_apt:zfs-dkms',
-                },
-            },
+            # 'linux-headers-amd64': {
+            #     'needed_by': {
+            #         'pkg_apt:zfs-dkms',
+            #     },
+            # },
             'parted':{
                 'needed_by': {
                     'pkg_apt:zfs-zed',
