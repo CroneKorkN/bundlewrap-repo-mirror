@@ -20,6 +20,7 @@ mailbox_size_limit = 0
 recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = all
+message_size_limit = ${10**8}
 
 virtual_mailbox_domains = pgsql:/etc/postfix/virtual_mailbox_domains.cf
 virtual_mailbox_maps = pgsql:/etc/postfix/virtual_mailbox_maps.cf
