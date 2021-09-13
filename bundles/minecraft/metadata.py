@@ -1,5 +1,13 @@
 assert node.has_bundle('java')
 
+defaults = {
+    'backup': {
+        'paths': {
+            '/var/lib/minecraft',
+        },
+    }
+}
+
 default_properties = {
     'broadcast-rcon-to-ops': True,
     'view-distance': 10,
