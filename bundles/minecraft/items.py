@@ -27,7 +27,7 @@ for name, properties in node.metadata.get('minecraft/servers').items():
         'owner': 'minecraft',
     }
 
-    files[f'/var/opt/minecraft/{name}/eula.txt'] = {
+    files[f'/var/lib/minecraft/{name}/eula.txt'] = {
         'content': 'eula=true',
         'owner': 'minecraft',
         'needed_by': {
@@ -39,7 +39,7 @@ for name, properties in node.metadata.get('minecraft/servers').items():
     }
 
     translations = {True: 'true', False: 'false', None: ''}
-    files[f'/var/opt/minecraft/{name}/server.properties'] = {
+    files[f'/var/lib/minecraft/{name}/server.properties'] = {
         'content': '\n'.join(
             f'{key}={translations.get(value, value)}'
                 for key, value in properties.items()
