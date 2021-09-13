@@ -32,9 +32,9 @@ defaults = {
         },
     },
     'backup': {
-        'paths': [
+        'paths': {
             '/etc/nextcloud/config.php',
-        ],
+        },
     },
     'nextcloud': {
         'admin_user': 'admin',

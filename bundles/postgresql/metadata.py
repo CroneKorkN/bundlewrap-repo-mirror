@@ -7,9 +7,9 @@ defaults = {
         },
     },
     'backup': {
-        'paths': [
+        'paths': {
             '/var/lib/postgresql',
-        ],
+        },
     },
     'postgresql': {
         'roles': {
@@ -20,7 +20,7 @@ defaults = {
         },
         'databases': {},
     },
-    'grafana_rows': [],
+    'grafana_rows': {},
 }
 
 if node.has_bundle('zfs'):

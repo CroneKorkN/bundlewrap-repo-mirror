@@ -7,7 +7,7 @@ defaults = {
     },
     'backup': {
         'server': None,
-        'paths': [],
+        'paths': {},
     },
     'systemd-timers': {
         f'backup': {

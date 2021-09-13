@@ -50,12 +50,12 @@ defaults = {
             },
         },
     },
-    'grafana_rows': [
+    'grafana_rows': {
         'cpu',
         'mem',
         'disk_io',
         'net_io',
-    ],
+    },
 }
 
 
