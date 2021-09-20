@@ -6,9 +6,9 @@
     ],
     'metadata': {
         'dns': {},
-        'nameservers': [
+        'nameservers': {
             '10.0.10.2',
-        ],
+        },
         'users': {
             'root': {
                 'shell': '/usr/bin/zsh',
