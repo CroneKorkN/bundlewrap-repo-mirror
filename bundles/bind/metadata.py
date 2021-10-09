@@ -58,7 +58,7 @@ def collect_records(metadata):
     zones = {}
     
     for other_node in repo.nodes:
-        for fqdn, records in other_node.metadata.get('dns').items():
+        for fqdn, records in other_node.metadata.get('dns', {}).items():
             matching_zones = sorted(
                 filter(
                     lambda potential_zone: fqdn.endswith(potential_zone),
