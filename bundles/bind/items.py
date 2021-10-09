@@ -136,7 +136,8 @@ for view in views:
         ],
     }
 
-    for zone, records in zones.items():
+    for zone, record_dicts in zones.items():
+        records = record_dicts.values()
         unique_records = [
             dict(record_tuple)
                 for record_tuple in set(

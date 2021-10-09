@@ -1,4 +1,5 @@
 from ipaddress import ip_interface
+from json import dumps
 
 
 defaults = {
@@ -74,11 +75,12 @@ def collect_records(metadata):
 
             for type, values in records.items():
                 for value in values:
+                    entry = {'name': name, 'type': type, 'value': value}
                     zones\
-                        .setdefault(zone, [])\
-                        .append(
-                            {'name': name, 'type': type, 'value': value}
-                        )
+                        .setdefault(zone, {})\
+                        .update({
+                            str(hash(dumps(entry))): entry,
+                        })
     
     return {
         'bind': {
@@ -104,10 +106,11 @@ def ns_records(metadata):
     return {
         'bind': {
             'zones': {
-                zone: [
-                    {'name': '@', 'type': 'NS', 'value': f"{nameserver}."}
+                zone: {
+                    # FIXME: bw currently cant handle lists of dicts :(
+                    str(hash(dumps({'name': '@', 'type': 'NS', 'value': f"{nameserver}."}))): {'name': '@', 'type': 'NS', 'value': f"{nameserver}."}
                         for nameserver in nameservers
-                ] for zone in metadata.get('bind/zones').keys()
+                } for zone in metadata.get('bind/zones').keys()
             },
         },
     }
