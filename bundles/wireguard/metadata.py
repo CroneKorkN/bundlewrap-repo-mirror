@@ -116,7 +116,7 @@ def peer_keys(metadata):
     for peer_name in metadata.get('wireguard/peers', {}):
         peer_node = repo.get_node(peer_name)
         
-        first, second = sorted([node.name, peer_name])
+        first, second = sorted([node.metadata.get('id'), peer_node.metadata.get('id')])
         psk = repo.vault.random_bytes_as_base64_for(f'{first} wireguard {second}')
         
         pubkey = repo.libs.keys.get_pubkey_from_privkey(
