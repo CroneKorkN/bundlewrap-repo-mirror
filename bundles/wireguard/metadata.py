@@ -5,6 +5,7 @@ from bundlewrap.metadata import atomic
 
 repo.libs.wireguard.repo = repo
 
+
 defaults = {
     'apt': {
         'packages': {
@@ -20,18 +21,11 @@ defaults = {
             },
         },
     },
+    'wireguard': {
+        'peers': {},
+        'clients': {},
+    },
 }
-
-
-@metadata_reactor.provides(
-    'wireguard/privkey',
-)
-def privkey(metadata):
-    return {
-        'wireguard': {
-            'privkey': repo.libs.wireguard.privkey(metadata.get('id')),
-        }
-    }
 
 
 @metadata_reactor.provides(
@@ -43,10 +37,8 @@ def s2s_peer_specific(metadata):
             'peers': {
                 peer: {
                     'id': repo.get_node(peer).metadata.get(f'id'),
-                    'privkey': repo.get_node(peer).metadata.get(f'wireguard/privkey'),
                     'ip': repo.get_node(peer).metadata.get(f'wireguard/my_ip'),
                     'endpoint': f'{repo.get_node(peer).hostname}:51820',
-
                 }
                     for peer in metadata.get('wireguard/peers')
             },
@@ -63,33 +55,10 @@ def client_peer_specific(metadata):
             'clients': {
                 client: {
                     'id': client,
-                    'privkey': repo.libs.wireguard.privkey(client),
                 }
                     for client in metadata.get('wireguard/clients')
             },
         },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/peers',
-    'wireguard/clients',
-)
-def common_peer_data(metadata):
-    peers = {
-        'peers': {},
-        'clients': {},
-    }
-    
-    for peer_type in peers:
-        for peer_name, peer_data in metadata.get(f'wireguard/{peer_type}', {}).items():
-            peers[peer_type][peer_name] = {
-                'psk': repo.libs.wireguard.psk(node.metadata.get('id'), peer_data['id']),
-                'pubkey': repo.libs.wireguard.pubkey(peer_data['id']),
-            }
-
-    return {
-        'wireguard': peers,
     }
 
 
@@ -150,7 +119,7 @@ def systemd_networkd_netdevs(metadata):
             'Description': 'WireGuard server',
         },
         'WireGuard': {
-            'PrivateKey': metadata.get('wireguard/privkey'),
+            'PrivateKey': repo.libs.wireguard.privkey(metadata.get('id')),
             'ListenPort': 51820,
         },
     }
@@ -161,8 +130,8 @@ def systemd_networkd_netdevs(metadata):
     }.items():
         netdev.update({
             f'WireGuardPeer#{peer}': {
-                'PublicKey': config['pubkey'],
-                'PresharedKey': config['psk'],
+                'PublicKey': repo.libs.wireguard.pubkey(config['id']),
+                'PresharedKey': repo.libs.wireguard.psk(config['id'], metadata.get('id')),
                 'AllowedIPs': ', '.join([
                     str(ip_interface(config['ip']).ip),
                     *config.get('route', []),
