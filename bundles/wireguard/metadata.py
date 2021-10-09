@@ -3,6 +3,7 @@ from ipaddress import ip_network, ip_interface
 from bundlewrap.exceptions import NoSuchNode
 from bundlewrap.metadata import atomic
 
+repo.libs.wireguard.repo = repo
 
 defaults = {
     'apt': {
@@ -19,10 +20,77 @@ defaults = {
             },
         },
     },
-    'wireguard': {
-        'privatekey': repo.vault.random_bytes_as_base64_for(f'{node.name} wireguard privatekey'),
-    },
 }
+
+
+@metadata_reactor.provides(
+    'wireguard/privkey',
+)
+def privkey(metadata):
+    return {
+        'wireguard': {
+            'privkey': repo.libs.wireguard.privkey(metadata.get('id')),
+        }
+    }
+
+
+@metadata_reactor.provides(
+    'wireguard/peers',
+)
+def s2s_peer_specific(metadata):
+    return {
+        'wireguard': {
+            'peers': {
+                peer: {
+                    'id': repo.get_node(peer).metadata.get(f'id'),
+                    'privkey': repo.get_node(peer).metadata.get(f'wireguard/privkey'),
+                    'ip': repo.get_node(peer).metadata.get(f'wireguard/my_ip'),
+                    'endpoint': f'{repo.get_node(peer).hostname}:51820',
+
+                }
+                    for peer in metadata.get('wireguard/peers')
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'wireguard/clients',
+)
+def client_peer_specific(metadata):
+    return {
+        'wireguard': {
+            'clients': {
+                client: {
+                    'id': client,
+                    'privkey': repo.libs.wireguard.privkey(client),
+                }
+                    for client in metadata.get('wireguard/clients')
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'wireguard/peers',
+    'wireguard/clients',
+)
+def common_peer_data(metadata):
+    peers = {
+        'peers': {},
+        'clients': {},
+    }
+    
+    for peer_type in peers:
+        for peer_name, peer_data in metadata.get(f'wireguard/{peer_type}', {}).items():
+            peers[peer_type][peer_name] = {
+                'psk': repo.libs.wireguard.psk(node.metadata.get('id'), peer_data['id']),
+                'pubkey': repo.libs.wireguard.pubkey(peer_data['id']),
+            }
+
+    return {
+        'wireguard': peers,
+    }
 
 
 @metadata_reactor.provides(
@@ -82,7 +150,7 @@ def systemd_networkd_netdevs(metadata):
             'Description': 'WireGuard server',
         },
         'WireGuard': {
-            'PrivateKey': metadata.get('wireguard/privatekey'),
+            'PrivateKey': metadata.get('wireguard/privkey'),
             'ListenPort': 51820,
         },
     }
@@ -111,65 +179,4 @@ def systemd_networkd_netdevs(metadata):
                 'wireguard.netdev':  netdev,
             },
         },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/peers',
-)
-def s2s_peer_specific(metadata):
-    return {
-        'wireguard': {
-            'peers': {
-                peer: {
-                    'id': repo.get_node(peer).metadata.get(f'id'),
-                    'privkey': repo.get_node(peer).metadata.get(f'wireguard/privatekey'),
-                    'ip': repo.get_node(peer).metadata.get(f'wireguard/my_ip'),
-                    'endpoint': f'{repo.get_node(peer).hostname}:51820',
-
-                }
-                    for peer in metadata.get('wireguard/peers')
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/clients',
-)
-def client_peer_specific(metadata):
-    return {
-        'wireguard': {
-            'clients': {
-                client: {
-                    'id': client,
-                    'privkey': repo.vault.random_bytes_as_base64_for(f'{client} wireguard privatekey'),
-                }
-                    for client in metadata.get('wireguard/clients')
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/peers',
-    'wireguard/clients',
-)
-def common_peer_data(metadata):
-    peers = {
-        'peers': {},
-        'clients': {},
-    }
-    
-    for peer_type in peers:
-        for peer_name, peer_data in metadata.get(f'wireguard/{peer_type}', {}).items():
-            first, second = sorted([node.metadata.get('id'), peer_data['id']])
-            
-            peers[peer_type][peer_name] = {
-                'psk': repo.vault.random_bytes_as_base64_for(f'{first} wireguard {second}'),
-                'pubkey': repo.libs.keys.get_pubkey_from_privkey(f'{peer_name} wireguard pubkey', peer_data['privkey']),
-            }
-
-    return {
-        'wireguard': peers,
     }
