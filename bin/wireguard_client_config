@@ -11,6 +11,20 @@ server_node = repo.get_node('htz.mails')
 server_pubkey = repo.libs.keys.get_pubkey_from_privkey(f'{server_node.name} wireguard pubkey', server_node.metadata.get('wireguard/privatekey'))
 data = server_node.metadata.get(f'wireguard/clients/{argv[1]}')
 
+sortable_client_routes = [
+    ip_interface(server_node.metadata.get('network/internal/ipv4')).network,
+]
+
+for peer in server_node.metadata.get('wireguard/peers').values():
+    for network in peer.get('route'):
+        sortable_client_routes.append(ip_network(network))
+        
+client_routes = [
+    ip_interface(server_node.metadata.get('wireguard/my_ip')).ip,
+    ip_interface(server_node.metadata.get('wireguard/my_ip')).network,
+    *sorted(sortable_client_routes),
+]
+
 print(
 f'''[Interface]
 PrivateKey = {data['privkey']}
@@ -21,7 +35,7 @@ DNS = 8.8.8.8
 [Peer]
 PublicKey = {server_pubkey}
 PresharedKey = {data['psk']}
-AllowedIPs = {ip_interface(server_node.metadata.get('wireguard/my_ip')).ip}, {ip_interface(server_node.metadata.get('wireguard/my_ip')).network}, 10.0.0.0/16
+AllowedIPs = {', '.join(str(client_route) for client_route in client_routes)}
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
 PersistentKeepalive = 10'''
 )
