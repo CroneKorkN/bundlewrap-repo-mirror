@@ -20,7 +20,7 @@ DNS = 8.8.8.8
 [Peer]
 PublicKey = {data['pubkey']}
 PresharedKey = {data['psk']}
-AllowedIPs = {server_node.metadata.get('wireguard/my_ip')}, 10.0.0.0/16
-Endpoint = {str(ip_interface(server_node.metadata.get('network/external/ipv4')).ip)}:51820
+AllowedIPs = {ip_interface(server_node.metadata.get('wireguard/my_ip')).ip}, {ip_interface(server_node.metadata.get('wireguard/my_ip')).network}, 10.0.0.0/16
+Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
 PersistentKeepalive = 10'''
 )
