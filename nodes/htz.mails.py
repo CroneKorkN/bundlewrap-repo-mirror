@@ -32,17 +32,17 @@
         'bind': {
             'hostname': 'resolver.name',
             'zones': {
-                'sublimity.de': [],
-                'freibrief.net': [],
-                'nadenau.net': [],
-                'naeder.net': [],
-                'rolfwerner.eu': [],
-                'wettengl.net': [],
-                'wingl.de': [],
-                'woodpipe.de': [],
-                'ckn.li': [],
-                'islamicstate.eu': [],
-                'hausamsilberberg.de': [],
+                'sublimity.de': {},
+                'freibrief.net': {},
+                'nadenau.net': {},
+                'naeder.net': {},
+                'rolfwerner.eu': {},
+                'wettengl.net': {},
+                'wingl.de': {},
+                'woodpipe.de': {},
+                'ckn.li': {},
+                'islamicstate.eu': {},
+                'hausamsilberberg.de': {},
             },
         },
         'dns': {
@@ -61,9 +61,9 @@
         },
         'letsencrypt': {
             'domains': {
-                'ckn.li': {},
-                'sublimity.de': {},
-                'freibrief.net': {},
+                'ckn.li': set(),
+                'sublimity.de': set(),
+                'freibrief.net': set(),
             },
         },
         'mailserver': {

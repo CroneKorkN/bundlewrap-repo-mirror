@@ -7,7 +7,9 @@ defaults = {
         },
     },
     'letsencrypt': {
-        'domains': {},
+        'domains': {
+            # 'example.com': {'alias1.example.com', 'alias2.example.com'},
+        },
     },
     'pacman': {
         'packages': {
@@ -52,7 +54,7 @@ def delegated_domains(metadata):
     return {
         'letsencrypt': {
             'domains': {
-                domain: {}
+                domain: set()
                     for other_node in repo.nodes
                     if other_node.has_bundle('letsencrypt')
                         and other_node.metadata.get('letsencrypt/delegate_to_node', None) == node.name

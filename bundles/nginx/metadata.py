@@ -104,7 +104,7 @@ def letsencrypt(metadata):
     return {
         'letsencrypt': {
             'domains': {
-                domain: {} for domain in metadata.get('nginx/vhosts')
+                domain: set() for domain in metadata.get('nginx/vhosts')
             },
             'reload_after': {
                 'nginx',
