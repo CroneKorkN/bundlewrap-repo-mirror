@@ -153,6 +153,7 @@ def client_peer_specific(metadata):
 
 @metadata_reactor.provides(
     'wireguard/peers',
+    'wireguard/clients',
 )
 def common_peer_data(metadata):
     peers = {

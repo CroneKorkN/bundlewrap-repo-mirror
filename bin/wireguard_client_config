@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+from bundlewrap.repo import Repository
+from os.path import realpath, dirname
+from sys import argv
+from ipaddress import ip_network, ip_interface
+
+
+repo = Repository(dirname(dirname(realpath(__file__))))
+server_node = repo.get_node('htz.mails')
+data = server_node.metadata.get(f'wireguard/clients/{argv[1]}')
+
+print(
+f'''[Interface]
+PrivateKey = {data['privkey']}
+ListenPort = 51820
+Address = {data['ip']}
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = {data['pubkey']}
+PresharedKey = {data['psk']}
+AllowedIPs = 10.0.0.0/16
+Endpoint = {str(ip_interface(server_node.metadata.get('network/external/ipv4')).ip)}:51820
+PersistentKeepalive = 10'''
+)
