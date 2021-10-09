@@ -38,7 +38,7 @@ def renew(metadata):
         return {
             'systemd-timers': {
                 'letsencrypt': {
-                    'command': '/usr/bin/dehydrated --cron --accept-terms --challenge http-01 && /usr/bin/dehydrated --cleanup',
+                    'command': '/bin/bash -c "/usr/bin/dehydrated --cron --accept-terms --challenge http-01 && /usr/bin/dehydrated --cleanup"',
                     'when': 'daily',
                 },
             },
