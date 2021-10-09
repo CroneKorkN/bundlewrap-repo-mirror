@@ -5,9 +5,10 @@ from os.path import realpath, dirname
 from sys import argv
 from ipaddress import ip_network, ip_interface
 
-
 repo = Repository(dirname(dirname(realpath(__file__))))
+
 server_node = repo.get_node('htz.mails')
+server_pubkey = repo.libs.keys.get_pubkey_from_privkey(f'{server_node.name} wireguard pubkey', server_node.metadata.get('wireguard/privatekey'))
 data = server_node.metadata.get(f'wireguard/clients/{argv[1]}')
 
 print(
@@ -18,7 +19,7 @@ Address = {data['ip']}
 DNS = 8.8.8.8
 
 [Peer]
-PublicKey = {data['pubkey']}
+PublicKey = {server_pubkey}
 PresharedKey = {data['psk']}
 AllowedIPs = {ip_interface(server_node.metadata.get('wireguard/my_ip')).ip}, {ip_interface(server_node.metadata.get('wireguard/my_ip')).network}, 10.0.0.0/16
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
