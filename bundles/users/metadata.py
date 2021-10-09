@@ -20,7 +20,7 @@ def authorized_users(metadata):
         users[name] = {
             'authorized_keys': set(),
         }
-        for authorized_user in config.get('authorized_users', []):
+        for authorized_user in config.get('authorized_users', set()):
             authorized_user_name, authorized_user_node = authorized_user.split('@')
             users[name]['authorized_keys'].add(
                 repo.get_node(authorized_user_node).metadata.get(f'users/{authorized_user_name}/pubkey')
