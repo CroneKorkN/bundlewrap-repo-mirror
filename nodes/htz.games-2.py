@@ -14,8 +14,14 @@
     'metadata': {
         'id': '3915f236-dd0a-4c6c-8fb3-1584c81038c6',
         'left4dead2': {
-            'realism-expert': {
-                'port': 27001,
+            'steamgroups': [38347879],
+            'servers': {
+                'realism-expert2': {
+                    'port': 27001,
+                },
+                'realism-expert3': {
+                    'port': 27002,
+                },
             }
         },
         'network': {

@@ -4,7 +4,9 @@ defaults = {
             'left4dead2': '222860',
         },
     },
-    'servers': {},
+    'left4dead2': {
+        'serevrs': {},
+    },
 }
 
 
@@ -15,7 +17,7 @@ def steam(metadata):
     units = {}
     services = {}
     
-    for name, config in metadata.get('left4dead2').items():
+    for name, config in metadata.get('left4dead2/servers').items():
         units[f'left4dead2-server-{name}.service'] = {
             'Unit': {
                 'Description': 'steam: install and update games',
