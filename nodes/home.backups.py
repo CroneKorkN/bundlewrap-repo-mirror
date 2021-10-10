@@ -23,7 +23,8 @@
         'zfs': {
             'pools': {
                 'tank': {
-                    'raidz': [
+                    'type': 'raidz',
+                    'devices': [
                         '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL',
                         '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB',
                         '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG',

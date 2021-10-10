@@ -30,7 +30,7 @@ def zfs(metadata):
         ):
             # container
             datasets[f"tank/{other_node.metadata.get('id')}"] = {
-                'mountpoint': 'none',
+                'mountpoint': None,
                 'readonly': 'on',
                 'backup': False,
             }
@@ -47,7 +47,7 @@ def zfs(metadata):
                     for dataset, config in other_node.metadata.get('zfs/datasets').items():
                         if path == config.get('mountpoint'):
                             datasets[f"tank/{other_node.metadata.get('id')}/{dataset}"] = {
-                                'mountpoint': 'none',
+                                'mountpoint': None,
                                 'readonly': 'on',
                                 'backup': False,
                             }

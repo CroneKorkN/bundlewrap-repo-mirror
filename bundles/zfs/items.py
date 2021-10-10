@@ -40,12 +40,14 @@ for name, config in node.metadata.get('zfs/datasets', {}).items():
     zfs_datasets[name].pop('backup', None)
 
 for name, config in node.metadata.get('zfs/pools', {}).items():
-    zfs_pools[name] = config
-
-    actions[f'pool_{name}_enable_trim'] = {
-       'command': f'zpool set autotrim=on {name}',
-       'unless':  f'zpool get autotrim -H -o value {name} | grep -q on',
-       'needs':   [
-           f'zfs_pool:{name}'
-       ]
+    zfs_pools[name] = {
+        "when_creating": {
+            "config": [
+                {
+                    "type": config.get('type', None),
+                    "devices": config['devices'],
+                },
+            ],
+        },
+        "autotrim": True,
     }
