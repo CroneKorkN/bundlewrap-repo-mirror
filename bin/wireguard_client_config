@@ -14,7 +14,7 @@ sortable_client_routes = [
     ip_interface(server_node.metadata.get('network/internal/ipv4')).network,
 ]
 for peer in server_node.metadata.get('wireguard/s2s').values():
-    for network in peer.get('route'):
+    for network in peer['allowed_ips']:
         sortable_client_routes.append(ip_network(network))
         
 client_routes = [
@@ -25,14 +25,14 @@ client_routes = [
 
 print(
 f'''[Interface]
-PrivateKey = {repo.libs.wireguard.privkey(data['id'])}
+PrivateKey = {repo.libs.wireguard.privkey(data['peer_id'])}
 ListenPort = 51820
-Address = {data['ip']}
+Address = {data['peer_ip']}
 DNS = 8.8.8.8
 
 [Peer]
 PublicKey = {repo.libs.wireguard.pubkey(server_node.metadata.get('id'))}
-PresharedKey = {repo.libs.wireguard.psk(data['id'], server_node.metadata.get('id'))}
+PresharedKey = {repo.libs.wireguard.psk(data['peer_id'], server_node.metadata.get('id'))}
 AllowedIPs = {', '.join(str(client_route) for client_route in client_routes)}
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
 PersistentKeepalive = 10'''

@@ -32,10 +32,10 @@ def s2s_peer_specific(metadata):
         'wireguard': {
             's2s': {
                 s2s: {
-                    'id': repo.get_node(s2s).metadata.get(f'id'),
-                    'ip': repo.get_node(s2s).metadata.get(f'wireguard/my_ip'),
+                    'peer_id': repo.get_node(s2s).metadata.get(f'id'),
+                    'peer_ip': repo.get_node(s2s).metadata.get(f'wireguard/my_ip'),
                     'endpoint': f'{repo.get_node(s2s).hostname}:51820',
-                    'route': [
+                    'allowed_ips': [
                         str(ip_interface(repo.get_node(s2s).metadata.get(f'wireguard/my_ip')).network),
                     ],
                 }
@@ -53,10 +53,10 @@ def client_peer_specific(metadata):
         'wireguard': {
             'clients': {
                 client: {
-                    'id': client,
-                    'route': [
-                        str(ip_interface(conf['ip']).network),
-                    ]
+                    'peer_id': client,
+                    'allowed_ips': [
+                        str(ip_interface(conf['peer_ip']).network),
+                    ],
                 }
                     for client, conf in metadata.get('wireguard/clients').items()
             },
@@ -83,7 +83,7 @@ def systemd_networkd_networks(metadata):
     }
 
     for peer, config in metadata.get('wireguard/s2s').items():
-        for route in config.get('route', []):
+        for route in config.get('allowed_ips', []):
             network.update({
                 f'Route#{peer}_{route}': {
                     'Destination': route,
@@ -122,12 +122,9 @@ def systemd_networkd_netdevs(metadata):
     }.items():
         netdev.update({
             f'WireGuardPeer#{peer}': {
-                'PublicKey': repo.libs.wireguard.pubkey(config['id']),
-                'PresharedKey': repo.libs.wireguard.psk(config['id'], metadata.get('id')),
-                'AllowedIPs': ', '.join([
-                    # '172.30.0.0/24', # FIXME
-                    *config.get('route', []),
-                ]), # FIXME
+                'PublicKey': repo.libs.wireguard.pubkey(config['peer_id']),
+                'PresharedKey': repo.libs.wireguard.psk(config['peer_id'], metadata.get('id')),
+                'AllowedIPs': ', '.join(config.get('allowed_ips', [])),
                 'PersistentKeepalive': 30,
             }
         })
