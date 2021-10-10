@@ -3,6 +3,7 @@
     'groups': [
         'backup',
         'debian-11',
+        'hetzner-cloud',
     ],
     'bundles': [
 #        'steam',
@@ -20,7 +21,7 @@
         'network': {
             'internal': {
                 'interface': 'ens10',
-                'ipv4': '10.0.10.3/24',
+                'ipv4': '10.0.10.3/32',
             },
             'external': {
                 'interface': 'eth0',
