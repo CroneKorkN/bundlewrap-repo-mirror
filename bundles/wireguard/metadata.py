@@ -9,12 +9,8 @@ repo.libs.wireguard.repo = repo
 defaults = {
     'apt': {
         'packages': {
-            # 'linux-headers-amd64': {},
             'wireguard': {
                 'backports': node.os_version < (11,),
-                # 'needs': [
-                #     'pkg_apt:linux-headers-amd64',
-                # ],
                 'triggers': [
                     'svc_systemd:systemd-networkd:restart',
                 ],
@@ -55,6 +51,9 @@ def client_peer_specific(metadata):
             'clients': {
                 client: {
                     'id': client,
+                    'route': [
+                        '172.30.0.0/24',
+                    ]
                 }
                     for client in metadata.get('wireguard/clients')
             },
@@ -73,11 +72,6 @@ def systemd_networkd_networks(metadata):
         'Address': {
             'Address': metadata.get('wireguard/my_ip'),
         },
-        'Route': {
-            'Destination': str(ip_interface(metadata.get('wireguard/my_ip')).network),
-            'GatewayOnlink': 'yes',
-            'PreferredSource': str(ip_interface(metadata.get('network/internal/ipv4')).ip),
-        },
         'Network': {
             'DHCP': 'no',
             'IPForward': 'yes',
@@ -87,15 +81,12 @@ def systemd_networkd_networks(metadata):
 
     for peer, config in {
         **metadata.get('wireguard/peers'),
-        **metadata.get('wireguard/clients'),
     }.items():
         for route in config.get('route', []):
             network.update({
                 f'Route#{peer}_{route}': {
                     'Destination': route,
-                    'Gateway': str(ip_interface(config['ip']).ip),
-                    'GatewayOnlink': 'yes',
-                    'PreferredSource': str(ip_interface(metadata.get('network/internal/ipv4')).ip),
+                    'Gateway': str(ip_interface(metadata.get('wireguard/my_ip')).ip),
                 }
             })
 
@@ -133,7 +124,7 @@ def systemd_networkd_netdevs(metadata):
                 'PublicKey': repo.libs.wireguard.pubkey(config['id']),
                 'PresharedKey': repo.libs.wireguard.psk(config['id'], metadata.get('id')),
                 'AllowedIPs': ', '.join([
-                    str(ip_interface(config['ip']).ip),
+                    # '172.30.0.0/24', # FIXME
                     *config.get('route', []),
                 ]), # FIXME
                 'PersistentKeepalive': 30,
