@@ -10,18 +10,15 @@ repo = Repository(dirname(dirname(realpath(__file__))))
 server_node = repo.get_node('htz.mails')
 data = server_node.metadata.get(f'wireguard/clients/{argv[1]}')
 
-sortable_client_routes = [
+vpn_network = ip_interface(server_node.metadata.get('wireguard/my_ip')).network
+allowed_ips = [
+    vpn_network,
     ip_interface(server_node.metadata.get('network/internal/ipv4')).network,
 ]
 for peer in server_node.metadata.get('wireguard/s2s').values():
     for network in peer['allowed_ips']:
-        sortable_client_routes.append(ip_network(network))
-        
-client_routes = [
-    ip_interface(server_node.metadata.get('wireguard/my_ip')).ip,
-    ip_interface(server_node.metadata.get('wireguard/my_ip')).network,
-    *sorted(sortable_client_routes),
-]
+        if not ip_network(network).subnet_of(vpn_network):
+            allowed_ips.append(ip_network(network))
 
 print(
 f'''[Interface]
@@ -33,7 +30,7 @@ DNS = 8.8.8.8
 [Peer]
 PublicKey = {repo.libs.wireguard.pubkey(server_node.metadata.get('id'))}
 PresharedKey = {repo.libs.wireguard.psk(data['peer_id'], server_node.metadata.get('id'))}
-AllowedIPs = {', '.join(str(client_route) for client_route in client_routes)}
+AllowedIPs = {', '.join(str(client_route) for client_route in sorted(allowed_ips))}
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
 PersistentKeepalive = 10'''
 )
