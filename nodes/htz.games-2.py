@@ -7,7 +7,7 @@
     ],
     'bundles': [
         'steam',
-        'l4d2',
+        'left4dead2',
 #        'java',
 #        'minecraft',
     ],
@@ -15,6 +15,12 @@
         'id': '3915f236-dd0a-4c6c-8fb3-1584c81038c6',
         'left4dead2': {
             'steamgroups': [38347879],
+            'workshop': {
+                '2524204971', # admin system inkl admin menu
+            },
+            'admins': {
+                'STEAM_1:0:12376499', # CroneKorkN
+            },
             'servers': {
                 'realism-expert2': {
                     'port': 27001,

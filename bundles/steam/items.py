@@ -18,6 +18,13 @@ files = {
         'owner': 'steam',
         'group': 'steam',
     },
+    '/opt/steam-workshop-downloader': {
+        'content_type': 'download',
+        'source': 'https://github.com/SegoCode/swd/releases/download/1.1/swd-linux-amd64',
+        'owner': 'steam',
+        'group': 'steam',
+        'mode': '750',
+    },
 }
 
 actions = {
@@ -37,5 +44,9 @@ actions = {
     },
 }
 
-# sudo -Hiu steam bash -c '~/steam/steamcmd.sh +login anonymous +force_install_dir ./l4d2/ +app_update 222860 validate +quit'
-# https://github.com/SegoCode/swd/releases/download/1.1/swd-linux-amd64
+svc_systemd['steam-update'] = {
+    'running': False,
+    'needs': {
+        'file:/etc/systemd/system/steam-update.service',
+    }
+}
