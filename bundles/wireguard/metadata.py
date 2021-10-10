@@ -35,6 +35,9 @@ def s2s_peer_specific(metadata):
                     'id': repo.get_node(peer).metadata.get(f'id'),
                     'ip': repo.get_node(peer).metadata.get(f'wireguard/my_ip'),
                     'endpoint': f'{repo.get_node(peer).hostname}:51820',
+                    'route': [
+                        str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).network),
+                    ],
                 }
                     for peer in metadata.get('wireguard/peers')
             },
@@ -52,10 +55,10 @@ def client_peer_specific(metadata):
                 client: {
                     'id': client,
                     'route': [
-                        '172.30.0.0/24',
+                        str(ip_interface(conf['ip']).network),
                     ]
                 }
-                    for client in metadata.get('wireguard/clients')
+                    for client, conf in metadata.get('wireguard/clients').items()
             },
         },
     }
