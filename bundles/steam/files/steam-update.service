@@ -1,4 +1,3 @@
-GNU nano 4.8                                                     /etc/systemd/system/l4d2-update.service
 [Unit]
 Description=l4d2 update
 After=network.target

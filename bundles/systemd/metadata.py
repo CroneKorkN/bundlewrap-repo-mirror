@@ -48,7 +48,7 @@ def services(metadata):
         extension = name.split('.')[-1]
         
         if extension not in ['timer', 'service']:
-            raise Exception(f'unknown extension {extension}')
+            raise Exception(f'unknown extension: {extension}')
 
     return {
         'systemd': {

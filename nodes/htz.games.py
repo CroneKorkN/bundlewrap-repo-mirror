@@ -9,7 +9,7 @@
 #        'steam',
 #        'l4d2',
         'java',
-        'minecraft',
+#        'minecraft',
     ],
     'metadata': {
         # TEMP
