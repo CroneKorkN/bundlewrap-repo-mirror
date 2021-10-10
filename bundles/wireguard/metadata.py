@@ -26,6 +26,7 @@ defaults = {
 
 @metadata_reactor.provides(
     'wireguard/s2s',
+    'wireguard/clients',
 )
 def s2s_peer_specific(metadata):
     return {
@@ -41,16 +42,6 @@ def s2s_peer_specific(metadata):
                 }
                     for s2s in metadata.get('wireguard/s2s')
             },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'wireguard/clients',
-)
-def client_peer_specific(metadata):
-    return {
-        'wireguard': {
             'clients': {
                 client: {
                     'peer_id': client,
