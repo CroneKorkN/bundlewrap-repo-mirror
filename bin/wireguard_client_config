@@ -13,7 +13,7 @@ data = server_node.metadata.get(f'wireguard/clients/{argv[1]}')
 sortable_client_routes = [
     ip_interface(server_node.metadata.get('network/internal/ipv4')).network,
 ]
-for peer in server_node.metadata.get('wireguard/peers').values():
+for peer in server_node.metadata.get('wireguard/s2s').values():
     for network in peer.get('route'):
         sortable_client_routes.append(ip_network(network))
         

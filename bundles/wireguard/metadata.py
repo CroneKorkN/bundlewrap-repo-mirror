@@ -18,28 +18,28 @@ defaults = {
         },
     },
     'wireguard': {
-        'peers': {},
+        's2s': {},
         'clients': {},
     },
 }
 
 
 @metadata_reactor.provides(
-    'wireguard/peers',
+    'wireguard/s2s',
 )
 def s2s_peer_specific(metadata):
     return {
         'wireguard': {
-            'peers': {
-                peer: {
-                    'id': repo.get_node(peer).metadata.get(f'id'),
-                    'ip': repo.get_node(peer).metadata.get(f'wireguard/my_ip'),
-                    'endpoint': f'{repo.get_node(peer).hostname}:51820',
+            's2s': {
+                s2s: {
+                    'id': repo.get_node(s2s).metadata.get(f'id'),
+                    'ip': repo.get_node(s2s).metadata.get(f'wireguard/my_ip'),
+                    'endpoint': f'{repo.get_node(s2s).hostname}:51820',
                     'route': [
-                        str(ip_interface(repo.get_node(peer).metadata.get(f'wireguard/my_ip')).network),
+                        str(ip_interface(repo.get_node(s2s).metadata.get(f'wireguard/my_ip')).network),
                     ],
                 }
-                    for peer in metadata.get('wireguard/peers')
+                    for s2s in metadata.get('wireguard/s2s')
             },
         },
     }
@@ -82,9 +82,7 @@ def systemd_networkd_networks(metadata):
         },
     }
 
-    for peer, config in {
-        **metadata.get('wireguard/peers'),
-    }.items():
+    for peer, config in metadata.get('wireguard/s2s').items():
         for route in config.get('route', []):
             network.update({
                 f'Route#{peer}_{route}': {
@@ -119,7 +117,7 @@ def systemd_networkd_netdevs(metadata):
     }
     
     for peer, config in {
-        **metadata.get('wireguard/peers'),
+        **metadata.get('wireguard/s2s'),
         **metadata.get('wireguard/clients'),
     }.items():
         netdev.update({

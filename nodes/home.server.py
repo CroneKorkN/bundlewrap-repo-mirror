@@ -59,7 +59,7 @@
         },
         'wireguard': {
             'my_ip': '172.30.0.2/32',
-            'peers': {
+            's2s': {
                 'htz.mails': {
                     'route': [
                         '10.0.10.0/24',

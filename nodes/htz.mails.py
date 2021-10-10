@@ -141,7 +141,7 @@
         },
         'wireguard': {
             'my_ip': '172.30.0.1/24',
-            'peers': {
+            's2s': {
                 'home.server': {
                     'route': [
                         '10.0.0.0/24',
