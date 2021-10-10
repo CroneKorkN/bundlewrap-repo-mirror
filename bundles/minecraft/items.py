@@ -43,7 +43,7 @@ for name, properties in node.metadata.get('minecraft/servers').items():
         'content': '\n'.join(
             f'{key}={translations.get(value, value)}'
                 for key, value in properties.items()
-        ),
+        )+ '\n',
         'owner': 'minecraft',
         'needed_by': {
             f'svc_systemd:minecraft-{name}'
