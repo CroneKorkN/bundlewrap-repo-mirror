@@ -74,7 +74,7 @@ def server_units(metadata):
                 'User': 'steam',
                 'Group': 'steam',
                 'WorkingDirectory': '/opt/left4dead2',
-                'ExecStart': f'/opt/left4dead2/srcds_run -port {config["port"]} -secure +exec /etc/left4dead2/{name}.cfg',
+                'ExecStart': f'/opt/left4dead2/srcds_run -port {config["port"]} -secure +exec server-{name}.cfg',
                 'Restart': 'on-failure',
             },
             'Install': {

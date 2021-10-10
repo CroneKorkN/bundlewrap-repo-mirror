@@ -5,11 +5,10 @@ directories = {
     '/opt/left4dead2/ems/admin system': {
         'owner': 'steam',
     },
-    '/opt/left4dead2/addons': {
+    '/opt/left4dead2/left4dead2/cfg': {
         'owner': 'steam',
-        'purge': True,
     },
-    '/etc/left4dead2': {
+    '/opt/left4dead2/addons': {
         'owner': 'steam',
         'purge': True,
     },
@@ -42,11 +41,21 @@ for id in node.metadata.get('left4dead2/workshop'):
 server_units = set()
 for name, config in node.metadata.get('left4dead2/servers').items():
     config.pop('port')
-    config['sv_steamgroup'] = name
-    config['hostname'] = name
-    config['sv_steamgroup'] = ','.join(str(gid) for gid in  node.metadata.get('left4dead2/steamgroups'))
+    config.update({
+        'hostname': name,
+        'sv_steamgroup': ','.join(
+            str(gid) for gid in  node.metadata.get('left4dead2/steamgroups')
+        ),
+        'log': 'on',
+        'sv_logecho': 1,
+        'sv_logfile': 1,
+        'sv_log_onefile': 0,
+        'sv_logbans': 1,
+        'sv_logflush': 0,
+        'sv_logsdir': 'logs', # /opt/left4dead2/left4dead2/logs
+    })
 
-    files[f'/etc/left4dead2/{name}.cfg'] = {
+    files[f'/opt/left4dead2/left4dead2/cfg/server-{name}.cfg'] = {
         'content': '\n'.join(
             f'{key} "{value}"' for key, value in sorted(config.items())
         ) + '\n',

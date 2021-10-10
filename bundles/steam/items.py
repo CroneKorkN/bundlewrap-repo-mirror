@@ -7,7 +7,9 @@ users = {
 directories = {
     '/opt/steam': {
         'owner': 'steam',
-        'group': 'steam',
+    },
+    '/opt/steam/.steam': {
+        'owner': 'steam',
     },
 }
 
@@ -16,15 +18,20 @@ files = {
         'content_type': 'download',
         'source': 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz',
         'owner': 'steam',
-        'group': 'steam',
     },
     '/opt/steam-workshop-downloader': {
         'content_type': 'download',
         'source': 'https://github.com/SegoCode/swd/releases/download/1.1/swd-linux-amd64',
         'owner': 'steam',
-        'group': 'steam',
         'mode': '750',
     },
+}
+
+symlinks = {
+    # /opt/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
+    '/opt/steam/.steam/sdk32': {
+        'target': '/opt/steam/linux32',
+    }
 }
 
 actions = {
@@ -36,7 +43,7 @@ actions = {
         ],
     },
     'chown_steamcmd': {
-        'command': 'chown -R steam:steam /opt/steam',
+        'command': 'chown -R steam /opt/steam',
         'triggered': True,
         'triggered_by': [
             'action:extract_steamcmd',
