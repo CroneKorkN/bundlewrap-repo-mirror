@@ -24,9 +24,9 @@ def workshop(metadata):
         'set -x; '
         'for ID in ' + ' '.join(metadata.get('left4dead2/workshop')) + '; '
         'do '
-            'if ! ls /opt/left4dead2/addons/$ID/*.vpk; '
+            'if ! ls /opt/left4dead2/left4dead2/addons/$ID/*.vpk; '
             'then '
-                'cd /opt/left4dead2/addons/$ID; '
+                'cd /opt/left4dead2/left4dead2/addons/$ID; '
                 '/opt/steam-workshop-downloader https://steamcommunity.com/sharedfiles/filedetails\?id\=$ID; '
                 'unzip $ID.zip; '
             'fi; '
@@ -74,7 +74,7 @@ def server_units(metadata):
                 'User': 'steam',
                 'Group': 'steam',
                 'WorkingDirectory': '/opt/left4dead2',
-                'ExecStart': f'/opt/left4dead2/srcds_run -port {config["port"]} -secure +exec server-{name}.cfg',
+                'ExecStart': f'/opt/left4dead2/srcds_run -port {config["port"]} -insecure +map {config["map"]} +exec server-{name}.cfg',
                 'Restart': 'on-failure',
             },
             'Install': {

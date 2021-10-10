@@ -8,7 +8,7 @@ directories = {
     '/opt/left4dead2/left4dead2/cfg': {
         'owner': 'steam',
     },
-    '/opt/left4dead2/addons': {
+    '/opt/left4dead2/left4dead2/addons': {
         'owner': 'steam',
         'purge': True,
     },
@@ -31,7 +31,7 @@ svc_systemd = {
 }
 
 for id in node.metadata.get('left4dead2/workshop'):
-    directories[f'/opt/left4dead2/addons/{id}'] = {
+    directories[f'/opt/left4dead2/left4dead2/addons/{id}'] = {
         'owner': 'steam',
         'triggers': [
             'svc_systemd:left4dead2-workshop:restart',
@@ -41,11 +41,14 @@ for id in node.metadata.get('left4dead2/workshop'):
 server_units = set()
 for name, config in node.metadata.get('left4dead2/servers').items():
     config.pop('port')
-    config.update({
+    config = {
         'hostname': name,
         'sv_steamgroup': ','.join(
             str(gid) for gid in  node.metadata.get('left4dead2/steamgroups')
         ),
+        'z_difficulty': 'Impossible',
+        'sv_gametypes': 'realism',
+        'sv_region': 3, # europe
         'log': 'on',
         'sv_logecho': 1,
         'sv_logfile': 1,
@@ -53,8 +56,9 @@ for name, config in node.metadata.get('left4dead2/servers').items():
         'sv_logbans': 1,
         'sv_logflush': 0,
         'sv_logsdir': 'logs', # /opt/left4dead2/left4dead2/logs
-    })
-
+        **config,
+    }
+    
     files[f'/opt/left4dead2/left4dead2/cfg/server-{name}.cfg'] = {
         'content': '\n'.join(
             f'{key} "{value}"' for key, value in sorted(config.items())

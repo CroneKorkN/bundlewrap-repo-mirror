@@ -22,11 +22,10 @@
                 'STEAM_1:0:12376499', # CroneKorkN
             },
             'servers': {
-                'realism-expert2': {
+                'realism-expert': {
                     'port': 27001,
-                },
-                'realism-expert3': {
-                    'port': 27002,
+                    'sv_steamgroup_exclusive': 1,
+                    'map': 'c2m1_highway',
                 },
             }
         },
