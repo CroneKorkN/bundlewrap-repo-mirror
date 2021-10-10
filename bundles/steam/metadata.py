@@ -2,6 +2,7 @@ defaults = {
     'apt': {
         'packages': {
             'lib32gcc-s1': {},
+            'unzip': {},
         },
     },
     'steam': {

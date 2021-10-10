@@ -6,8 +6,8 @@
         'hetzner-cloud',
     ],
     'bundles': [
-#        'steam',
-#        'left4dead2',
+       'steam',
+       'left4dead2',
         'java',
 #        'minecraft',
     ],
@@ -16,7 +16,22 @@
         'nameservers': {
             '8.8.8.8',
         },
-
+        'left4dead2': {
+            'steamgroups': [38347879],
+            'workshop': {
+                '2524204971', # admin system inkl admin menu
+            },
+            'admins': {
+                'STEAM_1:0:12376499', # CroneKorkN
+            },
+            'servers': {
+                'realism-expert': {
+                    'port': 27001,
+                    'sv_steamgroup_exclusive': 1,
+                    'map': 'c2m1_highway',
+                },
+            }
+        },
         'id': '353bb086-f3ce-4f36-8533-e91786c91ed9',
         'network': {
             'internal': {
