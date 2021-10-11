@@ -45,11 +45,13 @@ def keys(metadata):
                 key_size=2048
             )
             with open(pubkey_path, 'w') as file:
-                file.write(     
-                    key.public_key().public_bytes(
-                        crypto_serialization.Encoding.OpenSSH,
-                        crypto_serialization.PublicFormat.OpenSSH
-                    ).decode()
+                file.write(
+                    ''.join(
+                        key.public_key().public_bytes(
+                            crypto_serialization.Encoding.PEM,
+                            crypto_serialization.PublicFormat.SubjectPublicKeyInfo
+                        ).decode().split('\n')[1:-2]
+                    )
                 )
             with open(privkey_path, 'w') as file:
                 file.write(
