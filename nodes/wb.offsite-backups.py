@@ -2,6 +2,7 @@
     'hostname': '192.168.178.20',
     'groups': [
         'debian-11',
+        'monitored',
     ],
     'bundles': [
         'dm-crypt',

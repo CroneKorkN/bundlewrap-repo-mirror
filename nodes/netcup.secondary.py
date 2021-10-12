@@ -3,6 +3,7 @@
     'groups': [
         'debian-10',
         'dnsserver',
+        'monitored',
     ],
     'bundles': [
         'wireguard',
