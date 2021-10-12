@@ -22,4 +22,9 @@ defaults = {
             },
         },
     },
+    'letsencrypt': {
+        'reload_after': {
+            'postfix',
+        },
+    },
 }
