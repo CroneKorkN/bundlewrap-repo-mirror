@@ -7,7 +7,7 @@
     ],
     'bundles': [
        'steam',
-       'left4dead2',
+#       'left4dead2',
         'java',
 #        'minecraft',
     ],
