@@ -12,5 +12,8 @@
                 },
             },
         },
+        'grafana_rows': {
+            'health',
+        },
     },
 }
