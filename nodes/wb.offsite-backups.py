@@ -3,6 +3,7 @@
     'groups': [
         'debian-11',
         'monitored',
+        'raspberry-pi',
     ],
     'bundles': [
         'dm-crypt',
