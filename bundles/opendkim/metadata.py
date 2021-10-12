@@ -60,7 +60,7 @@ def keys(metadata):
                             crypto_serialization.Encoding.PEM,
                             crypto_serialization.PrivateFormat.PKCS8,
                             crypto_serialization.NoEncryption()
-                        ).decode(),
+                        ).decode()
                     )
                 )
                 
