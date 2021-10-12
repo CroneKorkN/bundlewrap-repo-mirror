@@ -35,6 +35,13 @@
                 },
             },
         },
+        'users': {
+            'root': {
+                'authorized_users': {
+                    'root@home.backups',
+                },
+            },
+        },
         'zfs': {
             'pools': {
                 'tank': {

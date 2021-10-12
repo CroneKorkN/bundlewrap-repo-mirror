@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -exu
+
+ssh="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 root@${server_ip}"
+bookmark_prefix="auto-mirror_"
+new_bookmark="$bookmark_prefix$(date +"%Y-%m-%d_%H:%M:%S")"
+
+for dataset in $(zfs list -t filesystem -H -o name)
+do
+  echo "MIRRORING $dataset"
+  
+  if ! $ssh sudo zfs list -t filesystem -H -o name | grep -q "^$dataset$"
+  then
+    echo "CREATING PARENT DATASET..."
+    $ssh sudo zfs create -p -o mountpoint=none "$dataset"
+  fi
+
+  zfs snap "$dataset@$new_bookmark"
+  
+  if zfs list -t bookmark -H -o name | grep "^$dataset#$bookmark_prefix" | wc -l | grep -q "^0$"
+  then
+    echo "INITIAL BACKUP"
+    # do in subshell, otherwise ctr+c will lead to 0 exitcode  
+    $(zfs send -v "$dataset@$new_bookmark" | $ssh sudo zfs recv -F "$dataset" -o mountpoint=none)
+  else
+    echo "INCREMENTAL BACKUP"
+    last_bookmark=$(zfs list -t bookmark -H -o name | grep "^$dataset#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
+    [[ -z "$last_bookmark" ]] && echo "ERROR - last_bookmark is empty" && exit 98
+    $(zfs send -v -i "#$last_bookmark" "$dataset@$new_bookmark" | $ssh sudo zfs recv "$dataset" -o mountpoint=none)
+  fi
+
+  if [[ "$?" == "0" ]]
+  then
+    zfs bookmark "$dataset@$new_bookmark" "$dataset#$new_bookmark"
+    zfs destroy "$dataset@$new_bookmark"
+    echo "SUCCESS $dataset"
+  else
+    zfs destroy "$dataset@$new_bookmark"
+    echo "ERROR $dataset"
+    exit 99
+  fi
+done
