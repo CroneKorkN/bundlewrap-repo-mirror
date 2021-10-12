@@ -17,15 +17,18 @@
                 'gateway4': '192.168.178.1',
             },
         },
-        'dm-crypt': {
-            'tank': {
-                'device': '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE',
-            },
-        },
         'users': {
             'root': {
                 'authorized_users': {
                     'root@home.backups',
+                },
+            },
+        },
+        'systemd': {
+            'services': {
+                'wpa_supplicant.service': {
+                    'enabled': False,
+                    'running': False,
                 },
             },
         },
@@ -41,6 +44,11 @@
                         '10.0.11.0/24',
                     ],
                 },
+            },
+        },
+        'dm-crypt': {
+            'tank': {
+                'device': '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE',
             },
         },
         'zfs': {
