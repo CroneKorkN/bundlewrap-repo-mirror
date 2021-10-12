@@ -35,5 +35,14 @@
                 },
             },
         },
+        'zfs': {
+            'pools': {
+                'tank': {
+                    'devices': [
+                        '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE',
+                    ],
+                },
+            },
+        },
     },
 }
