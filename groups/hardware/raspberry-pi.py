@@ -9,8 +9,8 @@
                         'data_format': "value",
                         'data_type': "integer",
                     }],
-                }
-            }
-        }
+                },
+            },
+        },
     },
 }
