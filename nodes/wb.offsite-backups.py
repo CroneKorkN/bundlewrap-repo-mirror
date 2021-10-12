@@ -4,21 +4,29 @@
         'debian-11',
     ],
     'bundles': [
+        'dm-crypt',
         'wireguard',
         'zfs',
     ],
     'metadata': {
-        # TEMP
-        'nameservers': {
-            '8.8.8.8',
-        },
-
         'id': '23b898bd-203b-42d5-8150-cdb459915d77',
         'network': {
             'internal': {
                 'interface': 'eth0',
                 'ipv4': '192.168.178.20/24',
                 'gateway4': '192.168.178.1',
+            },
+        },
+        'dm-crypt': {
+            'tank': {
+                'device': '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE',
+            },
+        },
+        'users': {
+            'root': {
+                'authorized_users': {
+                    'root@home.backups',
+                },
             },
         },
         'wireguard': {
@@ -35,18 +43,11 @@
                 },
             },
         },
-        'users': {
-            'root': {
-                'authorized_users': {
-                    'root@home.backups',
-                },
-            },
-        },
         'zfs': {
             'pools': {
                 'tank': {
                     'devices': [
-                        '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE',
+                        '/dev/mapper/tank',
                     ],
                 },
             },
