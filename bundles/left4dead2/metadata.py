@@ -49,7 +49,7 @@ def workshop(metadata):
                         'ExecStart': f'/bin/bash -c {quote(command)}',
                     },
                     'Install': {
-                        'WantedBy': ['multi-user.target'],
+                        'WantedBy': {'multi-user.target'},
                     },
                 }
             }
@@ -78,7 +78,7 @@ def server_units(metadata):
                 'Restart': 'on-failure',
             },
             'Install': {
-                'WantedBy': ['multi-user.target'],
+                'WantedBy': {'multi-user.target'},
             },
         }
 

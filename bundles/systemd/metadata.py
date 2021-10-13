@@ -21,13 +21,13 @@ def units(metadata):
             if extension == 'service':
                 units[name] = {
                     'Install': {
-                        'WantedBy': ['multi-user.target'],
+                        'WantedBy': {'multi-user.target'},
                     }
                 }
             elif extension == 'timer':
                 units[name] = {
                     'Install': {
-                        'WantedBy': ['timers.target'],
+                        'WantedBy': {'timers.target'},
                     }
                 }
 

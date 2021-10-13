@@ -47,7 +47,7 @@ defaults = {
                     'Environment': 'USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/gitea',
                 },
                 'Install': {
-                    'WantedBy': 'multi-user.target',
+                    'WantedBy': {'multi-user.target'},
                 },
             },
         },

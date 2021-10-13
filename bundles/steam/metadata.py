@@ -35,7 +35,7 @@ def initial_unit(metadata):
                         'ExecStart': f'/opt/steam/steamcmd.sh +login anonymous {install_games} validate +quit',
                     },
                     'Install': {
-                        'WantedBy': 'multi-user.target',
+                        'WantedBy': {'multi-user.target'},
                     },
                 },
             },
