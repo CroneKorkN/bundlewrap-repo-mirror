@@ -5,6 +5,7 @@
     'bundles': [
         'hostname',
         'hosts',
+        'locale',
         'network',
         'ssh',
         'systemd',
