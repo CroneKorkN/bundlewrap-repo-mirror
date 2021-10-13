@@ -1,6 +1,5 @@
 for name, conf in node.metadata.get('dm-crypt').items():
     actions[f'dm-crypt_format_{name}'] = {
-        'cascade_skip': False,
         'command': f"cryptsetup --batch-mode luksFormat --cipher aes-xts-plain64 --key-size 512 '{conf['device']}'",
         'data_stdin': conf['password'],
         'unless': f"blkid -t TYPE=crypto_LUKS '{conf['device']}'",
@@ -9,16 +8,23 @@ for name, conf in node.metadata.get('dm-crypt').items():
             'pkg_apt:cryptsetup',
         },
     }
-
+    
+    actions[f'dm-crypt_test_{name}'] = {
+        'command': 'false',
+        'unless': f"! cryptsetup --batch-mode luksOpen --test-passphrase '{conf['device']}'",
+        'data_stdin': conf['password'],
+        'needs': {
+            f"action:dm-crypt_format_{name}",
+        },
+    }
+    
     actions[f'dm-crypt_open_{name}'] = {
-        'cascade_skip': False,
         'command': f"cryptsetup --batch-mode luksOpen '{conf['device']}' '{name}'",
         'data_stdin': conf['password'],
         'unless': f"test -e /dev/mapper/{name}",
         'comment': f"Unlocks the device '{conf['device']}' and makes it available in: '/dev/mapper/{name}'",
         'needs': {
-            f"action:dm-crypt_format_{name}",
-            'pkg_apt:cryptsetup',
+            f"action:dm-crypt_test_{name}",
         },
         'needed_by': set(),
     }
