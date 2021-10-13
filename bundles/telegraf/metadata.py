@@ -4,9 +4,7 @@ defaults = {
             'telegraf': {},
         },
         'sources': {
-            # FIXME
-            # 'deb https://repos.influxdata.com/debian {release} stable',
-            'deb https://repos.influxdata.com/debian buster stable',
+            'deb https://repos.influxdata.com/debian {release} stable',
         },
     },
     'telegraf': {
