@@ -13,6 +13,5 @@
             },
         },
         'unit': 'degrees',
-        'display_name': '__field.labels.name'
     },
 }
