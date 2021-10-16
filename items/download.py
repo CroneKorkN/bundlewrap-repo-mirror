@@ -75,6 +75,11 @@ class Download(Item):
             cdict['sha256'] = self.attributes['sha256']
         elif self.attributes.get('gpg_signature_url'):
             cdict['verified'] = True
+        elif self.attributes.get('sha256_url'):
+            full_sha256_url = self.attributes['sha256_url'].format(url=self.attributes['url'])
+            cdict['sha256'] = force_text(
+                self.node.run(f"curl -sL -- {quote(full_sha256_url)}").stdout
+            ).strip().split()[0]
         else:
             raise
 
@@ -90,12 +95,9 @@ class Download(Item):
                 'type': 'download',
             }
             if self.attributes.get('sha256'):
-                sdict['sha256'] = self.attributes['sha256']
+                sdict['sha256'] = self.__hash_remote_file(self.name)
             elif self.attributes.get('sha256_url'):
-                full_sha256_url = self.attributes['sha256_url'].format(url=self.attributes['url'])
-                sdict['sha256'] = force_text(
-                    self.node.run(f"curl -sL -- {quote(full_sha256_url)}").stdout
-                ).strip().split()[0]
+                sdict['sha256'] = self.__hash_remote_file(self.name)
             elif self.attributes.get('gpg_signature_url'):
                 full_signature_url = self.attributes['gpg_signature_url'].format(url=self.attributes['url'])
                 signature_path = f'{self.name}.signature'

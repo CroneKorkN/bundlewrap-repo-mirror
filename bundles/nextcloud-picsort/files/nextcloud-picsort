@@ -1,30 +1,19 @@
 #!/bin/bash
 
-#exit 0
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+USER="$1"
+SOURCEPATH="/var/lib/nextcloud/$1/files/$2"
+DESTINATIONPATH="/var/lib/nextcloud/$1/files/$3"
 
-function log {
-  logger -st nc-picsort "${*:-$(</dev/stdin)}"
-}
-
-SOURCEPATH="/var/lib/nextcloud/ckn/files/SofortUpload/AutoSort/"
-DESTINATIONPATH="/var/lib/nextcloud/ckn/files/Bilder/Chronologie/"
-USER="ckn"
-
-log "STARTING..."
-
-if ps aux | grep cron | grep nc-picsort | grep -v $$; then log "EXIT: still running"; exit 0; fi
+echo "STARTING..."
 
 SCAN="FALSE"
 IFS=$'\n'
 for f in `find "$SOURCEPATH" -iname *.PNG -o -iname *.JPG -o -iname *.CR2 -o -iname *.CR3 -o -iname *.MP4 -o -iname *.MOV`; do
-  log "PROCESSING: $f"
+  echo "PROCESSING: $f"
   DATE=`exiftool "$f" | grep -m 1 "Create Date"`
   if ! echo "$DATE" | grep "Create Date" >/dev/null
   then
-    log "SKIP: no 'Create Date' in exif ($f)"
+    echo "SKIP: no 'Create Date' in exif ($f)"
     continue
   fi
   SCAN="TRUE"
@@ -42,19 +31,19 @@ for f in `find "$SOURCEPATH" -iname *.PNG -o -iname *.JPG -o -iname *.CR2 -o -in
   else
     RAW=""
   fi
-  FILE="$DESTINATIONPATH$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
-  log "DESTINATION: $FILE"
+  FILE="$DESTINATIONPATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
+  echo "DESTINATION: $FILE"
   mkdir -p "$(dirname "$FILE")"
   mv -v "$f" "$FILE"
 done
 
 if [ "$SCAN" == "TRUE" ]; then
-  log "SCANNING..."
-  # find "$SOURCEPATH/"* -type d -empty -delete >> /var/log/nc-picsort.log # nextcloud app bug when deleting folders
+  echo "SCANNING..."
+  # find "$SOURCEPATH/"* -type d -empty -delete >> /var/echo/nc-picsort.echo # nextcloud app bug when deleting folders
   chown -R www-data:www-data "$DESTINATIONPATH"
   chmod -R 777 "$DESTINATIONPATH"
-  sudo -u www-data php /var/www/nextcloud/occ files:scan $USER | log
-  sudo -u www-data php /var/www/nextcloud/occ preview:generate-all $USER | log
+  sudo -u www-data php /var/www/nextcloud/occ files:scan $USER
+  sudo -u www-data php /var/www/nextcloud/occ preview:generate-all $USER
 fi
 
-log "FINISH."
+echo "FINISH."

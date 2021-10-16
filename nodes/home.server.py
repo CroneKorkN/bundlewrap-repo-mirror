@@ -46,7 +46,13 @@
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
-            'version': '21.0.3',
+            'version': '21.0.5',
+        },
+        'nextcloud-picsort': {
+            'ckn': {
+                'source': 'SofortUpload/AutoSort',
+                'destination': 'Bilder/Chronologie',
+            },
         },
         'users': {
             'root': {
