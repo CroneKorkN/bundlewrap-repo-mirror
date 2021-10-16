@@ -12,4 +12,5 @@ from(bucket: "${bucket}")
 % if negative:
   |> map(fn: (r) => ({r with _value: r._value * - 1.0}))
 % endif
+  |> aggregateWindow(every: v.windowPeriod, fn: mean)
   |> yield(name: "mean")
