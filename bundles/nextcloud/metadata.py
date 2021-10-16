@@ -52,6 +52,12 @@ defaults = {
             },
         },
     },
+    'systemd-timers': {
+        'nextcloud-cron': {
+            'command': '/usr/bin/sudo -u www-data /usr/bin/php -f /opt/nextcloud/cron.php',
+            'when': '*:0/5',
+        },
+    },
     'zfs': {
         'datasets': {
             'tank/nextcloud': {
