@@ -41,8 +41,7 @@ files = {
     }
 }
 
-local_config_path = join(repo.path, 'bundles', 'rspamd', 'files', 'local.d')
-for f in listdir(local_config_path):
+for f in listdir(join(f'{repo.path}/bundles/rspamd/files/local.d')):
     files[f'/etc/rspamd/local.d/{f}'] = {
         'source': f'local.d/{f}',
         'triggers': {
@@ -50,8 +49,7 @@ for f in listdir(local_config_path):
         },
     }
 
-override_config_path = join(repo.path, 'bundles', 'rspamd', 'files', 'override.d')
-for f in listdir(override_config_path):
+for f in listdir(join(f'{repo.path}/bundles/rspamd/files/override.d')):
     files[f'/etc/rspamd/override.d/{f}'] = {
         'source': f'override.d/{f}',
         'triggers': {
