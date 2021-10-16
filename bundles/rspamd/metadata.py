@@ -10,21 +10,29 @@ defaults = {
             'rspamd': {},
         },
     },
-    'nginx': {
-        'vhosts': {
-            'rspamd.sublimity.de': {
-                'content': 'nginx/proxy_pass.conf',
-                'context': {
-                    'target': 'http://localhost:11334',
+    'rspamd': {
+        'web_password': repo.vault.password_for(node.name + ' rspamd web password'),
+        'ip_whitelist': set(),
+    },
+}
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts',
+)
+def nginx_vhost(metadata):
+    return {
+        'nginx': {
+            'vhosts': {
+                metadata.get('rspamd/hostname'): {
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'http://localhost:11334',
+                    },
                 },
             },
         },
-    },
-    'rspamd': {
-        'web_password': repo.vault.password_for(node.name + ' rspamd web password'),
-        'ip_whitelist': [],
-    },
-}
+    }
 
 
 @metadata_reactor.provides(

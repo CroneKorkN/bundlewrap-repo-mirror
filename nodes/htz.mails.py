@@ -81,6 +81,9 @@
                 'woodpipe.de',
             ],
         },
+        'rspamd': {
+            'hostname': 'rspamd.sublimity.de',
+        },
         'nginx': {
             'vhosts': {
                 'cloud.sublimity.de': {
