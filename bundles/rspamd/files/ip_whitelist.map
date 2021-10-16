@@ -1,3 +1,0 @@
-% for ip in sorted(node.metadata.get('rspamd/ignore_spam_check_for_ips', set())):
-${ip}
-% endfor

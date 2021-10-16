@@ -26,7 +26,9 @@ directories = {
 
 files = {
     '/etc/rspamd/local.d/ip_whitelist.map': {
-        'content_type': 'mako',
+        'content': '\n'.join(
+            sorted(node.metadata.get('rspamd/ip_whitelist'))
+        ) + '\n',
         'triggers': {
             'svc_systemd:rspamd:restart',
         },
