@@ -64,3 +64,13 @@ svc_systemd = {
         },
     },
 }
+
+actions = {
+    'rspamd_configtest': {
+        'command': 'false',
+        'unless': 'rspamadm configtest',
+        'needs': {
+            'svc_systemd:rspamd',
+        },
+    },
+}
