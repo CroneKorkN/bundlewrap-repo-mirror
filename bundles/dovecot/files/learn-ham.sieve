@@ -4,4 +4,4 @@ if string "${mailbox}" "Trash" {
   stop;
 }
 
-pipe :copy "rspamd-learn-ham.sh";
+pipe :copy "learn-ham.sh";

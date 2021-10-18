@@ -29,6 +29,10 @@ directories = {
         'owner': 'vmail',
         'group': 'vmail',
     },
+    '/var/vmail/sieve/bin': {
+        'owner': 'vmail',
+        'group': 'vmail',
+    },
 }
 
 files = {
@@ -71,12 +75,18 @@ files = {
     '/var/vmail/sieve/global/spam-to-folder.sieve': {
         'owner': 'vmail',
         'group': 'vmail',
+        'triggers': {
+            'svc_systemd:dovecot:restart',
+        },
     },
     '/var/vmail/sieve/global/learn-ham.sieve': {
         'owner': 'vmail',
         'group': 'vmail',
+        'triggers': {
+            'svc_systemd:dovecot:restart',
+        },
     },
-    '/var/vmail/sieve/global/learn-ham.sh': {
+    '/var/vmail/sieve/bin/learn-ham.sh': {
         'owner': 'vmail',
         'group': 'vmail',
         'mode': '550',
@@ -84,8 +94,11 @@ files = {
     '/var/vmail/sieve/global/learn-spam.sieve': {
         'owner': 'vmail',
         'group': 'vmail',
+        'triggers': {
+            'svc_systemd:dovecot:restart',
+        },
     },
-    '/var/vmail/sieve/global/learn-spam.sh': {
+    '/var/vmail/sieve/bin/learn-spam.sh': {
         'owner': 'vmail',
         'group': 'vmail',
         'mode': '550',
