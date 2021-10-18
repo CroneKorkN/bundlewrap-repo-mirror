@@ -98,6 +98,8 @@ files = {
             'svc_systemd:dovecot:restart',
         },
     },
+    # /usr/local/libexec/dovecot
+    # /usr/lib/dovecot/sieve-pipe
     '/var/vmail/sieve/bin/learn-spam.sh': {
         'owner': 'vmail',
         'group': 'vmail',
