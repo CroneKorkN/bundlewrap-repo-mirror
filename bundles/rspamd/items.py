@@ -24,25 +24,9 @@ directories = {
     },
 }
 
-files = {
-    '/etc/rspamd/local.d/ip_whitelist.map': {
-        'content': '\n'.join(
-            sorted(node.metadata.get('rspamd/ip_whitelist'))
-        ) + '\n',
-        'triggers': {
-            'svc_systemd:rspamd:restart',
-        },
-    },
-    '/etc/rspamd/local.d/worker-controller.inc': {
-        'content_type': 'mako',
-        'triggers': {
-            'svc_systemd:rspamd:restart',
-        },
-    }
-}
-
 for f in listdir(join(f'{repo.path}/bundles/rspamd/files/local.d')):
     files[f'/etc/rspamd/local.d/{f}'] = {
+        'content_type': 'mako',
         'source': f'local.d/{f}',
         'triggers': {
             'svc_systemd:rspamd:restart',
@@ -51,6 +35,7 @@ for f in listdir(join(f'{repo.path}/bundles/rspamd/files/local.d')):
 
 for f in listdir(join(f'{repo.path}/bundles/rspamd/files/override.d')):
     files[f'/etc/rspamd/override.d/{f}'] = {
+        'content_type': 'mako',
         'source': f'override.d/{f}',
         'triggers': {
             'svc_systemd:rspamd:restart',

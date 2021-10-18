@@ -1,0 +1,3 @@
+% for ip in sorted(node.metadata.get('rspamd/ip_whitelist')):
+${ip}
+% endfor

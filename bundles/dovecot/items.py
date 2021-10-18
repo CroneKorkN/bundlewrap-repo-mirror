@@ -25,7 +25,6 @@ directories = {
         'group': 'vmail',
     },
     '/var/vmail/sieve/global': {
-        'purge': True,
         'owner': 'vmail',
         'group': 'vmail',
     },
