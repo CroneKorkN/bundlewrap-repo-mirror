@@ -22,9 +22,7 @@ defaults = {
             },
         },
     },
-    'letsencrypt': {
-        'reload_after': {
-            'postfix',
-        },
+    'grafana_rows': {
+        'postfix_queue',
     },
 }
