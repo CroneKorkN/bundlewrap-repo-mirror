@@ -19,7 +19,16 @@ directories = {
     '/var/vmail': {
         'owner': 'vmail',
         'group': 'vmail',
-    }
+    },
+    '/var/vmail/sieve': {
+        'owner': 'vmail',
+        'group': 'vmail',
+    },
+    '/var/vmail/sieve/global': {
+        'purge': True,
+        'owner': 'vmail',
+        'group': 'vmail',
+    },
 }
 
 files = {
@@ -59,17 +68,27 @@ files = {
             'svc_systemd:dovecot:restart',
         },
     },
-    '/var/mail/vmail/sieve/global/learn-ham.sieve': {
-        'owner': 'nobody',
-        'group': 'nogroup',
+    '/var/vmail/sieve/global/spam-to-folder.sieve': {
+        'owner': 'vmail',
+        'group': 'vmail',
     },
-    '/var/mail/vmail/sieve/global/learn-spam.sieve': {
-        'owner': 'nobody',
-        'group': 'nogroup',
+    '/var/vmail/sieve/global/learn-ham.sieve': {
+        'owner': 'vmail',
+        'group': 'vmail',
     },
-    '/var/mail/vmail/sieve/global/spam-global.sieve': {
-        'owner': 'nobody',
-        'group': 'nogroup',
+    '/var/vmail/sieve/global/learn-ham.sh': {
+        'owner': 'vmail',
+        'group': 'vmail',
+        'mode': '550',
+    },
+    '/var/vmail/sieve/global/learn-spam.sieve': {
+        'owner': 'vmail',
+        'group': 'vmail',
+    },
+    '/var/vmail/sieve/global/learn-spam.sh': {
+        'owner': 'vmail',
+        'group': 'vmail',
+        'mode': '550',
     },
 }
 
