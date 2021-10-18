@@ -77,3 +77,19 @@ actions['test_virtual_alias_maps'] = {
         'action:mailserver_update_test_pw',
     ],
 }
+
+if node.has_bundle('telegraf'):
+    actions['postfix_setfacl_telegraf'] = {
+        'command': 'setfacl -Rm g:telegraf:rX /var/spool/postfix',
+        'unless': 'getfacl -a /var/spool/postfix | grep -q "^group:telegraf:r-x$"',
+        'needs': [
+            'svc_systemd:postfix',
+        ],
+    }
+    actions['postfix_setfacl_default_telegraf'] = {
+        'command': 'setfacl -dm g:telegraf:rX /var/spool/postfix',
+        'unless': 'getfacl -d /var/spool/postfix | grep -q "^group:telegraf:r-x$"',
+        'needs': [
+            'svc_systemd:postfix',
+        ],
+    }
