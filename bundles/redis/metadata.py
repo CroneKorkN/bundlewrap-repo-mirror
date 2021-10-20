@@ -18,6 +18,7 @@ if node.has_bundle('zfs'):
                 'mountpoint': '/var/lib/redis',
                 'needed_by': [
                     'pkg_apt:redis-server',
+                    'directory:/var/lib/redis',
                 ],
             },
         },
