@@ -7,6 +7,7 @@
     ],
     'bundles': [
         'wireguard',
+        'redis',
     ],
     'metadata': {
         'id': '890848b2-a900-4f74-ad5b-b811fbb4f0bc',
@@ -26,6 +27,11 @@
         'bind': {
             'master_node': 'htz.mails',
             'hostname': 'second.resolver.name',
+        },
+        'redis': {
+            'nextcloud': {
+                'port': '6380',
+            },
         },
         # 'postfix': {
         #     'master_node': 'htz.mails',
