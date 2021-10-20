@@ -22,4 +22,7 @@ $CONFIG = array (
   ],
   "cache_path" => "/var/lib/nextcloud/.cache",
   "upgrade.disable-web" => true,
+  "memcache.local" => "\\OC\\Memcache\\Redis",
+  "memcache.locking" => "\\OC\\Memcache\\Redis",
+  "memcache.distributed" => "\OC\Memcache\Redis",
 );
