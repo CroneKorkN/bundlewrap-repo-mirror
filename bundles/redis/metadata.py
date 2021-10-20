@@ -153,7 +153,6 @@ def units(metadata):
                 'RestrictAddressFamilies': 'AF_INET AF_INET6 AF_UNIX',
                 
                 'ProtectSystem': 'true',
-                'ReadWriteDirectories': '-/etc/redis',
             },
             'Install': {
                 'WantedBy': {'multi-user.target'},

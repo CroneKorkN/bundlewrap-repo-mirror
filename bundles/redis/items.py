@@ -7,7 +7,6 @@ directories = {
     },
     '/var/lib/redis': {
         'owner': 'redis',
-        'purge': True,
         'needs': [
             'pkg_apt:redis-server',
         ],
@@ -32,7 +31,6 @@ svc_systemd = {
         ],
     },
 }
-
 
 for name, conf in node.metadata.get('redis').items():
     files[f'/etc/redis/{name}.conf'] = {
