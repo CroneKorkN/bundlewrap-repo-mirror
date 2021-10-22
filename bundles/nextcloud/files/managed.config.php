@@ -27,9 +27,5 @@ $CONFIG = array (
   "memcache.distributed" => "\OC\Memcache\Redis",
   "redis" => [
     "host" => "/var/run/redis-nextcloud/redis.sock",
-    "port"     => 0,
-    "dbindex"  => 0,
-    "password" => "secret",
-    "timeout"  => 1.5,
   ],
 );
