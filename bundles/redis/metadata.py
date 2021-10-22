@@ -10,7 +10,9 @@ defaults = {
         },
     },
     'redis': {
-        'server': {},
+        'server': {
+            'port': '6379',
+        },
     },
 }
 
@@ -38,10 +40,10 @@ def config(metadata):
         redis[name] = {
             'bind': '127.0.0.1 ::1',
             'protected-mode': 'yes',
-            'port': '6379',
+            'port': '0',
             'tcp-backlog': '511',
             'unixsocket': f'/var/run/redis-{name}/redis.sock',
-            'unixsocketperm': '700',
+            'unixsocketperm': '777',
             'timeout': '0',
             'tcp-keepalive': '300',
             'daemonize': 'yes',
@@ -100,6 +102,7 @@ def config(metadata):
             'dynamic-hz': 'yes',
             'aof-rewrite-incremental-fsync': 'yes',
             'rdb-save-incremental-fsync': 'yes',
+            **metadata.get(f'redis/{name}', {}),
         }
     
     return {

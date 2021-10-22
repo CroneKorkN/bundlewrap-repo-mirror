@@ -10,6 +10,9 @@ defaults = {
             'rspamd': {},
         },
     },
+    'redis': {
+        'rspamd': {},
+    },
     'rspamd': {
         'web_password': repo.vault.password_for(node.name + ' rspamd web password'),
         'ip_whitelist': set(),

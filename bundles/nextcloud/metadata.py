@@ -52,6 +52,9 @@ defaults = {
             },
         },
     },
+    'redis': {
+        'nextcloud': {},
+    },
     'systemd-timers': {
         'nextcloud-cron': {
             'command': '/usr/bin/sudo -u www-data /usr/bin/php -f /opt/nextcloud/cron.php',

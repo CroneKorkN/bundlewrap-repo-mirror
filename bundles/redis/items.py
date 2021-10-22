@@ -35,7 +35,9 @@ svc_systemd = {
 for name, conf in node.metadata.get('redis').items():
     files[f'/etc/redis/{name}.conf'] = {
         'content': '\n'.join(
-            f'{key} {value}' for key, value in sorted(conf.items())
+            f'{key} {value}'
+                for key, value in sorted(conf.items())
+                if value is not False
         ),
         'owner': 'redis',
         'triggers': [
