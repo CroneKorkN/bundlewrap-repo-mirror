@@ -15,13 +15,6 @@ defaults = {
     'opendkim': {
         'keys': {},
     },
-    'dns': {
-        'mail._domainkey.mail2.sublimity.de': {
-            'TXT': [
-                
-            ]
-        }
-    }
 }
 
 
