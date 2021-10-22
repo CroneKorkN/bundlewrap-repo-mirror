@@ -36,9 +36,10 @@ for name, conf in node.metadata.get('redis').items():
     files[f'/etc/redis/{name}.conf'] = {
         'content': '\n'.join(
             f'{key} {value}'
-                for key, value in sorted(conf.items())
+                for key, values in sorted(conf.items())
+                for value in ([values] if isinstance(values, str) else sorted(values))
                 if value is not False
-        ),
+        ) + '\n',
         'owner': 'redis',
         'triggers': [
             f'svc_systemd:redis-{name}:restart'
