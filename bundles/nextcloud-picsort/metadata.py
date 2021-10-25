@@ -9,7 +9,7 @@ def systemd_timers(metadata):
         'systemd-timers': {
             f'nextcloud-picsort-{user}': {
                 'command': f'/opt/nextcloud-picsort {q(user)} {q(paths["source"])} {q(paths["destination"])}',
-                'when': '*:0/5',
+                'when': '*:0/10',
             }
                 for user, paths in metadata.get('nextcloud-picsort').items()
         }
