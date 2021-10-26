@@ -41,12 +41,12 @@ defaults = {
     'systemd-timers': {
         'zfs-trim': {
             'command': '/usr/lib/zfs-linux/trim',
-            'when': 'Sat 00:00',
+            'when': '*-*-01 00:00:00',
             'persistent': True,
         },
         'zfs-scrub': {
             'command': '/usr/lib/zfs-linux/scrub',
-            'when': 'Sun 00:00',
+            'when': '*-*-15 00:00:00',
             'persistent': True,
         },
         'zfs-auto-snapshot-hourly': {
