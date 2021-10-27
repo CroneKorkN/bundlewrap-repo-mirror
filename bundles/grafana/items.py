@@ -125,6 +125,9 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
 
             if 'legend' in panel_config:
                 panel['options']['legend'].update(panel_config['legend'])
+
+            if 'tooltip' in panel_config:
+                panel['options']['tooltip']['mode'] = panel_config['tooltip']
             
             for query_name, query_config in panel_config['queries'].items():
                 panel['targets'].append({

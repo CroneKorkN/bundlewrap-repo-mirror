@@ -13,55 +13,52 @@
                 'function': 'mean',
             },
         },
+        'min': 0,
         'unit': 'bytes',
     },
     'hits': {
+        'stacked': True,
         'queries': {
             'hits': {
                 'filters': {
                     '_measurement': 'zfs',
                     '_field': [
-                        'arcstats_hits',
+                        'arcstats_demand_data_hits',
+                        'arcstats_demand_metadata_hits',
+                        'arcstats_prefetch_data_hits',
+                        'arcstats_prefetch_metadata_hits',
                     ],
                 },
                 'function': 'derivative',
-            },
-            'misses': {
-                'filters': {
-                    '_measurement': 'zfs',
-                    '_field': [
-                        'arcstats_misses',
-                    ],
-                },
-                'function': 'derivative',
-                'negative': True,
             },
         },
+        'legend': {
+            'displayMode': 'hidden',
+        },
+        'tooltip': 'multi',
     },
-    'l2_hits': {
+    'misses': {
+        'stacked': True,
         'queries': {
-            'hits': {
-                'filters': {
-                    '_measurement': 'zfs',
-                    '_field': [
-                        'arcstats_l2_hits',
-                    ],
-                },
-                'function': 'derivative',
-            },
             'misses': {
                 'filters': {
                     '_measurement': 'zfs',
                     '_field': [
-                        'arcstats_l2_misses',
+                        'arcstats_demand_data_misses',
+                        'arcstats_demand_metadata_misses',
+                        'arcstats_prefetch_data_misses',
+                        'arcstats_prefetch_metadata_misses',
                     ],
                 },
                 'function': 'derivative',
-                'negative': True,
             },
         },
+        'legend': {
+            'displayMode': 'hidden',
+        },
+        'tooltip': 'multi',
     },
-    'l2_io': {
+    'l2': {
         'queries': {
             'read': {
                 'filters': {
