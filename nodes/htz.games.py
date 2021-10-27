@@ -1,4 +1,5 @@
 {
+    'dummy': True,
     'hostname': '159.69.93.165',
     'groups': [
         'backup',
