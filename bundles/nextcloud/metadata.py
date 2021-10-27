@@ -5,6 +5,7 @@ defaults = {
     'apt': {
         'packages': {
             'php': {},
+            'php-fpm': {},
             'php-curl': {},
             'php-gd': {},
             'php-json': {},
