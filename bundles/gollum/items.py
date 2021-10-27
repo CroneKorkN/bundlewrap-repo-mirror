@@ -42,7 +42,7 @@ def run(cmd):
 actions = {
     'gollum_install_bundler': {
         'command': run("gem install bundler --user"),
-        'unless': run("gem list -i bundler"),
+        'unless': run("test -e $(ruby -e 'puts Gem.user_dir')/bin/bundle"),
         'needs': [
             'file:/opt/gollum/.bundle/config',
         ],
