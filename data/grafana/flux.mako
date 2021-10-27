@@ -7,8 +7,8 @@ from(bucket: "${bucket}")
 % if function == 'derivative':
   |> derivative(nonNegative: true)
 % endif
+  |> aggregateWindow(every: duration(v: int(v: v.windowPeriod)*${resolution}), fn: mean, createEmpty: false)
 % if negative:
   |> map(fn: (r) => ({r with _value: r._value * - 1.0}))
 % endif
-  |> aggregateWindow(every: duration(v: int(v: v.windowPeriod)*${resolution}), fn: mean, createEmpty: false)
   |> yield(name: "mean")
