@@ -29,7 +29,7 @@
         },
         'gitea': {
             'version': '1.15.5',
-            'sha256': '0d11d87ce60d5d98e22fc52f2c8c6ba2b54b14f9c26c767a46bf102c381ad128',
+            'sha256': 'c3f190848c271bf250d385b80c1a98a7e2c9b23d092891cf1f7e4ce18c736484',
             'domain': 'git.sublimity.de',
         },
         'gollum': {
