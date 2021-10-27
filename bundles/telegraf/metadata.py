@@ -14,7 +14,7 @@ defaults = {
                 'collection_jitter': '0s',
                 'flush_interval': '10s',
                 'flush_jitter': '0s',
-                'interval': '10s',
+                'interval': '15s',
                 'metric_batch_size': 1000,
                 'metric_buffer_limit': 10000,
                 'omit_hostname': False,
@@ -38,6 +38,14 @@ defaults = {
                         'squashfs',
                     ],
                 }],
+                'procstat': [{
+                    'interval': '1m',
+                    'pattern': '.',
+                    'fieldpass': [
+                        'cpu_usage',
+                        'memory_rss',
+                    ],
+                }],
                 'diskio': [{}],
                 'kernel': [{}],
                 'mem': [{}],
@@ -53,6 +61,8 @@ defaults = {
         'mem',
         'disk_io',
         'net_io',
+        'proc_cpu',
+        'proc_ram',
     },
 }
 
