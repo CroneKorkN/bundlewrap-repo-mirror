@@ -46,7 +46,12 @@ defaults = {
                         'memory_rss',
                     ],
                 }],
-                'diskio': [{}],
+                'diskio': [{
+                    'fieldpass': [
+                        'read_bytes',
+                        'write_bytes',
+                    ],
+                }],
                 'kernel': [{}],
                 'mem': [{}],
                 'processes': [{}],
@@ -60,6 +65,7 @@ defaults = {
         'cpu',
         'mem',
         'disk_io',
+        'disk_usage',
         'net_io',
         'proc_cpu',
         'proc_ram',
