@@ -75,6 +75,9 @@ defaults = {
             },
         },
     },
+    'grafana_rows': {
+        'zfs_arc',
+    },
     'zfs': {
         'datasets': {},
         'pools': {},
