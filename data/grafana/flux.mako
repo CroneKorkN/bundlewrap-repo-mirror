@@ -5,7 +5,7 @@ from(bucket: "${bucket}")
   |> filter(fn: (r) => ${' or '.join(f'r["{key}"] == "{value}"' for value in values)})
 % endfor
 % if function == 'derivative':
-  |> derivative()
+  |> derivative(nonNegative: true)
 % endif
 % if negative:
   |> map(fn: (r) => ({r with _value: r._value * - 1.0}))
