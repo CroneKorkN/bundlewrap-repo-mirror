@@ -1,7 +1,7 @@
 {
     'hostname': '10.0.0.5',
     'groups': [
-        'debian-10',
+        'debian-11',
         'backup-server',
         'monitored',
     ],

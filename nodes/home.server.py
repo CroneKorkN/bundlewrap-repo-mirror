@@ -2,7 +2,7 @@
     'hostname': '10.0.0.2',
     'groups': [
         'backup',
-        'debian-10',
+        'debian-11',
         'nextcloud',
         'monitored',
         'webserver',
