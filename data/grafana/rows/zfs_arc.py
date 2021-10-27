@@ -1,10 +1,12 @@
 {
-    'l2_size': {
+    'size': {
         'queries': {
-            'l2_size': {
+            'size': {
                 'filters': {
                     '_measurement': 'zfs',
                     '_field': [
+                        'arcstats_metadata_size',
+                        'arcstats_data_size',
                         'arcstats_l2_size',
                     ],
                 },
@@ -12,6 +14,52 @@
             },
         },
         'unit': 'bytes',
+    },
+    'hits': {
+        'queries': {
+            'hits': {
+                'filters': {
+                    '_measurement': 'zfs',
+                    '_field': [
+                        'arcstats_hits',
+                    ],
+                },
+                'function': 'derivative',
+            },
+            'misses': {
+                'filters': {
+                    '_measurement': 'zfs',
+                    '_field': [
+                        'arcstats_misses',
+                    ],
+                },
+                'function': 'derivative',
+                'negative': True,
+            },
+        },
+    },
+    'l2_hits': {
+        'queries': {
+            'hits': {
+                'filters': {
+                    '_measurement': 'zfs',
+                    '_field': [
+                        'arcstats_l2_hits',
+                    ],
+                },
+                'function': 'derivative',
+            },
+            'misses': {
+                'filters': {
+                    '_measurement': 'zfs',
+                    '_field': [
+                        'arcstats_l2_misses',
+                    ],
+                },
+                'function': 'derivative',
+                'negative': True,
+            },
+        },
     },
     'l2_io': {
         'queries': {
@@ -35,28 +83,6 @@
                 'negative': True,
             },
         },
-    },
-    'l2_cache_hits': {
-        'queries': {
-            'hits': {
-                'filters': {
-                    '_measurement': 'zfs',
-                    '_field': [
-                        'arcstats_l2_hits',
-                    ],
-                },
-                'function': 'derivative',
-            },
-            'misses': {
-                'filters': {
-                    '_measurement': 'zfs',
-                    '_field': [
-                        'arcstats_l2_misses',
-                    ],
-                },
-                'function': 'derivative',
-                'negative': True,
-            },
-        },
+        'unit': 'bytes',
     },
 }
