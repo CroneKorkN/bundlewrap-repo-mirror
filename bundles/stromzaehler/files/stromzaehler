@@ -1,14 +1,12 @@
 #!/bin/bash
 
-#set -x
-
+# gpiochip number + pin number
 gpio=$(expr 458 + 3)
 
 # prepare
 if ! [[ -e "/sys/class/gpio/gpio$gpio" ]]; then
   echo $gpio > "/sys/class/gpio/export"
 fi
-
 echo in > "/sys/class/gpio/gpio$gpio/direction"
 
 # loop
@@ -22,14 +20,14 @@ while sleep 0.001; do
       delay=$(expr $(date --utc +%s%N) - $previous_impulse)
       impulse_per_hour=$(expr 3600000000000 / $delay)
       watt=$(expr $impulse_per_hour / $(expr 2000 / 1000))
-      echo $watt > /tmp/watt
-      echo $delay $impulse_per_hour $watt
-      # curl "https://${influxdb_domain}/ping" ${'\\'}
-      #   -X POST ${'\\'}
-      #   -H "Authentication: Token ${influxdb_token}" ${'\\'}
-      #   -d "bucket=${influxdb_bucket}" ${'\\'}
-      #   -d "ord=${influxdb_org}" ${'\\'}
-      #   -d "data=powermeter,host=${node_name} watts=$watt"
+      echo "$watt watts"
+      curl "https://${influxdb_domain}/api/v2/write?org=${influxdb_org}&bucket=${influxdb_bucket}&precision=ns" ${'\\'}
+        -X POST ${'\\'}
+        --header "Authorization: Token ${influxdb_token}" ${'\\'}
+        --header "Content-Type: text/plain; charset=utf-8" ${'\\'}
+        --header "Accept: application/json" ${'\\'}
+        --data-binary "powermeter,host=${node_name} watts=$watt" ${'\\'}
+        2&> /dev/null &
     fi
     previous_impulse=$(date --utc +%s%N)
   fi

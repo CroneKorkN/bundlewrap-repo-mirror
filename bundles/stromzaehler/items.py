@@ -11,13 +11,16 @@ files = {
             'influxdb_org': influxdb_metadata['org'],
             'influxdb_token': influxdb_metadata['admin_token'],
         },
+        'triggers': [
+            'svc_systemd:stromzaehler:restart'
+        ],
     },
 }
 
 svc_systemd = {
     'stromzaehler': {
-        'enabled': False,
-        'running': False,
+        # 'enabled': False,
+        # 'running': False,
         'needs': [
             'file:/opt/stromzaehler',
         ],

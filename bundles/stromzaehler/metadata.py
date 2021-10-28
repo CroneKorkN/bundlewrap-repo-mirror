@@ -1,6 +1,7 @@
 defaults = {
     'apt': {
         'packages': {
+            'curl': {},
             'gpiod': {},
         },
     },
