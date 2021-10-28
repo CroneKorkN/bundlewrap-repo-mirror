@@ -3,11 +3,6 @@
 defaults = {
     'apt': {
         'packages': {
-            # 'linux-headers-amd64': {
-            #     'needed_by': {
-            #         'pkg_apt:zfs-dkms',
-            #     },
-            # },
             'parted':{
                 'needed_by': {
                     'pkg_apt:zfs-zed',
@@ -110,6 +105,28 @@ def backup(metadata):
                 options['mountpoint']
                     for options in metadata.get('zfs/datasets').values()
                     if options.get('backup', True)
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'apt/packages'
+)
+def headers(metadata):
+    if node.in_group('raspberry-pi'):
+        arch = 'arm64'
+    else:
+        arch = 'amd64'
+    
+    return {
+        'apt': {
+            'packages': {
+                f'linux-headers-{arch}': {
+                    'needed_by': {
+                        'pkg_apt:zfs-dkms',
+                    },
+                },
             },
         },
     }
