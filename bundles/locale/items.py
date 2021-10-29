@@ -1,8 +1,15 @@
-locale = node.metadata.get('locale')
+default_locale = node.metadata.get('locale/default')[0]
+
+installed_locales = sorted([
+    node.metadata.get('locale/default'),
+    *node.metadata.get('locale/installed'),
+])
 
 files = {
     '/etc/locale.gen': {
-        'content': f"{locale} {locale.split('.')[1]}\n",
+        'content': '\n'.join(
+            f'{locale} {type}' for locale, type in installed_locales
+        ),
         'triggers': {
             'action:locale-gen',
         },
@@ -15,8 +22,8 @@ actions = {
         'triggered': True,
     },
     'systemd-locale': {
-        'command': f'localectl set-locale LANG="{locale}"',
-        'unless': f'localectl | grep -Fi "system locale" | grep -Fi "{locale}"',
+        'command': f'localectl set-locale LANG="{default_locale}"',
+        'unless': f'localectl | grep -Fi "system locale" | grep -Fi "{default_locale}"',
         'preceded_by': {
             'action:locale-gen',
         },
