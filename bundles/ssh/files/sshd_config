@@ -17,5 +17,5 @@ PermitTTY yes
 TCPKeepAlive yes
 ClientAliveInterval 30
 ClientAliveCountMax 5
-AcceptEnv LANG LC_*
+AcceptEnv LANG
 Subsystem	sftp	/usr/lib/openssh/sftp-server
