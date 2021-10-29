@@ -22,6 +22,7 @@ svc_systemd = {
         # 'enabled': False,
         # 'running': False,
         'needs': [
+            'pkg_apt:gpiod',
             'file:/opt/stromzaehler',
         ],
     }

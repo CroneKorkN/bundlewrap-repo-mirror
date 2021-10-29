@@ -6,8 +6,8 @@
         'monitored',
     ],
     'bundles': [
-        'stromzaehler',
-        'wpa-supplicant',
+       'stromzaehler',
+       'wpa-supplicant',
     ],
     'metadata': {
         'id': 'dd521b8a-dc03-43f5-b29f-068f948ba3b8',
