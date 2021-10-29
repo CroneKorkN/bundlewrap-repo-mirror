@@ -19,6 +19,9 @@
                 'gateway4': '10.0.0.1',
             },
         },
+        'java': {
+            'version': 11,
+        },
         'zfs': {
             'pools': {
                 'tank': {

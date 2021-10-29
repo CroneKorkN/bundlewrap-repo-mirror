@@ -1,16 +1,24 @@
 assert node.os == 'debian'
 
-if node.os_version == (10,):
-    version = 11
-elif node.os_version == (11,):
-    version = 17
-else:
-    raise Exception('java bundle doesnt support this os and version')
 
 defaults = {
-    'apt': {
-        'packages': {
-            f'openjdk-{version}-jre': {},
+    'java': {
+        'version': {
+            10: 11,
+            11: 17,
+        }[node.os_version[0]],
+    },
+}
+
+
+@metadata_reactor.provides(
+    'apt/packages',
+)
+def apt(metadata):
+    return {
+        'apt': {
+            'packages': {
+                f'openjdk-{metadata.get("java/version")}-jre': {},
+            }
         }
     }
-}
