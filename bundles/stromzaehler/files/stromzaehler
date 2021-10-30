@@ -1,35 +1,27 @@
 #!/bin/bash
 
-# gpiochip number + pin number
-gpio=$(expr 458 + 3)
+impulse_per_watthour=2
+ms_per_hour=3600000000000
+gpio=$(gpiofind SCL1)
 
-# prepare
-if ! [[ -e "/sys/class/gpio/gpio$gpio" ]]; then
-  echo $gpio > "/sys/class/gpio/export"
-fi
-echo in > "/sys/class/gpio/gpio$gpio/direction"
+while gpiomon --num-events=1 --rising-edge $gpio
+do
+    last_timestamp=$timestamp
+    timestamp=$(date --utc +%s%N)
 
-# loop
-previous_state=false
-while sleep 0.001; do
-  state=$(cat "/sys/class/gpio/gpio$gpio/value")
-  if ! [[ "$state" = "$previous_state" ]] && [[ "$state" = 0 ]]
-  then
-    if ! [ -z $previous_impulse ] # skip first iteration
-    then
-      delay=$(expr $(date --utc +%s%N) - $previous_impulse)
-      impulse_per_hour=$(expr 3600000000000 / $delay)
-      watt=$(expr $impulse_per_hour / $(expr 2000 / 1000))
-      echo "$watt watts"
-      curl "https://${influxdb_domain}/api/v2/write?org=${influxdb_org}&bucket=${influxdb_bucket}&precision=ns" ${'\\'}
-        -X POST ${'\\'}
-        --header "Authorization: Token ${influxdb_token}" ${'\\'}
-        --header "Content-Type: text/plain; charset=utf-8" ${'\\'}
-        --header "Accept: application/json" ${'\\'}
-        --data-binary "powermeter,host=${node_name} watts=$watt" ${'\\'}
-        2&> /dev/null &
-    fi
-    previous_impulse=$(date --utc +%s%N)
-  fi
-  previous_state=$state
+    [ -z $last_timestamp ] && continue
+
+    delay=$(expr $timestamp - $last_timestamp)
+    impulse_per_hour=$(expr $ms_per_hour / $delay)
+    watt=$(expr $impulse_per_hour / $impulse_per_watthour)
+    
+    echo "$delay $impulse_per_hour: $watt watts"
+    
+    curl "https://${influxdb_domain}/api/v2/write?org=${influxdb_org}&bucket=${influxdb_bucket}&precision=ns" ${'\\'}
+      -X POST ${'\\'}
+      --header "Authorization: Token ${influxdb_token}" ${'\\'}
+      --header "Content-Type: text/plain; charset=utf-8" ${'\\'}
+      --header "Accept: application/json" ${'\\'}
+      --data-binary "powermeter,host=${node_name} watts=$watt $timestamp" ${'\\'}
+      2&> /dev/null &
 done
