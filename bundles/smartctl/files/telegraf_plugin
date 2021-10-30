@@ -19,6 +19,6 @@ do
   # hdd might be sleeping
   if [[ $temp == ?(-)+([0-9]) ]]
   then
-    echo "smartctl,host=${node.name},device=$device temperature=${temp} $(date --utc +%s%N)"
+    echo "smartctl,host=${node.name},device=$device temperature=$temp $(date --utc +%s%N)"
   fi
 done
