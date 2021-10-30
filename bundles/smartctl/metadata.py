@@ -16,7 +16,7 @@ defaults = {
                         f'sudo /usr/local/share/icinga/plugins/smartctl',
                     ],
                     'data_format': 'influx',
-                    'interval': '60s',
+                    'interval': '20s',
                 }],
             },
         },

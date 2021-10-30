@@ -16,15 +16,9 @@ do
 
   temp=$(smartctl -n idle -A --json=c $device | jq .temperature.current)
   
+  # hdd might be sleeping
   if [[ $temp == ?(-)+([0-9]) ]]
   then
-    echo "smartctl,host=${node.name},device=$device temperature=<%text>${temp}</%text>i $(date --utc +%s%N)"
-  elif [[ $temp == null ]]
-  then
-    # hdd might be sleeping
-    continue
-  else
-    # hdd might be unsupported
-    continue
+    echo "smartctl,host=${node.name},device=$device temperature=${temp} $(date --utc +%s%N)"
   fi
 done
