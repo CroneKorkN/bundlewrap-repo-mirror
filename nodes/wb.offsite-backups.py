@@ -7,6 +7,7 @@
     ],
     'bundles': [
         'dm-crypt',
+        'smartctl',
         'wireguard',
         'zfs',
     ],
@@ -51,6 +52,11 @@
         'dm-crypt': {
             'tank': {
                 'device': '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE',
+            },
+        },
+        'smartctl': {
+            '/dev/disk/by-id/ata-TOSHIBA_MG06ACA10TE_61C0A1B1FKQE': {
+                'apm': 32,
             },
         },
         'zfs': {

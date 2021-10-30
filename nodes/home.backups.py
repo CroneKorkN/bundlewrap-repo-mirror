@@ -6,9 +6,9 @@
         'monitored',
     ],
     'bundles': [
+        'smartctl',
         'zfs',
         'zfs-mirror',
-        'hdparm',
     ],
     'metadata': {
         'id': '9cf52515-63a1-4659-a8ec-6c3c881727e5',
@@ -22,15 +22,15 @@
         'backup-server': {
             'hostname': 'backups.sublimity.de',
         },
-        'hdparm': {
+        'smartctl': {
             '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL': {
-                'power_management': 1,
+                'apm': 32,
             },
             '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB': {
-                'power_management': 1,
+                'apm': 32,
             },
             '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG': {
-                'power_management': 1,
+                'apm': 32,
             },
         },
         'zfs-mirror': {
