@@ -11,6 +11,7 @@
                 'function': 'mean',
             },
         },
+        'display_name': '__field.labels.device',
         'min': 0,
         'unit': 'degrees',
     },
