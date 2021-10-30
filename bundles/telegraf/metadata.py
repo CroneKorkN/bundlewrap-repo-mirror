@@ -39,7 +39,7 @@ defaults = {
                     ],
                 }],
                 'procstat': [{
-                    'interval': '1m',
+                    'interval': '60s',
                     'pattern': '.',
                     'fieldpass': [
                         'cpu_usage',
