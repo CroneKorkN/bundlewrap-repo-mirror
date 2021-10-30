@@ -29,7 +29,7 @@ done
 
 for device in $(smartctl --scan | cut -d' ' -f1)
 do
-  temp=$(smartctl -n idle -A --json=c $device | jq .temperature.current)
+  temp=$(smartctl -n standby -A --json=c $device | jq .temperature.current)
   
   # hdd might be sleeping
   if [[ $temp == ?(-)+([0-9]) ]]
