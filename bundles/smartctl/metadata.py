@@ -13,7 +13,7 @@ defaults = {
             'inputs': {
                 'exec': [{
                     'commands': [
-                        f'sudo /usr/local/share/icinga/plugins/hdd_temp',
+                        f'sudo /usr/local/share/icinga/plugins/smartctl',
                     ],
                     'data_format': 'influx',
                     'interval': '60s',
@@ -22,6 +22,6 @@ defaults = {
         },
     },
     'sudoers': {
-        'telegraf': ['/usr/local/share/icinga/plugins/hdd_temp'],
+        'telegraf': ['/usr/local/share/icinga/plugins/smartctl'],
     },
 }

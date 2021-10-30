@@ -24,13 +24,13 @@
         },
         'smartctl': {
             '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL': {
-                'apm': 32,
+                'apm': 1,
             },
             '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB': {
-                'apm': 32,
+                'apm': 1,
             },
             '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG': {
-                'apm': 32,
+                'apm': 1,
             },
         },
         'zfs-mirror': {

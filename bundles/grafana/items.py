@@ -136,6 +136,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                         bucket=bucket,
                         host=monitored_node.name,
                         negative=query_config.get('negative', False),
+                        boolean_to_int=query_config.get('boolean_to_int', False),
                         resolution=query_config.get('resolution', 1) * 4,
                         filters={
                             'host': monitored_node.name,

@@ -1,5 +1,6 @@
 files = {
-    '/usr/local/share/icinga/plugins/hdd_temp': {
+    '/usr/local/share/icinga/plugins/smartctl': {
+        'source': 'telegraf_plugin',
         'content_type': 'mako',
         'mode': '0755',
     },
