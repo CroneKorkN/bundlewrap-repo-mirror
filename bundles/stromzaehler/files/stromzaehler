@@ -4,7 +4,7 @@ impulse_per_watthour=2
 ms_per_hour=3600000000000
 gpio=$(gpiofind SCL1)
 
-while gpiomon --num-events=1 --rising-edge $gpio
+while gpiomon --num-events=1 --falling-edge $gpio 2&> /dev/null
 do
     last_timestamp=$timestamp
     timestamp=$(date --utc +%s%N)
@@ -24,4 +24,7 @@ do
       --header "Accept: application/json" ${'\\'}
       --data-binary "powermeter,host=${node_name} watts=$watt $timestamp" ${'\\'}
       2&> /dev/null &
+    
+    # workaround: s0 seems to flicker some times
+    sleep 0.1
 done
