@@ -14,23 +14,23 @@
         'display_name': '__field.labels.device',
         'min': 0,
         'unit': 'celsius',
+        'tooltip': 'multi',
     },
-    'active': {
+    'power_level': {
         'stacked': True,
         'queries': {
-            'usage': {
+            'power_level': {
                 'filters': {
                     '_measurement': 'smartctl',
                     '_field': [
-                        'active',
+                        'power_level',
                     ],
                 },
                 'function': 'last',
-                'boolean_to_int': True,
             },
         },
         'display_name': '__field.labels.device',
         'min': 0,
-        'unit': 'active',
+        'tooltip': 'multi',
     },
 }
