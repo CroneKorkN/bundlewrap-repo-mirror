@@ -7,6 +7,7 @@ if not node.in_group('raspberry-pi'):
     }
 
 svc_systemd['ssh'] = {
+    'running': not node.in_group('raspberry-pi'), # FIXME
     'needs': [
         'tag:ssh_users',
     ],
