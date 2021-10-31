@@ -7,6 +7,9 @@ do
   output=$(smartctl -n standby -i $device)
   exitstatus=$?
   unset power_level
+  
+  # maybe find out power state by trying through all states and check when
+  # it stops exiting 2, sarting with deepest.
 
   if $(echo $output | grep -q "Power mode is:")
   then
