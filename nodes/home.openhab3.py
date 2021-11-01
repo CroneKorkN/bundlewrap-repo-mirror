@@ -11,6 +11,8 @@
         'java',
     ],
     'metadata': {
+        'FIXME_dont_touch_sshd': True,
+        
         'id': '0afcde75-95c8-4fbd-b4c2-8a0fcc92884a',
         'network': {
             'internal': {
