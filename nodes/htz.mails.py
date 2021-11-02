@@ -69,7 +69,7 @@
         'mailserver': {
             'hostname': 'mail.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
-            'domains': [
+            'domains': {
                 'ckn.li',
                 'sublimity.de',
                 'freibrief.net',
@@ -79,7 +79,7 @@
                 'wettengl.net',
                 'wingl.de',
                 'woodpipe.de',
-            ],
+            },
         },
         'rspamd': {
             'hostname': 'rspamd.sublimity.de',

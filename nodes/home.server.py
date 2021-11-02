@@ -13,6 +13,7 @@
         'grafana',
         'influxdb2',
         'mirror',
+        'mosquitto',
         'postgresql',
         'redis',
         'smartctl',
@@ -51,6 +52,9 @@
         'letsencrypt': {
             'delegate_to_node': 'htz.mails',
         },
+        'mosquitto': {
+            'hostname': 'mqtt.sublimity.de',
+        },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
             'version': '21.0.5',
@@ -59,11 +63,6 @@
             'ckn': {
                 'source': 'SofortUpload/AutoSort',
                 'destination': 'Bilder/Chronologie',
-            },
-        },
-        'users': {
-            'root': {
-                'shell': '/usr/bin/zsh',
             },
         },
         'vm': {

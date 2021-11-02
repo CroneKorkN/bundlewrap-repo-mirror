@@ -51,14 +51,23 @@ def renew(metadata):
     'letsencrypt/domains'
 )
 def delegated_domains(metadata):
+    delegated_domains = {
+        domain
+            for other_node in repo.nodes
+            if other_node.has_bundle('letsencrypt')
+                and other_node.metadata.get('letsencrypt/delegate_to_node', None) == node.name
+            for domain in other_node.metadata.get('letsencrypt/domains').keys()
+    }
+
     return {
         'letsencrypt': {
             'domains': {
                 domain: set()
-                    for other_node in repo.nodes
-                    if other_node.has_bundle('letsencrypt')
-                        and other_node.metadata.get('letsencrypt/delegate_to_node', None) == node.name
-                    for domain in other_node.metadata.get('letsencrypt/domains').keys()
+                    for domain in delegated_domains
             },
+        },
+        'dns': {
+            domain: repo.libs.dns.get_a_records(metadata, internal=False)
+                for domain in delegated_domains
         },
     }
