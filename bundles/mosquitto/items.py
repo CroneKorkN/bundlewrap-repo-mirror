@@ -21,6 +21,20 @@ files = {
             'svc_systemd:mosquitto:restart'
         ],
     },
+    '/etc/mosquitto/password_file': {
+        'content': '\n'.join(
+            conf['password_file'] for conf in node.metadata.get('mosquitto/users').values()
+        ) + '\n',
+        'needs': [
+            'pkg_apt:mosquitto',
+        ],
+        'needed_by': [
+            'svc_systemd:mosquitto'
+        ],
+        'triggers': [
+            'svc_systemd:mosquitto:restart'
+        ],
+    },
 }
 
 svc_systemd = {

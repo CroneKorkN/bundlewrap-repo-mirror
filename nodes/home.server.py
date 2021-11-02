@@ -54,6 +54,9 @@
         },
         'mosquitto': {
             'hostname': 'mqtt.sublimity.de',
+            'users': {
+                'openhab': {},
+            },
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
