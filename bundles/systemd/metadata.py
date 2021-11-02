@@ -14,7 +14,7 @@ def units(metadata):
     for name, config in metadata.get('systemd/units').items():
         extension = name.split('.')[-1]
 
-        if extension not in ['timer', 'service', 'network', 'netdev']:
+        if extension not in ['timer', 'service', 'network', 'netdev', 'mount']:
             raise Exception(f'unknown extension {extension}')
 
         if not config.get('Install/WantedBy'):
@@ -47,7 +47,7 @@ def services(metadata):
     for name, config in metadata.get('systemd/services').items():
         extension = name.split('.')[-1]
         
-        if extension not in ['timer', 'service']:
+        if extension not in ['timer', 'service', 'mount']:
             raise Exception(f'unknown extension: {extension}')
 
     return {

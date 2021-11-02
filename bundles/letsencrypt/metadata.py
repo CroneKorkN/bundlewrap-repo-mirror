@@ -48,7 +48,8 @@ def renew(metadata):
 
 
 @metadata_reactor.provides(
-    'letsencrypt/domains'
+    'letsencrypt/domains',
+    'dns',
 )
 def delegated_domains(metadata):
     delegated_domains = {

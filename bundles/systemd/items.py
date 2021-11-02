@@ -18,13 +18,15 @@ for name, unit in node.metadata.get('systemd/units').items():
                 'svc_systemd:systemd-networkd:restart',
             ],
         }
-    elif extension in ['timer', 'service']:
+    elif extension in ['timer', 'service', 'mount']:
         path = f'/etc/systemd/system/{name}'
         dependencies = {
             'triggers': [
                 "action:systemd-reload",
             ],
         }
+        if name in node.metadata.get('systemd/services'):
+            dependencies['triggers'].append(f'svc_systemd:{name}:restart')
 
     files[path] = {
         'content': repo.libs.systemd.generate_unitfile(unit),

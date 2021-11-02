@@ -10,6 +10,7 @@
         'ssh',
         'systemd',
         'systemd-networkd',
+        'systemd-mount',
         'systemd-timers',
     ],
     'metadata': {
