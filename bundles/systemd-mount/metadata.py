@@ -1,7 +1,7 @@
 defaults = {
     'apt': {
         'packages': {
-            'bindfs',
+            'bindfs': {},
         },
     },
     'systemd-mount': {},

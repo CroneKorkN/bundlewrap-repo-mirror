@@ -31,6 +31,7 @@ defaults = {
                     'zfs_pool:',
                 },
             },
+            'zfs-auto-snapshot': {},
         },
     },
     'systemd-timers': {
