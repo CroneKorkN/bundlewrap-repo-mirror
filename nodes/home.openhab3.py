@@ -4,11 +4,13 @@
         'raspberry-pi',
         'debian-11',
         'monitored',
+        'webserver',
     ],
     'bundles': [
         'zfs',
         'openhab',
         'java',
+        'mirror',
     ],
     'metadata': {
         'FIXME_dont_touch_sshd': True,
@@ -19,6 +21,19 @@
                 'interface': 'eth0',
                 'ipv4': '10.0.0.17/24',
                 'gateway4': '10.0.0.1',
+            },
+        },
+        'letsencrypt': {
+            'delegate_to_node': 'htz.mails',
+        },
+        'nginx': {
+            'vhosts': {
+                'openhab.ckn.li': {
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'http://localhost:8080',
+                    },
+                },
             },
         },
         'java': {

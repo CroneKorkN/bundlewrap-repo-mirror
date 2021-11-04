@@ -9,7 +9,7 @@ files = {
             'influxdb_domain': influxdb_metadata['hostname'],
             'influxdb_bucket': influxdb_metadata['bucket'],
             'influxdb_org': influxdb_metadata['org'],
-            'influxdb_token': influxdb_metadata['admin_token'],
+            'influxdb_token': influxdb_metadata['writeonly_token'],
         },
         'triggers': [
             'svc_systemd:stromzaehler:restart'
