@@ -3,7 +3,7 @@
     'groups': [
         'raspberry-pi',
         'debian-11',
-        'monitored',
+#        'monitored',
         'webserver',
     ],
     'bundles': [
@@ -14,7 +14,14 @@
     ],
     'metadata': {
         'FIXME_dont_touch_sshd': True,
-        
+        'telegraf': {
+            'config': {
+                'agent': {
+                    'flush_interval': '30s',
+                    'interval': '30s',
+                },
+            },
+        },
         'id': '0afcde75-95c8-4fbd-b4c2-8a0fcc92884a',
         'network': {
             'internal': {

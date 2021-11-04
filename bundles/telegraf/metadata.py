@@ -12,7 +12,7 @@ defaults = {
             'agent': {
                 'hostname': node.name,
                 'collection_jitter': '0s',
-                'flush_interval': '10s',
+                'flush_interval': '15s',
                 'flush_jitter': '0s',
                 'interval': '15s',
                 'metric_batch_size': 1000,
