@@ -3,7 +3,7 @@
     'groups': [
         'raspberry-pi',
         'debian-11',
-#        'monitored',
+        'monitored',
         'webserver',
     ],
     'bundles': [

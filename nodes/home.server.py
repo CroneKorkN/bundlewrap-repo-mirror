@@ -19,6 +19,7 @@
         'smartctl',
         'wireguard',
         'zfs',
+        'crystal',
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',

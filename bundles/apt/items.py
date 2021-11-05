@@ -64,7 +64,8 @@ for host, sources in hosts.items():
         'content': '\n'.join(
             str(source) for source in sorted(sources)
         ).format(
-            release=node.metadata.get('os_release')
+            release=node.metadata.get('os_release'),
+            version=node.os_version[0], # WIP crystal
         ),
         'triggers': {
             'action:apt_update',
