@@ -27,8 +27,9 @@ def acme_zone(metadata):
         'bind': {
             'zones': {
                 metadata.get('bind/acme_hostname'): {
-                    'keys': ['acme'],
+                    'dynamic': True,
                     'records': set(),
+                    'views': ['external'],
                 },
             },
         },

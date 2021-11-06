@@ -145,15 +145,15 @@ def generate_keys(metadata):
     return {
         'bind': {
             'keys': {
-                key: repo.libs.hmac.hmac_sha512(
-                    'acme',
+                zone: repo.libs.hmac.hmac_sha512(
+                    zone,
                     str(repo.vault.random_bytes_as_base64_for(
-                        f"{metadata.get('id')} bind key {key}",
+                        f"{metadata.get('id')} bind key {zone}",
                         length=32,
                     )),
                 )
                     for zone, conf in metadata.get('bind/zones').items()
-                    for key in set(conf.get('keys', []))
+                    if conf.get('dynamic', False)
             },
         },
     }

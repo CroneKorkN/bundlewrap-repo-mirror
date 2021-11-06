@@ -144,6 +144,9 @@ for view in views:
     }
 
     for zone, conf in zones.items():
+        if view['name'] not in conf.get('views', ['internal', 'external']):
+            continue
+        
         records = conf['records']
         unique_records = [
             dict(record_tuple)
@@ -155,19 +158,7 @@ for view in views:
         files[f"/var/lib/bind/{view['name']}/db.{zone}"] = {
             'owner': 'bind',
             'group': 'bind',
-            'source': 'db',
-            'content_type': 'mako',
-            'unless': f"test -f /var/lib/bind/{view['name']}/db.{zone}" if 'keys' in conf else 'false',
-            'context': {
-                'view': view['name'],
-                'serial': datetime.now().strftime('%Y%m%d%H'),
-                'records': list(filter(
-                    lambda record: record_matches_view(record, records, view['name']),
-                    unique_records
-                )),
-                'hostname': node.metadata.get('bind/hostname'),
-                'type': node.metadata.get('bind/type'),
-            },
+            'content_type': 'any',
             'needs': [
                 f"directory:/var/lib/bind/{view['name']}",
             ],
@@ -178,6 +169,23 @@ for view in views:
                 'svc_systemd:bind9:restart',
             ],
         }
+        if node.metadata.get('bind/type') == 'master':
+            files[f"/var/lib/bind/{view['name']}/db.{zone}"].update({
+                'source': 'db',
+                'content_type': 'mako',
+                'unless': f"test -f /var/lib/bind/{view['name']}/db.{zone}" if conf.get('dynamic', False) else 'false',
+                'context': {
+                    'view': view['name'],
+                    'serial': datetime.now().strftime('%Y%m%d%H'),
+                    'records': list(filter(
+                        lambda record: record_matches_view(record, records, view['name']),
+                        unique_records
+                    )),
+                    'hostname': node.metadata.get('bind/hostname'),
+                    'type': node.metadata.get('bind/type'),
+                    'keys': node.metadata.get('bind/keys'),
+                },
+            })
 
 svc_systemd['bind9'] = {}
 

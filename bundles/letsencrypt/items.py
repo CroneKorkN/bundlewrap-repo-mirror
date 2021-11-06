@@ -24,7 +24,7 @@ files = {
         'context': {
             'server': node.metadata.get('network/external/ipv4').split('/')[0],
             'zone': node.metadata.get('bind/acme_hostname'),
-            'acme_key': node.metadata.get('bind/keys/acme'),
+            'acme_key': node.metadata.get('bind/keys/acme.sublimity.de'),
         },
         'mode': '0755',
     },
@@ -37,7 +37,7 @@ files = {
 }
 
 actions['letsencrypt_update_certificates'] = {
-    'command': 'dehydrated --cron --accept-terms --challenge http-01',
+    'command': 'true || dehydrated --cron --accept-terms --challenge http-01',
     'triggered': True,
     'skip': delegated,
     'needs': {
@@ -56,6 +56,6 @@ for domain in node.metadata.get('letsencrypt/domains').keys():
             'svc_systemd:nginx',
         },
         'triggers': {
-            'action:letsencrypt_update_certificates',
+           'action:letsencrypt_update_certificates',
         },
     }

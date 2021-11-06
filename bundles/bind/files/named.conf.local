@@ -33,15 +33,14 @@ view "${view['name']}" {
   };
 
   % for zone, conf in sorted(zones.items()):
+  <% if view['name'] not in conf.get('views', ['internal', 'external']): continue %>
   zone "${zone}" {
     type ${type};
     % if type == 'slave':
     masters { ${master_ip}; };
     % endif
-    % if type == 'master':
-    % for key in conf.get('keys', []):
-    allow-update { key "${key}"; };
-    % endfor
+    % if type == 'master' and zone in keys:
+    allow-update { key "${zone}"; };
     % endif
     file "/var/lib/bind/${view['name']}/db.${zone}";
   };

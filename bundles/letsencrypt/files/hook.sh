@@ -7,18 +7,37 @@ deploy_challenge() {
   SERVER=${server}
   DOMAIN=$1
   CHALLENGE=$3
-  KEY=hmac-sha512:acme:${acme_key}
+  KEY=hmac-sha512:acme.sublimity.de:${acme_key}
   cmd="
     server 162.55.188.157
     zone acme.sublimity.de.
-    update delete $DOMAIN.$ACME_ZONE. TXT
     update add $DOMAIN.$ACME_ZONE. 60 IN TXT \"$CHALLENGE\"
     send
   "
   echo "$cmd"
   echo "$cmd" | nsupdate -y $KEY
   
-  sleep 10
+  sleep 20
+}
+
+clean_challenge() {
+  set -e
+  set -u
+  set -o pipefail
+  
+  ACME_ZONE=${zone}
+  SERVER=${server}
+  DOMAIN=$1
+  CHALLENGE=$3
+  KEY=hmac-sha512:acme.sublimity.de:${acme_key}
+  cmd="
+    server 162.55.188.157
+    zone acme.sublimity.de.
+    update delete $DOMAIN.$ACME_ZONE. TXT
+    send
+  "
+  echo "$cmd"
+  echo "$cmd" | nsupdate -y $KEY
 }
 
 deploy_cert() {<%text>
@@ -55,6 +74,6 @@ exit_hook() {<%text>
 
 <%text>
 HANDLER="$1"; shift
-if [[ "${HANDLER}" =~ ^(deploy_cert|exit_hook|deploy_challenge)$ ]]; then
+if [[ "${HANDLER}" =~ ^(deploy_cert|exit_hook|deploy_challenge|clean_challenge)$ ]]; then
     "$HANDLER" "$@"
 fi</%text>

@@ -65,6 +65,8 @@
             'domains': {
                 'ckn.li': set(),
                 'test1.ckn.li': set(),
+                'test2.ckn.li': set(),
+                'test3.ckn.li': set(),
                 'sublimity.de': set(),
                 'freibrief.net': set(),
             },
