@@ -28,7 +28,7 @@ def acme_records(metadata):
                         h({ 
                             'name': f"_acme-challenge{'.' if name else ''}{name}",
                             'type': 'CNAME',
-                            'value': metadata.get('bind/acme_hostname'),
+                            'value': f"{name}.{zone}.{metadata.get('bind/acme_hostname')}.",
                         })
                             for name in {
                                 record['name'] if record['name'] != '@' else ''
@@ -55,7 +55,7 @@ def acme_zone(metadata):
     return {
         'bind': {
             'zones': {
-                metadata.get('bind/hostname'): {
+                metadata.get('bind/acme_hostname'): {
                     'keys': ['acme'],
                     'records': set(),
                 },

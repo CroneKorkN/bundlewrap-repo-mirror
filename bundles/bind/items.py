@@ -14,6 +14,8 @@ else:
     slave_ips = []
 
 directories[f'/var/lib/bind'] = {
+    'owner': 'bind',
+    'group': 'bind',
     'purge': True,
     'needed_by': [
         'svc_systemd:bind9',
@@ -129,6 +131,8 @@ def record_matches_view(record, records, view):
     
 for view in views:
     directories[f"/var/lib/bind/{view['name']}"] = {
+        'owner': 'bind',
+        'group': 'bind',
         'purge': True,
         'needed_by': [
             'svc_systemd:bind9',
@@ -148,6 +152,7 @@ for view in views:
         ]
         
         files[f"/var/lib/bind/{view['name']}/db.{zone}"] = {
+            'owner': 'bind',
             'group': 'bind',
             'source': 'db',
             'content_type': 'mako',
