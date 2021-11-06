@@ -38,9 +38,11 @@ view "${view['name']}" {
     % if type == 'slave':
     masters { ${master_ip}; };
     % endif
+    % if type == 'master':
     % for key in conf.get('keys', []):
     allow-update { key "${key}"; };
     % endfor
+    % endif
     file "/var/lib/bind/${view['name']}/db.${zone}";
   };
   % endfor

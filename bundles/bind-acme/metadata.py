@@ -13,34 +13,19 @@ def acme_hostname(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/zones',
+    'dns',
 )
 def acme_records(metadata):
     if metadata.get('bind/type') == 'slave':
         return {}
 
     return {
-        'bind': {
-            'zones': {
-                zone: {
-                    'records': {
-                        # FIXME: bw currently cant handle lists of dicts :(
-                        h({ 
-                            'name': f"_acme-challenge{'.' if name else ''}{name}",
-                            'type': 'CNAME',
-                            'value': f"{name}.{zone}.{metadata.get('bind/acme_hostname')}.",
-                        })
-                            for name in {
-                                record['name'] if record['name'] != '@' else ''
-                                    for record in conf['records']
-                                    if f"{record['name']}.{zone}" in metadata.get('letsencrypt/domains')
-                            }
-                    }
-                }
-                    for zone, conf in metadata.get('bind/zones').items()
-                    if zone != metadata.get('bind/acme_hostname')
-            },
-        },
+        'dns': {
+            f'_acme-challenge.{domain}': {
+                'CNAME': {f"{domain}.{metadata.get('bind/acme_hostname')}."},
+            }
+                for domain in node.metadata.get('letsencrypt/domains')
+        }
     }
 
 

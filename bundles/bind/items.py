@@ -53,6 +53,7 @@ files['/etc/bind/named.conf.options'] = {
     'context': {
         'type': node.metadata.get('bind/type'),
         'slave_ips': sorted(slave_ips),
+        'master_ip': master_ip,
     },
     'owner': 'root',
     'group': 'bind',
@@ -165,6 +166,7 @@ for view in views:
                     unique_records
                 )),
                 'hostname': node.metadata.get('bind/hostname'),
+                'type': node.metadata.get('bind/type'),
             },
             'needs': [
                 f"directory:/var/lib/bind/{view['name']}",

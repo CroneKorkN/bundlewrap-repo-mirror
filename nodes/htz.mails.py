@@ -32,6 +32,7 @@
         },
         'bind': {
             'hostname': 'resolver.name',
+            'acme_hostname': 'acme.sublimity.de',
             'zones': {
                 'sublimity.de': {},
                 'freibrief.net': {},
@@ -63,6 +64,7 @@
         'letsencrypt': {
             'domains': {
                 'ckn.li': set(),
+                'test1.ckn.li': set(),
                 'sublimity.de': set(),
                 'freibrief.net': set(),
             },

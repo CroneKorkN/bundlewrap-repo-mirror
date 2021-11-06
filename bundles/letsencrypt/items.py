@@ -21,6 +21,14 @@ files = {
     },
     '/etc/dehydrated/hook.sh': {
         'content_type': 'mako',
+        'context': {
+            'server': node.metadata.get('network/external/ipv4').split('/')[0],
+            'zone': node.metadata.get('bind/acme_hostname'),
+            'acme_key': node.metadata.get('bind/keys/acme'),
+        },
+        'mode': '0755',
+    },
+    '/etc/dehydrated/letsencrypt-ensure-some-certificate': {
         'mode': '0755',
     },
     '/etc/dehydrated/letsencrypt-ensure-some-certificate': {
