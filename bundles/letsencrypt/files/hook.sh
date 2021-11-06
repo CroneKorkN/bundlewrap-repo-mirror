@@ -9,18 +9,8 @@ deploy_challenge() {
   CHALLENGE=$3
   KEY=hmac-sha512:acme:${acme_key}
   cmd="
-    server 127.0.0.1
-    zone $ACME_ZONE.
-    update delete $DOMAIN.$ACME_ZONE. TXT
-    update add $DOMAIN.$ACME_ZONE. 60 IN TXT \"$CHALLENGE\"
-    send
-  "
-  echo "$cmd"
-  echo "$cmd" | nsupdate -y $KEY
-  cmd="
-    server $SERVER
-    local $SERVER
-    zone $ACME_ZONE.
+    server 162.55.188.157
+    zone acme.sublimity.de.
     update delete $DOMAIN.$ACME_ZONE. TXT
     update add $DOMAIN.$ACME_ZONE. 60 IN TXT \"$CHALLENGE\"
     send
