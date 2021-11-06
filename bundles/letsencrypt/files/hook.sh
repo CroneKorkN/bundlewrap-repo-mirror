@@ -17,7 +17,7 @@ deploy_challenge() {
   echo "$cmd"
   echo "$cmd" | nsupdate -y $KEY
   
-  sleep 20
+  sleep 30
 }
 
 clean_challenge() {
