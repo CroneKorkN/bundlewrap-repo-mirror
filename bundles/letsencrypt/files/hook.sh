@@ -9,8 +9,8 @@ deploy_challenge() {
   CHALLENGE=$3
   KEY=hmac-sha512:acme.sublimity.de:${acme_key}
   cmd="
-    server 162.55.188.157
-    zone acme.sublimity.de.
+    server $SERVER
+    zone $ACME_ZONE.
     update add $DOMAIN.$ACME_ZONE. 60 IN TXT \"$CHALLENGE\"
     send
   "
@@ -31,8 +31,8 @@ clean_challenge() {
   CHALLENGE=$3
   KEY=hmac-sha512:acme.sublimity.de:${acme_key}
   cmd="
-    server 162.55.188.157
-    zone acme.sublimity.de.
+    server $SERVER
+    zone $ACME_ZONE.
     update delete $DOMAIN.$ACME_ZONE. TXT
     send
   "

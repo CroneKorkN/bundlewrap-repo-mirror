@@ -8,7 +8,7 @@ def acme_records(metadata):
     return {
         'dns': {
             f'_acme-challenge.{domain}': {
-                'CNAME': {f"{domain}.{metadata.get('bind/acme_hostname')}."},
+                'CNAME': {f"{domain}.{metadata.get('bind/acme_zone')}."},
             }
                 for other_node in repo.nodes
                 for domain in other_node.metadata.get('letsencrypt/domains', {}).keys()
@@ -26,7 +26,7 @@ def acme_zone(metadata):
     return {
         'bind': {
             'zones': {
-                metadata.get('bind/acme_hostname'): {
+                metadata.get('bind/acme_zone'): {
                     'dynamic': True,
                     'records': set(),
                     'views': ['external'],
