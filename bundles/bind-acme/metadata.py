@@ -2,16 +2,19 @@
     'dns',
 )
 def acme_records(metadata):
-    if metadata.get('bind/type') == 'slave':
-        return {}
-
+    domains = set()
+    
+    for other_node in repo.nodes:
+        for domain, conf in other_node.metadata.get('letsencrypt/domains', {}).items():
+            domains.add(domain)
+            domains.update(conf.get('aliases', []))
+    
     return {
         'dns': {
             f'_acme-challenge.{domain}': {
                 'CNAME': {f"{domain}.{metadata.get('bind/acme_zone')}."},
             }
-                for other_node in repo.nodes
-                for domain in other_node.metadata.get('letsencrypt/domains', {}).keys()
+                for domain in domains
         }
     }
 
@@ -20,16 +23,13 @@ def acme_records(metadata):
     'bind/zones',
 )
 def acme_zone(metadata):
-    if metadata.get('bind/type') == 'slave':
-        return {}
-
     return {
         'bind': {
             'zones': {
                 metadata.get('bind/acme_zone'): {
                     'dynamic': True,
-                    'records': set(),
                     'views': ['external'],
+                    'records': set(),
                 },
             },
         },

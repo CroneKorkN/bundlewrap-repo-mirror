@@ -8,7 +8,7 @@ deploy_challenge() {
     zone ${zone}.
     update add $1.${zone}. 60 IN TXT \"$3\"
     send
-  " | tee | nsupdate -y hmac-sha512:acme.sublimity.de:${acme_key}
+  " | tee | nsupdate -y hmac-sha512:${zone}:${acme_key}
   
   sleep 10
 }
@@ -19,43 +19,37 @@ clean_challenge() {
     zone ${zone}.
     update delete $1.${zone}. TXT
     send
-  " | tee | nsupdate -y hmac-sha512:acme.sublimity.de:${acme_key}
+  " | tee | nsupdate -y hmac-sha512:${zone}:${acme_key}
 }
 
-deploy_cert() {<%text>
-    local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"</%text>
-% for service, config in node.metadata.get('letsencrypt/concat_and_deploy', {}).items():
-
-    # concat_and_deploy ${service}
-    if [ "$DOMAIN" = "${config['match_domain']}" ]; then
-        cat $KEYFILE > ${config['target']}
-        cat $FULLCHAINFILE >> ${config['target']}
-%  if 'chown' in config:
-        chown ${config['chown']} ${config['target']}
-%  endif
-%  if 'chmod' in config:
-        chmod ${config['chmod']} ${config['target']}
-%  endif
-%  if 'commands' in config:
-%   for command in config['commands']:
-        ${command}
-%   endfor
-%  endif
-    fi
-% endfor
+deploy_cert() {
+  DOMAIN="$1"
+  KEYFILE="$2"
+  CERTFILE="$3"
+  FULLCHAINFILE="$4"
+  CHAINFILE="$5"
+  
+  % for domain, conf in sorted(domains.items()):
+  % if conf.get('location', None):
+  if [[ $DOMAIN = ${domain} ]]
+  then
+    cat "$KEYFILE" > "${conf['location']}/privkey.pem"
+    cat "$CERTFILE" > "${conf['location']}/cert.pem"
+    cat "$FULLCHAINFILE" > "${conf['location']}/fullchain.pem"
+    cat "$CHAINFILE" > "${conf['location']}/chain.pem"
+  fi
+  % endif
+  % if conf.get('owner', None):
+  chown ${conf['owner']} "${conf['location']}/privkey.pem" "${conf['location']}/cert.pem" "${conf['location']}/fullchain.pem" "${conf['location']}/chain.pem"
+  % endif
+  % for service in sorted(conf.get('reload', [])):
+  systemctl reload-or-restart ${service}
+  % endfor
+  % endfor
 }
 
-
-exit_hook() {<%text>
-    local ERROR="${1:-}"</%text>
-
-% for service in sorted(node.metadata.get('letsencrypt/reload_after', set())):
-    systemctl reload-or-restart ${service}
-% endfor
-}
-
-<%text>
 HANDLER="$1"; shift
-if [[ "${HANDLER}" =~ ^(deploy_cert|exit_hook|deploy_challenge|clean_challenge)$ ]]; then
+if [[ $HANDLER =~ ^(deploy_cert|deploy_challenge|clean_challenge)$ ]]
+then
     "$HANDLER" "$@"
-fi</%text>
+fi

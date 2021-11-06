@@ -84,7 +84,7 @@ def letsencrypt(metadata):
     return  {
         'letsencrypt': {
             'domains': {
-                metadata.get('mosquitto/hostname'): set(),
+                metadata.get('mosquitto/hostname'): {},
             },
         },
     }

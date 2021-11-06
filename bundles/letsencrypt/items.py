@@ -13,6 +13,9 @@ directories = {
 files = {
     '/etc/dehydrated/domains.txt': {
         'content_type': 'mako',
+        'context': {
+            'domains': node.metadata.get('letsencrypt/domains'),
+        },
         'triggers': {
             'action:letsencrypt_update_certificates',
         },
@@ -28,6 +31,7 @@ files = {
             'server': ip_interface(acme_node.metadata.get('network/external/ipv4')).ip,
             'zone': acme_node.metadata.get('bind/acme_zone'),
             'acme_key': acme_node.metadata.get('bind/keys/' + acme_node.metadata.get('bind/acme_zone')),
+            'domains': node.metadata.get('letsencrypt/domains'),
         },
         'mode': '0755',
     },
