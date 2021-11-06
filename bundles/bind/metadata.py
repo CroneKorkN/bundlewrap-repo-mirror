@@ -27,6 +27,23 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'bind/acme_key',
+)
+def acme_key(metadata):
+    return {
+        'bind': {
+            'acme_key': repo.libs.hmac.hmac_sha512(
+                'acme',
+                str(repo.vault.random_bytes_as_base64_for(
+                    f"{metadata.get('id')} bind key acme",
+                    length=32,
+                )),
+            ),
+        }
+    }
+
+
+@metadata_reactor.provides(
     'bind/type',
 )
 def type(metadata):

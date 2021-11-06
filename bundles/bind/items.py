@@ -93,6 +93,8 @@ files['/etc/bind/named.conf.local'] = {
         'master_ip': master_ip,
         'views': views,
         'zones': sorted(zones),
+        'hostname': node.metadata.get('bind/hostname'),
+        'acme_key': node.metadata.get('bind/acme_key'),
     },
     'owner': 'root',
     'group': 'bind',
@@ -128,6 +130,24 @@ def record_matches_view(record, records, view):
 for view in views:
     directories[f"/var/lib/bind/{view['name']}"] = {
         'purge': True,
+        'needed_by': [
+            'svc_systemd:bind9',
+        ],
+        'triggers': [
+            'svc_systemd:bind9:restart',
+        ],
+    }
+    files[f"/var/lib/bind/{view['name']}/db.acme.{node.metadata.get('bind/hostname')}"] = {
+        'source': 'db.acme',
+        'content_type': 'mako',
+        'context': {
+            'hostname': node.metadata.get('bind/hostname'),
+        },
+        'owner': 'root',
+        'group': 'bind',
+        'needs': [
+            'pkg_apt:bind9',
+        ],
         'needed_by': [
             'svc_systemd:bind9',
         ],
@@ -175,5 +195,6 @@ actions['named-checkconf'] = {
     'unless': 'named-checkconf -z',
     'needs': [
         'svc_systemd:bind9',
+        'svc_systemd:bind9:restart',
     ]
 }

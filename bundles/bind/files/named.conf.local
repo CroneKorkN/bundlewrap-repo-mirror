@@ -4,6 +4,11 @@ acl "${view['name']}" {
 };
 % endfor
 
+key "acme" {
+  algorithm hmac-sha512;
+  secret "${acme_key}";
+};
+
 % for view in views:
 view "${view['name']}" {
   match-clients { ${view['name']}; };
@@ -34,6 +39,13 @@ view "${view['name']}" {
     file "/var/lib/bind/${view['name']}/db.${zone}";
   };
   % endfor
+
+  zone "acme.${hostname}" {
+    type master;
+    file "/var/lib/bind/${view['name']}/db.acme.${hostname}";
+    masterfile-format text;
+    allow-update { key "acme"; };
+  };
 
   include "/etc/bind/named.conf.default-zones";
   include "/etc/bind/zones.rfc1918";
