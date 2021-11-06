@@ -33,11 +33,12 @@ def acme_records(metadata):
                             for name in {
                                 record['name'] if record['name'] != '@' else ''
                                     for record in conf['records']
-                                    if '._domainkey' not in record['name']
+                                    if f"{record['name']}.{zone}" in metadata.get('letsencrypt/domains')
                             }
                     }
                 }
                     for zone, conf in metadata.get('bind/zones').items()
+                    if zone != metadata.get('bind/acme_hostname')
             },
         },
     }

@@ -151,6 +151,7 @@ for view in views:
             'group': 'bind',
             'source': 'db',
             'content_type': 'mako',
+            'unless': f"test -f /var/lib/bind/{view['name']}/db.{zone}" if 'keys' in conf else 'false',
             'context': {
                 'view': view['name'],
                 'serial': datetime.now().strftime('%Y%m%d%H'),

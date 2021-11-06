@@ -11,8 +11,8 @@ $TTL 600
         900        ;Negative response caching TTL
 )
 
-% for record in sorted(records, key=lambda r: (r['name'], r['type'], r['value'])):
-${(record['name'] or '@').ljust(column_width('name', records))} \
+% for record in sorted(records, key=lambda r: (tuple(reversed(r['name'].split('.'))), r['type'], r['value'])):
+(${(record['name'] or '@').rjust(column_width('name', records))}) \
 IN \
 ${record['type'].ljust(column_width('type', records))} \
     % if record['type'] == 'TXT':
