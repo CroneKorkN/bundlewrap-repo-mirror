@@ -11,6 +11,7 @@ defaults = {
     'bind': {
         'zones': {},
         'slaves': {},
+        'keys': {},
     },
     'telegraf': {
         'config': {
@@ -24,23 +25,6 @@ defaults = {
         },
     },
 }
-
-
-@metadata_reactor.provides(
-    'bind/acme_key',
-)
-def acme_key(metadata):
-    return {
-        'bind': {
-            'acme_key': repo.libs.hmac.hmac_sha512(
-                'acme',
-                str(repo.vault.random_bytes_as_base64_for(
-                    f"{metadata.get('id')} bind key acme",
-                    length=32,
-                )),
-            ),
-        }
-    }
 
 
 @metadata_reactor.provides(
@@ -93,7 +77,8 @@ def collect_records(metadata):
             for type, values in records.items():
                 for value in values:
                     zones\
-                        .setdefault(zone, set())\
+                        .setdefault(zone, {})\
+                        .setdefault('records', set())\
                         .add(
                             h({'name': name, 'type': type, 'value': value})
                         )
@@ -123,10 +108,13 @@ def ns_records(metadata):
         'bind': {
             'zones': {
                 zone: {
-                    # FIXME: bw currently cant handle lists of dicts :(
-                    h({'name': '@', 'type': 'NS', 'value': f"{nameserver}."})
-                        for nameserver in nameservers
-                } for zone in metadata.get('bind/zones').keys()
+                    'records': {
+                        # FIXME: bw currently cant handle lists of dicts :(
+                        h({'name': '@', 'type': 'NS', 'value': f"{nameserver}."})
+                            for nameserver in nameservers
+                    } 
+                }
+                    for zone in metadata.get('bind/zones').keys()
             },
         },
     }
@@ -146,5 +134,26 @@ def slaves(metadata):
                     for other_node in repo.nodes
                     if other_node.has_bundle('bind') and other_node.metadata.get('bind/master_node', None) == node.name
             ],
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'bind/keys',
+)
+def generate_keys(metadata):
+    return {
+        'bind': {
+            'keys': {
+                key: repo.libs.hmac.hmac_sha512(
+                    'acme',
+                    str(repo.vault.random_bytes_as_base64_for(
+                        f"{metadata.get('id')} bind key {key}",
+                        length=32,
+                    )),
+                )
+                    for zone, conf in metadata.get('bind/zones').items()
+                    for key in set(conf.get('keys', []))
+            },
         },
     }

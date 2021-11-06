@@ -92,9 +92,9 @@ files['/etc/bind/named.conf.local'] = {
         'type': node.metadata.get('bind/type'),
         'master_ip': master_ip,
         'views': views,
-        'zones': sorted(zones),
+        'zones': zones,
         'hostname': node.metadata.get('bind/hostname'),
-        'acme_key': node.metadata.get('bind/acme_key'),
+        'keys': node.metadata.get('bind/keys'),
     },
     'owner': 'root',
     'group': 'bind',
@@ -137,26 +137,9 @@ for view in views:
             'svc_systemd:bind9:restart',
         ],
     }
-    files[f"/var/lib/bind/{view['name']}/db.acme.{node.metadata.get('bind/hostname')}"] = {
-        'source': 'db.acme',
-        'content_type': 'mako',
-        'context': {
-            'hostname': node.metadata.get('bind/hostname'),
-        },
-        'owner': 'root',
-        'group': 'bind',
-        'needs': [
-            'pkg_apt:bind9',
-        ],
-        'needed_by': [
-            'svc_systemd:bind9',
-        ],
-        'triggers': [
-            'svc_systemd:bind9:restart',
-        ],
-    }
 
-    for zone, records in zones.items():
+    for zone, conf in zones.items():
+        records = conf['records']
         unique_records = [
             dict(record_tuple)
                 for record_tuple in set(

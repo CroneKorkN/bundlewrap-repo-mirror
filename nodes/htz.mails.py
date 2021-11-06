@@ -10,6 +10,7 @@
         'dnsserver',
     ],
     'bundles': [
+        'bind-acme',
         'islamicstate.eu',
         'wireguard',
         'zfs',

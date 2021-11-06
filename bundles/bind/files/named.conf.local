@@ -4,10 +4,12 @@ acl "${view['name']}" {
 };
 % endfor
 
-key "acme" {
+% for name, token in keys.items():
+key "${name}" {
   algorithm hmac-sha512;
-  secret "${acme_key}";
+  secret "${token}";
 };
+% endfor
 
 % for view in views:
 view "${view['name']}" {
@@ -30,22 +32,18 @@ view "${view['name']}" {
     8.8.8.8;
   };
 
-  % for zone in zones:
+  % for zone, conf in sorted(zones.items()):
   zone "${zone}" {
     type ${type};
-% if type == 'slave':
+    % if type == 'slave':
     masters { ${master_ip}; };
-% endif
+    % endif
+    % for key in conf.get('keys', []):
+    allow-update { key "${key}"; };
+    % endfor
     file "/var/lib/bind/${view['name']}/db.${zone}";
   };
   % endfor
-
-  zone "acme.${hostname}" {
-    type master;
-    file "/var/lib/bind/${view['name']}/db.acme.${hostname}";
-    masterfile-format text;
-    allow-update { key "acme"; };
-  };
 
   include "/etc/bind/named.conf.default-zones";
   include "/etc/bind/zones.rfc1918";
