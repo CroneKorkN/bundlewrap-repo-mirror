@@ -1,43 +1,25 @@
+set -e
+set -u
+set -o pipefail
+
 deploy_challenge() {
-  set -e
-  set -u
-  set -o pipefail
-  
-  ACME_ZONE=${zone}
-  SERVER=${server}
-  DOMAIN=$1
-  CHALLENGE=$3
-  KEY=hmac-sha512:acme.sublimity.de:${acme_key}
-  cmd="
-    server $SERVER
-    zone $ACME_ZONE.
-    update add $DOMAIN.$ACME_ZONE. 60 IN TXT \"$CHALLENGE\"
+  echo "
+    server ${server}
+    zone ${zone}.
+    update add $1.${zone}. 60 IN TXT \"$3\"
     send
-  "
-  echo "$cmd"
-  echo "$cmd" | nsupdate -y $KEY
+  " | tee | nsupdate -y hmac-sha512:acme.sublimity.de:${acme_key}
   
-  sleep 15
+  sleep 10
 }
 
 clean_challenge() {
-  set -e
-  set -u
-  set -o pipefail
-  
-  ACME_ZONE=${zone}
-  SERVER=${server}
-  DOMAIN=$1
-  CHALLENGE=$3
-  KEY=hmac-sha512:acme.sublimity.de:${acme_key}
-  cmd="
-    server $SERVER
-    zone $ACME_ZONE.
-    update delete $DOMAIN.$ACME_ZONE. TXT
+  echo "
+    server ${server}
+    zone ${zone}.
+    update delete $1.${zone}. TXT
     send
-  "
-  echo "$cmd"
-  echo "$cmd" | nsupdate -y $KEY
+  " | tee | nsupdate -y hmac-sha512:acme.sublimity.de:${acme_key}
 }
 
 deploy_cert() {<%text>
