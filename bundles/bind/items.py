@@ -158,7 +158,6 @@ for view in views:
         files[f"/var/lib/bind/{view['name']}/db.{zone}"] = {
             'owner': 'bind',
             'group': 'bind',
-            'content_type': 'any',
             'needs': [
                 f"directory:/var/lib/bind/{view['name']}",
             ],
@@ -169,7 +168,7 @@ for view in views:
                 'svc_systemd:bind9:restart',
             ],
         }
-        if node.metadata.get('bind/type') == 'master':
+        if True or node.metadata.get('bind/type') == 'master': #FIXME: slave doesnt get updated if db doesnt get rewritten on each apply
             files[f"/var/lib/bind/{view['name']}/db.{zone}"].update({
                 'source': 'db',
                 'content_type': 'mako',
