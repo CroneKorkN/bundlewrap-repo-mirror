@@ -81,7 +81,6 @@ files['/etc/bind/named.conf.local'] = {
                     for view_name, view_conf in master_node.metadata.get('bind/views').items()
             },
         },
-        'keys': master_node.metadata.get('bind/keys'),
         'views': dict(sorted(
             master_node.metadata.get('bind/views').items(),
             key=lambda e: (e[1].get('default', False), e[0]),

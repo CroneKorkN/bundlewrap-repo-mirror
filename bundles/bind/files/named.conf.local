@@ -6,11 +6,13 @@ acl "${acl_name}" {
 };
 % endfor
 
-% for key_name, key_conf in sorted(keys.items()):
+% for view_name, view_conf in views.items():
+% for key_name, key_conf in sorted(view_conf['keys'].items()):
 key "${key_name}" {
   algorithm hmac-sha512;
   secret "${key_conf['token']}";
 };
+% endfor
 % endfor
 
 % for view_name, view_conf in views.items():

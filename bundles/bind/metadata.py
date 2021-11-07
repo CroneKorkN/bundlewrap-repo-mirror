@@ -23,6 +23,7 @@ defaults = {
         'views': {
             'internal': {
                 'is_internal': True,
+                'keys': {},
                 'acl': {
                     'our-nets',
                 },
@@ -31,6 +32,7 @@ defaults = {
             'external': {
                 'default': True,
                 'is_internal': False,
+                'keys': {},
                 'acl': {
                     'any',
                 },
@@ -38,7 +40,6 @@ defaults = {
             },
         },
         'zones': {},
-        'keys': {},
     },
     'telegraf': {
         'config': {
@@ -175,24 +176,29 @@ def slaves(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/keys',
+    'bind/views',
 )
 def generate_keys(metadata):
     return {
         'bind': {
-            'keys': {
-                key: {
-                    'token':repo.libs.hmac.hmac_sha512(
-                        key,
-                        str(repo.vault.random_bytes_as_base64_for(
-                            f"{metadata.get('id')} bind key {key}",
-                            length=32,
-                        )),
-                    )
+            'views': {
+                view_name: {
+                    'keys': {
+                        key: {
+                            'token':repo.libs.hmac.hmac_sha512(
+                                key,
+                                str(repo.vault.random_bytes_as_base64_for(
+                                    f"{metadata.get('id')} bind key {key}",
+                                    length=32,
+                                )),
+                            )
+                        }
+                            for key in view_conf['keys']
+                    }
                 }
+                    for view_name, view_conf in metadata.get('bind/views').items()
             }
-                for key in metadata.get('bind/keys')
-        },
+        }
     }
 
 
@@ -213,11 +219,10 @@ def generate_acl_entries_for_keys(metadata):
                         },
                         # reject keys from other views
                         *{
-                            f'! key {other_view_name}.{zone_name}'
+                            f'! key {key}'
                                 for other_view_name, other_view_conf in metadata.get('bind/views').items()
                                 if other_view_name != view_name
-                                for zone_name, zone_conf in other_view_conf['zones'].items()
-                                if zone_conf.get('key', False)
+                                for key in other_view_conf.get('keys', [])
                         }
                     }
                 }
