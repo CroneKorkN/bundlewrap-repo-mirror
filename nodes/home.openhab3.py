@@ -30,9 +30,6 @@
                 'gateway4': '10.0.0.1',
             },
         },
-        'letsencrypt': {
-            'delegate_to_node': 'htz.mails',
-        },
         'nginx': {
             'vhosts': {
                 'openhab.ckn.li': {

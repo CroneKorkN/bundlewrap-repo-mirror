@@ -4,16 +4,17 @@ defaults = {
     'apt': {
         'packages': {
             'dehydrated': {},
+            'dnsutils': {},
         },
     },
     'letsencrypt': {
         'domains': {
-            # 'example.com': {'alias1.example.com', 'alias2.example.com'},
-        },
-    },
-    'pacman': {
-        'packages': {
-            'dehydrated': {},
+            # 'example.com': {
+            #     'aliases': {'www.example.com'},
+            #     'reload': {'nginx'},
+            #     'owner': 'www-data',
+            #     'location': '/opt/app/certs',
+            # },
         },
     },
 }

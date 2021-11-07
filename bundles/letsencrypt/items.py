@@ -44,7 +44,7 @@ files = {
 }
 
 actions['letsencrypt_update_certificates'] = {
-    'command': 'true || dehydrated --cron --accept-terms --challenge http-01',
+    'command': 'dehydrated --cron --accept-terms --challenge dns-01',
     'triggered': True,
     'skip': delegated,
     'needs': {
