@@ -39,7 +39,7 @@ defaults = {
                 'zones': {},
             },
         },
-        'zones': {},
+        'zones': set(),
     },
     'telegraf': {
         'config': {
@@ -92,7 +92,7 @@ def collect_records(metadata):
                 matching_zones = sorted(
                     filter(
                         lambda potential_zone: fqdn.endswith(potential_zone),
-                        metadata.get('bind/zones').keys()
+                        metadata.get('bind/zones')
                     ),
                     key=len,
                 )
