@@ -1,6 +1,13 @@
 from ipaddress import ip_address
 
-def record_matches_view(value, type, name, zone, view, metadata, repo):
+def _values_from_all_nodes(type, name, zone):
+    return {
+        value
+            for node in repo.nodes
+            for value in node.metadata.get(f'dns/{name}.{zone}/{type}', [])
+    }
+
+def record_matches_view(value, type, name, zone, view, metadata):
     if type not in ['A', 'AAAA']:
         return True
 
@@ -9,12 +16,7 @@ def record_matches_view(value, type, name, zone, view, metadata, repo):
             return True
         elif not list(filter(
             lambda other_value: ip_address(other_value).is_private,
-            {
-                other_value
-                    for other_node in repo.nodes
-                    if other_node.metadata.get(f'dns/{name}.{zone}/{type}', [])
-                    for other_value in other_node.metadata.get(f'dns/{name}.{zone}/{type}')
-            }
+            _values_from_all_nodes(type, name, zone),
         )):
             return True
     else:
@@ -22,11 +24,6 @@ def record_matches_view(value, type, name, zone, view, metadata, repo):
             return True
         elif not list(filter(
             lambda other_value: ip_address(other_value).is_global,
-            {
-                other_value
-                    for other_node in repo.nodes
-                    if other_node.metadata.get(f'dns/{name}.{zone}/{type}', [])
-                    for other_value in other_node.metadata.get(f'dns/{name}.{zone}/{type}')
-            }
+            _values_from_all_nodes(type, name, zone),
         )):
             return True

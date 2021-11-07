@@ -1,6 +1,7 @@
 from ipaddress import ip_interface
 from json import dumps
 h = repo.libs.hashable.hashable
+repo.libs.bind.repo = repo
 
 defaults = {
     'apt': {
@@ -103,7 +104,7 @@ def collect_records(metadata):
 
                 for type, values in records.items():                    
                     for value in values:
-                        if repo.libs.bind.record_matches_view(value, type, name, zone, view_name, metadata, repo):
+                        if repo.libs.bind.record_matches_view(value, type, name, zone, view_name, metadata):
                             views\
                                 .setdefault(view_name, {})\
                                 .setdefault('zones', {})\
