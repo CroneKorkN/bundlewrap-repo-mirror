@@ -75,11 +75,9 @@ files['/etc/bind/named.conf.local'] = {
         'type': node.metadata.get('bind/type'),
         'master_ip': master_ip,
         'views': dict(sorted(
-            master_node.metadata.get('bind/hostname'),
+            master_node.metadata.get('bind/views').items(),
             key=lambda e: (e[1].get('default', False), e[0]),
         )),
-        'zones': zones,
-        'hostname': node.metadata.get('bind/hostname'),
     },
     'owner': 'root',
     'group': 'bind',
@@ -107,8 +105,8 @@ for view_name, view_conf in node.metadata.get('bind/views').items():
         ],
     }
 
-    for zone, conf in view_conf['zones'].items():
-        files[f"/var/lib/bind/{view_name}/db.{zone}"] = {
+    for zone_name, zone_conf in view_conf['zones'].items():
+        files[f"/var/lib/bind/{view_name}/db.{zone_name}"] = {
             'owner': 'bind',
             'group': 'bind',
             'needs': [
@@ -122,19 +120,15 @@ for view_name, view_conf in node.metadata.get('bind/views').items():
             ],
         }
         #FIXME: slave doesnt get updated if db doesnt get rewritten on each apply
-        files[f"/var/lib/bind/{view_name}/db.{zone}"].update({
+        files[f"/var/lib/bind/{view_name}/db.{zone_name}"].update({
             'source': 'db',
             'content_type': 'mako',
-            'unless': f"test -f /var/lib/bind/{view_name}/db.{zone}" if conf.get('dynamic', False) else 'false',
+            'unless': f"test -f /var/lib/bind/{view_name}/db.{zone_name}" if zone_conf.get('dynamic', False) else 'false',
             'context': {
                 'serial': datetime.now().strftime('%Y%m%d%H'),
-                'records': list(filter(
-                    lambda record: record_matches_view(record, records, view_name),
-                    unique_records
-                )),
+                'records': zone_conf['records'],
                 'hostname': node.metadata.get('bind/hostname'),
                 'type': node.metadata.get('bind/type'),
-                'keys': node.metadata.get('bind/keys'),
             },
         })
 

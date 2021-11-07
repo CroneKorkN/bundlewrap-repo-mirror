@@ -7,11 +7,13 @@ acl "${view_name}" {
 % endfor
 
 % for view_name, view_conf in views.items():
-% for name, token in view_conf['keys'].items():
-key "${name}" {
+% for zone_name, zone_conf in view_conf['zones'].items():
+% if zone_conf.get('key', False):
+key "${view_name}.${zone_name}" {
   algorithm hmac-sha512;
-  secret "${token}";
+  secret "${zone_conf['key']}";
 };
+% endif
 % endfor
 % endfor
 
@@ -38,17 +40,16 @@ view "${view_name}" {
     8.8.8.8;
   };
 
-  % for zone, conf in sorted(zones.items()):
-  <% if view_name not in conf.get('views', ['internal', 'external']): continue %>
-  zone "${zone}" {
+  % for zone_name, zone_conf in sorted(view_conf['zones'].items()):
+  zone "${zone_name}" {
     type ${type};
     % if type == 'slave':
     masters { ${master_ip}; };
     % endif
-    % if type == 'master' and f'{view_name}.{zone}' in view_conf['keys']:
-    allow-update { key "${zone}"; };
+    % if type == 'master' and zone_conf.get('key', False):
+    allow-update { key "${view_name}.${zone_name}"; };
     % endif
-    file "/var/lib/bind/${view_name}/db.${zone}";
+    file "/var/lib/bind/${view_name}/db.${zone_name}";
   };
   % endfor
 
