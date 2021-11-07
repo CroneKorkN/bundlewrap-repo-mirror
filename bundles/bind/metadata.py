@@ -116,7 +116,7 @@ def collect_records(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/zones',
+    'bind/views',
 )
 def ns_records(metadata):
     if metadata.get('bind/type') == 'slave':
@@ -205,11 +205,13 @@ def generate_acl_entries_for_keys(metadata):
             'views': {
                 view_name: {
                     'acl': {
+                        # allow keys from this view
                         *{
                             f'key {view_name}.{zone_name}'
                                 for zone_name, zone_conf in view_conf['zones'].items()
                                 if zone_conf.get('key', False)
                         },
+                        # reject keys from other views
                         *{
                             f'! key {other_view_name}.{zone_name}'
                                 for other_view_name, other_view_conf in metadata.get('bind/views').items()
