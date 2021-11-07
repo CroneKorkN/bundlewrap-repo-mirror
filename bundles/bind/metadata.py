@@ -9,7 +9,6 @@ defaults = {
         },
     },
     'bind': {
-        'zones': {},
         'slaves': {},
         'views': {
             'internal': {
@@ -22,6 +21,7 @@ defaults = {
                     '192.168.0.0/16',
                 },
                 'keys': {},
+                'zones': {},
             },
             'external': {
                 'default': True,
@@ -31,6 +31,7 @@ defaults = {
                     'any',
                 },
                 'keys': {},
+                'zones': {},
             },
         },
         'keys': {
@@ -81,36 +82,40 @@ def collect_records(metadata):
     if metadata.get('bind/type') == 'slave':
         return {}
     
-    zones = {}
-    
-    for other_node in repo.nodes:
-        for fqdn, records in other_node.metadata.get('dns', {}).items():
-            matching_zones = sorted(
-                filter(
-                    lambda potential_zone: fqdn.endswith(potential_zone),
-                    metadata.get('bind/zones').keys()
-                ),
-                key=len,
-            )
-            if matching_zones:
-                zone = matching_zones[-1]
-            else:
-                continue
+    views = {}
 
-            name = fqdn[0:-len(zone) - 1]
+    for view_name, view_conf in metadata.get('bind/views').items():
+        for other_node in repo.nodes:
+            for fqdn, records in other_node.metadata.get('dns', {}).items():
+                matching_zones = sorted(
+                    filter(
+                        lambda potential_zone: fqdn.endswith(potential_zone),
+                        metadata.get('bind/zones').keys()
+                    ),
+                    key=len,
+                )
+                if matching_zones:
+                    zone = matching_zones[-1]
+                else:
+                    continue
 
-            for type, values in records.items():
-                for value in values:
-                    zones\
-                        .setdefault(zone, {})\
-                        .setdefault('records', set())\
-                        .add(
-                            h({'name': name, 'type': type, 'value': value})
-                        )
+                name = fqdn[0:-len(zone) - 1]
+
+                for type, values in records.items():                    
+                    for value in values:
+                        if repo.libs.bind.record_matches_view(value, type, name, zone, view_name, metadata, repo):
+                            views\
+                                .setdefault(view_name, {})\
+                                .setdefault('zones', {})\
+                                .setdefault(zone, {})\
+                                .setdefault('records', set())\
+                                .add(
+                                    h({'name': name, 'type': type, 'value': value})
+                                )
     
     return {
         'bind': {
-            'zones': zones,
+            'views': views,
         },
     }
 

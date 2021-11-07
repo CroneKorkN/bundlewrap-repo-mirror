@@ -64,12 +64,6 @@
         'letsencrypt': {
             'domains': {
                 'ckn.li': {},
-                'test6.ckn.li': {
-                    'aliases': {'www.test6.ckn.li'},
-                    'location': '/root/temp',
-                    'owner': 'telegraf',
-                    'reload': {'telegraf'},
-                },
                 'sublimity.de': {},
                 'freibrief.net': {},
             },
