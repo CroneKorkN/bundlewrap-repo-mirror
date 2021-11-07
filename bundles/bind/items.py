@@ -68,33 +68,15 @@ files['/etc/bind/named.conf.options'] = {
     ],
 }
 
-views = [
-    {
-        'name': 'internal',
-        'is_internal': True,
-        'acl': [
-            '127.0.0.1',
-            '10.0.0.0/8',
-            '169.254.0.0/16',
-            '172.16.0.0/12',
-            '192.168.0.0/16',
-        ]
-    },
-    {
-        'name': 'external', 
-        'is_internal': False,
-        'acl': [
-            'any',
-        ]
-    },
-]
-
 files['/etc/bind/named.conf.local'] = {
     'content_type': 'mako',
     'context': {
         'type': node.metadata.get('bind/type'),
         'master_ip': master_ip,
-        'views': views,
+        'views': dict(sorted(
+            node.metadata.get('bind/views').items(),
+            key=lambda e: (e[1].get('default', False), e[0]),
+        )),
         'zones': zones,
         'hostname': node.metadata.get('bind/hostname'),
         'keys': node.metadata.get('bind/keys'),
@@ -130,8 +112,8 @@ def record_matches_view(record, records, view):
                         return False
     return True
     
-for view in views:
-    directories[f"/var/lib/bind/{view['name']}"] = {
+for view_name, view_conf in node.metadata.get('bind/views').items():
+    directories[f"/var/lib/bind/{view_name}"] = {
         'owner': 'bind',
         'group': 'bind',
         'purge': True,
@@ -144,7 +126,7 @@ for view in views:
     }
 
     for zone, conf in zones.items():
-        if view['name'] not in conf.get('views', ['internal', 'external']):
+        if view_name not in conf.get('views', ['internal', 'external']):
             continue
         
         records = conf['records']
@@ -155,11 +137,11 @@ for view in views:
                 )
         ]
         
-        files[f"/var/lib/bind/{view['name']}/db.{zone}"] = {
+        files[f"/var/lib/bind/{view_name}/db.{zone}"] = {
             'owner': 'bind',
             'group': 'bind',
             'needs': [
-                f"directory:/var/lib/bind/{view['name']}",
+                f"directory:/var/lib/bind/{view_name}",
             ],
             'needed_by': [
                 'svc_systemd:bind9',
@@ -169,15 +151,15 @@ for view in views:
             ],
         }
         if True or node.metadata.get('bind/type') == 'master': #FIXME: slave doesnt get updated if db doesnt get rewritten on each apply
-            files[f"/var/lib/bind/{view['name']}/db.{zone}"].update({
+            files[f"/var/lib/bind/{view_name}/db.{zone}"].update({
                 'source': 'db',
                 'content_type': 'mako',
-                'unless': f"test -f /var/lib/bind/{view['name']}/db.{zone}" if conf.get('dynamic', False) else 'false',
+                'unless': f"test -f /var/lib/bind/{view_name}/db.{zone}" if conf.get('dynamic', False) else 'false',
                 'context': {
-                    'view': view['name'],
+                    'view': view_name,
                     'serial': datetime.now().strftime('%Y%m%d%H'),
                     'records': list(filter(
-                        lambda record: record_matches_view(record, records, view['name']),
+                        lambda record: record_matches_view(record, records, view_name),
                         unique_records
                     )),
                     'hostname': node.metadata.get('bind/hostname'),

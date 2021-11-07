@@ -4,22 +4,22 @@ set -o pipefail
 
 deploy_challenge() {
   echo "
-    server ${server}
+    server 10.0.10.2
     zone ${zone}.
     update add $1.${zone}. 60 IN TXT \"$3\"
     send
-  " | tee | nsupdate -y hmac-sha512:${zone}:${acme_key}
+  " | tee | nsupdate -y hmac-sha512:${acme_key_name}:${acme_key}
   
   sleep 10
 }
 
 clean_challenge() {
   echo "
-    server ${server}
+    server 10.0.10.2
     zone ${zone}.
     update delete $1.${zone}. TXT
     send
-  " | tee | nsupdate -y hmac-sha512:${zone}:${acme_key}
+  " | tee | nsupdate -y hmac-sha512:${acme_key_name}:${acme_key}
 }
 
 deploy_cert() {

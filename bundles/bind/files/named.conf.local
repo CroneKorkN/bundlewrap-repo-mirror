@@ -1,21 +1,31 @@
-% for view in views:
-acl "${view['name']}" {
-  ${' '.join(f'{e};' for e in view['acl'])}
+% for view_name, view_conf in views.items():
+acl "${view_name}" {
+  ${' '.join(f'{e};' for e in view_conf['acl'])}
 };
 % endfor
 
-% for name, token in keys.items():
+% for view_name, view_conf in views.items():
+% for name, token in view_conf['keys'].items():
 key "${name}" {
   algorithm hmac-sha512;
   secret "${token}";
 };
 % endfor
+% endfor
 
-% for view in views:
-view "${view['name']}" {
-  match-clients { ${view['name']}; };
+% for view_name, view_conf in views.items():
+view "${view_name}" {
+  match-clients {
+    % for rejected_client in view_conf['rejected_clients']:
+    ! ${rejected_client};
+    % endfor
+    % for key in view_conf['keys']:
+    ${key};
+    % endfor
+    ${view_name};
+  };
 
-  % if view['is_internal']:
+  % if view_conf['is_internal']:
   recursion yes;
   % else:
   recursion no;
@@ -33,7 +43,7 @@ view "${view['name']}" {
   };
 
   % for zone, conf in sorted(zones.items()):
-  <% if view['name'] not in conf.get('views', ['internal', 'external']): continue %>
+  <% if view_name not in conf.get('views', ['internal', 'external']): continue %>
   zone "${zone}" {
     type ${type};
     % if type == 'slave':
@@ -42,7 +52,7 @@ view "${view['name']}" {
     % if type == 'master' and zone in keys:
     allow-update { key "${zone}"; };
     % endif
-    file "/var/lib/bind/${view['name']}/db.${zone}";
+    file "/var/lib/bind/${view_name}/db.${zone}";
   };
   % endfor
 

@@ -11,7 +11,34 @@ defaults = {
     'bind': {
         'zones': {},
         'slaves': {},
-        'keys': {},
+        'views': {
+            'internal': {
+                'is_internal': True,
+                'acl': {
+                    '127.0.0.1',
+                    '10.0.0.0/8',
+                    '169.254.0.0/16',
+                    '172.16.0.0/12',
+                    '192.168.0.0/16',
+                },
+                'keys': {},
+                'rejected_keys': set(),
+            },
+            'external': {
+                'default': True,
+                'name': 'external', 
+                'is_internal': False,
+                'acl': {
+                    'any',
+                },
+                'keys': {},
+                'rejected_keys': set(),
+            },
+        },
+        'keys': {
+            'internal': {},
+            'external': {},
+        },
     },
     'telegraf': {
         'config': {
@@ -139,21 +166,59 @@ def slaves(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/keys',
+    'bind/views',
 )
 def generate_keys(metadata):
     return {
         'bind': {
-            'keys': {
-                zone: repo.libs.hmac.hmac_sha512(
-                    zone,
-                    str(repo.vault.random_bytes_as_base64_for(
-                        f"{metadata.get('id')} bind key {zone}",
-                        length=32,
-                    )),
-                )
-                    for zone, conf in metadata.get('bind/zones').items()
-                    if conf.get('dynamic', False)
-            },
+            'views': {
+                view: {
+                    'keys': {
+                        f'{view}.{zone}': repo.libs.hmac.hmac_sha512(
+                            zone,
+                            str(repo.vault.random_bytes_as_base64_for(
+                                f"{metadata.get('id')} bind {view} key {zone}",
+                                length=32,
+                            )),
+                        )
+                            for zone, conf in metadata.get('bind/zones').items()
+                            if conf.get('dynamic', False)
+                            and view in conf.get('views', metadata.get('bind/views').keys())
+                    }
+                }
+                    for view in metadata.get('bind/views')
+            }
+        },
+    }
+
+@metadata_reactor.provides(
+    'bind/views',
+)
+def collected_rejected_keys_from_other_views(metadata):
+    return {
+        'bind': {
+            'views': {
+                view: {
+                    'rejected_clients': {
+                        # reject other views keys
+                        *{
+                            key
+                                for other_view, other_conf in metadata.get('bind/views').items()
+                                if other_view != view
+                                and not other_conf.get('default')
+                                for key in other_conf['keys']
+                        },
+                        # reject other views acls
+                        *{
+                            other_view
+                                for other_view, other_conf in metadata.get('bind/views').items()
+                                if other_view != view
+                                and not other_conf.get('default')
+                        },
+                        
+                    }
+                }
+                    for view in metadata.get('bind/views')
+            }
         },
     }
