@@ -38,6 +38,7 @@ defaults = {
             },
         },
         'zones': {},
+        'keys': {},
     },
     'telegraf': {
         'config': {
@@ -174,29 +175,23 @@ def slaves(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/views',
+    'bind/keys',
 )
 def generate_keys(metadata):
     return {
         'bind': {
-            'views': {
-                view_name: {
-                    'zones': {
-                        zone_name: {
-                            'key': repo.libs.hmac.hmac_sha512(
-                                f'{view_name}.{zone_name}',
-                                str(repo.vault.random_bytes_as_base64_for(
-                                    f"{metadata.get('id')} bind {view_name} key {zone_name}",
-                                    length=32,
-                                )),
-                            )
-                        }
-                            for zone_name, zone_conf in view_conf['zones'].items()
-                            if zone_conf.get('dynamic', False)
-                    }
+            'keys': {
+                key: {
+                    'token':repo.libs.hmac.hmac_sha512(
+                        key,
+                        str(repo.vault.random_bytes_as_base64_for(
+                            f"{metadata.get('id')} bind key {key}",
+                            length=32,
+                        )),
+                    )
                 }
-                    for view_name, view_conf in metadata.get('bind/views').items()
             }
+                for key in metadata.get('bind/keys')
         },
     }
 

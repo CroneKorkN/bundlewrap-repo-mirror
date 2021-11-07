@@ -1,3 +1,6 @@
+from ipaddress import ip_interface
+
+
 @metadata_reactor.provides(
     'dns',
 )
@@ -20,16 +23,35 @@ def acme_records(metadata):
 
 
 @metadata_reactor.provides(
+    'bind/acls/acme',
+    'bind/keys/acme',
     'bind/views/external/zones',
 )
 def acme_zone(metadata):
+    allowed_ips = {
+        str(ip_interface(other_node.metadata.get('network/internal/ipv4')).ip)
+            for other_node in repo.nodes
+            if other_node.metadata.get('letsencrypt/domains', {})
+    }
+    
     return {
         'bind': {
+            'acls': {
+                'acme': {
+                    'key acme',
+                    '!{ !{' + ' '.join(f'{ip};' for ip in sorted(allowed_ips)) + '}; any;}',
+                },
+            },
+            'keys': {
+                'acme': {},
+            },
             'views': {
                 'external': {
                     'zones': {
                         metadata.get('bind/acme_zone'): {
-                            'dynamic': True,
+                            'allow_update': {
+                                'acme',
+                            },
                         },
                     },
                 },

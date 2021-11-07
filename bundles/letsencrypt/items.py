@@ -30,8 +30,8 @@ files = {
         'context': {
             'server': ip_interface(acme_node.metadata.get('network/external/ipv4')).ip,
             'zone': acme_node.metadata.get('bind/acme_zone'),
-            'acme_key_name': 'external' + acme_node.metadata.get('bind/acme_zone'),
-            'acme_key': acme_node.metadata.get('bind/views/external/zones/'+acme_node.metadata.get('bind/acme_zone')+'/key'),
+            'acme_key_name': 'acme',
+            'acme_key': acme_node.metadata.get('bind/keys/acme/token'),
             'domains': node.metadata.get('letsencrypt/domains'),
         },
         'mode': '0755',

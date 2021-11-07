@@ -1,20 +1,16 @@
 % for acl_name, acl_content in acls.items():
 acl "${acl_name}" {
-  % for ac in sorted(acl_content, key=lambda e: (not e.startswith('!'), not e.startswith('key'))):
+  % for ac in sorted(acl_content, key=lambda e: (not e.startswith('!'), not e.startswith('key'), e)):
   ${ac};
   % endfor
 };
 % endfor
 
-% for view_name, view_conf in views.items():
-% for zone_name, zone_conf in view_conf['zones'].items():
-% if zone_conf.get('key', False):
-key "${view_name}.${zone_name}" {
+% for key_name, key_conf in sorted(keys.items()):
+key "${key_name}" {
   algorithm hmac-sha512;
-  secret "${zone_conf['key']}";
+  secret "${key_conf['token']}";
 };
-% endif
-% endfor
 % endfor
 
 % for view_name, view_conf in views.items():
@@ -46,8 +42,12 @@ view "${view_name}" {
     % if type == 'slave':
     masters { ${master_ip}; };
     % endif
-    % if type == 'master' and zone_conf.get('key', False):
-    allow-update { !{ !our-nets; any; }; key "${view_name}.${zone_name}"; };
+    % if zone_conf.get('allow_update', False):
+    allow-update {
+    % for allow_update in zone_conf['allow_update']:
+      ${allow_update};
+    % endfor
+    };
     % endif
     file "/var/lib/bind/${view_name}/db.${zone_name}";
   };

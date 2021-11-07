@@ -81,6 +81,7 @@ files['/etc/bind/named.conf.local'] = {
                     for view_name, view_conf in master_node.metadata.get('bind/views').items()
             },
         },
+        'keys': master_node.metadata.get('bind/keys'),
         'views': dict(sorted(
             master_node.metadata.get('bind/views').items(),
             key=lambda e: (e[1].get('default', False), e[0]),
@@ -130,7 +131,7 @@ for view_name, view_conf in node.metadata.get('bind/views').items():
         files[f"/var/lib/bind/{view_name}/db.{zone_name}"].update({
             'source': 'db',
             'content_type': 'mako',
-            'unless': f"test -f /var/lib/bind/{view_name}/db.{zone_name}" if zone_conf.get('dynamic', False) else 'false',
+            'unless': f"test -f /var/lib/bind/{view_name}/db.{zone_name}" if zone_conf.get('allow_update', False) else 'false',
             'context': {
                 'serial': datetime.now().strftime('%Y%m%d%H'),
                 'records': zone_conf['records'],
