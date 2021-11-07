@@ -9,7 +9,7 @@ key "${key_name}" {
 % endfor
 % endfor
 
-# ACL
+# ACLS
 
 % for acl_name, acl_content in acls.items():
 acl "${acl_name}" {

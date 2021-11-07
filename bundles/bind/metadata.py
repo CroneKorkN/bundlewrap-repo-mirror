@@ -57,13 +57,27 @@ defaults = {
 
 @metadata_reactor.provides(
     'bind/type',
+    'bind/master_ip',
+    'bind/slave_ips',
 )
-def type(metadata):
-    return {
-        'bind': {
-            'type': 'slave' if metadata.get('bind/master_node', None) else 'master',
+def master_slave(metadata):
+    if metadata.get('bind/master_node', None):
+        return {
+            'bind': {
+                'type': 'slave',
+                'master_ip': str(ip_interface(repo.get_node(metadata.get('bind/master_node')).metadata.get('network/external/ipv4')).ip),
+            }
         }
-    }
+    else:
+        return {
+            'bind': {
+                'type': 'master',
+                'slave_ips': {
+                    str(ip_interface(repo.get_node(slave).metadata.get('network/external/ipv4')).ip)
+                        for slave in metadata.get('bind/slaves')
+                }
+            }
+        }
 
 
 @metadata_reactor.provides(

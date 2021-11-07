@@ -1,6 +1,11 @@
 from ipaddress import ip_address, ip_interface
 from datetime import datetime
 
+if node.metadata.get('bind/type') == 'master':
+    master_node = node
+else:
+    master_node = repo.get_node(node.metadata.get('bind/master_node'))
+
 directories[f'/var/lib/bind'] = {
     'owner': 'bind',
     'group': 'bind',
@@ -37,24 +42,12 @@ files['/etc/bind/named.conf'] = {
     ],
 }
 
-if node.metadata.get('bind/type') == 'master':
-    master_node = node
-    master_ip = None
-    slave_ips = [
-        ip_interface(repo.get_node(slave).metadata.get('network/external/ipv4')).ip
-            for slave in node.metadata.get('bind/slaves')
-    ]
-else:
-    master_node = repo.get_node(node.metadata.get('bind/master_node'))
-    master_ip = ip_interface(repo.get_node(node.metadata.get('bind/master_node')).metadata.get('network/external/ipv4')).ip
-    slave_ips = []
-
 files['/etc/bind/named.conf.options'] = {
     'content_type': 'mako',
     'context': {
         'type': node.metadata.get('bind/type'),
-        'slave_ips': sorted(slave_ips),
-        'master_ip': master_ip,
+        'slave_ips': node.metadata.get('bind/slave_ips', []),
+        'master_ip': node.metadata.get('bind/master_ip', None),
     },
     'owner': 'root',
     'group': 'bind',
@@ -73,7 +66,7 @@ files['/etc/bind/named.conf.local'] = {
     'content_type': 'mako',
     'context': {
         'type': node.metadata.get('bind/type'),
-        'master_ip': master_ip,
+        'master_ip': node.metadata.get('bind/master_ip', None),
         'acls': {
             **master_node.metadata.get('bind/acls'),
             **{
@@ -99,7 +92,7 @@ files['/etc/bind/named.conf.local'] = {
     ],
 }
 
-for view_name, view_conf in node.metadata.get('bind/views').items():
+for view_name, view_conf in master_node.metadata.get('bind/views').items():
     directories[f"/var/lib/bind/{view_name}"] = {
         'owner': 'bind',
         'group': 'bind',
