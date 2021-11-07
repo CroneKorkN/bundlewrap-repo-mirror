@@ -70,7 +70,7 @@ files['/etc/bind/named.conf.local'] = {
         'acls': {
             **master_node.metadata.get('bind/acls'),
             **{
-                view_name: view_conf['acl']
+                view_name: view_conf['match_clients']
                     for view_name, view_conf in master_node.metadata.get('bind/views').items()
             },
         },

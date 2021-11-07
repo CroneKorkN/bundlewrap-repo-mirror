@@ -24,7 +24,7 @@ defaults = {
             'internal': {
                 'is_internal': True,
                 'keys': {},
-                'acl': {
+                'match_clients': {
                     'our-nets',
                 },
                 'zones': {},
@@ -33,7 +33,7 @@ defaults = {
                 'default': True,
                 'is_internal': False,
                 'keys': {},
-                'acl': {
+                'match_clients': {
                     'any',
                 },
                 'zones': {},
@@ -162,7 +162,7 @@ def ns_records(metadata):
                                     for nameserver in nameservers
                             } 
                         }
-                        for zone_name, zone_conf in view_conf['zones'].items()
+                            for zone_name, zone_conf in view_conf['zones'].items()
                     }
                 }
                     for view_name, view_conf in metadata.get('bind/views').items()
@@ -224,7 +224,7 @@ def generate_acl_entries_for_keys(metadata):
         'bind': {
             'views': {
                 view_name: {
-                    'acl': {
+                    'match_clients': {
                         # allow keys from this view
                         *{
                             f'key {key}'
