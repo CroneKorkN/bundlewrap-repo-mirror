@@ -213,9 +213,8 @@ def generate_acl_entries_for_keys(metadata):
                     'acl': {
                         # allow keys from this view
                         *{
-                            f'key {view_name}.{zone_name}'
-                                for zone_name, zone_conf in view_conf['zones'].items()
-                                if zone_conf.get('key', False)
+                            f'key {key}'
+                                for key in view_conf['keys']
                         },
                         # reject keys from other views
                         *{
@@ -227,7 +226,6 @@ def generate_acl_entries_for_keys(metadata):
                     }
                 }
                     for view_name, view_conf in metadata.get('bind/views').items()
-                    if not view_conf.get('default')
             },
         },
     }
