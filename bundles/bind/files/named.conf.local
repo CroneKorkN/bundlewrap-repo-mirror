@@ -45,7 +45,7 @@ view "${view_name}" {
     % if type == 'slave':
     masters { ${master_ip}; };
     % endif
-    % if type == 'master' and zone in keys:
+    % if type == 'master' and f'{view_name}.{zone}' in view_conf['keys']:
     allow-update { key "${zone}"; };
     % endif
     file "/var/lib/bind/${view_name}/db.${zone}";
