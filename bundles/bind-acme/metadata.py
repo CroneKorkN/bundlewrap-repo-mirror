@@ -20,16 +20,18 @@ def acme_records(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/zones',
+    'bind/views/external/zones',
 )
 def acme_zone(metadata):
     return {
         'bind': {
-            'zones': {
-                metadata.get('bind/acme_zone'): {
-                    'dynamic': True,
-                    'views': ['external'],
-                    'records': set(),
+            'views': {
+                'external': {
+                    'zones': {
+                        metadata.get('bind/acme_zone'): {
+                            'dynamic': True,
+                        },
+                    },
                 },
             },
         },

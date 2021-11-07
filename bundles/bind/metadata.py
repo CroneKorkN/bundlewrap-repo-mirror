@@ -21,24 +21,18 @@ defaults = {
                     '172.16.0.0/12',
                     '192.168.0.0/16',
                 },
-                'keys': {},
                 'zones': {},
             },
             'external': {
                 'default': True,
-                'name': 'external', 
                 'is_internal': False,
                 'acl': {
                     'any',
                 },
-                'keys': {},
                 'zones': {},
             },
         },
-        'keys': {
-            'internal': {},
-            'external': {},
-        },
+        'zones': {},
     },
     'telegraf': {
         'config': {
@@ -77,7 +71,7 @@ def dns(metadata):
 
 
 @metadata_reactor.provides(
-    'bind/zones',
+    'bind/views',
 )
 def collect_records(metadata):
     if metadata.get('bind/type') == 'slave':
@@ -137,15 +131,20 @@ def ns_records(metadata):
     ]
     return {
         'bind': {
-            'zones': {
-                zone: {
-                    'records': {
-                        # FIXME: bw currently cant handle lists of dicts :(
-                        h({'name': '@', 'type': 'NS', 'value': f"{nameserver}."})
-                            for nameserver in nameservers
-                    } 
+            'views': {
+                view_name: {
+                    'zones': {
+                        zone_name: {
+                            'records': {
+                                # FIXME: bw currently cant handle lists of dicts :(
+                                h({'name': '@', 'type': 'NS', 'value': f"{nameserver}."})
+                                    for nameserver in nameservers
+                            } 
+                        }
+                        for zone_name, zone_conf in view_conf['zones'].items()
+                    }
                 }
-                    for zone in metadata.get('bind/zones').keys()
+                    for view_name, view_conf in metadata.get('bind/views').items()
             },
         },
     }
@@ -176,21 +175,22 @@ def generate_keys(metadata):
     return {
         'bind': {
             'views': {
-                view: {
-                    'keys': {
-                        f'{view}.{zone}': repo.libs.hmac.hmac_sha512(
-                            zone,
-                            str(repo.vault.random_bytes_as_base64_for(
-                                f"{metadata.get('id')} bind {view} key {zone}",
-                                length=32,
-                            )),
-                        )
-                            for zone, conf in metadata.get('bind/zones').items()
-                            if conf.get('dynamic', False)
-                            and view in conf.get('views', metadata.get('bind/views').keys())
+                view_name: {
+                    'zones': {
+                        zone_name: {
+                            'key': repo.libs.hmac.hmac_sha512(
+                                f'{view_name}.{zone_name}',
+                                str(repo.vault.random_bytes_as_base64_for(
+                                    f"{metadata.get('id')} bind {view_name} key {zone_name}",
+                                    length=32,
+                                )),
+                            )
+                        }
+                            for zone_name, zone_conf in view_conf['zones'].items()
+                            if zone_conf.get('dynamic', False)
                     }
                 }
-                    for view in metadata.get('bind/views')
+                    for view_name, view_conf in metadata.get('bind/views').items()
             }
         },
     }
@@ -199,39 +199,28 @@ def generate_keys(metadata):
 @metadata_reactor.provides(
     'bind/views',
 )
-def allow_keys_in_acl(metadata):
+def generate_acl_entries_for_keys(metadata):
     return {
         'bind': {
             'views': {
-                view: {
+                view_name: {
                     'acl': {
-                        f'key {key}'
-                            for key in conf['keys']
+                        *{
+                            f'key {view_name}.{zone_name}'
+                                for zone_name, zone_conf in view_conf['zones'].items()
+                                if zone_conf.get('key', False)
+                        },
+                        *{
+                            f'! key {other_view_name}.{zone_name}'
+                                for other_view_name, other_view_conf in metadata.get('bind/views').items()
+                                if other_view_name != view_name
+                                for zone_name, zone_conf in other_view_conf['zones'].items()
+                                if zone_conf.get('key', False)
+                        }
                     }
                 }
-                    for view, conf in metadata.get('bind/views').items()
-            }
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'bind/views',
-)
-def reject_keys_from_other_views(metadata):
-    return {
-        'bind': {
-            'views': {
-                view: {
-                    'acl': {
-                        f'! key {key}'
-                            for other_view, other_conf in metadata.get('bind/views').items()
-                            if other_view != view
-                            for key in other_conf['keys']
-                    }
-                }
-                    for view, conf in metadata.get('bind/views').items()
-                    if not conf.get('default')
-            }
+                    for view_name, view_conf in metadata.get('bind/views').items()
+                    if not view_conf.get('default')
+            },
         },
     }
