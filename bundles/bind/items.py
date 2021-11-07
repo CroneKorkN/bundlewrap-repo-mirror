@@ -74,6 +74,13 @@ files['/etc/bind/named.conf.local'] = {
     'context': {
         'type': node.metadata.get('bind/type'),
         'master_ip': master_ip,
+        'acls': {
+            **master_node.metadata.get('bind/acls'),
+            **{
+                view_name: view_conf['acl']
+                    for view_name, view_conf in master_node.metadata.get('bind/views').items()
+            },
+        },
         'views': dict(sorted(
             master_node.metadata.get('bind/views').items(),
             key=lambda e: (e[1].get('default', False), e[0]),

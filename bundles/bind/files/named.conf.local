@@ -1,6 +1,6 @@
-% for view_name, view_conf in views.items():
-acl "${view_name}" {
-  % for ac in sorted(view_conf['acl'], key=lambda e: (not e.startswith('!'), not e.startswith('key'))):
+% for acl_name, acl_content in acls.items():
+acl "${acl_name}" {
+  % for ac in sorted(acl_content, key=lambda e: (not e.startswith('!'), not e.startswith('key'))):
   ${ac};
   % endfor
 };
@@ -47,7 +47,7 @@ view "${view_name}" {
     masters { ${master_ip}; };
     % endif
     % if type == 'master' and zone_conf.get('key', False):
-    allow-update { key "${view_name}.${zone_name}"; };
+    allow-update { !{ !our-nets; any; }; key "${view_name}.${zone_name}"; };
     % endif
     file "/var/lib/bind/${view_name}/db.${zone_name}";
   };
