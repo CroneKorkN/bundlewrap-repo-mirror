@@ -193,6 +193,9 @@ def slaves(metadata):
     'bind/views',
 )
 def generate_keys(metadata):
+    if metadata.get('bind/type') == 'slave':
+        return {}
+
     return {
         'bind': {
             'views': {
@@ -220,6 +223,9 @@ def generate_keys(metadata):
     'bind/views',
 )
 def generate_acl_entries_for_keys(metadata):
+    if metadata.get('bind/type') == 'slave':
+        return {}
+
     return {
         'bind': {
             'views': {
