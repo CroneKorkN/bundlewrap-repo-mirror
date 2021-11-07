@@ -22,7 +22,6 @@ defaults = {
                     '192.168.0.0/16',
                 },
                 'keys': {},
-                'rejected_keys': set(),
             },
             'external': {
                 'default': True,
@@ -32,7 +31,6 @@ defaults = {
                     'any',
                 },
                 'keys': {},
-                'rejected_keys': set(),
             },
         },
         'keys': {
@@ -191,34 +189,43 @@ def generate_keys(metadata):
         },
     }
 
+
 @metadata_reactor.provides(
     'bind/views',
 )
-def collected_rejected_keys_from_other_views(metadata):
+def allow_keys_in_acl(metadata):
     return {
         'bind': {
             'views': {
                 view: {
-                    'rejected_clients': {
-                        # reject other views keys
-                        *{
-                            key
-                                for other_view, other_conf in metadata.get('bind/views').items()
-                                if other_view != view
-                                and not other_conf.get('default')
-                                for key in other_conf['keys']
-                        },
-                        # reject other views acls
-                        *{
-                            other_view
-                                for other_view, other_conf in metadata.get('bind/views').items()
-                                if other_view != view
-                                and not other_conf.get('default')
-                        },
-                        
+                    'acl': {
+                        f'key {key}'
+                            for key in conf['keys']
                     }
                 }
-                    for view in metadata.get('bind/views')
+                    for view, conf in metadata.get('bind/views').items()
+            }
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'bind/views',
+)
+def reject_keys_from_other_views(metadata):
+    return {
+        'bind': {
+            'views': {
+                view: {
+                    'acl': {
+                        f'! key {key}'
+                            for other_view, other_conf in metadata.get('bind/views').items()
+                            if other_view != view
+                            for key in other_conf['keys']
+                    }
+                }
+                    for view, conf in metadata.get('bind/views').items()
+                    if not conf.get('default')
             }
         },
     }

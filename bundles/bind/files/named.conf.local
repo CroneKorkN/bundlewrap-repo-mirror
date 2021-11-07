@@ -1,6 +1,8 @@
 % for view_name, view_conf in views.items():
 acl "${view_name}" {
-  ${' '.join(f'{e};' for e in view_conf['acl'])}
+  % for ac in sorted(view_conf['acl'], key=lambda e: (not e.startswith('!'), not e.startswith('key'))):
+  ${ac};
+  % endfor
 };
 % endfor
 
@@ -16,12 +18,6 @@ key "${name}" {
 % for view_name, view_conf in views.items():
 view "${view_name}" {
   match-clients {
-    % for rejected_client in view_conf['rejected_clients']:
-    ! ${rejected_client};
-    % endfor
-    % for key in view_conf['keys']:
-    ${key};
-    % endfor
     ${view_name};
   };
 
