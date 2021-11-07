@@ -1,10 +1,4 @@
-% for acl_name, acl_content in acls.items():
-acl "${acl_name}" {
-  % for ac in sorted(acl_content, key=lambda e: (not e.startswith('!'), not e.startswith('key'), e)):
-  ${ac};
-  % endfor
-};
-% endfor
+# KEYS
 
 % for view_name, view_conf in views.items():
 % for key_name, key_conf in sorted(view_conf['keys'].items()):
@@ -14,6 +8,18 @@ key "${key_name}" {
 };
 % endfor
 % endfor
+
+# ACL
+
+% for acl_name, acl_content in acls.items():
+acl "${acl_name}" {
+  % for ac in sorted(acl_content, key=lambda e: (not e.startswith('!'), not e.startswith('key'), e)):
+  ${ac};
+  % endfor
+};
+% endfor
+
+# VIEWS
 
 % for view_name, view_conf in views.items():
 view "${view_name}" {
