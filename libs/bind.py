@@ -4,7 +4,7 @@ def _values_from_all_nodes(type, name, zone):
     return {
         value
             for node in repo.nodes
-            for value in node.metadata.get(f'dns/{name}.{zone}/{type}', [])
+            for value in node.metadata.get(f'dns/{name}{"." if name else ""}{zone}/{type}', [])
     }
 
 def record_matches_view(value, type, name, zone, view, metadata):
