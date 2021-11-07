@@ -28,7 +28,7 @@ files = {
     '/etc/dehydrated/hook.sh': {
         'content_type': 'mako',
         'context': {
-            'server': ip_interface(acme_node.metadata.get('network/external/ipv4')).ip,
+            'server': ip_interface(acme_node.metadata.get('network/internal/ipv4')).ip,
             'zone': acme_node.metadata.get('bind/acme_zone'),
             'acme_key_name': 'acme',
             'acme_key': acme_node.metadata.get('bind/keys/acme/token'),

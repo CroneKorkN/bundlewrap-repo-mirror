@@ -42,7 +42,7 @@ view "${view_name}" {
     % if type == 'slave':
     masters { ${master_ip}; };
     % endif
-    % if zone_conf.get('allow_update', False):
+    % if type == 'master' and zone_conf.get('allow_update', False):
     allow-update {
     % for allow_update in zone_conf['allow_update']:
       ${allow_update};

@@ -25,6 +25,7 @@ def acme_records(metadata):
 @metadata_reactor.provides(
     'bind/acls/acme',
     'bind/keys/acme',
+    'bind/views/internal/acl',
     'bind/views/external/zones',
 )
 def acme_zone(metadata):
@@ -46,6 +47,11 @@ def acme_zone(metadata):
                 'acme': {},
             },
             'views': {
+                'internal': {
+                    'acl': {
+                        '! key acme',
+                    },
+                },
                 'external': {
                     'zones': {
                         metadata.get('bind/acme_zone'): {
