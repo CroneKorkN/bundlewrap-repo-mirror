@@ -1,6 +1,9 @@
 assert node.has_bundle('nginx')
 
+from ipaddress import ip_interface
+
 delegated = 'delegate_to_node' in node.metadata.get('letsencrypt')
+acme_node = repo.get_node(node.metadata.get('letsencrypt/acme_node'))
 
 directories = {
     '/etc/dehydrated/conf.d': {},
@@ -10,6 +13,9 @@ directories = {
 files = {
     '/etc/dehydrated/domains.txt': {
         'content_type': 'mako',
+        'context': {
+            'domains': node.metadata.get('letsencrypt/domains'),
+        },
         'triggers': {
             'action:letsencrypt_update_certificates',
         },
@@ -21,6 +27,16 @@ files = {
     },
     '/etc/dehydrated/hook.sh': {
         'content_type': 'mako',
+        'context': {
+            'server': ip_interface(acme_node.metadata.get('network/internal/ipv4')).ip,
+            'zone': acme_node.metadata.get('bind/acme_zone'),
+            'acme_key_name': 'acme',
+            'acme_key': acme_node.metadata.get('bind/views/external/keys/acme/token'),
+            'domains': node.metadata.get('letsencrypt/domains'),
+        },
+        'mode': '0755',
+    },
+    '/etc/dehydrated/letsencrypt-ensure-some-certificate': {
         'mode': '0755',
     },
     '/etc/dehydrated/letsencrypt-ensure-some-certificate': {
@@ -29,7 +45,7 @@ files = {
 }
 
 actions['letsencrypt_update_certificates'] = {
-    'command': 'dehydrated --cron --accept-terms --challenge http-01',
+    'command': 'dehydrated --cron --accept-terms --challenge dns-01',
     'triggered': True,
     'skip': delegated,
     'needs': {
@@ -48,6 +64,6 @@ for domain in node.metadata.get('letsencrypt/domains').keys():
             'svc_systemd:nginx',
         },
         'triggers': {
-            'action:letsencrypt_update_certificates',
+           'action:letsencrypt_update_certificates',
         },
     }

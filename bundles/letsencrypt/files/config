@@ -3,3 +3,4 @@ BASEDIR=/var/lib/dehydrated
 WELLKNOWN="${BASEDIR}/acme-challenges"
 DOMAINS_TXT="/etc/dehydrated/domains.txt"
 HOOK="/etc/dehydrated/hook.sh"
+CA="https://acme-v02.api.letsencrypt.org/directory"
