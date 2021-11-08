@@ -10,6 +10,7 @@
         'dnsserver',
     ],
     'bundles': [
+        'bind-acme',
         'islamicstate.eu',
         'wireguard',
         'zfs',
@@ -31,18 +32,19 @@
         },
         'bind': {
             'hostname': 'resolver.name',
+            'acme_zone': 'acme.sublimity.de',
             'zones': {
-                'sublimity.de': {},
-                'freibrief.net': {},
-                'nadenau.net': {},
-                'naeder.net': {},
-                'rolfwerner.eu': {},
-                'wettengl.net': {},
-                'wingl.de': {},
-                'woodpipe.de': {},
-                'ckn.li': {},
-                'islamicstate.eu': {},
-                'hausamsilberberg.de': {},
+                'sublimity.de',
+                'freibrief.net',
+                'nadenau.net',
+                'naeder.net',
+                'rolfwerner.eu',
+                'wettengl.net',
+                'wingl.de',
+                'woodpipe.de',
+                'ckn.li',
+                'islamicstate.eu',
+                'hausamsilberberg.de',
             },
         },
         'dns': {
@@ -61,9 +63,9 @@
         },
         'letsencrypt': {
             'domains': {
-                'ckn.li': set(),
-                'sublimity.de': set(),
-                'freibrief.net': set(),
+                'ckn.li': {},
+                'sublimity.de': {},
+                'freibrief.net': {},
             },
         },
         'mailserver': {

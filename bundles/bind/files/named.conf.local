@@ -1,14 +1,33 @@
-% for view in views:
-acl "${view['name']}" {
-  ${' '.join(f'{e};' for e in view['acl'])}
+# KEYS
+
+% for view_name, view_conf in views.items():
+% for key_name, key_conf in sorted(view_conf['keys'].items()):
+key "${key_name}" {
+  algorithm hmac-sha512;
+  secret "${key_conf['token']}";
+};
+% endfor
+% endfor
+
+# ACLS
+
+% for acl_name, acl_content in acls.items():
+acl "${acl_name}" {
+  % for ac in sorted(acl_content, key=lambda e: (not e.startswith('!'), not e.startswith('key'), e)):
+  ${ac};
+  % endfor
 };
 % endfor
 
-% for view in views:
-view "${view['name']}" {
-  match-clients { ${view['name']}; };
+# VIEWS
 
-  % if view['is_internal']:
+% for view_name, view_conf in views.items():
+view "${view_name}" {
+  match-clients {
+    ${view_name};
+  };
+
+  % if view_conf['is_internal']:
   recursion yes;
   % else:
   recursion no;
@@ -25,13 +44,20 @@ view "${view['name']}" {
     8.8.8.8;
   };
 
-  % for zone in zones:
-  zone "${zone}" {
+  % for zone_name, zone_conf in sorted(view_conf['zones'].items()):
+  zone "${zone_name}" {
     type ${type};
-% if type == 'slave':
+    % if type == 'slave':
     masters { ${master_ip}; };
-% endif
-    file "/var/lib/bind/${view['name']}/db.${zone}";
+    % endif
+    % if type == 'master' and zone_conf.get('allow_update', False):
+    allow-update {
+    % for allow_update in zone_conf['allow_update']:
+      ${allow_update};
+    % endfor
+    };
+    % endif
+    file "/var/lib/bind/${view_name}/db.${zone_name}";
   };
   % endfor
 

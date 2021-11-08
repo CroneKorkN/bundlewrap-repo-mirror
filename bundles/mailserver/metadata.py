@@ -60,7 +60,9 @@ def letsencrypt(metadata):
     return {
         'letsencrypt': {
             'domains': {
-                metadata.get('mailserver/hostname'): set(),
+                metadata.get('mailserver/hostname'): {
+                    'reload': {'dovecot', 'postfix'},
+                },
             },
         },
     } 

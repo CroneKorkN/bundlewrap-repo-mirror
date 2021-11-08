@@ -17,5 +17,8 @@
                 },
             },
         },
+        'letsencrypt': {
+            'acme_node': 'htz.mails',
+        },
     }
 }
