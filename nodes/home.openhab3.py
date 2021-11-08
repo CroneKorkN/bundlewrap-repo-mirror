@@ -40,11 +40,6 @@
                 },
             },
         },
-        'letsencrypt': {
-            'domains': {
-                'test12.ckn.li': {},
-            }
-        },
         'java': {
             'version': 11,
         },
