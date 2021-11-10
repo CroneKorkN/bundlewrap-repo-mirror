@@ -14,4 +14,20 @@
         },
         'unit': 'degrees',
     },
+    'frequency': {
+        'stacked': False,
+        'queries': {
+            'cpu_frequency': {
+                'filters': {
+                    '_measurement': 'cpu_frequency',
+                    '_field': [
+                        'current',
+                    ],
+                },
+                'function': 'mean',
+            },
+        },
+        'unit': 'MHz',
+        'display_name': '__field.labels.cpu',
+    },
 }

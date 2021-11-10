@@ -14,7 +14,7 @@
     ],
     'metadata': {
         'FIXME_dont_touch_sshd': True,
-        'id': '0afcde75-95c8-4fbd-b4c2-8a0fcc92884a',
+        'id': '34199b24-4621-42f4-85ae-ec354f9c43e6',
         'network': {
             'internal': {
                 'interface': 'eth0',
