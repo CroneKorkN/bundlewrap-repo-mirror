@@ -15,5 +15,10 @@
         'grafana_rows': {
             'health',
         },
+        'zfs': {
+            'kernel_params': {
+                'zfs_txg_timeout': 300,
+            },
+        },
     },
 }

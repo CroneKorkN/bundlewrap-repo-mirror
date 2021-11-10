@@ -44,9 +44,15 @@ files = {
     }, 
     '/etc/nginx/sites-available': {
         'delete': True,
+        'needs': {
+            'pkg_apt:nginx',
+        },
     },
     '/etc/nginx/sites-enabled': {
         'delete': True,
+        'needs': {
+            'pkg_apt:nginx',
+        },
     },
 }
 

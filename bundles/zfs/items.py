@@ -8,6 +8,12 @@ files = {
     '/etc/cron.daily/zfs-auto-snapshot': {'delete': True},
     '/etc/cron.weekly/zfs-auto-snapshot': {'delete': True},
     '/etc/cron.monthly/zfs-auto-snapshot': {'delete': True},
+    '/etc/modprobe.d/zfs.conf': {
+        'content': '\n'.join(
+            f'option zfs {k}={v}'
+                for k, v in node.metadata.get('zfs/kernel_params').items()
+        ) + '\n',
+    },
 }
 
 actions = {

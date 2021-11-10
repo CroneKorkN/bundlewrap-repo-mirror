@@ -130,17 +130,6 @@
             'version': '1.5-rc',
             'installer': True,
         },
-        'users': {
-            'root': {
-                'authorized_users': {
-                    'root@home.server',
-                    'root@home.openhab3',
-                },
-                'authorized_keys': {
-                    'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHMKTJLw6Cb+MLt+9JFOkuo2QBpuA8EoTKOFpb3IFQHEq19YLMzOhcErWmzaRfiCnILhnwTQz0njS+n9Qu4aghk= root@mail.sublimity.de'
-                },
-            },
-        },
         'vm': {
             'cores': 2,
             'ram': 8096,

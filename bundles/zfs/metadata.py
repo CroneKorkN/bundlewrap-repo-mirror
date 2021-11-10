@@ -77,6 +77,7 @@ defaults = {
     'zfs': {
         'datasets': {},
         'pools': {},
+        'kernel_params': {},
     },
 }
 
