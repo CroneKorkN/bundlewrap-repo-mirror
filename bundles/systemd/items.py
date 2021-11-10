@@ -18,7 +18,7 @@ for name, unit in node.metadata.get('systemd/units').items():
                 'svc_systemd:systemd-networkd:restart',
             ],
         }
-    elif extension in ['timer', 'service', 'mount']:
+    elif extension in ['timer', 'service', 'mount', 'swap']:
         path = f'/etc/systemd/system/{name}'
         dependencies = {
             'triggers': [
