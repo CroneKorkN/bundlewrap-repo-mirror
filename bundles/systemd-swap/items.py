@@ -43,8 +43,9 @@ svc_systemd = {
             'action:initialize_swapfile',
         },
         'needs': {
+            'file:/swapfile',
+            'action:initialize_swapfile',
             'action:systemd-reload',
-            'action:create_swapfile',
         },
     },
 }
