@@ -7,11 +7,25 @@ defaults = {
     'systemd-journald': {
         'Storage': 'volatile',
     },
+    'telegraf': {
+        'config': {
+            'inputs': {
+                'exec': {
+                    h({
+                        'commands': ["/bin/bash -c 'expr $(cat /sys/class/thermal/thermal_zone0/temp) / 1000'"],
+                        'name_override': "cpu_temperature",
+                        'data_format': "value",
+                        'data_type': "integer",
+                    }),
+                },
+            },
+        },
+    },
 }
 
 
 @metadata_reactor.provides(
-    'telegraf/config',
+    'telegraf/config/agent',
 )
 def telegraf(metadata):
     return {
@@ -21,27 +35,9 @@ def telegraf(metadata):
                     'flush_interval': '30s',
                     'interval': '30s',
                 },
-                'inputs': {
-                    'exec': {
-                        h({
-                            'commands': ["/bin/bash -c 'expr $(cat /sys/class/thermal/thermal_zone0/temp) / 1000'"],
-                            'name_override': "cpu_temperature",
-                            'data_format': "value",
-                            'data_type': "integer",
-                        }),
-                        # h({
-                        #     'commands': [
-                        #         f'sudo /usr/local/share/icinga/plugins/smartctl',
-                        #     ],
-                        #     'data_format': 'influx',
-                        #     'interval': '20s',
-                        # }),
-                    },
-                },
             },
         },
     }
-
 
 
 @metadata_reactor.provides(

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+date=$(date --utc +%s%N)
+
+for cpu in $(cat /sys/devices/system/cpu/cpu0/cpufreq/affected_cpus)
+do
+  echo "cpu_frequency,cpu=$cpu mhz=$(expr $(cat /sys/devices/system/cpu/cpu$cpu/cpufreq/scaling_cur_freq) / 1000) $date"
+done

@@ -6,6 +6,7 @@
         'nextcloud',
         'monitored',
         'webserver',
+        'hardware',
     ],
     'bundles': [
         'gitea',
