@@ -33,12 +33,6 @@ def zfs(metadata):
 
     return {
         'zfs': {
-            'datasets': {
-                name: {
-                    'logbias': 'throughput',
-                }
-                    for name in metadata.get('zfs/datasets')
-            },
             'kernel_params': {
                 'zfs_txg_timeout': 300,
             },

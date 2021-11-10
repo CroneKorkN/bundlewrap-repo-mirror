@@ -30,7 +30,6 @@ if node.has_bundle('zfs'):
                 'mountpoint': '/var/lib/postgresql',
                 'recordsize': '8192',
                 'atime': 'off',
-                'logbias': 'throughput',
             },
         },
     }
