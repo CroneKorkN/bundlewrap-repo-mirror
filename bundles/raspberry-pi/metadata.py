@@ -4,10 +4,8 @@ defaults = {
     'grafana_rows': {
         'health',
     },
-    'systemd': {
-        'journald.conf': {
-            'Storage': 'volatile',
-        },
+    'systemd-journald': {
+        'Storage': 'volatile',
     },
 }
 

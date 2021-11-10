@@ -9,6 +9,7 @@
         'network',
         'ssh',
         'systemd',
+        'systemd-journald',
         'systemd-networkd',
         'systemd-mount',
         'systemd-timers',
