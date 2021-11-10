@@ -2,6 +2,7 @@ defaults = {
     'systemd': {
         'units': {},
         'services': {},
+        'journald.conf': {},
     }
 }
 

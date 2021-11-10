@@ -1,5 +1,20 @@
 from bundlewrap.utils.dicts import merge_dict
 
+files = {
+    '/etc/systemd/journald.conf.d/managed.conf': {
+        'content': repo.libs.systemd.generate_unitfile({
+                'Jorunal': node.metadata.get('systemd/journald.conf'),
+        }),
+        'triggers': {
+            'svc_systemd:systemd-journald:restart',
+        },
+    }
+}
+
+svc_systemd = {
+    'systemd-journald': {},
+}
+
 actions = {
      'systemd-reload': {
         'command': 'systemctl daemon-reload',

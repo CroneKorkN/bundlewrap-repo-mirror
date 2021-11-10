@@ -1,3 +1,5 @@
+h = repo.libs.hashable.hashable
+
 defaults = {
     'apt': {
         'packages': {
@@ -11,13 +13,13 @@ defaults = {
     'telegraf': {
         'config': {
             'inputs': {
-                'exec': [{
+                'exec': {h({
                     'commands': [
                         f'sudo /usr/local/share/icinga/plugins/smartctl',
                     ],
                     'data_format': 'influx',
                     'interval': '20s',
-                }],
+                })},
             },
         },
     },

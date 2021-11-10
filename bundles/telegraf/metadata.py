@@ -1,3 +1,5 @@
+h = repo.libs.hashable.hashable
+
 defaults = {
     'apt': {
         'packages': {
@@ -21,13 +23,13 @@ defaults = {
                 'round_interval': True,
             },
             'inputs': {
-                'cpu': [{
+                'cpu': {h({
                     'collect_cpu_time': False,
                     'percpu': True,
                     'report_active': False,
                     'totalcpu': True,
-                }],
-                'disk': [{
+                })},
+                'disk': {h({
                     'ignore_fs': [
                         'tmpfs',
                         'devtmpfs',
@@ -37,22 +39,22 @@ defaults = {
                         'aufs',
                         'squashfs',
                     ],
-                }],
-                'procstat': [{
+                })},
+                'procstat': {h({
                     'interval': '60s',
                     'pattern': '.',
                     'fieldpass': [
                         'cpu_usage',
                         'memory_rss',
                     ],
-                }],
-                'diskio': [{}],
-                'kernel': [{}],
-                'mem': [{}],
-                'processes': [{}],
-                'swap': [{}],
-                'system': [{}],
-                'net': [{}],
+                })},
+                'diskio': {h({})},
+                'kernel': {h({})},
+                'mem': {h({})},
+                'processes': {h({})},
+                'swap': {h({})},
+                'system': {h({})},
+                'net': {h({})},
             },
         },
     },
