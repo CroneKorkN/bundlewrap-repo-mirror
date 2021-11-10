@@ -1,4 +1,4 @@
-size = node.metadata.get('systemd-swap/size')
+size = node.metadata.get('systemd-swap')
 assert isinstance(size, int)
 
 actions = {
