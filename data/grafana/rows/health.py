@@ -12,6 +12,10 @@
                 'function': 'mean',
             },
         },
+        'legend': {
+            'displayMode': 'hidden',
+        },
+        'tooltip': 'multi',
         'unit': 'degrees',
     },
     'frequency': {
@@ -27,6 +31,10 @@
                 'function': 'mean',
             },
         },
+        'legend': {
+            'displayMode': 'hidden',
+        },
+        'tooltip': 'multi',
         'unit': 'MHz',
         'display_name': '__field.labels.cpu',
     },
