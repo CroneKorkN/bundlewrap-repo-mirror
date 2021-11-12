@@ -1,4 +1,4 @@
-bundlewrap>=4.13.0
+bundlewrap>=4.13.1
 pycryptodome
 PyNaCl
 PyYAML
