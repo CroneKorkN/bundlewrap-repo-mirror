@@ -28,35 +28,45 @@ def zfs(metadata):
             other_node.has_bundle('backup') and
             other_node.metadata.get('backup/server') == node.name
         ):
+            base_dataset = f"tank/{other_node.metadata.get('id')}"
+
             # container
-            datasets[f"tank/{other_node.metadata.get('id')}"] = {
+            datasets[base_dataset] = {
                 'mountpoint': None,
                 'readonly': 'on',
                 'backup': False,
+                'com.sun:auto-snapshot': 'false',
             }
+            
             # for rsync backups
-            datasets[f"tank/{other_node.metadata.get('id')}/fs"] = {
+            datasets[f'{base_dataset}/fs'] = {
                 'mountpoint': f"/mnt/backups/{other_node.metadata.get('id')}",
                 'readonly': 'off',
                 'backup': False,
+                'com.sun:auto-snapshot': 'true',
             }
+            
             # for zfs send/recv
             if other_node.has_bundle('zfs'):
+                
                 # base datasets for each tank
                 for pool in other_node.metadata.get('zfs/pools'):
-                    datasets[f"tank/{other_node.metadata.get('id')}/{pool}"] = {
+                    datasets[f'{base_dataset}/{pool}'] = {
                         'mountpoint': None,
                         'readonly': 'on',
                         'backup': False,
+                        'com.sun:auto-snapshot': 'false',
                     }
+                
                 # actual datasets
                 for path in other_node.metadata.get('backup/paths'):
                     for dataset, config in other_node.metadata.get('zfs/datasets').items():
                         if path == config.get('mountpoint'):
-                            datasets[f"tank/{other_node.metadata.get('id')}/{dataset}"] = {
+                            datasets[f'{base_dataset}/{dataset}'] = {
                                 'mountpoint': None,
                                 'readonly': 'on',
                                 'backup': False,
+                                'com.sun:auto-snapshot': 'false',
                             }
                             continue
 
