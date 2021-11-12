@@ -15,6 +15,12 @@
         'systemd-timers',
     ],
     'metadata': {
+        'systemd-timers': {
+            'trim': {
+                'command': '/usr/sbin/fstrim -v /',
+                'when': 'daily',
+            },
+        },
         'hosts': {
             '10.0.10.2': [
                 'resolver.name',
