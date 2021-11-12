@@ -28,7 +28,8 @@ def zfs(metadata):
             other_node.has_bundle('backup') and
             other_node.metadata.get('backup/server') == node.name
         ):
-            base_dataset = f"tank/{other_node.metadata.get('id')}"
+            id = other_node.metadata.get('id')
+            base_dataset = f'tank/{id}'
 
             # container
             datasets[base_dataset] = {
@@ -40,7 +41,7 @@ def zfs(metadata):
             
             # for rsync backups
             datasets[f'{base_dataset}/fs'] = {
-                'mountpoint': f"/mnt/backups/{other_node.metadata.get('id')}",
+                'mountpoint': f"/mnt/backups/{id}",
                 'readonly': 'off',
                 'backup': False,
                 'com.sun:auto-snapshot': 'true',
