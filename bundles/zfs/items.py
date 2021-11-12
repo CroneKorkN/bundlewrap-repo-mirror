@@ -55,5 +55,5 @@ for name, config in node.metadata.get('zfs/pools', {}).items():
                 },
             ],
         },
-        "autotrim": True,
+        "autotrim": False,
     }
