@@ -1,8 +1,16 @@
 defaults = {
     'apt': {
         'packages': {
-            'jq': {},
-            'rsync': {},
+            'jq': {
+                'needed_by': {
+                    'svc_systemd:backup.timer',
+                },
+            },
+            'rsync': {
+                'needed_by': {
+                    'svc_systemd:backup.timer',
+                },
+            },
         },
     },
     'backup': {

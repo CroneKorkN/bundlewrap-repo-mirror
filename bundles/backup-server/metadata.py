@@ -40,9 +40,16 @@ def zfs(metadata):
                 'readonly': 'off',
                 'backup': False,
             }
-            
             # for zfs send/recv
             if other_node.has_bundle('zfs'):
+                # base datasets for each tank
+                for pool in other_node.metadata.get('zfs/pools'):
+                    datasets[f"tank/{other_node.metadata.get('id')}/{pool}"] = {
+                        'mountpoint': None,
+                        'readonly': 'on',
+                        'backup': False,
+                    }
+                # actual datasets
                 for path in other_node.metadata.get('backup/paths'):
                     for dataset, config in other_node.metadata.get('zfs/datasets').items():
                         if path == config.get('mountpoint'):

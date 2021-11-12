@@ -1,9 +1,10 @@
 {
     'hostname': '10.0.0.17',
     'groups': [
-        'raspberry-pi',
+        'backup',
         'debian-11',
         'monitored',
+        'raspberry-pi',
         'webserver',
     ],
     'bundles': [
@@ -39,7 +40,7 @@
             'pools': {
                 'tank': {
                     'devices': [
-                        '/dev/sda',
+                        '/dev/mmcblk1p3',
                     ],
                 },
             },
