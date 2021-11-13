@@ -41,6 +41,16 @@ defaults = {
         'admin_user': 'admin',
         'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw'),
     },
+    'php': {
+        'post_max_size': '32G',
+        'www.conf': {
+            'env[hostname]': '$HOSTNAME',
+            'env[path]': '/usr/local/bin:/usr/bin:/bin',
+            'env[tmp]': '/tmp',
+            'env[tmpdir]': '/tmp',
+            'env[temp]': '/tmp',
+        },
+    },
     'postgresql': {
         'roles': {
             'nextcloud': {

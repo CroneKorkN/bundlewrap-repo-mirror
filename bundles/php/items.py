@@ -6,23 +6,35 @@ php_ini_context = {
 }
 
 files = {
+    f'/etc/php/{version}/cli/php.ini': {
+        'content_type': 'mako',
+        'context': php_ini_context,
+        'needs': {
+            f'pkg_apt:php{version}',
+            f'pkg_apt:php{version}-fpm',
+        },
+    },
     f'/etc/php/{version}/fpm/php.ini': {
         'content_type': 'mako',
         'context': php_ini_context,
         'needs': {
-            # "all php packages"
-            'pkg_apt:'
+            f'pkg_apt:php{version}',
+            f'pkg_apt:php{version}-fpm',
         },
         'triggers': {
             f'svc_systemd:php{version}-fpm:restart',
         },
     },
-    f'/etc/php/{version}/cli/php.ini': {
-        'content_type': 'mako',
-        'context': php_ini_context,
+    f'/etc/php/{version}/fpm/pool.d/www.conf': {
+        'content': repo.libs.ini.dumps({
+            'www': node.metadata.get('php/www.conf'),
+        }),
         'needs': {
-            # "all php packages"
-            'pkg_apt:'
+            f'pkg_apt:php{version}',
+            f'pkg_apt:php{version}-fpm',
+        },
+        'triggers': {
+            f'svc_systemd:php{version}-fpm:restart',
         },
     },
 }
