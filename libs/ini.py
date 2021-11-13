@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+import json
 
 def parse(text):
     config = ConfigParser()
@@ -17,7 +18,8 @@ class Writable():
 
 def dumps(dict):
     config = ConfigParser()
-    config.read_dict(dict)
+    sorted_dict = json.loads(json.dumps(dict, sort_keys=True))
+    config.read_dict(sorted_dict)
     writable = Writable()
     config.write(writable)
 
