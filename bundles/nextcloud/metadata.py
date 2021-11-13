@@ -44,11 +44,11 @@ defaults = {
     'php': {
         'post_max_size': '32G',
         'www.conf': {
-            'env[hostname]': '$HOSTNAME',
-            'env[path]': '/usr/local/bin:/usr/bin:/bin',
-            'env[tmp]': '/tmp',
-            'env[tmpdir]': '/tmp',
-            'env[temp]': '/tmp',
+            'env[HOSTNAME]': '$HOSTNAME',
+            'env[PATH]': '/usr/local/bin:/usr/bin:/bin',
+            'env[TMP]': '/tmp',
+            'env[TMPDIR]': '/tmp',
+            'env[TEMP]': '/tmp',
         },
     },
     'postgresql': {

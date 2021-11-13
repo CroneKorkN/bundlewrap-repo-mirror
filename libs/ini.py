@@ -1,8 +1,18 @@
 from configparser import ConfigParser
 import json
 
+class Writable():
+    data = ''
+    def write(self, line):
+        self.data += line
+
+class CaseSensitiveConfigParser(ConfigParser):
+    # dont make keys lowercase
+    def optionxform(self, value):
+        return value
+
 def parse(text):
-    config = ConfigParser()
+    config = CaseSensitiveConfigParser()
     config.read_string(text)
     
     return {
@@ -10,17 +20,13 @@ def parse(text):
             for section in config.sections()
     }
 
-class Writable():
-    data = ''
-
-    def write(self, line):
-        self.data += line
-
 def dumps(dict):
-    config = ConfigParser()
     sorted_dict = json.loads(json.dumps(dict, sort_keys=True))
-    config.read_dict(sorted_dict)
+
+    parser = CaseSensitiveConfigParser()
+    parser.read_dict(sorted_dict)
+
     writable = Writable()
-    config.write(writable)
+    parser.write(writable)
 
     return writable.data
