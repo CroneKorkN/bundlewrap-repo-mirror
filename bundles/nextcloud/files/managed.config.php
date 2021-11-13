@@ -26,6 +26,6 @@ $CONFIG = array (
   "memcache.locking" => "\\OC\\Memcache\\Redis",
   "memcache.distributed" => "\OC\Memcache\Redis",
   "redis" => [
-    "host" => "/var/run/redis-nextcloud/redis.sock",
+    "host" => "/var/run/redis/nextcloud.sock",
   ],
 );
