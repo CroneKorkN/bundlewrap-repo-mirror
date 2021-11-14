@@ -109,7 +109,7 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
     }
 
     for zone_name, zone_conf in view_conf['zones'].items():
-        files[f"/var/lib/bind/{view_name}/db.{zone_name}"] = {
+        files[f"/var/lib/bind/{view_name}/{zone_name}"] = {
             'owner': 'bind',
             'group': 'bind',
             'needs': [
@@ -123,10 +123,10 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
             ],
         }
         #FIXME: slave doesnt get updated if db doesnt get rewritten on each apply
-        files[f"/var/lib/bind/{view_name}/db.{zone_name}"].update({
+        files[f"/var/lib/bind/{view_name}/{zone_name}"].update({
             'source': 'db',
             'content_type': 'mako',
-            'unless': f"test -f /var/lib/bind/{view_name}/db.{zone_name}" if zone_conf.get('allow_update', False) else 'false',
+            'unless': f"test -f /var/lib/bind/{view_name}/{zone_name}" if zone_conf.get('allow_update', False) else 'false',
             'context': {
                 'serial': datetime.now().strftime('%Y%m%d%H'),
                 'records': zone_conf['records'],
