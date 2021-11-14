@@ -21,7 +21,7 @@
         },
         'bind': {
             'master_node': 'netcup.mails',
-            'hostname': 'second.resolver.name',
+            'hostname': 'secondary.resolver.name',
         },
         # 'postfix': {
         #     'master_node': 'netcup.mails',
