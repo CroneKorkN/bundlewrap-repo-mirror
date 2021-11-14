@@ -1,8 +1,7 @@
 {
-    'hostname': '162.55.188.157',
+    'hostname': '202.61.255.108',
     'groups': [
         'backup',
-        'hetzner-cloud',
         'debian-11',
         'mailserver',
         'monitored',
@@ -19,14 +18,14 @@
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
             'internal': {
-                'interface': 'ens10',
-                'ipv4': '10.0.10.2/32',
+                'interface': 'eth1',
+                'ipv4': '10.0.11.3/24',
             },
             'external': {
                 'interface': 'eth0',
-                'ipv4': '162.55.188.157/32',
-                'ipv6': '2a01:4f8:1c1c:4121::2/64',
-                'gateway4': '172.31.1.1',
+                'ipv4': '202.61.255.108/22',
+                'gateway4': '202.61.252.1',
+                'ipv6': '2a03:4000:55:a89::2/64',
                 'gateway6': 'fe80::1',
             }
         },
@@ -49,15 +48,15 @@
         },
         'dns': {
             'ckn.li': {
-                'A': ['162.55.188.157'],
+                'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::2'],
             },
             'sublimity.de': {
-                'A': ['162.55.188.157'],
+                'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::2'],
             },
             'freibrief.net': {
-                'A': ['162.55.188.157'],
+                'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::2'],
             },
         },
@@ -127,12 +126,12 @@
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
-            'version': '1.5-rc',
+            'version': '1.5.0',
             'installer': True,
         },
         'vm': {
-            'cores': 2,
-            'ram': 8096,
+            'cores': 4,
+            'ram': 16384,
         },
         'wireguard': {
             'my_ip': '172.30.0.1/24',
@@ -171,7 +170,7 @@
             'pools': {
                 'tank': {
                     'devices': [
-                        '/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi0-0-0-0-part2',
+                        '/dev/sda4',
                     ],
                 },
             },

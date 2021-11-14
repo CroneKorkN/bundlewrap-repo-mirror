@@ -2,12 +2,12 @@ from json import dumps
 from bundlewrap.metadata import MetadataJSONEncoder
 
 files = {
-    '/etc/cron.d/zfsutils-linux': {'delete': True},
-    '/etc/cron.d/zfs-auto-snapshot': {'delete': True},
-    '/etc/cron.hourly/zfs-auto-snapshot': {'delete': True},
-    '/etc/cron.daily/zfs-auto-snapshot': {'delete': True},
-    '/etc/cron.weekly/zfs-auto-snapshot': {'delete': True},
-    '/etc/cron.monthly/zfs-auto-snapshot': {'delete': True},
+    '/etc/cron.d/zfsutils-linux': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
+    '/etc/cron.d/zfs-auto-snapshot': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
+    '/etc/cron.hourly/zfs-auto-snapshot': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
+    '/etc/cron.daily/zfs-auto-snapshot': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
+    '/etc/cron.weekly/zfs-auto-snapshot': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
+    '/etc/cron.monthly/zfs-auto-snapshot': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
     '/etc/modprobe.d/zfs.conf': {
         'content': '\n'.join(
             f'option zfs {k}={v}'

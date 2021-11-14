@@ -22,10 +22,9 @@ directories = {
 }
 
 
-downloads[f'/tmp/roundcube-{version}.tar.gz'] = {
-    'url': f'https://github.com/roundcube/roundcubemail/releases/download/{version}/roundcubemail-{version}-complete.tar.gz',
-    'gpg_signature_url': '{url}.asc',
-    'gpg_pubkey_url': 'https://roundcube.net/download/pubkey.asc',
+files[f'/tmp/roundcube-{version}.tar.gz'] = {
+    'content_type': 'download',
+    'source': f'https://github.com/roundcube/roundcubemail/releases/download/{version}/roundcubemail-{version}-complete.tar.gz',
     'triggered': True,
 }
 actions['delete_roundcube'] = {
@@ -37,7 +36,7 @@ actions['extract_roundcube'] = {
     'unless': f'grep -q "Version {version}" /opt/roundcube/index.php',
     'preceded_by': [
         'action:delete_roundcube',
-        f'download:/tmp/roundcube-{version}.tar.gz',
+        f'file:/tmp/roundcube-{version}.tar.gz',
     ],
     'needs': [
         'directory:/opt/roundcube',
@@ -53,30 +52,28 @@ actions['chown_roundcube'] = {
 }
 
 
-files = {
-    '/opt/roundcube/config/config.inc.php': {
-        'content_type': 'mako',
-        'context': {
-            'installer': node.metadata.get('roundcube/installer'),
-            'product_name': node.metadata.get('roundcube/product_name'),
-            'des_key': node.metadata.get('roundcube/des_key'),
-            'database': node.metadata.get('roundcube/database'),
-            'plugins': node.metadata.get('roundcube/plugins'),
-        },
-        'needs': [
-            'action:chown_roundcube',
-        ],
+files['/opt/roundcube/config/config.inc.php'] = {
+    'content_type': 'mako',
+    'context': {
+        'installer': node.metadata.get('roundcube/installer'),
+        'product_name': node.metadata.get('roundcube/product_name'),
+        'des_key': node.metadata.get('roundcube/des_key'),
+        'database': node.metadata.get('roundcube/database'),
+        'plugins': node.metadata.get('roundcube/plugins'),
     },
-    '/opt/roundcube/plugins/password/config.inc.php': {
-        'source': 'password.config.inc.php',
-        'content_type': 'mako',
-        'context': {
-            'mailserver_db_password': node.metadata.get('mailserver/database/password'),
-        },
-        'needs': [
-            'action:chown_roundcube',
-        ],
+    'needs': [
+        'action:chown_roundcube',
+    ],
+}
+files['/opt/roundcube/plugins/password/config.inc.php'] = {
+    'source': 'password.config.inc.php',
+    'content_type': 'mako',
+    'context': {
+        'mailserver_db_password': node.metadata.get('mailserver/database/password'),
     },
+    'needs': [
+        'action:chown_roundcube',
+    ],
 }
 
 actions['composer_install'] = {

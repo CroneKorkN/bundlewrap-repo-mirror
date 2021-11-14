@@ -35,16 +35,18 @@ def zfs(metadata):
             datasets[base_dataset] = {
                 'mountpoint': None,
                 'readonly': 'on',
-                'backup': False,
+                'compression': 'lz4',
                 'com.sun:auto-snapshot': 'false',
+                'backup': False,
             }
             
             # for rsync backups
             datasets[f'{base_dataset}/fs'] = {
                 'mountpoint': f"/mnt/backups/{id}",
                 'readonly': 'off',
-                'backup': False,
+                'compression': 'lz4',
                 'com.sun:auto-snapshot': 'true',
+                'backup': False,
             }
             
             # for zfs send/recv
@@ -55,8 +57,9 @@ def zfs(metadata):
                     datasets[f'{base_dataset}/{pool}'] = {
                         'mountpoint': None,
                         'readonly': 'on',
-                        'backup': False,
+                        'compression': 'lz4',
                         'com.sun:auto-snapshot': 'false',
+                        'backup': False,
                     }
                 
                 # actual datasets
@@ -66,8 +69,9 @@ def zfs(metadata):
                             datasets[f'{base_dataset}/{dataset}'] = {
                                 'mountpoint': None,
                                 'readonly': 'on',
-                                'backup': False,
+                                'compression': 'lz4',
                                 'com.sun:auto-snapshot': 'false',
+                                'backup': False,
                             }
                             continue
 

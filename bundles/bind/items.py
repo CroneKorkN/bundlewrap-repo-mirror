@@ -10,6 +10,9 @@ directories[f'/var/lib/bind'] = {
     'owner': 'bind',
     'group': 'bind',
     'purge': True,
+    'needs': [
+        'pkg_apt:bind9',
+    ],
     'needed_by': [
         'svc_systemd:bind9',
     ],

@@ -38,7 +38,7 @@
         'wireguard': {
             'my_ip': '172.30.0.4/32',
             's2s': {
-                'htz.mails': {
+                'netcup.mails': {
                     'allowed_ips': [
                         '10.0.0.0/24',
                         '10.0.2.0/24',

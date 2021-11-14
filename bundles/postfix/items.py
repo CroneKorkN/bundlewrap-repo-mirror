@@ -83,6 +83,7 @@ if node.has_bundle('telegraf'):
         'command': 'setfacl -Rm g:telegraf:rX /var/spool/postfix',
         'unless': 'getfacl -a /var/spool/postfix | grep -q "^group:telegraf:r-x$"',
         'needs': [
+            'pkg_apt:acl',
             'svc_systemd:postfix',
         ],
     }
@@ -90,6 +91,7 @@ if node.has_bundle('telegraf'):
         'command': 'setfacl -dm g:telegraf:rX /var/spool/postfix',
         'unless': 'getfacl -d /var/spool/postfix | grep -q "^group:telegraf:r-x$"',
         'needs': [
+            'pkg_apt:acl',
             'svc_systemd:postfix',
         ],
     }

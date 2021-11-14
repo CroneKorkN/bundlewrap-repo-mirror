@@ -7,7 +7,7 @@
     'metadata': {
         'dns': {},
         'nameservers': {
-            '10.0.10.2',
+            '10.0.11.3',
         },
         'users': {
             'root': {
@@ -18,7 +18,7 @@
             },
         },
         'letsencrypt': {
-            'acme_node': 'htz.mails',
+            'acme_node': 'netcup.mails',
         },
     }
 }

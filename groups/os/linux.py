@@ -22,7 +22,7 @@
             },
         },
         'hosts': {
-            '10.0.10.2': [
+            '10.0.11.3': [
                 'resolver.name',
                 'first.resolver.name',
                 'second.resolver.name',

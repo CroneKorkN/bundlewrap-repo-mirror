@@ -5,6 +5,7 @@ directories = {
         'owner': 'postgres',
         'group': 'postgres',
         'needs': [
+            'pkg_apt:postgresql',
             'zfs_dataset:tank/postgresql',
         ],
         'needed_by': [
