@@ -143,7 +143,7 @@
                         '10.0.9.0/24',
                     ],
                 },
-                'netcup.secondary': {
+                'ovh.secondary': {
                     'allowed_ips': [
                         '10.0.11.0/24',
                     ],

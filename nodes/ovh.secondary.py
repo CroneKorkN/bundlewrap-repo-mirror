@@ -1,5 +1,5 @@
 {
-    'hostname': '46.38.240.85',
+    'hostname': '135.125.239.125',
     'groups': [
         'debian-11',
         'dnsserver',
@@ -9,18 +9,14 @@
         'wireguard',
     ],
     'metadata': {
-        'id': '890848b2-a900-4f74-ad5b-b811fbb4f0bc',
+        'id': 'd5080b1a-b310-48be-bd5a-02cfcecf0c90',
         'network': {
             'external': {
                 'interface': 'eth0',
-                'ipv4': '46.38.240.85/22',
-                'gateway4': '46.38.240.1',
-                'ipv6': '2a03:4000:7:534::2/64',
-                'gateway6': 'fe80::1',
-            },
-            'internal': {
-                'interface': 'eth1',
-                'ipv4': '10.0.11.2/24',
+                'ipv4': '135.125.239.125/32',
+                'gateway4': '135.125.238.1',
+                'ipv6': '2001:41d0:701:1100::3dea/64',
+                'gateway6': '2001:41d0:701:1100::1',
             },
         },
         'bind': {
