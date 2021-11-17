@@ -1,17 +1,23 @@
 from ipaddress import ip_interface
 
 defaults = {
-    'flask': {
-        'build-server' : {
-            'git_url': "https://git.sublimity.de/cronekorkn/build-server.git",
-            'port': 4000,
-            'app_module': 'build_server',
-            'user': 'build-server',
-            'group': 'build-server',
-            'timeout': 900,
-            'env': {
-                'CONFIG': '/etc/build-server.json',
-                'STRATEGIES_DIR': '/opt/build-server/strategies',
+    'systemd': {
+        'units': {
+            'build-server.service': {
+                'Unit': {
+                    'Description': 'build server',
+                    'After': 'network.target',
+                },
+                'Service': {
+                    'User': 'build-server',
+                    'Group': 'build-server',
+                    'Environment': 'STRATEGIES_DIR=/opt/build-server/strategies',
+                    'ExecStart': '/opt/build-server/build-server-crystal --port 4000',
+                    'Restart': 'always',
+                },
+                'Install': {
+                    'WantedBy': {'multi-user.target'},
+                },
             },
         },
     },
