@@ -15,6 +15,7 @@ cd ~
 rm -rf "$REPO_NAME"
 git clone "$CLONE_URL"
 cd "$REPO_NAME"
+shards install
 
 for ARCH in $(jq -r '.architectures | keys[]' <<< $CONFIG)
 do
