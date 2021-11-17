@@ -4,7 +4,7 @@ def column_width(column, table):
 %>\
 $TTL 600
 @   IN  SOA        ${hostname}. admin.${hostname}. (
-        2021070821 ;Serial
+        2021111709 ;Serial
         3600       ;Refresh
         200        ;Retry
         1209600    ;Expire

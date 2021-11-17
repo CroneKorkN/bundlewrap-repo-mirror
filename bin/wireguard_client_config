@@ -25,7 +25,7 @@ f'''[Interface]
 PrivateKey = {repo.libs.wireguard.privkey(data['peer_id'])}
 ListenPort = 51820
 Address = {data['peer_ip']}
-DNS = 8.8.8.8
+DNS = 172.30.0.1
 
 [Peer]
 PublicKey = {repo.libs.wireguard.pubkey(server_node.metadata.get('id'))}
