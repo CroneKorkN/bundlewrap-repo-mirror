@@ -12,6 +12,7 @@ defaults = {
                     'User': 'build-server',
                     'Group': 'build-server',
                     'Environment': 'STRATEGIES_DIR=/opt/build-server/strategies',
+                    'WorkingDirectory': '/var/lib/build-server',
                     'ExecStart': '/opt/build-server/build-server-crystal --port 4000',
                     'Restart': 'always',
                 },
