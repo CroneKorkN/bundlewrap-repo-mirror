@@ -8,10 +8,11 @@
         'webserver',
     ],
     'bundles': [
-        'zfs',
-        'openhab',
+        'build-agent',
         'java',
+        'openhab',
         'systemd-swap',
+        'zfs',
     ],
     'metadata': {
         'FIXME_dont_touch_sshd': True,

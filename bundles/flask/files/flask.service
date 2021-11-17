@@ -1,0 +1,14 @@
+[Unit]
+Description=flask application ${name}
+After=network.target
+
+[Service]
+% for key, value in env.items():
+Environment=${key}=${value}
+% endfor
+User=${user}
+Group=${group}
+ExecStart=/opt/${name}/venv/bin/gunicorn -w ${workers} -b ${host}:${port} ${app_module}:app
+
+[Install]
+WantedBy=multi-user.target

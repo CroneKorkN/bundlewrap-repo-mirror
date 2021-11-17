@@ -10,6 +10,7 @@
     ],
     'bundles': [
         'bind-acme',
+        'download-server',
         'islamicstate.eu',
         'wireguard',
         'zfs',
@@ -59,6 +60,9 @@
                 'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::2'],
             },
+        },
+        'download-server': {
+            'hostname': 'dl.sublimity.de',
         },
         'letsencrypt': {
             'domains': {

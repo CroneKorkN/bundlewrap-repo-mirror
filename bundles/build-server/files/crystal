@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -exu
+
+DOWNLOAD_SERVER="${download_server}"
+CONFIG=$(cat ${config_path})
+JSON="$1"
+ARGS="$2"
+REPO_NAME=$(jq -r .repository.name <<< $JSON)
+CLONE_URL=$(jq -r .repository.clone_url <<< $JSON)
+BUILD_FILE=$(jq -r .file <<< $ARGS)
+DATE=$(date --utc +%s)
+
+cd ~
+rm -rf "$REPO_NAME"
+git clone "$CLONE_URL"
+cd "$REPO_NAME"
+
+for ARCH in $(jq -r '.architectures | keys[]' <<< $CONFIG)
+do
+  TARGET=$(jq -r .architectures.$ARCH.target <<< $CONFIG)
+  IP=$(jq -r .architectures.$ARCH.ip <<< $CONFIG)
+  BUILD_CMD=$(crystal build "$BUILD_FILE" --cross-compile --target="$TARGET" --release -o "$REPO_NAME")
+
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$REPO_NAME.o" "build-agent@$IP:~"
+  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "build-agent@$IP" $BUILD_CMD
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "build-agent@$IP:~/$REPO_NAME" .
+  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "downloads@$DOWNLOAD_SERVER" mkdir -p "~/$REPO_NAME"
+  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$REPO_NAME" "downloads@$DOWNLOAD_SERVER:~/$REPO_NAME/$REPO_NAME-$ARCH-$DATE"
+  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "downloads@$DOWNLOAD_SERVER" ln -sf "$REPO_NAME-$ARCH-$DATE" "~/$REPO_NAME/$REPO_NAME-$ARCH-latest"
+done

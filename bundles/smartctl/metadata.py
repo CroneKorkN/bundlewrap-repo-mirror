@@ -24,6 +24,6 @@ defaults = {
         },
     },
     'sudoers': {
-        'telegraf': ['/usr/local/share/icinga/plugins/smartctl'],
+        'telegraf': {'/usr/local/share/icinga/plugins/smartctl'},
     },
 }

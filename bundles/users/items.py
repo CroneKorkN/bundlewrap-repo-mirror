@@ -3,8 +3,9 @@ for group, config in node.metadata.get('groups', {}).items():
 
 for name, config in node.metadata.get('users').items():
     directories[config['home']] = {
-        'owner': name,
-        'mode': '700',
+        'owner': config.get('home_owner', name),
+        'group': config.get('home_group', name),
+        'mode': config.get('home_mode', '700'),
     }
 
     files[f"{config['home']}/.ssh/id_{config['keytype']}"] = {
@@ -33,5 +34,5 @@ for name, config in node.metadata.get('users').items():
     }
 
     users[name] = config
-    for option in ['authorized_keys', 'authorized_users', 'privkey', 'pubkey', 'keytype']:
+    for option in ['authorized_keys', 'authorized_users', 'privkey', 'pubkey', 'keytype', 'home_owner', 'home_group', 'home_mode']:
         users[name].pop(option, None)

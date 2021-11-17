@@ -7,8 +7,10 @@
         'monitored',
         'webserver',
         'hardware',
+        'build-server',
     ],
     'bundles': [
+        'build-agent',
         'gitea',
         'gollum',
         'grafana',
@@ -30,6 +32,20 @@
                 'ipv4': '10.0.0.2/24',
                 'gateway4': '10.0.0.1',
             },
+        },
+        'build-server': {
+            'hostname': 'build.sublimity.de',
+            'architectures': {
+                'amd64': {
+                    'node': 'home.server',
+                    'target': 'x86_64-unknown-linux-gnu',
+                },
+                'arm64': {
+                    'node': 'home.openhab',
+                    'target': 'aarch64-unknown-linux-gnu',
+                },
+            },
+            'download_server': 'netcup.mails',
         },
         'gitea': {
             'version': '1.15.5',
