@@ -38,7 +38,6 @@
                 'freibrief.net',
                 'nadenau.net',
                 'naeder.net',
-                'rolfwerner.eu',
                 'wettengl.net',
                 'wingl.de',
                 'woodpipe.de',
@@ -80,10 +79,7 @@
                 'freibrief.net',
                 'nadenau.net',
                 'naeder.net',
-                'rolfwerner.eu',
                 'wettengl.net',
-                'wingl.de',
-                'woodpipe.de',
             },
         },
         'rspamd': {
