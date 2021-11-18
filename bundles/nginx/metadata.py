@@ -111,3 +111,42 @@ def letsencrypt(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts',
+)
+def basic_auth_passwords(metadata):
+    return {
+        'nginx': {
+            'vhosts': {
+                domain: {
+                    'context': {
+                        'basic_auth': {
+                            user: {
+                                'password': str(repo.vault.password_for('basic_auth'+domain+user))
+                            }
+                                for user in metadata.get(f'nginx/vhosts/{domain}/context/basic_auth')
+                        },
+                    },
+                }
+                    for domain, vhost in metadata.get('nginx/vhosts').items()
+                    if metadata.get(f'nginx/vhosts/{domain}/context/basic_auth', None)
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'nginx/htpasswd',
+)
+def htpasswd(metadata):
+    return {
+        'nginx': {
+            'htpasswd': {
+                repo.libs.htpasswd.line(name, data['password'], metadata.get('id')+domain, repo)
+                    for domain, vhost in metadata.get('nginx/vhosts').items()
+                    for name, data in metadata.get(f'nginx/vhosts/{domain}/context/basic_auth', {}).items()
+            },
+        },
+    }
