@@ -10,7 +10,7 @@
                     ],
                 },
                 'function': 'derivative',
-                'minimum': 1,
+                'minimum': 1024,
             },
         },
         'unit': 'bytes',

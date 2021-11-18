@@ -2,8 +2,6 @@ import tomlkit
 import json
 from bundlewrap.metadata import MetadataJSONEncoder
 
-arch = node.metadata.get('vm/architecture', 'amd64')
-
 files = {
     '/etc/telegraf/telegraf.conf': {
         'content': tomlkit.dumps(
@@ -19,7 +17,7 @@ files = {
     },
     '/usr/local/share/icinga/plugins/procio': {
         'content_type': 'download',
-        'source': f'https://dl.sublimity.de/telegraf-procio/telegraf-procio-{arch}-latest',
+        'source': f"https://dl.sublimity.de/telegraf-procio/telegraf-procio-{node.metadata.get('system/architecture')}-latest",
         'mode': '0755',
     },
 }
