@@ -46,16 +46,18 @@ view "${view_name}" {
 
   % for zone_name, zone_conf in sorted(view_conf['zones'].items()):
   zone "${zone_name}" {
-    type ${type};
-    % if type == 'slave':
+    % if type == 'slave' and zone_conf.get('allow_update', []):
+    type slave;
     masters { ${master_ip}; };
-    % endif
-    % if type == 'master' and zone_conf.get('allow_update', False):
+    % else:
+    type master;
+    % if zone_conf.get('allow_update', []):
     allow-update {
     % for allow_update in zone_conf['allow_update']:
       ${allow_update};
     % endfor
     };
+    % endif
     % endif
     file "/var/lib/bind/${view_name}/${zone_name}";
   };
