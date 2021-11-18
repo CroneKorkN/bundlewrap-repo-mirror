@@ -1,5 +1,9 @@
 from ipaddress import ip_address, ip_interface
 from datetime import datetime
+import json
+from bundlewrap.metadata import MetadataJSONEncoder
+from hashlib import sha3_512
+
 
 if node.metadata.get('bind/type') == 'master':
     master_node = node
@@ -109,31 +113,41 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
     }
 
     for zone_name, zone_conf in view_conf['zones'].items():
-        files[f"/var/lib/bind/{view_name}/{zone_name}"] = {
-            'owner': 'bind',
-            'group': 'bind',
-            'needs': [
-                f"directory:/var/lib/bind/{view_name}",
-            ],
-            'needed_by': [
-                'svc_systemd:bind9',
-            ],
-            'triggers': [
-                'svc_systemd:bind9:restart',
-            ],
-        }
-        #FIXME: slave doesnt get updated if db doesnt get rewritten on each apply
-        files[f"/var/lib/bind/{view_name}/{zone_name}"].update({
-            'source': 'db',
-            'content_type': 'mako',
-            'unless': f"test -f /var/lib/bind/{view_name}/{zone_name}" if zone_conf.get('allow_update', False) else 'false',
-            'context': {
-                'serial': datetime.now().strftime('%Y%m%d%H'),
-                'records': zone_conf['records'],
-                'hostname': node.metadata.get('bind/hostname'),
-                'type': node.metadata.get('bind/type'),
-            },
-        })
+        if node.metadata.get('bind/type') == 'master':
+            files[f"/var/lib/bind/{view_name}/{zone_name}"] = {
+                'source': 'db',
+                'content_type': 'mako',
+                'unless': f"test -f /var/lib/bind/{view_name}/{zone_name}" if zone_conf.get('allow_update', False) else 'false',
+                'context': {
+                    'serial': datetime.now().strftime('%Y%m%d%H'),
+                    'records': zone_conf['records'],
+                    'hostname': node.metadata.get('bind/hostname'),
+                    'type': node.metadata.get('bind/type'),
+                },
+                'owner': 'bind',
+                'group': 'bind',
+                'needed_by': [
+                    'svc_systemd:bind9',
+                ],
+                'triggers': [
+                    'svc_systemd:bind9:restart',
+                ],
+            }
+        else:
+            files[f"/var/lib/bind/{view_name}/{zone_name}"] = {
+                'content_type': 'any',
+                'owner': 'bind',
+                'group': 'bind',
+            }
+        
+        if node.metadata.get('bind/type') == 'slave':
+            files[f"/var/lib/bind/diff"] = {
+                'content': sha3_512(json.dumps(master_node.metadata.get('bind'), cls=MetadataJSONEncoder, sort_keys=True).encode()).hexdigest(),
+                'triggers': [
+                    'svc_systemd:bind9:restart',
+                ],
+            }
+        
 
 svc_systemd['bind9'] = {}
 
