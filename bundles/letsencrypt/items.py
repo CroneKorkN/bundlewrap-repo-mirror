@@ -67,3 +67,6 @@ for domain in node.metadata.get('letsencrypt/domains').keys():
            'action:letsencrypt_update_certificates',
         },
     }
+
+if node.has_bundle('dns'):
+    actions['letsencrypt_update_certificates']['needs'].add('svc_systemd:named:restart')
