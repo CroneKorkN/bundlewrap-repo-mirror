@@ -44,6 +44,7 @@
                 'ckn.li',
                 'islamicstate.eu',
                 'hausamsilberberg.de',
+                'wiegand.tel',
             },
         },
         'dns': {
@@ -80,6 +81,7 @@
                 'nadenau.net',
                 'naeder.net',
                 'wettengl.net',
+                'wiegand.tel',
             },
         },
         'rspamd': {
