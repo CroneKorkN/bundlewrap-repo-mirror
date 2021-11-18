@@ -9,8 +9,6 @@ deploy_challenge() {
     update add $1.${zone}. 60 IN TXT \"$3\"
     send
   " | tee | nsupdate -y hmac-sha512:${acme_key_name}:${acme_key}
-  
-  sleep 10
 }
 
 clean_challenge() {

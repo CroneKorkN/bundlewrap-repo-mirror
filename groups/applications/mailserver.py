@@ -4,6 +4,7 @@
         'dovecot',
         'letsencrypt',
         'mailserver',
+        'mailserver-autoconfig',
         'nginx',
         'php',
         'postfix',

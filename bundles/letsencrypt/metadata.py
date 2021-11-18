@@ -1,5 +1,3 @@
-from ipaddress import ip_interface
-
 defaults = {
     'apt': {
         'packages': {
