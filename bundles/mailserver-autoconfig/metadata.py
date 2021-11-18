@@ -65,11 +65,26 @@ def autoconfig(metadata):
             f'autoconfig.{domain}': {
                 'CNAME': {f"{metadata.get('mailserver/autoconfig_hostname')}."},
             },
-            f'_autodiscover._tcp.{domain}': {
-                'SRV': {f"10 10 443 {metadata.get('mailserver/autoconfig_hostname')}."},
-            },
             f'autodiscover.{domain}': {
                 'CNAME': {f"{metadata.get('mailserver/autoconfig_hostname')}."},
+            },
+            f'_autodiscover._tcp.{domain}': {
+                'SRV': {f"0 1 443 {metadata.get('mailserver/autoconfig_hostname')}."},
+            },
+            f'_smtp._tcp.{domain}': {
+                'SRV': {f"0 1 25 {metadata.get('mailserver/hostname')}."},
+            },
+            f'_smtps._tcp.{domain}': {
+                'SRV': {f"0 1 465 {metadata.get('mailserver/hostname')}."},
+            },
+            f'_submission._tcp.{domain}': {
+                'SRV': {f"0 1 587 {metadata.get('mailserver/hostname')}."},
+            },
+            f'_imap._tcp.{domain}': {
+                'SRV': {f"0 1 143 {metadata.get('mailserver/hostname')}."},
+            },
+            f'_imaps._tcp.{domain}': {
+                'SRV': {f"0 1 993 {metadata.get('mailserver/hostname')}."},
             },
         })
     
