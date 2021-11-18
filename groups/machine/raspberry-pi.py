@@ -5,4 +5,9 @@
     'bundles': {
         'raspberry-pi',
     },
+    'metadata': {
+        'system': {
+            'architecture': 'arm64',
+        },
+    },
 }

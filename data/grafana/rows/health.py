@@ -1,4 +1,25 @@
 {
+    'frequency': {
+        'stacked': True,
+        'queries': {
+            'cpu_frequency': {
+                'filters': {
+                    '_measurement': 'cpu_frequency',
+                    '_field': [
+                        'current',
+                    ],
+                },
+                'function': 'mean',
+            },
+        },
+        'legend': {
+            'displayMode': 'hidden',
+        },
+        'tooltip': 'multi',
+        'unit': 'MHz',
+        'display_name': '__field.labels.cpu',
+        'min': 0,
+    },
     'temperature': {
         'stacked': False,
         'queries': {
@@ -18,14 +39,14 @@
         'tooltip': 'multi',
         'unit': 'degrees',
     },
-    'frequency': {
+    'sensors': {
         'stacked': False,
         'queries': {
-            'cpu_frequency': {
+            'sensors': {
                 'filters': {
-                    '_measurement': 'cpu_frequency',
+                    '_measurement': 'sensors',
                     '_field': [
-                        'current',
+                        'temp_input',
                     ],
                 },
                 'function': 'mean',
@@ -35,7 +56,7 @@
             'displayMode': 'hidden',
         },
         'tooltip': 'multi',
-        'unit': 'MHz',
-        'display_name': '__field.labels.cpu',
+        'unit': 'degrees',
+        'display_name': '__field.labels.chip',
     },
 }

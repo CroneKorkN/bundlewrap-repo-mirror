@@ -1,4 +1,9 @@
 defaults = {
+    'apt': {
+        'packages': {
+            'lm-sensors': {},
+        },
+    },
     'grafana_rows': {
         'health',
     },
@@ -10,6 +15,9 @@ defaults = {
     'telegraf': {
         'config': {
             'inputs': {
+                'sensors': {repo.libs.hashable.hashable({
+                    'timeout': '2s',
+                })},
                 'exec': {
                     repo.libs.hashable.hashable({
                         'commands': ["sudo /usr/local/share/icinga/plugins/cpu_frequency"],

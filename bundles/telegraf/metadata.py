@@ -55,6 +55,13 @@ defaults = {
                 'swap': {h({})},
                 'system': {h({})},
                 'net': {h({})},
+                'exec': {h({
+                    'commands': [
+                        f'sudo /usr/local/share/icinga/plugins/procio',
+                    ],
+                    'data_format': 'influx',
+                    'interval': '20s',
+                })},
             },
         },
     },
@@ -66,6 +73,10 @@ defaults = {
         'net_io',
         'proc_cpu',
         'proc_ram',
+        'proc_io',
+    },
+    'sudoers': {
+        'telegraf': {'/usr/local/share/icinga/plugins/procio'},
     },
 }
 
