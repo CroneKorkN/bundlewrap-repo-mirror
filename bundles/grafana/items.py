@@ -36,7 +36,12 @@ directories = {
         'purge': True,
     },
     '/var/lib/grafana': {},
-    '/var/lib/grafana/dashboards': {},
+    '/var/lib/grafana/dashboards': {
+        'purge': True,
+        'triggers': [
+            'svc_systemd:grafana-server:restart',
+        ],
+    },
 }
 
 files = {
