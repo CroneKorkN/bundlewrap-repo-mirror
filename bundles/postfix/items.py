@@ -17,6 +17,7 @@ files = {
         'content_type': 'mako',
         'context': {
             'hostname': node.metadata.get('mailserver/hostname'),
+            'debug': node.metadata.get('mailserver/debug')
         },
         **file_options,
     },

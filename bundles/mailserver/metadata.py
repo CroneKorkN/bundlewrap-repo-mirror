@@ -4,6 +4,7 @@ database_password = repo.vault.password_for(f'{node.name} db mailserver')
 
 defaults = {
     'mailserver': {
+        'debug': False,
         'maildir': '/var/vmail',
         'database': {
             'host': '127.0.0.1', # dont use localhost

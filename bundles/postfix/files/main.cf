@@ -37,6 +37,9 @@ smtpd_tls_auth_only = yes
 smtpd_tls_cert_file = /var/lib/dehydrated/certs/${hostname}/fullchain.pem
 smtpd_tls_key_file = /var/lib/dehydrated/certs/${hostname}/privkey.pem
 smtp_tls_security_level = may
+% if debug:
+smtpd_tls_loglevel = 3
+% endif
 smtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
 smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
 
