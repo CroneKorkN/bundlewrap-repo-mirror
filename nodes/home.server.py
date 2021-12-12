@@ -81,6 +81,7 @@
             'ckn': {
                 'source': 'SofortUpload/AutoSort',
                 'destination': 'Bilder/Chronologie',
+                'unsortable': 'SofortUpload/Unsortable',
             },
         },
         'vm': {

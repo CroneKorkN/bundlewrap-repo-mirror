@@ -3,47 +3,58 @@
 USER="$1"
 SOURCEPATH="/var/lib/nextcloud/$1/files/$2"
 DESTINATIONPATH="/var/lib/nextcloud/$1/files/$3"
+UNSORTABLEPATH="/var/lib/nextcloud/$1/files/$4"
 
 echo "STARTING..."
+
+chown -R www-data:www-data "$SOURCEPATH"
+chmod -R 770 "$SOURCEPATH"
 
 SCAN="FALSE"
 IFS=$'\n'
 for f in `find "$SOURCEPATH" -iname *.PNG -o -iname *.JPG -o -iname *.CR2 -o -iname *.CR3 -o -iname *.MP4 -o -iname *.MOV`; do
+  SCAN="TRUE"
   echo "PROCESSING: $f"
   DATE=`exiftool "$f" | grep -m 1 "Create Date"`
   if ! echo "$DATE" | grep "Create Date" >/dev/null
   then
-    echo "SKIP: no 'Create Date' in exif ($f)"
-    continue
-  fi
-  SCAN="TRUE"
-  YEAR=`echo $DATE | cut -d':' -f2 | cut -c 2-`
-  MONTH=`echo $DATE | cut -d':' -f3`
-  DAY=`echo $DATE | cut -d':' -f4 | cut -d' ' -f1`
-  HOUR=`echo $DATE | cut -d':' -f4 | cut -d' ' -f2`
-  MINUTE=`echo $DATE | cut -d':' -f5`
-  SECOND=`echo $DATE | cut -d':' -f6`
-  HASH=`sha256sum "$f" | xxd -r -p | base64 | head -c 3 | tr '/+' '_-'`
-  EXT=`echo "${f##*.}" | tr '[:upper:]' '[:lower:]'`
-  if [[ "$EXT" = "cr2" ]] ||  [[ "$EXT" = "cr3" ]]
-  then
-    RAW="raw/"
+    RELPATH=$(realpath --relative-to="$SOURCEPATH" "$f")
+    DIRNAME=$(dirname "$UNSORTABLEPATH/$RELPATH")
+    echo "UNSORTABLE: $f"
+    mkdir -p "$DIRNAME"
+    mv "$f" "$DIRNAME"
   else
-    RAW=""
+    YEAR=`echo $DATE | cut -d':' -f2 | cut -c 2-`
+    MONTH=`echo $DATE | cut -d':' -f3`
+    DAY=`echo $DATE | cut -d':' -f4 | cut -d' ' -f1`
+    HOUR=`echo $DATE | cut -d':' -f4 | cut -d' ' -f2`
+    MINUTE=`echo $DATE | cut -d':' -f5`
+    SECOND=`echo $DATE | cut -d':' -f6`
+    SECOND=`echo $SECOND | cut -d'+' -f1` # remove timezone
+    HASH=`sha256sum "$f" | xxd -r -p | base64 | head -c 3 | tr '/+' '_-'`
+    EXT=`echo "${f##*.}" | tr '[:upper:]' '[:lower:]'`
+    if [[ "$EXT" = "cr2" ]] ||  [[ "$EXT" = "cr3" ]]
+    then
+      RAW="raw/"
+    else
+      RAW=""
+    fi
+    FILE="$DESTINATIONPATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
+    echo "DESTINATION: $FILE"
+    mkdir -p "$(dirname "$FILE")"
+    mv -v "$f" "$FILE"
   fi
-  FILE="$DESTINATIONPATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
-  echo "DESTINATION: $FILE"
-  mkdir -p "$(dirname "$FILE")"
-  mv -v "$f" "$FILE"
 done
 
 if [ "$SCAN" == "TRUE" ]; then
   echo "SCANNING..."
   # find "$SOURCEPATH/"* -type d -empty -delete >> /var/echo/nc-picsort.echo # nextcloud app bug when deleting folders
   chown -R www-data:www-data "$DESTINATIONPATH"
-  chmod -R 777 "$DESTINATIONPATH"
-  sudo -u www-data php /opt/nextcloud/occ files:scan $USER
-  sudo -u www-data php /opt/nextcloud/occ preview:generate-all $USER
+  chown -R www-data:www-data "$UNSORTABLEPATH"
+  chmod -R 770 "$DESTINATIONPATH"
+  chmod -R 770 "$UNSORTABLEPATH"
+  sudo -u www-data php /opt/nextcloud/occ files:scan "$USER"
+  sudo -u www-data php /opt/nextcloud/occ preview:generate-all "$USER"
 fi
 
 echo "FINISH."
