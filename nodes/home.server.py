@@ -23,6 +23,7 @@
         'wireguard',
         'zfs',
         'crystal',
+        'tasmota-charge',
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
@@ -82,6 +83,18 @@
                 'source': 'SofortUpload/AutoSort',
                 'destination': 'Bilder/Chronologie',
                 'unsortable': 'SofortUpload/Unsortable',
+            },
+        },
+        'tasmota-charge': {
+            'phone': {
+                'ip': '10.0.0.166',
+                'user': 'u0_q194',
+                'password': 'november',
+            },
+            'plug': {
+                'ip': '10.0.2.115',
+                'min': 45,
+                'max': 70,
             },
         },
         'vm': {

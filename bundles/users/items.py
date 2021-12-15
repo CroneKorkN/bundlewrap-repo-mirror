@@ -8,6 +8,12 @@ for name, config in node.metadata.get('users').items():
         'mode': config.get('home_mode', '700'),
     }
 
+    directories[f"{config['home']}/.ssh"] = {
+        'owner': config.get('home_owner', name),
+        'group': config.get('home_group', name),
+        'mode': '0700',
+    }
+
     files[f"{config['home']}/.ssh/id_{config['keytype']}"] = {
         'content': config['privkey'] + '\n',
         'owner': name,

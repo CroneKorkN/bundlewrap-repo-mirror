@@ -1,0 +1,27 @@
+#!/bin/bash
+
+PHONE_IP=${phone_ip}
+PHONE_USER=${phone_user}
+PLUG_IP=${plug_ip}
+MIN=${min}
+MAX=${max}
+
+AKKU=$(ssh -p 8022 $PHONE_USER@$PHONE_IP termux-battery-status | jq -r .percentage)
+echo "akku is at $AKKU%"
+
+PLUG_IS=$(curl -s "http://$PLUG_IP/cm?cmnd=Power" | jq -r .POWER)
+echo "plug is $PLUG_IS"
+
+if [[ $AKKU < $MIN ]] && [[ $PLUG_IS = OFF ]]
+then
+  TURN_PLUG=ON
+elif [[ $AKKU > $MAX ]] && [[ $PLUG_IS = ON ]]
+then
+  TURN_PLUG=OFF
+else
+  echo "nothing to do"
+  exit 0
+fi
+
+echo "turning plug $TURN_PLUG"
+curl -s "http://$PLUG_IP/cm?cmnd=Power%20$TURN_PLUG"
