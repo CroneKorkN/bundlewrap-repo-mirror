@@ -1,0 +1,18 @@
+#!/bin/bash
+
+PLUG_IP=${plug_ip}
+
+PLUG_IS=$(curl -s "http://$PLUG_IP/cm?cmnd=Power" | jq -r .POWER)
+
+if [[ $PLUG_IS = ON ]]
+then
+  STATE=1
+elif [[ $PLUG_IS = OFF ]]
+then
+  STATE=0
+else
+  echo "unknown state: '$PLUG_IS'"
+  exit 1
+fi
+
+echo "tasmota_charge,host=${node.name} state=$STATE $(date --utc +%s%N)"
