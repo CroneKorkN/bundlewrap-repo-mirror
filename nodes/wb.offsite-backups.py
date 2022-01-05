@@ -1,5 +1,5 @@
 {
-    'hostname': '192.168.178.20',
+    'hostname': '192.168.179.20',
     'groups': [
         'debian-11',
         'monitored',
@@ -16,8 +16,8 @@
         'network': {
             'internal': {
                 'interface': 'eth0',
-                'ipv4': '192.168.178.20/24',
-                'gateway4': '192.168.178.1',
+                'ipv4': '192.168.179.20/24',
+                'gateway4': '192.168.179.1',
             },
         },
         'users': {
