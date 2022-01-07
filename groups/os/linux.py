@@ -17,7 +17,7 @@
     'metadata': {
         'systemd-timers': {
             'trim': {
-                'command': '/usr/sbin/fstrim -v /',
+                'command': '/sbin/fstrim -v /',
                 'when': 'daily',
             },
         },
