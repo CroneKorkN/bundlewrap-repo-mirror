@@ -15,4 +15,10 @@ defaults = {
             # },
         },
     },
+    'systemd-timers': {
+        'letsencrypt': {
+            'command': '/usr/bin/dehydrated --cron --accept-terms --challenge dns-01',
+            'when': 'daily',
+        },
+    },
 }
