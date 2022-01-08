@@ -1,0 +1,8 @@
+#!/bin/bash
+
+date=$(date --utc +%s%N)
+
+for metric in TIMELEFT LOADPCT BCHARGE
+do
+  echo "apcupsd $metric=$(apcaccess -p $metric | cut -d' ' -f1) $date"
+done

@@ -10,6 +10,7 @@
         'build-server',
     ],
     'bundles': [
+        'apcupsd',
         'build-agent',
         'gitea',
         'gollum',
