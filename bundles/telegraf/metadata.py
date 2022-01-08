@@ -57,7 +57,7 @@ defaults = {
                 'net': {h({})},
                 'exec': {h({
                     'commands': [
-                        f'sudo /usr/local/share/icinga/plugins/procio',
+                        f'sudo /usr/local/share/telegraf/procio',
                     ],
                     'data_format': 'influx',
                     'interval': '20s',
@@ -76,7 +76,7 @@ defaults = {
         'proc_io',
     },
     'sudoers': {
-        'telegraf': {'/usr/local/share/icinga/plugins/procio'},
+        'telegraf': {'/usr/local/share/telegraf/procio'},
     },
 }
 

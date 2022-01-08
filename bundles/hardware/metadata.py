@@ -9,7 +9,7 @@ defaults = {
     },
     'sudoers': {
         'telegraf': {
-            '/usr/local/share/icinga/plugins/cpu_frequency',
+            '/usr/local/share/telegraf/cpu_frequency',
         },
     },
     'telegraf': {
@@ -20,7 +20,7 @@ defaults = {
                 })},
                 'exec': {
                     repo.libs.hashable.hashable({
-                        'commands': ["sudo /usr/local/share/icinga/plugins/cpu_frequency"],
+                        'commands': ["sudo /usr/local/share/telegraf/cpu_frequency"],
                         'name_override': "cpu_frequency",
                         'data_format': "influx",
                     }),

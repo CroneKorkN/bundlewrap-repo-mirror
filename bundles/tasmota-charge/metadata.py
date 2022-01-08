@@ -23,7 +23,7 @@ def telegraf(metadata):
                 'inputs': {
                     'exec': {
                         repo.libs.hashable.hashable({
-                            'commands': ["/usr/local/share/icinga/plugins/tasmota_charge"],
+                            'commands': ["/usr/local/share/telegraf/tasmota_charge"],
                             'name_override': "tasmota_charge",
                             'data_format': "influx",
                         }),

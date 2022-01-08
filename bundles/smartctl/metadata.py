@@ -15,7 +15,7 @@ defaults = {
             'inputs': {
                 'exec': {h({
                     'commands': [
-                        f'sudo /usr/local/share/icinga/plugins/smartctl',
+                        f'sudo /usr/local/share/telegraf/smartctl',
                     ],
                     'data_format': 'influx',
                     'interval': '20s',
@@ -24,6 +24,6 @@ defaults = {
         },
     },
     'sudoers': {
-        'telegraf': {'/usr/local/share/icinga/plugins/smartctl'},
+        'telegraf': {'/usr/local/share/telegraf/smartctl'},
     },
 }

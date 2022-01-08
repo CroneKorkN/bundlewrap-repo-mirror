@@ -15,7 +15,7 @@ files = {
             'svc_systemd:telegraf:restart',
         ],
     },
-    '/usr/local/share/icinga/plugins/procio': {
+    '/usr/local/share/telegraf/procio': {
         'content_type': 'download',
         'source': f"https://dl.sublimity.de/telegraf-procio/telegraf-procio-{node.metadata.get('system/architecture')}-latest",
         'mode': '0755',

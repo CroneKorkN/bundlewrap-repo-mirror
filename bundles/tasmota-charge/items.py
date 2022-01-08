@@ -11,7 +11,7 @@ files = {
             'max': node.metadata.get('tasmota-charge/plug/max'),
         }
     },
-    '/usr/local/share/icinga/plugins/tasmota_charge': {
+    '/usr/local/share/telegraf/tasmota_charge': {
         'content_type': 'mako',
         'source': 'telegraf-plugin',
         'mode': '0755',

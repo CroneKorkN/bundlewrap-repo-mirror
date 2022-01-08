@@ -1,5 +1,5 @@
 files = {
-    '/usr/local/share/icinga/plugins/smartctl': {
+    '/usr/local/share/telegraf/smartctl': {
         'source': 'telegraf_plugin',
         'content_type': 'mako',
         'mode': '0755',
