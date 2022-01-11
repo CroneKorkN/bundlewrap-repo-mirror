@@ -4,6 +4,9 @@ defaults = {
             'resolvconf': {
                 'installed': False,
             },
+            'openresolv': {
+                'installed': False,
+            },
         },
     },
 }
