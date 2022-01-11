@@ -33,3 +33,14 @@ for name, conf in node.metadata.get('dm-crypt').items():
         for pool, pool_conf in node.metadata.get('zfs/pools').items():
             if f'/dev/mapper/{name}' in pool_conf['devices']:
                 actions[f'dm-crypt_open_{name}']['needed_by'].add(f'zfs_pool:{pool}')
+
+            actions[f'zpool_import_{name}'] = {
+                'command': f"zpool import -d /dev/mapper/{name} {pool}",
+                'unless': f"zpool status {pool}",
+                'needs': {
+                    f"action:dm-crypt_open_{name}",
+                },
+                'needed_by': {
+                    f"zfs_pool:{pool}",
+                },
+            }
