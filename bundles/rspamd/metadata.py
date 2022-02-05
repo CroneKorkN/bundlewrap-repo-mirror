@@ -30,8 +30,7 @@ def nginx_vhost(metadata):
                 metadata.get('rspamd/hostname'): {
                     'content': 'nginx/proxy_pass.conf',
                     'context': {
-                        'target': 'http://localhost:9999',
-                        # 'target': 'http://localhost:11334',
+                        'target': 'http://localhost:11334',
                     },
                 },
             },
