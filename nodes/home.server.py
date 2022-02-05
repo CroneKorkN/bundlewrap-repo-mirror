@@ -18,6 +18,7 @@
         'gitea',
         'gollum',
         'grafana',
+        'icinga2',
         'influxdb2',
         'mirror',
         'mosquitto',
