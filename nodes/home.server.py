@@ -18,7 +18,7 @@
         'gitea',
 #        'gollum',
         'grafana',
-        'grub',
+        'icinga2',
         'influxdb2',
         'mirror',
         'postgresql',
