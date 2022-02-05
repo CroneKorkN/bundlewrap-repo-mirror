@@ -77,7 +77,7 @@
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
-            'version': '21.0.5',
+            'version': '23.0.0',
         },
         'nextcloud-picsort': {
             'ckn': {
