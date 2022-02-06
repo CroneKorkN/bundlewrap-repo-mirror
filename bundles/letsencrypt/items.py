@@ -39,9 +39,6 @@ files = {
     '/etc/dehydrated/letsencrypt-ensure-some-certificate': {
         'mode': '0755',
     },
-    '/etc/dehydrated/letsencrypt-ensure-some-certificate': {
-        'mode': '0755',
-    },
 }
 
 actions['letsencrypt_update_certificates'] = {
