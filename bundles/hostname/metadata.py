@@ -9,6 +9,15 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'hostname_file',
+)
+def hostname_file(metadata):
+    return {
+        'hostname_file': node.metadata.get('hostname_file', '/etc/hostname'),
+    }
+
+
+@metadata_reactor.provides(
     'dns',
 )
 def dns(metadata):

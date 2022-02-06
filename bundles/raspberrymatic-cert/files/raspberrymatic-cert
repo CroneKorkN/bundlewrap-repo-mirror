@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cat /var/lib/dehydrated/certs/${domain}/privkey.pem /var/lib/dehydrated/certs/${domain}/cert.pem ${'\\'}
+  | ssh -o StrictHostKeyChecking=no root@${hostname} 'cat > /etc/config/server.pem' ${'\\'}
+  && ssh -o StrictHostKeyChecking=no root@${hostname} 'chmod 600 /etc/config/server.pem' ${'\\'}
+  && ssh -o StrictHostKeyChecking=no root@${hostname} '/etc/init.d/S50lighttpd reload' ${'\\'}

@@ -8,11 +8,13 @@
         'locale',
         'network',
         'ssh',
+        'sudo',
         'systemd',
         'systemd-journald',
         'systemd-networkd',
         'systemd-mount',
         'systemd-timers',
+        'zsh',
     ],
     'metadata': {
         'systemd-timers': {
@@ -26,6 +28,11 @@
                 'resolver.name',
                 'secondary.resolver.name',
             ],
+        },
+        'users': {
+            'root': {
+                'shell': '/usr/bin/zsh',
+            },
         },
     },
 }

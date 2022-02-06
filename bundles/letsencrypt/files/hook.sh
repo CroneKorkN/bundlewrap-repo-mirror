@@ -43,6 +43,9 @@ deploy_cert() {
       % for service in sorted(conf.get('reload', [])):
       systemctl reload-or-restart ${service}
       % endfor
+      % for service in sorted(conf.get('start', [])):
+      systemctl start ${service}
+      % endfor
     ;;
   % endfor
   esac

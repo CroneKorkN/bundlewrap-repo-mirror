@@ -24,6 +24,7 @@
         'wireguard',
         'zfs',
         'crystal',
+        'raspberrymatic-cert',
         'tasmota-charge',
     ],
     'metadata': {
@@ -85,6 +86,10 @@
                 'destination': 'Bilder/Chronologie',
                 'unsortable': 'SofortUpload/Unsortable',
             },
+        },
+        'raspberrymatic-cert': {
+            'domain': 'homematic.ckn.li',
+            'node': 'home.homematic',
         },
         'tasmota-charge': {
             'phone': {
