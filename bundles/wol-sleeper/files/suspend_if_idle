@@ -1,7 +1,7 @@
 #!/bin/bash
 
 UPTIME=$(cat /proc/uptime | cut -d. -f1)
-MIN_UPTIME=$(expr 60 \* 10)
+MIN_UPTIME=$(expr 60 \* 20)
 if [[ "$UPTIME" -lt "$MIN_UPTIME" ]]
 then
   echo "ABORT: uptime ($UPTIME) lower than min ($MIN_UPTIME)"
@@ -21,7 +21,7 @@ do
   fi
 done
 
-LOGINS=$(who -u | grep pts\/ | wc -l)
+LOGINS=$(netstat -tnpa | grep 'ESTABLISHED.*sshd' | wc -l)
 if [[ "$LOGINS" -gt 0 ]]
 then
   echo "ABORT: $LOGINS user logins"
@@ -31,9 +31,7 @@ fi
 if [[ "$1" = now ]]
 then
   echo "SESPENDING"
-  sleep 10
   systemctl suspend
 else
   echo "WOULD SESPEND"
-  sleep 300
 fi
