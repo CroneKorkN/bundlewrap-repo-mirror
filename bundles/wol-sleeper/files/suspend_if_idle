@@ -22,7 +22,7 @@ do
 done
 
 LOGINS=$(who -u | grep pts\/ | wc -l)
-if ! [[ "$LOGINS" =~ "^0$" ]]
+if [[ "$LOGINS" -gt 0 ]]
 then
   echo "ABORT: $LOGINS user logins"
   exit 0
