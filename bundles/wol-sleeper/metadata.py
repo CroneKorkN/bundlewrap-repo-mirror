@@ -24,7 +24,7 @@ def wake_command(metadata):
     
     return {
         'wol-sleeper': {
-            'wake_command': f"ssh wol@{waker_hostname} 'wakeonlan {mac} && while ! ping {ip} -c1 -W3; do true; done'",
+            'wake_command': f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} 'wakeonlan {mac} && while ! ping {ip} -c1 -W3; do true; done'",
         },
     }
 
