@@ -1,10 +1,12 @@
 #!/bin/bash
 
-UPTIME=$(cat /proc/uptime | cut -d. -f1)
+WOKE=$(expr $(journalctl -t systemd-sleep -b 0 -o json MESSAGE="System resumed." -n1 | jq -r .__REALTIME_TIMESTAMP) / 1000000)
+NOW=$(date +%s)
+UPTIME=$(expr $NOW - $WOKE)
 MIN_UPTIME=$(expr 60 \* 20)
 if [[ "$UPTIME" -lt "$MIN_UPTIME" ]]
 then
-  echo "ABORT: uptime ($UPTIME) lower than min ($MIN_UPTIME)"
+  echo "ABORT: uptime ($UPTIME s) lower than minimum ($MIN_UPTIME s)"
   exit 0
 fi
 
