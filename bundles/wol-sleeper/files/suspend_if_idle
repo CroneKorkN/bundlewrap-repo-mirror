@@ -1,0 +1,35 @@
+#!/bin/bash
+
+UPTIME=$(cat /proc/uptime | cut -d. -f1)
+MIN_UPTIME=$(expr 60 \* 30)
+if [[ $UPTIME -lt $MIN_UPTIME ]]
+then
+  echo "ABORT: uptime ($UPTIME) lower than min ($MIN_UPTIME)"
+  exit 0
+fi
+
+for SERVICE in $(systemctl list-timers --no-pager --no-legend --state active -o json | jq -r '.[] | .activates')
+do
+  if systemctl is-active "$SERVICE" --quiet
+  then
+    echo "ABORT: service $SERVICE is running by timer"
+    exit 0
+  fi
+done
+
+LOGINS=$(who -u | grep pts\/ | wc -l)
+if ! [[ $LOGINS =~ "^0$" ]]
+then
+  echo "ABORT: $LOGINS user logins"
+  exit 0
+fi
+
+if [[ $1 = now ]]
+then
+  echo "SESPENDING"
+  sleep 10
+  systemctl suspend
+else
+  echo "WOULD SESPEND"
+  sleep 300
+fi

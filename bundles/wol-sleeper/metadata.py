@@ -1,5 +1,17 @@
 from ipaddress import ip_interface
 
+@metadata_reactor.provides(
+    'systemd-timers/suspend-if-idle',
+)
+def timer(metadata):
+    return {
+        'systemd-timers': {
+            'suspend-if-idle': {
+                'command': '/opt/suspend_if_idle now',
+                'when': 'minutely',
+            },
+        },
+    }
 
 @metadata_reactor.provides(
     'wol-sleeper/wake_command',
