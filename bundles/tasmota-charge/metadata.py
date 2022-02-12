@@ -14,7 +14,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'telegraf/config/inpus/exec',
+    'telegraf/config/inputs/exec',
 )
 def telegraf(metadata):
     return {

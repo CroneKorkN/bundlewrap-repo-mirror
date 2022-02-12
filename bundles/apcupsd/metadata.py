@@ -8,7 +8,9 @@ defaults = {
         'ups',
     },
     'sudoers': {
-        'telegraf': ['/usr/local/share/telegraf/apcupsd'],
+        'telegraf': {
+            '/usr/local/share/telegraf/apcupsd',
+        },
     },
     'telegraf': {
         'config': {
