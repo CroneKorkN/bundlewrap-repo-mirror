@@ -1,5 +1,15 @@
 from ipaddress import ip_interface
 
+
+defaults = {
+    'apt': {
+        'packages': {
+            'jq': {},
+        },
+    },
+}
+
+
 @metadata_reactor.provides(
     'systemd-timers/suspend-if-idle',
 )
@@ -13,6 +23,7 @@ def timer(metadata):
             },
         },
     }
+
 
 @metadata_reactor.provides(
     'wol-sleeper/wake_command',
