@@ -13,6 +13,7 @@
     'bundles': [
         'apcupsd',
         'build-agent',
+        'crystal',
         'gitea',
         'gollum',
         'grafana',
@@ -22,11 +23,11 @@
         'postgresql',
         'redis',
         'smartctl',
-        'wireguard',
-        'zfs',
-        'crystal',
         'raspberrymatic-cert',
         'tasmota-charge',
+        'wireguard',
+        'wol-waker',
+        'zfs',
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',

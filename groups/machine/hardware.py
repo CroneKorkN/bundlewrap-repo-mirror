@@ -1,6 +1,5 @@
 {
     'bundles': { 
         'hardware',
-        'wol-sleeper',
     },
 }

@@ -29,8 +29,8 @@ def systemd(metadata):
                         'Type': 'oneshot',
                         'RemainAfterExit': 'yes',
                         'ExecStart': set(
-                            f"ethtool -s {conf['interface']} wol g"
-                                for itnerface in interfaces
+                            f"ethtool -s {interface} wol g"
+                                for interface in interfaces
                         ),
                     },
                     'Install': {

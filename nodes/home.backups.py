@@ -8,6 +8,7 @@
     ],
     'bundles': [
         'smartctl',
+        'wol-sleeper',
         'zfs',
         'zfs-mirror',
     ],
@@ -34,6 +35,9 @@
             '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG': {
                 'apm': 1,
             },
+        },
+        'wol-sleeper': {
+            'waker': 'home.server',
         },
         'zfs-mirror': {
             'server': 'wb.offsite-backups',
