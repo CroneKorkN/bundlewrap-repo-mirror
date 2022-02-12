@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# FIXME: inelegant
+% if wol_command:
+${wol_command}
+% endif
+
 for path in $(jq -r '.paths | .[]' < /etc/backup/config.json)
 do
   /opt/backup/backup_path "$path"
