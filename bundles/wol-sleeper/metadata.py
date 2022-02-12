@@ -18,7 +18,7 @@ def wake_command(metadata):
 
 @metadata_reactor.provides(
     'apt/packages/ethtool',
-    'systemd/units/enable-wol',
+    'systemd/units/enable-wol.service',
     'systemd/services/enable-wol.service',
 )
 def systemd(metadata):
@@ -40,9 +40,6 @@ def systemd(metadata):
                         'Type': 'oneshot',
                         'RemainAfterExit': 'yes',
                         'ExecStart': f'ethtool -s {interface} wol g',
-                    },
-                    'Install': {
-                        'WantedBy': 'multi-user.target',
                     },
                 },
             },
