@@ -4,10 +4,11 @@ from ipaddress import ip_interface
     'systemd-timers/suspend-if-idle',
 )
 def timer(metadata):
+    name = 'suspend-if-idle'#
     return {
         'systemd-timers': {
-            'suspend-if-idle': {
-                'command': '/opt/suspend_if_idle now',
+            name: {
+                'command': f'/opt/suspend_if_idle now {name}.service',
                 'when': 'minutely',
             },
         },
