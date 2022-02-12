@@ -20,7 +20,6 @@
                 'ipv4': '10.0.0.5/24',
                 'gateway4': '10.0.0.1',
                 'mac': 'd8:cb:8a:e7:be:c6',
-                'wol': True,
             },
         },
         'backup-server': {
@@ -38,6 +37,7 @@
             },
         },
         'wol-sleeper': {
+            'network': 'internal',
             'waker': 'home.server',
         },
         'zfs-mirror': {
