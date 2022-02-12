@@ -9,7 +9,7 @@ actions = {
 }
 
 for name, unit in node.metadata.get('systemd/units').items():
-    extension = name.split('.')[-1]
+    extension = name.split('.')[1]
 
     if extension in ['netdev', 'network']:
         path = f'/etc/systemd/network/{name}'
@@ -27,6 +27,9 @@ for name, unit in node.metadata.get('systemd/units').items():
         }
         if name in node.metadata.get('systemd/services'):
             dependencies['triggers'].append(f'svc_systemd:{name}:restart')
+    else:
+        raise Exception(f'unknown type {extension}')
+
 
     files[path] = {
         'content': repo.libs.systemd.generate_unitfile(unit),
@@ -39,3 +42,9 @@ for name, config in node.metadata.get('systemd/services').items():
             'action:systemd-reload',
         ],
     })
+
+files['/etc/systemd/logind.conf'] = {
+    'content': repo.libs.systemd.generate_unitfile({
+        'Login': node.metadata.get('systemd/logind'),
+    }),
+}

@@ -4,6 +4,7 @@
         'debian-11',
         'raspberry-pi',
         'monitored',
+        'autologin',
     ],
     'bundles': [
        'stromzaehler',

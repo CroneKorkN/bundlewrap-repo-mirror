@@ -2,6 +2,7 @@ defaults = {
     'systemd': {
         'units': {},
         'services': {},
+        'logind': {},
     }
 }
 
@@ -12,19 +13,22 @@ def units(metadata):
     units = {}
     
     for name, config in metadata.get('systemd/units').items():
-        extension = name.split('.')[-1]
+        if '/' in name:
+            continue
 
-        if extension not in ['timer', 'service', 'network', 'netdev', 'mount', 'swap']:
-            raise Exception(f'unknown extension {extension}')
+        type = name.split('.')[-1]
+
+        if type not in ['timer', 'service', 'network', 'netdev', 'mount', 'swap']:
+            raise Exception(f'unknown type {type}')
 
         if not config.get('Install/WantedBy'):
-            if extension == 'service':
+            if type == 'service':
                 units[name] = {
                     'Install': {
                         'WantedBy': {'multi-user.target'},
                     }
                 }
-            elif extension == 'timer':
+            elif type == 'timer':
                 units[name] = {
                     'Install': {
                         'WantedBy': {'timers.target'},

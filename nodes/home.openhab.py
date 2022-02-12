@@ -6,6 +6,7 @@
         'monitored',
         'raspberry-pi',
         'webserver',
+        'autologin',
     ],
     'bundles': [
         'build-agent',

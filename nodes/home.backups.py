@@ -4,6 +4,7 @@
         'debian-11',
         'backup-server',
         'monitored',
+        'autologin',
     ],
     'bundles': [
         'smartctl',

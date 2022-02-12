@@ -8,6 +8,7 @@
         'webserver',
         'hardware',
         'build-server',
+        'autologin',
     ],
     'bundles': [
         'apcupsd',
