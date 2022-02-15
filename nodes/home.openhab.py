@@ -1,12 +1,13 @@
 {
     'hostname': '10.0.0.17',
     'groups': [
+        'autologin',
         'backup',
         'debian-11',
+        'home',
         'monitored',
         'raspberry-pi',
         'webserver',
-        'autologin',
     ],
     'bundles': [
         'build-agent',

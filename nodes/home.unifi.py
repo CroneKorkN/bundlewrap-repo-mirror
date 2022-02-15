@@ -1,5 +1,8 @@
 {
     'dummy': True,
+    'groups': [
+        'home',
+    ],
     'metadata': {
         'id': '',
         'network': {

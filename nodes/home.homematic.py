@@ -1,8 +1,9 @@
 {
     'hostname': '10.0.2.8',
     'groups': [
-        'raspberrymatic',
         'autologin',
+        'home',
+        'raspberrymatic',
     ],
     'bundles': [
         'hostname',

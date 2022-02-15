@@ -1,10 +1,11 @@
 {
     'hostname': '10.0.0.15',
     'groups': [
+        'autologin',
         'debian-11',
+        'home',
         'raspberry-pi',
         'monitored',
-        'autologin',
     ],
     'bundles': [
        'stromzaehler',

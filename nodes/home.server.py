@@ -1,14 +1,15 @@
 {
     'hostname': '10.0.0.2',
     'groups': [
+        'autologin',
         'backup',
         'debian-11',
+        'home',
         'nextcloud',
         'monitored',
         'webserver',
         'hardware',
         'build-server',
-        'autologin',
     ],
     'bundles': [
         'apcupsd',

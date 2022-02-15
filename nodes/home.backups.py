@@ -1,10 +1,11 @@
 {
     'hostname': '10.0.0.5',
     'groups': [
-        'debian-11',
-        'backup-server',
-        'monitored',
         'autologin',
+        'backup-server',
+        'debian-11',
+        'home',
+        'monitored',
     ],
     'bundles': [
         'smartctl',
