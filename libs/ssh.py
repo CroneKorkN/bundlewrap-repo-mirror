@@ -1,7 +1,8 @@
 from base64 import b64decode, b64encode
+from hashlib import sha3_256
+
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, PublicFormat, NoEncryption
-from hashlib import sha3_256
 
 
 def generate_ed25519_key_pair(secret):
