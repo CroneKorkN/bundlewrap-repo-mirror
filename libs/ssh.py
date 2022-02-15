@@ -6,6 +6,9 @@ from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat
 
 
 def generate_ed25519_key_pair(secret):
+
+    # PRIVATE KEY
+    
     privkey_bytes = Ed25519PrivateKey.from_private_bytes(secret)
     
     nondeterministic_privatekey = privkey_bytes.private_bytes(
@@ -16,13 +19,22 @@ def generate_ed25519_key_pair(secret):
 
     # handle random 32bit number, occuring twice in a row
     nondeterministic_bytes = b64decode(''.join(nondeterministic_privatekey.split('\n')[1:-2]))
+    
+    # sanity check
+    if nondeterministic_bytes[98:102] != nondeterministic_bytes[102:106]:
+        raise Exception("checksums should be the same: whats going on here?")
+    
+    # replace random bytes with deterministic values
     random_bytes = sha3_224(secret).digest()[0:4]
     deterministic_bytes = nondeterministic_bytes[:98] + random_bytes + random_bytes + nondeterministic_bytes[106:]
+    
     deterministic_privatekey = '\n'.join([
         '-----BEGIN OPENSSH PRIVATE KEY-----',
         b64encode(deterministic_bytes).decode(),
         '-----END OPENSSH PRIVATE KEY-----',
     ])
+
+    # PUBLIC KEY
 
     public_key = privkey_bytes.public_key().public_bytes(
         encoding=Encoding.OpenSSH,
