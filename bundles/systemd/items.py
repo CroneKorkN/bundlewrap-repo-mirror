@@ -14,6 +14,9 @@ for name, unit in node.metadata.get('systemd/units').items():
     if extension in ['netdev', 'network']:
         path = f'/etc/systemd/network/{name}'
         dependencies = {
+            'needed_by': [
+                'svc_systemd:systemd-networkd',
+            ],
             'triggers': [
                 'svc_systemd:systemd-networkd:restart',
             ],
