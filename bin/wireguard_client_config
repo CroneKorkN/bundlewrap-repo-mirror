@@ -20,7 +20,7 @@ for peer in server_node.metadata.get('wireguard/s2s').values():
         if not ip_network(network).subnet_of(vpn_network):
             allowed_ips.append(ip_network(network))
 
-print(
+conf = \
 f'''[Interface]
 PrivateKey = {repo.libs.wireguard.privkey(data['peer_id'])}
 ListenPort = 51820
@@ -33,4 +33,9 @@ PresharedKey = {repo.libs.wireguard.psk(data['peer_id'], server_node.metadata.ge
 AllowedIPs = {', '.join(str(client_route) for client_route in sorted(allowed_ips))}
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
 PersistentKeepalive = 10'''
-)
+
+if input("as test or qrcode? [Tq]: ") in 'Qq':
+    import pyqrcode
+    print(pyqrcode.create(conf).terminal(quiet_zone=1))
+else:    
+    print(conf)

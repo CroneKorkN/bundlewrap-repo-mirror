@@ -2,3 +2,4 @@ bundlewrap>=4.13.6
 pycryptodome
 PyNaCl
 PyYAML
+pyqrcode
