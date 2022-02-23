@@ -28,6 +28,7 @@ def systemd(metadata):
                     'Description': f'{name} timer service',
                 },
                 'Service': {
+                    'User': config.get('user', 'root'),
                     'ExecStart': config['command'],
                 },
             },

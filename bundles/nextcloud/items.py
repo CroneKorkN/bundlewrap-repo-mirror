@@ -80,6 +80,15 @@ files = {
             'directory:/etc/nextcloud',
         ],
     },
+    '/opt/nextcloud/rescan': {
+        'owner': 'www-data',
+        'group': 'www-data',
+        'mode': '550',
+        'needs': [
+            'directory:/opt/nextcloud',
+            'action:extract_nextcloud',
+        ],
+    },
 }
 
 # SETUP

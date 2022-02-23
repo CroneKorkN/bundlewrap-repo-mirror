@@ -6,8 +6,9 @@ defaults = {
     },
     'systemd-timers': {
         'tasmota-charge': {
-            'command': f'/usr/bin/sudo -u tasmota-charge /opt/tasmota-charge',
+            'command': f'/opt/tasmota-charge',
             'when': 'minutely',
+            'user': 'tasmota-charge',
         },
     },
 }

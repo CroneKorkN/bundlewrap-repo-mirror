@@ -68,8 +68,14 @@ defaults = {
     },
     'systemd-timers': {
         'nextcloud-cron': {
-            'command': '/usr/bin/sudo -u www-data /usr/bin/php -f /opt/nextcloud/cron.php',
+            'command': '/usr/bin/php -f /opt/nextcloud/cron.php',
             'when': '*:0/5',
+            'user': 'www-data',
+        },
+        'nextcloud-rescan': {
+            'command': '/opt/nextcloud/rescan',
+            'when': 'Sun 00:00:00',
+            'user': 'www-data',
         },
     },
     'zfs': {

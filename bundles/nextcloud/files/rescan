@@ -1,0 +1,4 @@
+#!/bin/bash
+
+php /opt/nextcloud/occ files:scan-app-data
+php /opt/nextcloud/occ preview:generate-all
