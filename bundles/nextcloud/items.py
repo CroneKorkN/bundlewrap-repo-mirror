@@ -80,15 +80,6 @@ files = {
             'directory:/etc/nextcloud',
         ],
     },
-    '/opt/nextcloud/rescan': {
-        'owner': 'www-data',
-        'group': 'www-data',
-        'mode': '550',
-        'needs': [
-            'directory:/opt/nextcloud',
-            'action:extract_nextcloud',
-        ],
-    },
 }
 
 # SETUP
@@ -139,5 +130,17 @@ actions['nextcloud_add_missing_inidces'] = {
     'triggered': True,
     'triggered_by': [
         f'action:extract_nextcloud',
+    ],
+}
+
+# RESCAN
+
+files['/opt/nextcloud/rescan'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
+    'mode': '550',
+    'needs': [
+        'directory:/opt/nextcloud',
+        'action:extract_nextcloud',
     ],
 }
