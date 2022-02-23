@@ -114,10 +114,20 @@ actions['install_nextcloud'] = {
 
 # UPGRADE
 
+files['/opt/nextcloud/upgrade_status.php'] = {
+    'owner': 'www-data',
+    'group': 'www-data',
+    'mode': '640',
+    'needs': [
+        'action:extract_nextcloud',
+    ],
+}
+    
 actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
-    'unless': "! " + repo.libs.nextcloud.occ('status') + ' 2>&1 1>/dev/null | grep -q "Nextcloud or one of the apps require upgrade"',
+    'unless': 'sudo -u www-data php /opt/nextcloud/upgrade_status.php; test $? -ne 99',
     'needs': [
+        'file:/opt/nextcloud/upgrade_status.php',
         'action:install_nextcloud',
     ],
 }
@@ -140,7 +150,6 @@ files['/opt/nextcloud/rescan'] = {
     'group': 'www-data',
     'mode': '550',
     'needs': [
-        'directory:/opt/nextcloud',
         'action:extract_nextcloud',
     ],
 }
