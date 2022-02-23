@@ -73,7 +73,7 @@ defaults = {
             'user': 'www-data',
         },
         'nextcloud-rescan': {
-            'command': '/opt/nextcloud/rescan',
+            'command': '/opt/nextcloud_rescan',
             'when': 'Sun 00:00:00',
             'user': 'www-data',
         },

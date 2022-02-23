@@ -114,7 +114,8 @@ actions['install_nextcloud'] = {
 
 # UPGRADE
 
-files['/opt/nextcloud/upgrade_status.php'] = {
+files['/opt/nextcloud_upgrade_status.php'] = {
+    'source': 'upgrade_status.php',
     'owner': 'www-data',
     'group': 'www-data',
     'mode': '640',
@@ -127,7 +128,7 @@ actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
     'unless': 'sudo -u www-data php /opt/nextcloud/upgrade_status.php; test $? -ne 99',
     'needs': [
-        'file:/opt/nextcloud/upgrade_status.php',
+        'file:/opt/nextcloud_upgrade_status.php',
         'action:install_nextcloud',
     ],
 }
@@ -145,7 +146,8 @@ actions['nextcloud_add_missing_inidces'] = {
 
 # RESCAN
 
-files['/opt/nextcloud/rescan'] = {
+files['/opt/nextcloud_rescan'] = {
+    'source': 'rescan',
     'owner': 'www-data',
     'group': 'www-data',
     'mode': '550',
