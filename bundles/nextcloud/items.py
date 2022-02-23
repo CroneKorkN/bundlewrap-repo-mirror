@@ -97,7 +97,7 @@ actions['install_nextcloud'] = {
         admin_pass=node.metadata.get('nextcloud/admin_pass'),
         data_dir='/var/lib/nextcloud',
     ),
-    'unless': repo.libs.nextcloud.occ('status') + ' | grep -q "installed: true"',
+    'unless': repo.libs.nextcloud.occ('status', output='json') + ' | jq -r .installed | grep -q "^true$"',
     'needs': [
         'directory:/etc/nextcloud',
         'directory:/opt/nextcloud',
