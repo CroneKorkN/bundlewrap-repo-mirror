@@ -116,7 +116,7 @@ actions['install_nextcloud'] = {
 
 actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
-    'unless': "! " + repo.libs.nextcloud.occ('status') + ' | grep -q "Nextcloud or one of the apps require upgrade"',
+    'unless': "! " + repo.libs.nextcloud.occ('status') + ' 2>&1 1>/dev/null | grep -q "Nextcloud or one of the apps require upgrade"',
     'needs': [
         'action:install_nextcloud',
     ],
