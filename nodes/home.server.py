@@ -54,8 +54,8 @@
             'download_server': 'netcup.mails',
         },
         'gitea': {
-            'version': '1.15.5',
-            'sha256': 'c3f190848c271bf250d385b80c1a98a7e2c9b23d092891cf1f7e4ce18c736484',
+            'version': '1.16.2',
+            'sha256': 'ec9b01d119cfe47df44d580c1d321132ce054ff139b05b0a35da91268ca2bcbe',
             'domain': 'git.sublimity.de',
         },
         'gollum': {
