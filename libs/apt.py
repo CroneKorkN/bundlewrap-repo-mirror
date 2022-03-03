@@ -1,4 +1,5 @@
 # https://manpages.debian.org/jessie/apt/sources.list.5.de.html
+
 from urllib.parse import urlparse
 from re import search, sub
 from functools import total_ordering
@@ -7,16 +8,20 @@ from functools import total_ordering
 @total_ordering
 class AptSource():
     def __init__(self, string):
+        # parse options, which are optional
         if search(r'\[.*\]', string):
             self.options = {
                 k:v.split(',') for k,v in (
                     e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
                 )
             }
+            string_without_options = sub(r'\[.*\]', '', string)
         else:
             self.options = {}
+            string_without_options = string
 
-        parts = sub(r'\[.*\]', '', string).split()
+        # parse rest of source, now in defined order
+        parts = string_without_options.split()
         self.type = parts[0]
         self.url = urlparse(parts[1])
         self.suite = parts[2]
