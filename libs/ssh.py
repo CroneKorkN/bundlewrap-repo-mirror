@@ -1,10 +1,12 @@
 from base64 import b64decode, b64encode
 from hashlib import sha3_224
+from functools import cache
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, PublicFormat, NoEncryption
 
 
+@cache
 def generate_ed25519_key_pair(secret):
     privkey_bytes = Ed25519PrivateKey.from_private_bytes(secret)
 
