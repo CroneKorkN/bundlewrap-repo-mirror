@@ -68,6 +68,9 @@
             'hostname': 'grafana.sublimity.de',
             'influxdb_node': 'home.server',
         },
+        'icinga2': {
+            'hostname': 'icinga2.sublimity.de',
+        },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',
             'admin_token': '!decrypt:encrypt$gAAAAABg3z5PcaLYmUpcElJ07s_G-iYwnS8d532TcR8xUYbZfttT-B736zgR6J726mzKAFNYlIfJ7amNLIzi2ETDH5TAXWsOiAKpX8WC_dPBAvG3uXGtcPYENjdeuvllSagZzPt0hCIZQZXg--Z_YvzaX9VzNrVAgGD-sXQnghN5_Vhf9gVxxwP---VB_6iNlsf61Nc4axoS',
