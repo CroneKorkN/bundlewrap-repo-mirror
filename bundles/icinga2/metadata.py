@@ -1,3 +1,5 @@
+from hashlib import sha3_256
+
 defaults = {
     'apt': {
         'packages': {
@@ -42,3 +44,31 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'icingaweb2/setup_token',
+)
+def setup_token(metadata):
+    return {
+        'icingaweb2': {
+            'setup_token': sha3_256(metadata.get('id').encode()).hexdigest()[:16],
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts',
+)
+def nginx(metadata):
+    return {
+        'nginx': {
+            'vhosts': {
+                metadata.get('icinga2/hostname'): {
+                    'content': 'icingaweb2/vhost.conf',
+                    'context': {
+                    },
+                },
+            },
+        },
+    }

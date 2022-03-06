@@ -70,8 +70,8 @@
             'hostname': 'grafana.sublimity.de',
             'influxdb_node': 'home.server',
         },
-        'grub': {
-            'kernel_params': {'nomodeset'}, # nvidia GT1030 freeze fix
+        'icinga2': {
+            'hostname': 'icinga2.sublimity.de',
         },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',

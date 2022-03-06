@@ -1,26 +1,65 @@
 # Git-Hash for Icinga1: b63bb0ef52bf213715e567c81e3ed097024e61af
 
-from json import load
-from os.path import join
-
-ICINGA_PLUGINS = {
+directories = {
+    '/etc/icinga2': {
+        'purge': True,
+        'owner': 'nagios',
+    },
+    '/etc/icinga2/conf.d': {
+        'purge': True,
+        'owner': 'nagios',
+    },
+    '/etc/icinga2/hosts.d': {
+        'purge': True,
+        'owner': 'nagios',
+    },
+    '/etc/icinga2/features.d': {
+        'purge': True,
+        'owner': 'nagios',
+    },
 }
 
-ENABLED_FEATURES = [
-    'ido-pgsql',
-    'notification',
-]
-for feature in ENABLED_FEATURES:
-    symlinks[f'/etc/icinga2/features-enabled/{feature}.conf'] = {
-        'target': f'/etc/icinga2/features-available/{feature}.conf',
+files = {
+    '/etc/icinga2/icinga2.conf': {
         'owner': 'nagios',
-        'group': 'nagios',
+    },
+    '/etc/icinga2/constants.conf': {
+        'owner': 'nagios',
+        'context': {
+            'hostname': node.metadata.get('icinga2/hostname')
+        },
+    },
+    '/etc/icinga2/conf.d/templates.conf': {
+        'source': 'conf.d/templates.conf',
+        'owner': 'nagios',
+    },
+    '/etc/icinga2/features/ido-pgsql.conf': {
+        'source': 'features/ido-pgsql.conf',
+        'content_type': 'mako',
+        'owner': 'nagios',
+        'context': {
+            'db_password': node.metadata.get('postgresql/roles/icinga2/password')
+        },
         'needs': [
             'pkg_apt:icinga2-ido-pgsql',
         ],
-        'triggers': [
-            'svc_systemd:icinga2:restart',
-        ],
+    },
+    '/etc/icingaweb2/setup.token': {
+        'content': node.metadata.get('icingaweb2/setup_token'),
+        'owner': 'nagios',
+    },
+}
+
+for other_node in repo.nodes:
+    files[f'/etc/icinga2/hosts.d/{other_node.name}.conf'] = {
+        'content_type': 'mako',
+        'source': 'hosts.d/host.conf',
+        'owner': 'nagios',
+        'context': {
+            'host_name': other_node.name,
+            'host_settings': {},
+            'services': other_node.metadata.get('monitoring', {}),
+        },
     }
 
 svc_systemd = {
@@ -28,27 +67,6 @@ svc_systemd = {
         'needs': [
             'pkg_apt:icinga2-ido-pgsql',
             'svc_systemd:postgresql',
-        ],
-    },
-}
-
-directories = {
-    '/etc/icinga2/features-enabled': {
-        'purge': True,
-    },
-}
-
-files = {
-    '/etc/icinga2/features-available/ido-pgsql.conf': {
-        'source': 'ido-pgsql.conf',
-        'content_type': 'mako',
-        'context': {
-            'db_password': node.metadata.get('postgresql/roles/icinga2/password')
-        },
-        'owner': 'nagios',
-        'group': 'nagios',
-        'needs': [
-            'pkg_apt:icinga2-ido-pgsql',
         ],
     },
 }
