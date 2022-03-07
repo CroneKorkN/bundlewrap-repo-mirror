@@ -6,7 +6,7 @@
                     'Service': {
                         'ExecStart': [
                             '',
-                            '-/usr/sbin/agetty --autologin root --noclear %I $TERM',
+                            '-/sbin/agetty --autologin root --noclear %I $TERM',
                         ],
                     },
                 },
