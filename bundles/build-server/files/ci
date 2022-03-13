@@ -20,6 +20,7 @@ do
   HOSTNAME=$(jq -r '.hostname' <<< $INTEGRATION)
   DESTINATION_PATH=$(jq -r '.path' <<< $INTEGRATION)
   DESTINATION_GROUP=$(jq -r '.group' <<< $INTEGRATION)
+  [[ -z "$HOSTNAME" ]] || [[ -z "$DESTINATION_PATH" ]] || [[ -z "$DESTINATION_GROUP" ]] && exit 5
 
   cd ~
   rm -rf "$REPO_NAME"
