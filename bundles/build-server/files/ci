@@ -16,7 +16,6 @@ do
   HOSTNAME=$(jq -r '.hostname' <<< $INTEGRATION)
   DEST_PATH=$(jq -r '.path' <<< $INTEGRATION)
   DEST_GROUP=$(jq -r '.group' <<< $INTEGRATION)
-  DEST_MODE=$(jq -r '.mode' <<< $INTEGRATION)
   
   [[ -z "$HOSTNAME" ]] || [[ -z "$DEST_PATH" ]] || [[ -z "$DEST_GROUP" ]] && exit 5
 
