@@ -40,6 +40,24 @@ def agent_conf(metadata):
         },
     }
 
+@metadata_reactor.provides(
+    'build-server',
+)
+def ci(metadata):
+    return {
+        'build-server': {
+            'ci': {
+                f'{repo}@{other_node.name}': {
+                    'hostname': other_node.metadata.get('hostname'),
+                    'repo': repo,
+                    **options,
+                }
+                    for other_node in repo.nodes
+                    if other_node.has_bundle('build-ci')
+                    for repo, options in other_node.metadata.get('build-ci').items()
+            },
+        },
+    }
 
 @metadata_reactor.provides(
     'nginx/vhosts',

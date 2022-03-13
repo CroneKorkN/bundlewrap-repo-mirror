@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -xu
+
+
+CONFIG_PATH=${config_path}
+JSON="$1"
+REPO_NAME=$(jq -r .repository.name <<< $JSON)
+CLONE_URL=$(jq -r .repository.clone_url <<< $JSON)
+SSH_OPTIONS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+
+for INTEGRATION in "$(cat $CONFIG_PATH | jq -r '.ci | values[]')"
+do
+  
+  echo '-----------------------'
+  echo $INTEGRATION
+  
+  [[ $(jq -r '.repo' <<< $INTEGRATION) = $REPO_NAME ]] || continue
+  
+  HOSTNAME=$(jq -r '.hostname' <<< $INTEGRATION)
+  DESTINATION_PATH=$(jq -r '.path' <<< $INTEGRATION)
+  DESTINATION_GROUP=$(jq -r '.group' <<< $INTEGRATION)
+
+  cd ~
+  rm -rf "$REPO_NAME"
+  git clone "$CLONE_URL" "$REPO_NAME"
+
+  ssh $SSH_OPTIONS "build-ci@$HOSTNAME" "find \"$DESTINATION_PATH\" -mindepth 1 -delete"
+  scp -r $SSH_OPTIONS "$REPO_NAME"/* "build-ci@$HOSTNAME:$DESTINATION_PATH"
+  ssh $SSH_OPTIONS "build-ci@$HOSTNAME" "sudo chown -R build-ci:$DESTINATION_GROUP $(printf "%q" "$DESTINATION_PATH")"
+done
