@@ -7,7 +7,7 @@ defaults = {
         'lonercrew': {
             'path': '/opt/lonercrew',
             'group': 'www-data',
-            'rev': 'master',
+            'branch': 'master',
         },
     },
 }
