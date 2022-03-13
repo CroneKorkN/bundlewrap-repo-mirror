@@ -3,6 +3,7 @@ from shlex import quote
 
 @metadata_reactor.provides(
     'users/build-ci/authorized_users',
+    'sudoers/build-ci',
 )
 def ssh_keys(metadata):
     return {
