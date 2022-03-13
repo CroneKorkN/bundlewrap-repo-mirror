@@ -11,15 +11,12 @@ SSH_OPTIONS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
 for INTEGRATION in "$(cat $CONFIG_PATH | jq -r '.ci | values[]')"
 do
-  
-  echo '-----------------------'
-  echo $INTEGRATION
-  
   [[ $(jq -r '.repo' <<< $INTEGRATION) = $REPO_NAME ]] || continue
   
   HOSTNAME=$(jq -r '.hostname' <<< $INTEGRATION)
   DESTINATION_PATH=$(jq -r '.path' <<< $INTEGRATION)
   DESTINATION_GROUP=$(jq -r '.group' <<< $INTEGRATION)
+  
   [[ -z "$HOSTNAME" ]] || [[ -z "$DESTINATION_PATH" ]] || [[ -z "$DESTINATION_GROUP" ]] && exit 5
 
   cd ~
