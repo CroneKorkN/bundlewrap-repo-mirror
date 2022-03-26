@@ -12,7 +12,10 @@ defaults = {
         },
     },
     'sudoers': {
-        'backup-receiver': ['ALL'],
+        'backup-receiver': {
+            '/usr/bin/rsync',
+            '/sbin/zfs',
+        },
     }
 }
 
