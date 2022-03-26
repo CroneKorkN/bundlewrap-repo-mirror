@@ -1,0 +1,3 @@
+% for command in sorted(commands):
+${user} ALL=(ALL) NOPASSWD: ${command}
+% endfor
