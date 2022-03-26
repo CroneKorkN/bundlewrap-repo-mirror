@@ -22,11 +22,11 @@ for name, user_config in node.metadata.get('users').items():
     
     git_deploy = {
         join(user_config['home'], '.zsh/oh-my-zsh'): {
-            'repo': 'git://github.com/ohmyzsh/ohmyzsh.git',
+            'repo': 'https://github.com/ohmyzsh/ohmyzsh.git',
             'rev': 'master',
         },
         join(user_config['home'], '.zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions'): {
-            'repo': 'git://github.com/zsh-users/zsh-autosuggestions.git',
+            'repo': 'https://github.com/zsh-users/zsh-autosuggestions.git',
             'rev': 'master',
         },
     }
