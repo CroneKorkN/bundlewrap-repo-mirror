@@ -3,11 +3,10 @@ from hashlib import sha3_256
 defaults = {
     'apt': {
         'packages': {
-            'icinga2': {},
+            'icingadb': {},
+            'icingadb-web': {},
             'icingaweb2': {},
-            'icinga2-ido-pgsql': {},
-            'icingacli': {},
-            'monitoring-plugins': {},
+            'icingadb-redis': {},
         },
         'sources': {
             'deb https://packages.icinga.com/debian icinga-{release} main',
@@ -15,7 +14,7 @@ defaults = {
     },
     'postgresql': {
         'databases': {
-            'icinga2': {
+            'icingadb': {
                 'owner': 'icinga2',
             },
             'icingaweb2': {
@@ -23,7 +22,7 @@ defaults = {
             },
         },
         'roles': {
-            'icinga2': {
+            'icingadb': {
                 'password': repo.vault.password_for(f'psql icinga2 on {node.name}'),
             },
             'icingaweb2': {
@@ -31,44 +30,44 @@ defaults = {
             },
         },
     },
-    'zfs': {
-        'datasets': {
-            'tank/icinga2': {
-                'mountpoint': '/var/lib/icinga2',
-                'needed_by': {
-                    'pkg_apt:icinga2',
-                    'pkg_apt:icingaweb2',
-                    'pkg_apt:icinga2-ido-pgsql',
-                },
-            },
-        },
-    },
+    # 'zfs': {
+    #     'datasets': {
+    #         'tank/icinga2': {
+    #             'mountpoint': '/var/lib/icingadb',
+    #             'needed_by': {
+    #                 'pkg_apt:icingadb',
+    #                 'pkg_apt:icingadb-web',
+    #                 'pkg_apt:icingaweb2',
+    #             },
+    #         },
+    #     },
+    # },
 }
 
-
-@metadata_reactor.provides(
-    'icingaweb2/setup_token',
-)
-def setup_token(metadata):
-    return {
-        'icingaweb2': {
-            'setup_token': sha3_256(metadata.get('id').encode()).hexdigest()[:16],
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'nginx/vhosts',
-)
-def nginx(metadata):
-    return {
-        'nginx': {
-            'vhosts': {
-                metadata.get('icinga2/hostname'): {
-                    'content': 'icingaweb2/vhost.conf',
-                    'context': {
-                    },
-                },
-            },
-        },
-    }
+# 
+# @metadata_reactor.provides(
+#     'icingaweb2/setup_token',
+# )
+# def setup_token(metadata):
+#     return {
+#         'icingaweb2': {
+#             'setup_token': sha3_256(metadata.get('id').encode()).hexdigest()[:16],
+#         },
+#     }
+# 
+# 
+# @metadata_reactor.provides(
+#     'nginx/vhosts',
+# )
+# def nginx(metadata):
+#     return {
+#         'nginx': {
+#             'vhosts': {
+#                 metadata.get('icinga2/hostname'): {
+#                     'content': 'icingaweb2/vhost.conf',
+#                     'context': {
+#                     },
+#                 },
+#             },
+#         },
+#     }
