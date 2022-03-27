@@ -10,6 +10,7 @@ defaults = {
         },
         'sources': {
             'deb https://packages.icinga.com/debian icinga-{release} main',
+            'deb https://packages.icinga.com/debian icinga-{release}-testing main',
         },
     },
     'postgresql': {
