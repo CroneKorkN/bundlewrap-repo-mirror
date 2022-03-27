@@ -7,7 +7,7 @@ template = '''
 # ${segment.split('#', 2)[1]}
 %     endif
 [${segment.split('#')[0]}]
-%     for option, value in options.items():
+%     for option, value in sorted(options.items()):
 %         if isinstance(value, dict):
 %             for k, v in value.items():
 ${option}=${k}=${v}
@@ -16,6 +16,7 @@ ${option}=${k}=${v}
 %             for item in sorted(value):
 ${option}=${item}
 %             endfor
+%         elif isinstance(value, type(None)):
 %         else:
 ${option}=${str(value)}
 %         endif
@@ -39,7 +40,6 @@ def segment_order(segment):
 def generate_unitfile(data):
     return Template(template).render(
         data=dict(sorted(data.items(), key=segment_order)),
-        order=order
     ).lstrip()
 
 # wip
