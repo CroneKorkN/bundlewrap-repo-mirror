@@ -10,7 +10,7 @@ MaxSessions 255
 PubkeyAuthentication yes
 PasswordAuthentication no
 ChallengeResponseAuthentication no
-AuthorizedKeysFile	.ssh/authorized_keys
+AuthorizedKeysFile .ssh/authorized_keys
 UsePAM yes
 
 AllowUsers ${' '.join(users)}
