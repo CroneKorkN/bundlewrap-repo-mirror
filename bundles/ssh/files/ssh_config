@@ -1,5 +1,4 @@
 Host *
-    #UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts.d/%k
     SendEnv LANG LC_*
     HashKnownHosts yes
     GSSAPIAuthentication yes
