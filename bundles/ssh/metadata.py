@@ -1,3 +1,4 @@
+from ipaddress import ip_interface
 from base64 import b64decode
 
 
@@ -29,6 +30,37 @@ def host_key(metadata):
             'host_key': {
                 'private': private + '\n',
                 'public': public + f' root@{node.name}',
+            }
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'ssh/hostnames',
+)
+def hostnames(metadata):
+    ips = set()
+
+    for network in node.metadata.get('network').values():
+        if network.get('ipv4', None):
+            ips.add(str(ip_interface(network['ipv4']).ip))
+        if network.get('ipv6', None):
+            ips.add(str(ip_interface(network['ipv6']).ip))
+
+    domains = {
+        domain
+            for domain, records in node.metadata.get('dns').items()
+            for type, values in records.items()
+            if type in {'A', 'AAAA'}
+            and set(values) & ips
+    }
+
+    return {
+        'ssh': {
+            'hostnames': {
+                node.hostname,
+                *ips,
+                *domains,
             }
         },
     }

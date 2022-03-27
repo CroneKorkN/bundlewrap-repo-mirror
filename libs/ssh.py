@@ -2,7 +2,6 @@ from base64 import b64decode, b64encode
 from hashlib import sha3_224, sha1
 from functools import cache
 import hmac
-from ipaddress import ip_interface
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding, PrivateFormat, PublicFormat, NoEncryption
@@ -57,30 +56,13 @@ def generate_ed25519_key_pair(secret):
 # - `bw debug -c 'repo.libs.ssh.known_hosts_entry_for(repo.get_node(<node with hostname 10.0.0.5>), <salt from ssh-keygen>)'`
 @cache
 def known_hosts_entry_for(node, test_salt=None):
-    ips = set()
-
-    for network in node.metadata.get('network').values():
-        if network.get('ipv4', None):
-            ips.add(str(ip_interface(network['ipv4']).ip))
-        if network.get('ipv6', None):
-            ips.add(str(ip_interface(network['ipv6']).ip))
-
-    domains = {
-        domain
-            for domain, records in node.metadata.get('dns').items()
-            for type, values in records.items()
-            if type in {'A', 'AAAA'}
-            and set(values) & ips
-    }
-
     lines = set()
 
-    for hostname in {node.hostname, *ips, *domains}:
-    
+    for hostname in sorted(node.metadata.get('ssh/hostnames')):
         if test_salt:
             salt = b64decode(test_salt)
         else:
-            salt = sha1(node.metadata.get('id').encode()).digest()
+            salt = sha1((node.metadata.get('id') + hostname).encode()).digest()
 
         hash = hmac.new(salt, hostname.encode(), sha1).digest()
         pubkey = node.metadata.get('ssh/host_key/public')
