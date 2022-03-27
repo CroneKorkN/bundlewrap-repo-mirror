@@ -19,6 +19,8 @@
 #        'gollum',
         'grafana',
         'icinga2',
+        'icingadb',
+        'icingaweb2',
         'influxdb2',
         'mirror',
         'postgresql',
@@ -71,7 +73,10 @@
             'influxdb_node': 'home.server',
         },
         'icinga2': {
-            'hostname': 'icinga2.sublimity.de',
+            'hostname': 'icinga.sublimity.de',
+        },
+        'icingaweb2': {
+            'hostname': 'icinga.sublimity.de',
         },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',
