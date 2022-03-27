@@ -5,7 +5,7 @@ set -exu
 path=$1
 uuid=$(jq -r .client_uuid < /etc/backup/config.json)
 server=$(jq -r .server_hostname < /etc/backup/config.json)
-ssh="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 backup-receiver@$server"
+ssh="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 backup-receiver@$server"
 
 rsync -av --rsync-path="sudo rsync" "$path/" "backup-receiver@$server:/mnt/backups/$uuid$path/"
 $ssh sudo zfs snap "tank/$uuid/fs@auto-backup_$(date +"%Y-%m-%d_%H:%M:%S")" 

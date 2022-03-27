@@ -5,7 +5,7 @@ set -exu
 path=$1
 uuid=$(jq -r .client_uuid < /etc/backup/config.json)
 server=$(jq -r .server_hostname < /etc/backup/config.json)
-ssh="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 backup-receiver@$server"
+ssh="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=5 backup-receiver@$server"
 
 source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
 target_dataset="tank/$uuid/$source_dataset"
