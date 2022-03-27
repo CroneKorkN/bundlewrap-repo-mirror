@@ -2,3 +2,4 @@ Host *
     SendEnv LANG LC_*
     HashKnownHosts yes
     GSSAPIAuthentication yes
+    GlobalKnownHostsFile /etc/ssh/ssh_known_hosts
