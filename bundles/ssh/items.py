@@ -1,6 +1,6 @@
 # on debian bullseye raspberry images, starting the systemd ssh
 # daemon seems to collide with an existing sysv daemon
-dont_touch_sshd = node.metadata.get('FIXME_dont_touch_sshd', False),
+dont_touch_sshd = node.metadata.get('FIXME_dont_touch_sshd', False)
 
 directories = {
     '/etc/ssh': {
