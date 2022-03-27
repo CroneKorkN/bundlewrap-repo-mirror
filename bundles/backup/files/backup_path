@@ -7,7 +7,7 @@ then
   /opt/backup/backup_path_via_zfs "$path"
 elif test -d "$path"
 then
-  /opt/backuo/backup_path_via_rsync "$path"
+  /opt/backup/backup_path_via_rsync "$path"
 else
   echo "UNKNOWN PATH: $path"
   exit 1
