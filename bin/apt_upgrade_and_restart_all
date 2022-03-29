@@ -7,9 +7,10 @@ from ipaddress import ip_interface
 repo = Repository(dirname(dirname(realpath(__file__))))
 nodes = [
     node
-        for node in repo.nodes_in_group('debian')
+        for node in sorted(repo.nodes_in_group('debian'))
         if not node.dummy
 ]
+reboot_nodes = []
 
 print('updating nodes:', sorted(node.name for node in nodes))
 
@@ -21,13 +22,16 @@ for node in nodes:
     print('--------------------------------------')
     repo.libs.wol.wake(node)
     print(node.run('DEBIAN_FRONTEND=noninteractive apt update').stdout.decode())
-    print(node.run('DEBIAN_FRONTEND=noninteractive apt -y dist-upgrade').stdout.decode())
+    print(node.run('DEBIAN_FRONTEND=noninteractive apt list --upgradable').stdout.decode())
+    if int(node.run('DEBIAN_FRONTEND=noninteractive apt list --upgradable 2> /dev/null | grep upgradable | wc -l').stdout.decode()):
+        print(node.run('DEBIAN_FRONTEND=noninteractive apt -y dist-upgrade').stdout.decode())
+        reboot_nodes.append(node)
 
 # REBOOT IN ORDER
 
 wireguard_servers = [
     node
-        for node in nodes
+        for node in reboot_nodes
         if node.has_bundle('wireguard')
         and (
             ip_interface(node.metadata.get('wireguard/my_ip')).network.prefixlen <
@@ -37,7 +41,7 @@ wireguard_servers = [
 
 wireguard_s2s = [
     node
-        for node in nodes
+        for node in reboot_nodes
         if node.has_bundle('wireguard')
         and (
             ip_interface(node.metadata.get('wireguard/my_ip')).network.prefixlen ==
@@ -47,12 +51,11 @@ wireguard_s2s = [
 
 everything_else = [
     node
-        for node in nodes
+        for node in reboot_nodes
         if not node.has_bundle('wireguard')
 ]
 
 print('======================================')
-print(len(everything_else), len(wireguard_s2s), len(wireguard_servers))
 
 for node in [
     *everything_else,
