@@ -126,7 +126,7 @@ files['/opt/nextcloud_upgrade_status.php'] = {
     
 actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
-    'unless': 'sudo -u www-data php /opt/nextcloud/upgrade_status.php; test $? -ne 99',
+    'unless': 'sudo -u www-data php /opt/nextcloud_upgrade_status.php; test $? -ne 99',
     'needs': [
         'file:/opt/nextcloud_upgrade_status.php',
         'action:install_nextcloud',
