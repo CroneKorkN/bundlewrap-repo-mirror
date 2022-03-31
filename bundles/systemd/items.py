@@ -1,5 +1,14 @@
 from bundlewrap.utils.dicts import merge_dict
 
+directories = {
+    '/usr/local/lib/systemd/system': {
+        'purge': True,
+        'triggers': [
+            "action:systemd-reload",
+        ],
+    },
+}
+
 actions = {
      'systemd-reload': {
         'command': 'systemctl daemon-reload',
@@ -22,7 +31,7 @@ for name, unit in node.metadata.get('systemd/units').items():
             ],
         }
     elif extension in ['timer', 'service', 'mount', 'swap']:
-        path = f'/etc/systemd/system/{name}'
+        path = f'/usr/local/lib/systemd/system/{name}'
         dependencies = {
             'triggers': [
                 "action:systemd-reload",

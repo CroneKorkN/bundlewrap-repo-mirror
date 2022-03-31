@@ -114,6 +114,6 @@ for name, conf in node.metadata.get('flask').items():
     svc_systemd[name] = {
         'needs': [
             f'action:flask_{name}_pip_install',
-            f'file:/etc/systemd/system/{name}.service',
+            f'file:/usr/local/lib/systemd/system/{name}.service',
         ],
     }

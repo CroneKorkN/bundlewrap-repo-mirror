@@ -54,6 +54,6 @@ actions = {
 svc_systemd['steam-update'] = {
     'running': False,
     'needs': {
-        'file:/etc/systemd/system/steam-update.service',
+        'file:/usr/local/lib/systemd/system/steam-update.service',
     }
 }

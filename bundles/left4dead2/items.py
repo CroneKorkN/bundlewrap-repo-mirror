@@ -70,7 +70,7 @@ for name, config in node.metadata.get('left4dead2/servers').items():
     }
     svc_systemd[f'left4dead2-server-{name}'] = {
         'needs': [
-            f'file:/etc/systemd/system/left4dead2-server-{name}.service',
+            f'file:/usr/local/lib/systemd/system/left4dead2-server-{name}.service',
         ],
     }
     server_units.add(f'left4dead2-server-{name}')
@@ -87,7 +87,7 @@ for id in node.metadata.get('left4dead2/workshop'):
 # TIDYUP
 
 find_obsolete_units = (
-    'find /etc/systemd/system -type f -name "left4dead2-server-*.service" ' +
+    'find /usr/local/lib/systemd/system -type f -name "left4dead2-server-*.service" ' +
     ' '.join(f"! -name '{name}.service'" for name in server_units)
 )
 actions['remove_obsolete_left4dead2_units'] = {
