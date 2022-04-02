@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+
+from bundlewrap.repo import Repository
+from os.path import realpath, dirname
+from sys import argv
+
+repo = Repository(dirname(dirname(realpath(__file__))))
+
+repo.libs.wol.wake(repo.get_node(argv[1]))

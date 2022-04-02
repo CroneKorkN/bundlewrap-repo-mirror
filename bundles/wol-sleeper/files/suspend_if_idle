@@ -1,19 +1,30 @@
 #!/bin/bash
 
-WOKE=$(expr $(journalctl -t systemd-sleep -b 0 -o json MESSAGE="System resumed." -n1 | jq -r .__REALTIME_TIMESTAMP) / 1000000)
-NOW=$(date +%s)
-UPTIME=$(expr $NOW - $WOKE)
+# CHECK UPTIME
+
+RESUMED_TIMESTAMP_MICRO=$(journalctl -t systemd-sleep -b 0 -o json MESSAGE="System resumed." -n1 | jq -r .__REALTIME_TIMESTAMP)
+if [[ -z "$RESUMED_TIMESTAMP_MICRO" ]]
+then
+  UPTIME=$(cat /proc/uptime | cut -d' ' -f1 | cut -d'.' -f1)
+else
+  RESUMED_TIMESTAMP=$(expr $RESUMED_TIMESTAMP_MICRO / 1000000)
+  NOW_TIMESTAMP=$(date +%s)
+  UPTIME=$(expr $NOW_TIMESTAMP - $RESUMED_TIMESTAMP)
+fi
+
+
 MIN_UPTIME=$(expr 60 \* 15)
 if [[ "$UPTIME" -lt "$MIN_UPTIME" ]]
 then
-  echo "ABORT: uptime ($UPTIME s) lower than minimum ($MIN_UPTIME s)"
+  echo "ABORT: uptime of ${UPTIME}s is lower than minimum of ${MIN_UPTIME}s"
   exit 0
 fi
 
-MY_SERVICE="$2"
+# CHECK FOR RUNNING TIMERS
+
 for SERVICE in $(systemctl list-timers --no-pager --no-legend --state active -o json | jq -r '.[] | .activates')
 do
-  if [[ "$SERVICE" = "$MY_SERVICE" ]]
+  if [[ "$SERVICE" = "$THIS_SERVICE" ]]
   then
     continue
   elif systemctl is-active "$SERVICE" --quiet
@@ -23,18 +34,22 @@ do
   fi
 done
 
-LOGINS=$(netstat -tnpa | grep 'ESTABLISHED.*sshd' | wc -l)
-if [[ "$LOGINS" -gt 0 ]]
+# CHECK FOR ACTIVE LOGINS
+
+LOGINS=$(netstat -tnpa | grep 'ESTABLISHED.*sshd' | tr -s ' ' | cut -d' ' -f5,7-8 | paste -d',' -s | sed 's/,/, /')
+if ! [[ -z "$LOGINS" ]]
 then
-  echo "ABORT: $LOGINS user logins"
+  echo "ABORT: users logged in: $LOGINS"
   exit 0
 fi
 
-if [[ "$1" = now ]]
+# SUSPEND!
+
+if [[ "$1" = check ]]
 then
+  echo "WOULD SESPEND"
+else
   echo "SESPENDING"
   sleep 60
   systemctl suspend
-else
-  echo "WOULD SESPEND"
 fi

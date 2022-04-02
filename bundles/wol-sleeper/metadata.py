@@ -5,6 +5,7 @@ defaults = {
     'apt': {
         'packages': {
             'jq': {},
+            'ethtool': {},
         },
     },
 }
@@ -14,12 +15,14 @@ defaults = {
     'systemd-timers/suspend-if-idle',
 )
 def timer(metadata):
-    name = 'suspend-if-idle'#
     return {
         'systemd-timers': {
-            name: {
-                'command': f'/opt/suspend_if_idle now {name}.service',
+            'suspend-if-idle': {
+                'command': f'suspend_if_idle',
                 'when': 'minutely',
+                'env': {
+                    'THIS_SERVICE': 'suspend-if-idle.service',
+                },
             },
         },
     }
@@ -41,7 +44,6 @@ def wake_command(metadata):
 
 
 @metadata_reactor.provides(
-    'apt/packages/ethtool',
     'systemd/units/enable-wol.service',
     'systemd/services/enable-wol.service',
 )
@@ -49,11 +51,6 @@ def systemd(metadata):
     interface = metadata.get(f"network/{metadata.get('wol-sleeper/network')}/interface")
     
     return {
-        'apt': {
-            'packages': {
-                'ethtool': {},
-            },
-        },
         'systemd': {
             'units': {
                 'enable-wol.service': {

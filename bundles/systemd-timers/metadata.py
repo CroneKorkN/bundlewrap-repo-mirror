@@ -30,6 +30,7 @@ def systemd(metadata):
                 'Service': {
                     'User': config.get('user', 'root'),
                     'ExecStart': config['command'],
+                    'Environment': config.get('env'),
                 },
             },
         })
