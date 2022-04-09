@@ -45,7 +45,7 @@ fi
 if [[ "$?" == "0" ]]
 then
   zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
-  #zfs destroy "$source_dataset@$new_bookmark" # keep snapshots?
+  zfs destroy "$source_dataset@$new_bookmark" # keep snapshots?
   echo "SUCCESS"
 else
   zfs destroy "$source_dataset@$new_bookmark"
