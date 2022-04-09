@@ -56,6 +56,20 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'grafana/config/server/domain',
+)
+def domain(metadata):
+    return {
+        'grafana': {
+            'config': {
+                'server': {
+                    'domain': metadata.get('grafana/hostname'),
+                },
+            },
+        },    
+    }
+
+@metadata_reactor.provides(
     'grafana/datasources',
 )
 def influxdb2(metadata):
