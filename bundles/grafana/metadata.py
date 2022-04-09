@@ -129,10 +129,7 @@ def nginx(metadata):
         'nginx': {
             'vhosts': {
                 metadata.get('grafana/hostname'): {
-                    'content': 'nginx/proxy_pass.conf',
-                    'context': {
-                        'target': 'http://127.0.0.1:8300',
-                    }
+                    'content': 'grafana/vhost.conf',
                 },
             },
         },
