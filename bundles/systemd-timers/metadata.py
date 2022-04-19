@@ -34,6 +34,9 @@ def systemd(metadata):
                 },
             },
         })
+        if config.get('working_dir'):
+            units[f'{name}.service']['Service']['WorkingDirectory'] = config['working_dir']
+        
         services[f'{name}.timer'] = {}
         
     return {

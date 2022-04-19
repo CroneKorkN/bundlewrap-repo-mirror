@@ -24,6 +24,7 @@
         'postgresql',
         'redis',
         'smartctl',
+        'steam-chat-logger',
         'raspberrymatic-cert',
         'tasmota-charge',
         'wireguard',
@@ -93,6 +94,14 @@
         'raspberrymatic-cert': {
             'domain': 'homematic.ckn.li',
             'node': 'home.homematic',
+        },
+        'steam_chat_logger': {
+            'STEAM_USERNAME': 'snake_452',
+            'STEAM_ID': 'STEAM_0:0:12376499',
+            'STEAM_PASSWORD': '!decrypt:encrypt$gAAAAABiUzERrXVNxzDaDW_4MgEmPtXkMHlTiz5uqCbu-22-2yKHRHMKvuGqAygpGbnwZucZcmZMox9KM89a6qlVKlE1ZPizTA==',
+            'IMAP_HOST': 'mail.sublimity.de',
+            'IMAP_USER': 'i@ckn.li',
+            'IMAP_PASSWORD': '!decrypt:encrypt$gAAAAABiUzcTVRL-Xb4RDjcwciZawYlmOa9Qy_hKz6sVWDlwZqUFLGRD8ERWoFCOWCM22Sq73Gc4nFuAblBB6wpbH5YEltLA6hmROGKpOFhI63ESLFwNgbY=',
         },
         'tasmota-charge': {
             'phone': {
