@@ -34,4 +34,11 @@ else
 fi
 
 echo "turning plug $TURN_PLUG"
-curl -s "http://$PLUG_IP/cm?cmnd=Power%20$TURN_PLUG"
+if curl --silent "http://$PLUG_IP/cm?cmnd=Power%20$TURN_PLUG" | jq -r .POWER | grep -q "^$TURN_PLUG\$"
+then
+  echo "SUCCESS"
+  exit 0
+else
+  echo "ERROR"
+  exit 53
+fi
