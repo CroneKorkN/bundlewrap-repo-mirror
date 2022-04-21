@@ -6,16 +6,26 @@ PLUG_IP=${plug_ip}
 MIN=${min}
 MAX=${max}
 
-AKKU=$(ssh -p 8022 $PHONE_USER@$PHONE_IP termux-battery-status | jq -r .percentage)
-echo "akku is at $AKKU%"
+if ! ssh -o 'StrictHostKeyChecking no' -p 8022 $PHONE_USER@$PHONE_IP 'true'
+then
+  echo "ERROR: cant connect to phone via ssh"
+  exit 51
+fi
+AKKU=$(ssh -o 'StrictHostKeyChecking no' -p 8022 $PHONE_USER@$PHONE_IP termux-battery-status | jq -r .percentage)
+echo "akku is at $AKKU% ($MIN%/$MAX%)"
 
+if ! curl --head --silent --fail "http://$PLUG_IP/cm?cmnd=Power" --output /dev/null
+then
+  echo "ERROR: cant connect to plug via http"
+  exit 52
+fi
 PLUG_IS=$(curl -s "http://$PLUG_IP/cm?cmnd=Power" | jq -r .POWER)
 echo "plug is $PLUG_IS"
 
-if [[ $AKKU < $MIN ]] && [[ $PLUG_IS = OFF ]]
+if [[ $AKKU -lt $MIN ]] && [[ $PLUG_IS = OFF ]]
 then
   TURN_PLUG=ON
-elif [[ $AKKU > $MAX ]] && [[ $PLUG_IS = ON ]]
+elif [[ $AKKU -gt $MAX ]] && [[ $PLUG_IS = ON ]]
 then
   TURN_PLUG=OFF
 else

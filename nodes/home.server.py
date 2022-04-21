@@ -105,8 +105,8 @@
         },
         'tasmota-charge': {
             'phone': {
-                'ip': '10.0.0.166',
-                'user': 'u0_q194',
+                'ip': '10.0.0.175',
+                'user': 'u0_a233',
                 'password': 'november',
             },
             'plug': {
