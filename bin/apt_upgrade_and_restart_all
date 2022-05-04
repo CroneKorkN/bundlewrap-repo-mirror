@@ -63,4 +63,7 @@ for node in [
     *wireguard_servers,
 ]:
     print('rebooting', node.name)
-    print(node.run('systemctl reboot').stdout.decode())
+    try:
+        print(node.run('systemctl reboot').stdout.decode())
+    except Exception as e:
+        print(e)

@@ -6,6 +6,7 @@ defaults = {
         'version': {
             10: 11,
             11: 17,
+            12: 17,
         }[node.os_version[0]],
     },
 }

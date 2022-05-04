@@ -5,9 +5,6 @@ defaults = {
         'packages': {
             'telegraf': {},
         },
-        'sources': {
-            'deb https://repos.influxdata.com/debian {release} stable',
-        },
     },
     'telegraf': {
         'config': {
@@ -79,6 +76,28 @@ defaults = {
         'telegraf': {'/usr/local/share/telegraf/procio'},
     },
 }
+
+
+@metadata_reactor.provides(
+    'apt/sources',
+)
+def apt(metadata):
+    release = {
+        'buster': 'buster',
+        'bullseye': 'bullseye',
+        'bookworm': 'bullseye',
+    }[metadata.get('os_release')]
+
+    return {
+        'apt': {
+            'packages': {
+                'telegraf': {},
+            },
+            'sources': {
+                f"deb https://repos.influxdata.com/debian {release} stable",
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(
