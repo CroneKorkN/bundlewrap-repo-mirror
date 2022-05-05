@@ -10,6 +10,9 @@ files = {
         'content': '\n'.join(
             f'{locale} {type}' for locale, type in installed_locales
         ),
+        'needs': {
+            'pkg_apt:locales',
+        },
         'triggers': {
             'action:locale-gen',
         },
