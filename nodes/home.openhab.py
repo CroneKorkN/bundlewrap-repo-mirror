@@ -17,7 +17,6 @@
         'zfs',
     ],
     'metadata': {
-        'FIXME_dont_touch_sshd': True,
         'id': '34199b24-4621-42f4-85ae-ec354f9c43e6',
         'network': {
             'internal': {
