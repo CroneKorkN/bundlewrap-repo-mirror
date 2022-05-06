@@ -2,6 +2,7 @@ defaults = {
     'apt': {
         'packages': {
             'lm-sensors': {},
+            'console-data': {}, # leykeys de
         },
     },
     'grafana_rows': {
