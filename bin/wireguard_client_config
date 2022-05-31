@@ -21,7 +21,9 @@ for peer in server_node.metadata.get('wireguard/s2s').values():
             allowed_ips.append(ip_network(network))
 
 conf = \
-f'''[Interface]
+f'''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+[Interface]
 PrivateKey = {repo.libs.wireguard.privkey(data['peer_id'])}
 ListenPort = 51820
 Address = {data['peer_ip']}
@@ -32,10 +34,12 @@ PublicKey = {repo.libs.wireguard.pubkey(server_node.metadata.get('id'))}
 PresharedKey = {repo.libs.wireguard.psk(data['peer_id'], server_node.metadata.get('id'))}
 AllowedIPs = {', '.join(str(client_route) for client_route in sorted(allowed_ips))}
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
-PersistentKeepalive = 10'''
+PersistentKeepalive = 10
 
-if input("as test or qrcode? [Tq]: ") in 'Qq':
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
+
+print(conf)
+
+if input("print qrcode? [yN]: ").upper() == 'Y':
     import pyqrcode
     print(pyqrcode.create(conf).terminal(quiet_zone=1))
-else:    
-    print(conf)
