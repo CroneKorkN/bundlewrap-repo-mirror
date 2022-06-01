@@ -25,6 +25,7 @@
         'redis',
         'smartctl',
         'steam-chat-logger',
+        'steam-chat-viewer',
         'raspberrymatic-cert',
         'tasmota-charge',
         'wireguard',
@@ -102,6 +103,9 @@
             'IMAP_HOST': 'mail.sublimity.de',
             'IMAP_USER': 'i@ckn.li',
             'IMAP_PASSWORD': '!decrypt:encrypt$gAAAAABiUzcTVRL-Xb4RDjcwciZawYlmOa9Qy_hKz6sVWDlwZqUFLGRD8ERWoFCOWCM22Sq73Gc4nFuAblBB6wpbH5YEltLA6hmROGKpOFhI63ESLFwNgbY=',
+        },
+        'steam-chat-viewer': {
+            'hostname': 'steam-chats.ckn.li',
         },
         'tasmota-charge': {
             'phone': {
