@@ -31,6 +31,7 @@ def systemd(metadata):
                     'User': config.get('user', 'root'),
                     'ExecStart': config['command'],
                     'Environment': config.get('env'),
+                    'Nice': config.get('nice', 10),
                 },
             },
         })
