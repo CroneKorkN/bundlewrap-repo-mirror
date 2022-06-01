@@ -21,7 +21,7 @@ function spwd {
   echo
 }
 
-indicator="$(hostname -s)"
+indicator="$(whoami)@$(hostname -s)"
 local ret_status="%(?:%{$fg_bold[green]%}$indicator:%{$fg_bold[red]%}$indicator)"
 PROMPT='${ret_status} %{$fg[cyan]%}$(spwd)%{$reset_color%} $(git_prompt_info)'
 
