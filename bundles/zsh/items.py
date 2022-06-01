@@ -4,7 +4,7 @@ for name, user_config in node.metadata.get('users').items():
     if user_config.get('shell', None) != '/usr/bin/zsh':
         continue
 
-    directories = {
+    directories.update({
         join(user_config['home'], '.zsh'): {
             'owner': name,
             'group': name,
@@ -20,9 +20,9 @@ for name, user_config in node.metadata.get('users').items():
                 f"git_deploy:{join(user_config['home'], '.zsh/oh-my-zsh')}",
             ]
         },
-    }
+    })
 
-    git_deploy = {
+    git_deploy.update({
         join(user_config['home'], '.zsh/oh-my-zsh'): {
             'repo': 'https://github.com/ohmyzsh/ohmyzsh.git',
             'rev': 'master',
@@ -37,9 +37,9 @@ for name, user_config in node.metadata.get('users').items():
                 f'action:chown_zsh_{name}',
             ],
         },
-    }
+    })
 
-    files = {
+    files.update({
         join(user_config['home'], '.zshrc'): {
             'owner': name,
             'group': name,
@@ -52,11 +52,11 @@ for name, user_config in node.metadata.get('users').items():
                 f"git_deploy:{join(user_config['home'], '.zsh/oh-my-zsh')}",
             ]
         },
-    }
+    })
 
-    actions = {
+    actions.update({
         f'chown_zsh_{name}': {
             'command': f"chown -R {name}:{name} {user_config['home']}",
             'triggered': True,
         },
-    }
+    })
