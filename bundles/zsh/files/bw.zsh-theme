@@ -21,15 +21,20 @@ function spwd {
   echo
 }
 
-if test "$EUID" -eq 0
-then
-  local root_color="%{$fg_bold[red]%}"
-else
-  local root_color="%{$fg_bold[green]%}"
-fi
+function root_color {
+  if test "$EUID" -eq 0
+  then
+    echo "%{$fg_bold[red]%}"
+  else
+    echo "%{$fg_bold[green]%}"
+  fi
+}
 
-local indicator="$root_color$(whoami)%{$fg_bold[black]%}@%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})$(hostname -s)"
-PROMPT='${indicator} %{$fg[cyan]%}$(spwd)%{$reset_color%} $(git_prompt_info)'
+function exitcode_color {
+  echo "%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})"
+}
+
+PROMPT='$(root_color)$(whoami)%{$reset_color%}@$(exitcode_color)$(hostname -s) %{$fg[cyan]%}$(spwd)%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
