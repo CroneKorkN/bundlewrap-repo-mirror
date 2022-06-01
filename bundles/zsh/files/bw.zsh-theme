@@ -1,4 +1,4 @@
-function spwd {
+function zsh_spwd {
   paths=(${(s:/:)PWD})
 
   cur_path='/'
@@ -21,7 +21,7 @@ function spwd {
   echo
 }
 
-function root_color {
+function zsh_root_color {
   if test "$EUID" -eq 0
   then
     echo "%{$fg_bold[green]%}"
@@ -30,11 +30,11 @@ function root_color {
   fi
 }
 
-function exitcode_color {
+function zsh_exitcode_color {
   echo "%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})"
 }
 
-PROMPT='$(root_color)$(whoami)%{$reset_color%}@$(exitcode_color)$(hostname -s) %{$fg[cyan]%}$(spwd)%{$reset_color%} $(git_prompt_info)'
+PROMPT='$(zsh_root_color)$(whoami)%{$reset_color%}@$(zsh_exitcode_color)$(hostname -s) %{$fg[cyan]%}$(zsh_spwd)%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
