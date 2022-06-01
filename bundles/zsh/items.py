@@ -2,8 +2,8 @@ from os.path import join
 
 directories = {
     '/etc/zsh/oh-my-zsh': {},
-    '/etc/zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions': {
-        'mode': '644',
+    '/etc/zsh/oh-my-zsh/custom/plugins': {
+        'mode': '0755',
         'needs': [
             f"git_deploy:/etc/zsh/oh-my-zsh",
         ]
