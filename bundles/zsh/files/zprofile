@@ -7,3 +7,10 @@
 # Global Order: zshenv, zprofile, zshrc, zlogin
 
 alias s='sudo su - root -s /usr/bin/zsh'
+
+ZSH_THEME=bw
+DISABLE_AUTO_UPDATE=true
+plugins=(
+  zsh-autosuggestions
+)
+source /etc/zsh/oh-my-zsh/oh-my-zsh.sh
