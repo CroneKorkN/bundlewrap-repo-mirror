@@ -4,7 +4,14 @@ directories = {
     },
     '/var/lib/steam_chat_logger': {
         'owner': 'steam_chat_logger',
-        'mode': '0770',
+        'mode': '0755',
+        'needs': [
+            'zfs_dataset:tank/steam-chat-logger'
+        ],
+    },
+    '/var/lib/steam_chat_logger/steamuserimages': {
+        'owner': 'steam_chat_logger',
+        'mode': '0755',
         'needs': [
             'zfs_dataset:tank/steam-chat-logger'
         ],
