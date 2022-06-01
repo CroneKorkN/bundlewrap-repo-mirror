@@ -10,6 +10,13 @@
 - run `sshd` to start ssh server
 - run `su - tasmota-charge -c 'ssh-copy-id -p 8022 u0_a233@10.0.0.175'` on server node
 - acquire wakelock for the termux session in notifications
+- install termux::boot from F-Droid
+- create file ~/.termux/boot/start-sshd:
+  ```shell
+  #!/data/data/com.termux/files/usr/bin/sh
+  termux-wake-lock
+  sshd
+  ```
 
 # Server
 
