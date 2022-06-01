@@ -24,9 +24,9 @@ function spwd {
 function root_color {
   if test "$EUID" -eq 0
   then
-    echo "%{$fg_bold[red]%}"
-  else
     echo "%{$fg_bold[green]%}"
+  else
+    echo "%{$fg_bold[black]%}"
   fi
 }
 
