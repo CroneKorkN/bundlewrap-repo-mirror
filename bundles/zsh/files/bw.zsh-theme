@@ -26,7 +26,7 @@ function root_color {
   then
     echo "%{$fg_bold[green]%}"
   else
-    echo "%{$fg_bold[black]%}"
+    echo "%{$fg_bold[yellow]%}"
   fi
 }
 
