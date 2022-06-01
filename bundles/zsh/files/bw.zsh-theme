@@ -21,9 +21,15 @@ function spwd {
   echo
 }
 
-local indicator="$(whoami)@$(hostname -s)"
-local ret_status="%(?:%{$fg_bold[green]%}$indicator:%{$fg_bold[red]%}$indicator)"
-PROMPT='${ret_status} %{$fg[cyan]%}$(spwd)%{$reset_color%} $(git_prompt_info)'
+if test "$EUID" -eq 0
+then
+  local root_color="%{$fg_bold[red]%}"
+else
+  local root_color="%{$fg_bold[green]%}"
+fi
+
+local indicator="$root_color$(whoami)%{$fg_bold[black]%}@%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})$(hostname -s)"
+PROMPT='${indicator} %{$fg[cyan]%}$(spwd)%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
