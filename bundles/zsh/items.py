@@ -1,5 +1,9 @@
 from os.path import join
 
+files = {
+    '/etc/zsh/zprofile': {},
+}
+
 for name, user_config in node.metadata.get('users').items():
     if user_config.get('shell', None) != '/usr/bin/zsh':
         continue
