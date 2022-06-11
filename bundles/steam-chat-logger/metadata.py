@@ -32,7 +32,7 @@ def systemd_timer(metadata):
         'systemd-timers': {
             f'steam-chat-logger': {
                 'command': '/opt/steam_chat_logger/steam_chat_logger.py',
-                'when': 'daily',
+                'when': 'hourly',
                 'user': 'steam_chat_logger',
                 'env': {
                     'DB_NAME': 'steam_chat_logger',
