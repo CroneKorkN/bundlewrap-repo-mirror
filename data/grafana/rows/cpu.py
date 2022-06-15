@@ -10,6 +10,7 @@
                         'usage_iowait',
                         'usage_system',
                         'usage_user',
+                        'usage_nice',
                     ],
                 },
                 'function': 'mean',
