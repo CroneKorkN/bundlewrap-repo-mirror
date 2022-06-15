@@ -15,6 +15,10 @@ defaults = {
             'php-cgi': {},
             'php-zip': {},
             'php-pgsql': {},
+            'php-bz2': {}, # face recognition
+        },
+        'sources': {
+            'deb https://repo.delellis.com.ar {release} {release}',
         },
     },
     'archive': {
@@ -50,6 +54,11 @@ defaults = {
             'env[TMPDIR]': '/tmp',
             'env[TEMP]': '/tmp',
         },
+        'php.ini': {
+            'PHP': {
+                'memory_limit': '3G', # face recognition requires 2G
+            },
+        },
     },
     'postgresql': {
         'roles': {
@@ -75,6 +84,11 @@ defaults = {
         'nextcloud-rescan': {
             'command': '/opt/nextcloud_rescan',
             'when': 'Sun 00:00:00',
+            'user': 'www-data',
+        },
+        'nextcloud-face-recognition': {
+            'command': '/usr/bin/php -f /opt/nextcloud/occ face:background_job -t 1800',
+            'when': '*:0/10',
             'user': 'www-data',
         },
     },
@@ -104,6 +118,19 @@ def vhost(metadata):
                         'root': '/opt/nextcloud',
                     },
                 },
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts'
+)
+def pdlib(metadata):
+    return {
+        'apt': {
+            'packages': {
+                f"php{metadata.get('php/version')}-pdlib": {},
             },
         },
     }
