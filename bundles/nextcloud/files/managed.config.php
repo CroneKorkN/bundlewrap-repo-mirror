@@ -28,4 +28,14 @@ $CONFIG = array (
   "redis" => [
     "host" => "/var/run/redis/nextcloud.sock",
   ],
+  'trusted_domains' => 
+  array (
+    0 => 'localhost',
+    1 => '127.0.0.1',
+    2 => '${hostname}',
+  ),
+  "log_type" => "syslog",
+  "syslog_tag" => "nextcloud",
+  "logfile" => "",
+  "loglevel" => 3,
 );

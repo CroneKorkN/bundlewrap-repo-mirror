@@ -75,6 +75,7 @@ files = {
         'mode': '640',
         'context': {
             'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
+            'hostname': node.metadata.get('nextcloud/hostname'),
         },
         'needs': [
             'directory:/etc/nextcloud',
