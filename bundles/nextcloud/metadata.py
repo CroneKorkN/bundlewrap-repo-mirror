@@ -18,7 +18,7 @@ defaults = {
             'php-bz2': {}, # face recognition
         },
         'sources': {
-            'deb https://repo.delellis.com.ar {release} {release}',
+            'deb https://repo.delellis.com.ar {release} {release}', # face recognition
         },
     },
     'archive': {
