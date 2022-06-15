@@ -1,22 +1,21 @@
-version = node.metadata.get('php/version')
+from os.path import join
+import json
 
-php_ini_context = {
-    'num_cpus': node.metadata.get('vm/cores'),
-    'post_max_size': node.metadata.get('php/post_max_size'),
-}
+from bundlewrap.utils.dicts import merge_dict
+
+
+version = node.metadata.get('php/version')
 
 files = {
     f'/etc/php/{version}/cli/php.ini': {
-        'content_type': 'mako',
-        'context': php_ini_context,
+        'content': repo.libs.ini.dumps(node.metadata.get('php/php.ini')),
         'needs': {
             f'pkg_apt:php{version}',
             f'pkg_apt:php{version}-fpm',
         },
     },
     f'/etc/php/{version}/fpm/php.ini': {
-        'content_type': 'mako',
-        'context': php_ini_context,
+        'content': repo.libs.ini.dumps(node.metadata.get('php/php.ini')),
         'needs': {
             f'pkg_apt:php{version}',
             f'pkg_apt:php{version}-fpm',
