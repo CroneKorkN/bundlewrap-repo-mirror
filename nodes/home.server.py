@@ -36,7 +36,7 @@
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
         'network': {
             'internal': {
-                'interface': 'enp1s0f0',
+                'interface': 'enp0s31f6',
                 'ipv4': '10.0.0.2/24',
                 'gateway4': '10.0.0.1',
             },
