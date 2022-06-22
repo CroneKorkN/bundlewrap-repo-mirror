@@ -61,13 +61,13 @@ for host, sources in hosts.items():
         source.options['signed-by'] = [destination_path]
 
     files[f'/etc/apt/sources.list.d/{host}.list'] = {
-        'content': '\n'.join(set(
+        'content': '\n'.join(sorted(set(
             str(source).format(
                 release=node.metadata.get('os_release'),
                 version=node.os_version[0], # WIP crystal
             )
-                for source in sorted(dict.fromkeys(sources))
-        )),
+                for source in sources
+        ))),
         'triggers': {
             'action:apt_update',
         },
