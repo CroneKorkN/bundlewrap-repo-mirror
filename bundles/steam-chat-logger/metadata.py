@@ -1,4 +1,9 @@
 defaults = {
+    'apt': {
+        'packages': {
+            'python3-pip': {},
+        },
+    },
     'postgresql': {
         'roles': {
             'steam_chat_logger': {

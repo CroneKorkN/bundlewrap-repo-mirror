@@ -4,6 +4,7 @@ defaults = {
     'apt': {
         'packages': {
             'influxdb2': {},
+            'influxdb2-cli': {},
         },
         'sources': {
             'deb https://repos.influxdata.com/debian {release} stable',

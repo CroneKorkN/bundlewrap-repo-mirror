@@ -16,11 +16,10 @@
         'build-agent',
         'crystal',
         'gitea',
-        'gollum',
+#        'gollum',
         'grafana',
         'influxdb2',
         'mirror',
-        'mosquitto',
         'postgresql',
         'redis',
         'smartctl',
@@ -36,7 +35,7 @@
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
         'network': {
             'internal': {
-                'interface': 'enp0s31f6',
+                'interface': 'enp42s0',
                 'ipv4': '10.0.0.2/24',
                 'gateway4': '10.0.0.1',
             },
@@ -121,7 +120,7 @@
         },
         'vm': {
             'cores': 2,
-            'ram':  16192,
+            'ram':  32384,
         },
         'wireguard': {
             'my_ip': '172.30.0.2/32',
@@ -136,12 +135,25 @@
             },
         },
         'zfs': {
+            'zfs_arc_max_percent': 75,
             'pools': {
                 'tank': {
                     'type': 'mirror',
                     'devices': [
                         '/dev/disk/by-partlabel/zfs-data-1',
                         '/dev/disk/by-partlabel/zfs-data-2',
+                    ],
+                },
+                'ssd': {
+                    'type': 'mirror',
+                    'devices': [
+                        '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part3',
+                        '/dev/disk/by-id/nvme-KINGSTON_SNVS500G_50026B7685A7B988-part1',
+                    ],
+                },
+                'cache': {
+                    'devices': [
+                        '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part4',
                     ],
                 },
             },

@@ -1,3 +1,11 @@
+defaults = {
+    'apt': {
+        'packages': {
+            'wakeonlan': {},
+        },
+    },
+}
+
 @metadata_reactor.provides(
     'users/wol',
 )

@@ -1,6 +1,15 @@
 database_password = repo.vault.password_for(f'{node.name} postgresql gitea')
 
 defaults = {
+    'apt': {
+        'packages': {
+            'git': {
+                'needed_by': {
+                    'svc_systemd:gitea',
+                }
+            },
+        },
+    },
     'gitea': {
         'database': {
             'host': 'localhost',
@@ -50,6 +59,11 @@ defaults = {
                     'WantedBy': {'multi-user.target'},
                 },
             },
+        },
+    },
+    'users': {
+        'git': {
+            'home': '/home/git',
         },
     },
     'zfs': {

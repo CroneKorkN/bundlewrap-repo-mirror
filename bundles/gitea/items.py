@@ -11,10 +11,6 @@ downloads['/usr/local/bin/gitea'] = {
     },
 }
 
-users['git'] = {
-    'home': '/home/git',
-}
-
 directories['/var/lib/gitea'] = {
     'owner': 'git',
     'mode': '0700',
