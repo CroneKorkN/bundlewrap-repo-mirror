@@ -48,8 +48,8 @@ hosts = {}
 for source_string in node.metadata.get('apt/sources'):
     source = repo.libs.apt.AptSource(source_string)
     hosts\
-        .setdefault(source.url.hostname, set())\
-        .add(source)
+        .setdefault(source.url.hostname, list())\
+        .append(source)
 
 # create sources lists and keyfiles
 
@@ -61,12 +61,13 @@ for host, sources in hosts.items():
         source.options['signed-by'] = [destination_path]
 
     files[f'/etc/apt/sources.list.d/{host}.list'] = {
-        'content': '\n'.join(
-            str(source) for source in sorted(sources)
-        ).format(
-            release=node.metadata.get('os_release'),
-            version=node.os_version[0], # WIP crystal
-        ),
+        'content': '\n'.join(set(
+            str(source).format(
+                release=node.metadata.get('os_release'),
+                version=node.os_version[0], # WIP crystal
+            )
+                for source in sorted(dict.fromkeys(sources))
+        )),
         'triggers': {
             'action:apt_update',
         },
