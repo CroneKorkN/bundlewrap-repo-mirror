@@ -136,3 +136,23 @@ def headers(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'zfs/kernel_params/zfs_arc_max',
+)
+def arc_size(metadata):
+    arc_percent = metadata.get('zfs/zfs_arc_max_percent', None)
+    
+    if arc_percent:
+        return {
+            'zfs': {
+                'kernel_params': {
+                    'zfs_arc_max': str(int(
+                        metadata.get('vm/ram') * 1024 * 1024 * (arc_percent/100)
+                    )),
+                },
+            },
+        }
+    else:
+        return {}
