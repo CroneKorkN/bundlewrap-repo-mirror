@@ -78,8 +78,12 @@ defaults = {
         'datasets': {},
         'pools': {},
         'kernel_params': {},
+        'storage_classes': {
+            'ssd': 'tank',
+        },
     },
 }
+
 
 @metadata_reactor.provides(
     'zfs/datasets'

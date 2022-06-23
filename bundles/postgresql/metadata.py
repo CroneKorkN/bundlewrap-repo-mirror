@@ -1,3 +1,6 @@
+from importlib.metadata import metadata
+
+
 root_password = repo.vault.password_for(f'{node.name} postgresql root')
 
 defaults = {
@@ -23,13 +26,22 @@ defaults = {
     'grafana_rows': set(),
 }
 
-if node.has_bundle('zfs'):
-    defaults['zfs'] = {
-        'datasets': {
-            'tank/postgresql': {
-                'mountpoint': '/var/lib/postgresql',
-                'recordsize': '8192',
-                'atime': 'off',
+
+@metadata_reactor.provides(
+    'zfs/datasets',
+)
+def zfs(metadata):
+    if not node.has_bundle('zfs'):
+        return {}
+
+    return {
+        'zfs': {
+            'datasets': {
+                f"{metadata.get('zfs/storage_classes/ssd')}/postgresql": {
+                    'mountpoint': '/var/lib/postgresql',
+                    'recordsize': '8192',
+                    'atime': 'off',
+                },
             },
         },
     }

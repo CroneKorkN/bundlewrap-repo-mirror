@@ -136,6 +136,9 @@
         },
         'zfs': {
             'zfs_arc_max_percent': 75,
+            'storage_classes': {
+                'ssd': 'ssd',
+            },
             'pools': {
                 'tank': {
                     'type': 'mirror',
