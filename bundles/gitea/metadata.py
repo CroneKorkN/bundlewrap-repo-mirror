@@ -66,14 +66,25 @@ defaults = {
             'home': '/home/git',
         },
     },
-    'zfs': {
-        'datasets': {
-            'tank/gitea': {
-                'mountpoint': '/var/lib/gitea',
+}
+
+
+@metadata_reactor.provides(
+    'zfs/datasets',
+)
+def zfs(metadata):
+    if not node.has_bundle('zfs'):
+        return {}
+
+    return {
+        'zfs': {
+            'datasets': {
+                f"{metadata.get('zfs/storage_classes/ssd')}/gitea": {
+                    'mountpoint': '/var/lib/gitea',
+                },
             },
         },
-    },
-}
+    }
 
 
 @metadata_reactor.provides(
