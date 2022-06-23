@@ -4,6 +4,7 @@
     ],
     'bundles': [
         'apt',
+        # 'modprobe',
     ],
     'metadata': {
         'apt': {
