@@ -119,7 +119,7 @@
             },
         },
         'vm': {
-            'cores': 2,
+            'cores': 16,
             'ram':  32384,
         },
         'wireguard': {
