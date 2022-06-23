@@ -132,6 +132,8 @@ def php_ini(metadata):
     'php/www.conf',
 )
 def www_conf(metadata):
+    threads = metadata.get('vm/threads', metadata.get('vm/cores', 4))
+
     return {
         'php': {
             'www.conf': {
@@ -141,11 +143,11 @@ def www_conf(metadata):
                 'listen.owner': 'www-data',
                 'listen.group': 'www-data',
                 'pm': 'dynamic',
-                'pm.max_children': '32',
-                'pm.start_servers': '16',
-                'pm.min_spare_servers': '8',
-                'pm.max_spare_servers': '16',
-                'pm.max_requests': '500',
+                'pm.max_children': int(threads*2),
+                'pm.start_servers': int(threads),
+                'pm.min_spare_servers': int(threads/2),
+                'pm.max_spare_servers': int(threads),
+                'pm.max_requests': int(threads*32),
             },
         },
     }
