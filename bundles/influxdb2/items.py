@@ -5,7 +5,7 @@ directories['/var/lib/influxdb'] = {
     'owner': 'influxdb',
     'group': 'influxdb',
     'needs': [
-        'zfs_dataset:tank/influxdb',
+        f"zfs_dataset:{node.metadata.get('zfs/storage_classes/ssd')}/influxdb",
     ],
 }
 

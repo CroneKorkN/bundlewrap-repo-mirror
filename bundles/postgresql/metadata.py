@@ -1,6 +1,3 @@
-from importlib.metadata import metadata
-
-
 root_password = repo.vault.password_for(f'{node.name} postgresql root')
 
 defaults = {
