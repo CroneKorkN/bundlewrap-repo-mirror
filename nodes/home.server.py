@@ -148,17 +148,16 @@
                     ],
                 },
                 'ssd': {
-                    'type': 'mirror',
                     'devices': [
                         '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part3',
-                        '/dev/disk/by-id/nvme-KINGSTON_SNVS500G_50026B7685A7B988-part1',
                     ],
                 },
-                'cache': {
-                    'devices': [
-                        '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part4',
-                    ],
                 },
+            'datasets': {
+                'ssd/nextcloud-appdata': {
+                    'mountpoint': '/var/lib/nextcloud/appdata_oci6dw1woodz',
+                    'backup': False,
+                }
             },
         },
     },
