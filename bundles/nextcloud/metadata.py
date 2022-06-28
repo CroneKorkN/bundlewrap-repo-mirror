@@ -131,7 +131,7 @@ def pdlib(metadata):
     return {
         'apt': {
             'packages': {
-                f"php{metadata.get('php/version')}-pdlib": {},
+                f"php{metadata.get('php/version')}-pdlib": {}, # face recognition
             },
         },
     }
