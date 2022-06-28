@@ -83,6 +83,7 @@
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
             'version': '24.0.2',
+            'instance_id': 'oci6dw1woodz',
         },
         'nextcloud-picsort': {
             'ckn': {
@@ -120,7 +121,8 @@
         },
         'vm': {
             'cores': 16,
-            'ram':  32384,
+            'threads': 32,
+            'ram':  49152,
         },
         'wireguard': {
             'my_ip': '172.30.0.2/32',
@@ -135,7 +137,7 @@
             },
         },
         'zfs': {
-            'zfs_arc_max_percent': 75,
+            'zfs_arc_max_percent': 80,
             'storage_classes': {
                 'ssd': 'ssd',
             },
@@ -152,7 +154,7 @@
                         '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part3',
                     ],
                 },
-                },
+            },
             'datasets': {
                 'ssd/nextcloud-appdata': {
                     'mountpoint': '/var/lib/nextcloud/appdata_oci6dw1woodz',
