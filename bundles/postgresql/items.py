@@ -1,5 +1,8 @@
 from bundlewrap.utils.dicts import merge_dict
 
+
+version = node.metadata.get('postgresql/version')
+
 directories = {
     '/var/lib/postgresql': {
         'owner': 'postgres',
@@ -14,6 +17,22 @@ directories = {
     }
 }
 
+files = {
+    f"/etc/postgresql/{version}/main/conf.d/managed.conf": {
+        'content': '\n'.join(
+            f'{key} = {value}'
+                for key, value in sorted(node.metadata.get('postgresql/conf').items())
+        ) + '\n',
+        'owner': 'postgres',
+        'group': 'postgres',
+        'needed_by': [
+            'svc_systemd:postgresql',
+        ],
+        'triggers': [
+            'svc_systemd:postgresql:restart',
+        ],
+    },
+}
 
 svc_systemd['postgresql'] = {
     'needs': [
