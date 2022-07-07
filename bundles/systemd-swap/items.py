@@ -1,5 +1,4 @@
-size = node.metadata.get('systemd-swap')
-assert isinstance(size, int)
+size_mb = node.metadata.get('systemd-swap')//1_000_000
 
 actions = {
     'stop_swap': {
@@ -16,8 +15,8 @@ actions = {
         },
     },
     'create_swapfile': {
-        'command': f'dd if=/dev/zero of=/swapfile bs={size} count=1',
-        'unless': f'stat -c %s /swapfile | grep ^{size}$',
+        'command': f'dd if=/dev/zero of=/swapfile bs=1000000 count={size_mb}',
+        'unless': f'stat -c %s /swapfile | grep ^{size_mb*1_000_000}$',
         'preceded_by': {
             'action:stop_swap',
             'action:remove_swapfile',
@@ -27,23 +26,23 @@ actions = {
             'svc_systemd:swapfile.swap:restart',
         },
     },
+    'swapfile_mode': {
+        'command': f'chmod 600 /swapfile',
+        'unless': f'stat -c "%a" /swapfile | grep -q "^600$"',
+        'needs': {
+            'action:create_swapfile',
+        },
+        'triggers': {
+            'svc_systemd:swapfile.swap:restart',
+        },
+    },
     'initialize_swapfile': {
         'command': f'mkswap /swapfile',
         'triggered': True,
         'needs': {
-            'action:create_swapfile',
+            'action:swapfile_mode',
         }
     },
-}
-
-files = {
-    '/swapfile': {
-        'content_type': 'any', 
-        'mode': '600',
-        'triggers': {
-            'svc_systemd:swapfile.swap:restart',
-        },
-    }
 }
 
 svc_systemd = {
@@ -52,7 +51,6 @@ svc_systemd = {
             'action:initialize_swapfile',
         },
         'needs': {
-            'file:/swapfile',
             'action:initialize_swapfile',
             'action:systemd-reload',
         },

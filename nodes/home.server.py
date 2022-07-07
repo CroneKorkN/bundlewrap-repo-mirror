@@ -107,7 +107,7 @@
         'steam-chat-viewer': {
             'hostname': 'steam-chats.ckn.li',
         },
-        'systemd-swap': 4*10**9,
+        'systemd-swap': 4_000_000_000,
         'tasmota-charge': {
             'phone': {
                 'ip': '10.0.0.175',
