@@ -142,7 +142,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                         host=monitored_node.name,
                         negative=query_config.get('negative', False),
                         boolean_to_int=query_config.get('boolean_to_int', False),
-                        resolution=query_config.get('resolution', 1) * 4,
+                        resolution=query_config.get('resolution', 1),
                         minimum=query_config.get('minimum', None),
                         filters={
                             'host': monitored_node.name,
