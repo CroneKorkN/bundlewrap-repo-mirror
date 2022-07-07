@@ -9,7 +9,7 @@
                         'cpu_usage',
                     ],
                 },
-                'minimum': 1,
+                'minimum': 0.2,
             },
         },
         'unit': 'percent',
