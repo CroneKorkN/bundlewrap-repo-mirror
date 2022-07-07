@@ -1,6 +1,15 @@
 from shlex import quote as q
 
 
+defaults = {
+    'apt': {
+        'packages': {
+            'exiftool': {},
+        },
+    },
+}
+
+
 @metadata_reactor.provides(
     'systemd-timers',
 )
