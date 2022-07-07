@@ -4,7 +4,7 @@ from shlex import quote as q
 defaults = {
     'apt': {
         'packages': {
-            'exiftool': {},
+            'libimage-exiftool-perl': {},
         },
     },
 }
