@@ -4,7 +4,7 @@ from(bucket: "${bucket}")
 <% values = values if isinstance(values, list) else [values] %>\
   |> filter(fn: (r) => ${' or '.join(f'r["{key}"] == "{value}"' for value in values)})
 % endfor
-  |> aggregateWindow(every: duration(v: int(v: v.windowPeriod)*${resolution}), fn: mean, createEmpty: false) // aggregate early for best performance
+  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) // aggregate early for best performance
 % if minimum:
   |> filter(fn: (r) => r._value > ${minimum})
 % endif

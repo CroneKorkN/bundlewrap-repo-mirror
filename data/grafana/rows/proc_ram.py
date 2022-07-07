@@ -10,7 +10,6 @@
                     ],
                 },
                 'minimum': 10*(10**6),
-                'resolution': 2,
             },
         },
         'unit': 'bytes',

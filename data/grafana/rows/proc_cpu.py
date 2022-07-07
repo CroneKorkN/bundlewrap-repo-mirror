@@ -10,7 +10,6 @@
                     ],
                 },
                 'minimum': 1,
-                'resolution': 2,
             },
         },
         'unit': 'percent',
