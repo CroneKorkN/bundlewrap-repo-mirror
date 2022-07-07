@@ -8,6 +8,7 @@
         'monitored',
     ],
     'bundles': [
+        'grub',
         'smartctl',
         'wol-sleeper',
         'zfs',

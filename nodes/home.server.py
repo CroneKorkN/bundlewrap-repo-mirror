@@ -18,6 +18,7 @@
         'gitea',
 #        'gollum',
         'grafana',
+        'grub',
         'influxdb2',
         'mirror',
         'postgresql',
@@ -68,6 +69,9 @@
         'grafana': {
             'hostname': 'grafana.sublimity.de',
             'influxdb_node': 'home.server',
+        },
+        'grub': {
+            'kernel_params': {'nomodeset'}, # nvidia GT1030 freeze fix
         },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',
