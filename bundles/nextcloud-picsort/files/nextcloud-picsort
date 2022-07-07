@@ -16,7 +16,7 @@ chmod -R 770 "$SOURCEPATH"
 
 SCAN="FALSE"
 IFS=$'\n'
-for f in `find "$SOURCEPATH" -iname *.PNG -o -iname *.JPG -o -iname *.CR2 -o -iname *.CR3 -o -iname *.MP4 -o -iname *.MOV`; do
+for f in `find "$SOURCEPATH" -iname *.PNG -o -iname *.JPG -o -iname *.HEIC -o -iname *.CR2 -o -iname *.CR3 -o -iname *.MP4 -o -iname *.MOV`; do
   SCAN="TRUE"
   echo "PROCESSING: $f"
   DATE=`exiftool "$f" | grep -m 1 "Create Date"`
