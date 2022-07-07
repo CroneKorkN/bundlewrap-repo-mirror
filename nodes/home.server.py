@@ -25,6 +25,7 @@
         'smartctl',
         'steam-chat-logger',
         'steam-chat-viewer',
+        'systemd-swap',
         'raspberrymatic-cert',
         'tasmota-charge',
         'wireguard',
@@ -107,6 +108,7 @@
         'steam-chat-viewer': {
             'hostname': 'steam-chats.ckn.li',
         },
+        'systemd-swap': 4*10**9,
         'tasmota-charge': {
             'phone': {
                 'ip': '10.0.0.175',
@@ -154,7 +156,7 @@
                         '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part3',
                     ],
                 },
-            },
+                },
             'datasets': {
                 'ssd/nextcloud-appdata': {
                     'mountpoint': '/var/lib/nextcloud/appdata_oci6dw1woodz',
