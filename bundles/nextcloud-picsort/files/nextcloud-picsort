@@ -1,7 +1,9 @@
 #!/bin/bash
 
 USER="$1"
-SOURCEPATH="/var/lib/nextcloud/$1/files/$2"
+
+REL_SOURCE_PATH="/$1/files/$2"
+ABS_SOURCE_PATH="/var/lib/nextcloud/$1/files/$2"
 
 REL_DEST_PATH="/$1/files/$3"
 ABS_DEST_PATH="/var/lib/nextcloud/$1/files/$3"
@@ -11,52 +13,63 @@ ABS_UNSORTABLE_PATH="/var/lib/nextcloud/$1/files/$4"
 
 echo "STARTING..."
 
-chown -R www-data:www-data "$SOURCEPATH"
-chmod -R 770 "$SOURCEPATH"
+chown -R www-data:www-data "$ABS_SOURCE_PATH"
+chmod -R 770 "$ABS_SOURCE_PATH"
 
 SCAN="FALSE"
 IFS=$'\n'
-for f in `find "$SOURCEPATH" -iname *.PNG -o -iname *.JPG -o -iname *.HEIC -o -iname *.CR2 -o -iname *.CR3 -o -iname *.MP4 -o -iname *.MOV`; do
+for f in `find "$ABS_SOURCE_PATH" -iname *.PNG -o -iname *.JPG -o -iname *.JPEG -o -iname *.HEIC -o -iname *.CR2 -o -iname *.CR3 -o -iname *.MP4 -o -iname *.MOV`; do
   SCAN="TRUE"
   echo "PROCESSING: $f"
-  DATE=`exiftool "$f" | grep -m 1 "Create Date"`
-  if ! echo "$DATE" | grep "Create Date" >/dev/null
+
+  EXIF=`exiftool "$f"`
+  if grep -q '^Create Date' <<< $EXIF
   then
-    RELPATH=$(realpath --relative-to="$SOURCEPATH" "$f")
+    DATETIME=`grep -m 1 "^Create Date" <<< $EXIF | cut -d: -f2- | xargs`
+  elif grep -q '^File Modification Date' <<< $EXIF
+  then
+    DATETIME=`grep -m 1 '^File Modification Date' <<< $EXIF | cut -d: -f2- | xargs`
+  else
+    RELPATH=$(realpath --relative-to="$ABS_SOURCE_PATH" "$f")
     DIRNAME=$(dirname "$ABS_UNSORTABLE_PATH/$RELPATH")
     echo "UNSORTABLE: $f"
     mkdir -p "$DIRNAME"
     mv "$f" "$DIRNAME"
-  else
-    YEAR=`echo $DATE | cut -d':' -f2 | cut -c 2-`
-    MONTH=`echo $DATE | cut -d':' -f3`
-    DAY=`echo $DATE | cut -d':' -f4 | cut -d' ' -f1`
-    HOUR=`echo $DATE | cut -d':' -f4 | cut -d' ' -f2`
-    MINUTE=`echo $DATE | cut -d':' -f5`
-    SECOND=`echo $DATE | cut -d':' -f6`
-    SECOND=`echo $SECOND | cut -d'+' -f1` # remove timezone
-    HASH=`sha256sum "$f" | xxd -r -p | base64 | head -c 3 | tr '/+' '_-'`
-    EXT=`echo "${f##*.}" | tr '[:upper:]' '[:lower:]'`
-    if [[ "$EXT" = "cr2" ]] ||  [[ "$EXT" = "cr3" ]]
-    then
-      RAW="raw/"
-    else
-      RAW=""
-    fi
-    FILE="$ABS_DEST_PATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
-    echo "DESTINATION: $FILE"
-    mkdir -p "$(dirname "$FILE")"
-    mv -v "$f" "$FILE"
+    continue
   fi
+
+  DATE=`cut -d' ' -f1 <<< $DATETIME`
+  TIME=`cut -d' ' -f2 <<< $DATETIME | cut -d'+' -f1`
+
+  YEAR=`cut -d':' -f1 <<< $DATE`
+  MONTH=`cut -d':' -f2 <<< $DATE`
+  DAY=`cut -d':' -f3 <<< $DATE`
+  HOUR=`cut -d':' -f1 <<< $TIME`
+  MINUTE=`cut -d':' -f2 <<< $TIME`
+  SECOND=`cut -d':' -f3 <<< $TIME`
+
+  HASH=`sha256sum "$f" | xxd -r -p | base64 | head -c 3 | tr '/+' '_-'`
+  EXT=`echo "${f##*.}" | tr '[:upper:]' '[:lower:]'`
+  if [[ "$EXT" = "cr2" ]] ||  [[ "$EXT" = "cr3" ]]
+  then
+    RAW="raw/"
+  else
+    RAW=""
+  fi
+  FILE="$ABS_DEST_PATH/$YEAR-$MONTH/$RAW$YEAR$MONTH$DAY"-"$HOUR$MINUTE$SECOND"_"$HASH"."$EXT"
+  echo "DESTINATION: $FILE"
+  mkdir -p "$(dirname "$FILE")"
+  mv -v "$f" "$FILE"
 done
 
 if [ "$SCAN" == "TRUE" ]; then
   echo "SCANNING..."
-  # find "$SOURCEPATH/"* -type d -empty -delete >> /var/echo/nc-picsort.echo # nextcloud app bug when deleting folders
+  # find "$ABS_SOURCE_PATH/"* -type d -empty -delete >> /var/echo/nc-picsort.echo # nextcloud app bug when deleting folders
   chown -R www-data:www-data "$ABS_DEST_PATH"
   chown -R www-data:www-data "$ABS_UNSORTABLE_PATH"
   chmod -R 770 "$ABS_DEST_PATH"
   chmod -R 770 "$ABS_UNSORTABLE_PATH"
+  sudo -u www-data php /opt/nextcloud/occ files:scan --path "$REL_SOURCE_PATH"
   sudo -u www-data php /opt/nextcloud/occ files:scan --path "$REL_UNSORTABLE_PATH"
   sudo -u www-data php /opt/nextcloud/occ files:scan --path "$REL_DEST_PATH"
   sudo -u www-data php /opt/nextcloud/occ preview:pre-generate
