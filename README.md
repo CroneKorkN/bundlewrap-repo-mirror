@@ -16,3 +16,14 @@ Raspberry pi as soundcard
 # install bw fork
 
 pip3 install --editable git+file:///Users/mwiegand/Projekte/bundlewrap-fork#egg=bundlewrap
+
+# monitor timers
+
+```sh
+Triggers=$(systemctl show logrotate.timer --property=Triggers --value)
+if systemctl is-failed "$Triggers"
+do
+  InvocationID=$(systemctl show "$Triggers" --property=InvocationID --value)
+  journalctl INVOCATION_ID="$InvocationID" --output cat
+fi
+```
