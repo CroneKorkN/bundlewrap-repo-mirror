@@ -2,14 +2,14 @@
 
 set -exu
 
-ssh="ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 root@${server_ip}"
+ssh="ssh -o ConnectTimeout=5 root@${server_ip}"
 bookmark_prefix="auto-mirror_"
 new_bookmark="$bookmark_prefix$(date +"%Y-%m-%d_%H:%M:%S")"
 
 for dataset in $(zfs list -t filesystem -H -o name)
 do
   echo "MIRRORING $dataset"
-  
+
   if ! $ssh sudo zfs list -t filesystem -H -o name | grep -q "^$dataset$"
   then
     echo "CREATING PARENT DATASET..."
@@ -17,11 +17,11 @@ do
   fi
 
   zfs snap "$dataset@$new_bookmark"
-  
+
   if zfs list -t bookmark -H -o name | grep "^$dataset#$bookmark_prefix" | wc -l | grep -q "^0$"
   then
     echo "INITIAL BACKUP"
-    # do in subshell, otherwise ctr+c will lead to 0 exitcode  
+    # do in subshell, otherwise ctr+c will lead to 0 exitcode
     $(zfs send -v "$dataset@$new_bookmark" | $ssh sudo zfs recv -F "$dataset" -o mountpoint=none)
   else
     echo "INCREMENTAL BACKUP"
@@ -32,6 +32,19 @@ do
 
   if [[ "$?" == "0" ]]
   then
+
+    # delete old local bookmarks
+    for destroyable_bookmark in $(zfs list -t bookmark -H -o name "$dataset" | grep "^$dataset#$bookmark_prefix")
+    do
+      zfs destroy "$destroyable_bookmark"
+    done
+
+    # delete snapshots from bookmarks (except newest, even of not necessary; maybe for resuming tho)
+    for destroyable_snapshot in $($ssh sudo zfs list -t snapshot -H -o name "$dataset" | grep "^$dataset@$bookmark_prefix" | grep -v "$new_bookmark")
+    do
+      $ssh sudo zfs destroy "$destroyable_snapshot"
+    done
+
     zfs bookmark "$dataset@$new_bookmark" "$dataset#$new_bookmark"
     zfs destroy "$dataset@$new_bookmark"
     echo "SUCCESS $dataset"
