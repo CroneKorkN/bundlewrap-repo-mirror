@@ -17,7 +17,7 @@ MIN_UPTIME=$(expr 60 \* 15)
 if [[ "$UPTIME" -lt "$MIN_UPTIME" ]]
 then
   echo "ABORT: uptime of ${UPTIME}s is lower than minimum of ${MIN_UPTIME}s"
-  exit 0
+  exit 75
 fi
 
 # CHECK FOR RUNNING TIMERS
@@ -30,7 +30,7 @@ do
   elif systemctl is-active "$SERVICE" --quiet
   then
     echo "ABORT: service $SERVICE is running by timer"
-    exit 0
+    exit 75
   fi
 done
 
@@ -40,7 +40,7 @@ LOGINS=$(netstat -tnpa | grep 'ESTABLISHED.*sshd' | tr -s ' ' | cut -d' ' -f5,7-
 if ! [[ -z "$LOGINS" ]]
 then
   echo "ABORT: users logged in: $LOGINS"
-  exit 0
+  exit 75
 fi
 
 # SUSPEND!
@@ -48,8 +48,26 @@ fi
 if [[ "$1" = check ]]
 then
   echo "WOULD SESPEND"
+  exit 0
 else
+  echo "SESPENDING AFTER TIMEOUT"
+
+  for i in 1 2 3 4 5 6
+  do
+    echo "TIMEOUT ${i} success"
+    sleep 10
+
+    # check if condition is still met
+    if "$0" check
+    then
+      continue
+    else
+      echo "SESPENSION ABORTED"
+      exit 75
+    fi
+  done
+
   echo "SESPENDING"
-  sleep 60
   systemctl suspend
+  exit 0
 fi

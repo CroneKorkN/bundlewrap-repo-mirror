@@ -22,7 +22,7 @@ def systemd(metadata):
                     'Persistent': config.get('persistent', False),
                     'Unit': f'{name}.service',
                 },
-            }, 
+            },
             f'{name}.service': {
                 'Unit':{
                     'Description': f'{name} timer service',
@@ -37,9 +37,11 @@ def systemd(metadata):
         })
         if config.get('working_dir'):
             units[f'{name}.service']['Service']['WorkingDirectory'] = config['working_dir']
-        
+        if config.get('success_exit_status'):
+            units[f'{name}.service']['Service']['SuccessExitStatus'] = config['success_exit_status']
+
         services[f'{name}.timer'] = {}
-        
+
     return {
         'systemd': {
             'units': units,
