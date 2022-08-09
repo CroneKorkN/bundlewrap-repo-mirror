@@ -9,10 +9,8 @@
 alias s='sudo su - root -s /usr/bin/zsh'
 
 function hhtop {
-    # mkdir -p ~/.config/htop
-    # cp /etc/htoprc.global ~/.config/htop/htoprc
-    # cp /etc/htoprc.global ~/.htoprc
-    rm -rf ~/.config/htop ~/.htoprc
+    mkdir -p ~/.config/htop
+    cp /etc/htoprc.global ~/.config/htop/htoprc
     htop
 }
 
