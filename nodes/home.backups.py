@@ -56,6 +56,12 @@
                     ],
                 },
             },
+            'auto_snapshots': {
+                'hourly': 1,
+                'daily': 7,
+                'weekly': 4,
+                'monthly': 24,
+            },
         },
     },
 }

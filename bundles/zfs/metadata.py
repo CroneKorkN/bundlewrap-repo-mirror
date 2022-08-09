@@ -45,24 +45,6 @@ defaults = {
             'when': '*-2,4,6,8,10,12-1 02:00',
             'persistent': True,
         },
-        'zfs-auto-snapshot-hourly': {
-            'command': '/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=hourly --keep=24 //',
-            'when': 'hourly',
-        },
-        'zfs-auto-snapshot-daily': {
-            'command': '/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=daily --keep=7 //',
-            'when': 'daily',
-        },
-        'zfs-auto-snapshot-weekly': {
-            'command': '/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=weekly --keep=4 //',
-            'when': 'weekly',
-            'persistent': True,
-        },
-        'zfs-auto-snapshot-monthly': {
-            'command': '/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=monthly --keep=24 //',
-            'when': 'monthly',
-            'persistent': True,
-        },
     },
     'telegraf': {
         'config': {
@@ -80,6 +62,12 @@ defaults = {
         'kernel_params': {},
         'storage_classes': {
             'ssd': 'tank',
+        },
+        'auto_snapshots': {
+            'hourly': 24,
+            'daily': 7,
+            'weekly': 4,
+            'monthly': 24,
         },
     },
 }
@@ -124,7 +112,7 @@ def headers(metadata):
         arch = 'arm64'
     else:
         arch = 'amd64'
-    
+
     return {
         'apt': {
             'packages': {
@@ -143,7 +131,7 @@ def headers(metadata):
 )
 def arc_size(metadata):
     arc_percent = metadata.get('zfs/zfs_arc_max_percent', None)
-    
+
     if arc_percent:
         return {
             'zfs': {
@@ -156,3 +144,42 @@ def arc_size(metadata):
         }
     else:
         return {}
+
+
+@metadata_reactor.provides(
+    'systemd-timers/zfs-auto-snapshot-hourly',
+    'systemd-timers/zfs-auto-snapshot-daily',
+    'systemd-timers/zfs-auto-snapshot-weekly',
+    'systemd-timers/zfs-auto-snapshot-monthly',
+)
+def auto_snapshots(metadata):
+    hourly = metadata.get('zfs/auto_snapshots/hourly')
+    daily = metadata.get('zfs/auto_snapshots/daily')
+    weekly = metadata.get('zfs/auto_snapshots/weekly')
+    monthly = metadata.get('zfs/auto_snapshots/monthly')
+
+    # cant be 0
+    assert hourly > 0 and daily > 0 and weekly > 0 and monthly > 0
+
+    return {
+        'systemd-timers': {
+            'zfs-auto-snapshot-hourly': {
+                'command': f'/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=hourly --keep={hourly} //',
+                'when': 'hourly',
+            },
+            'zfs-auto-snapshot-daily': {
+                'command': f'/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=daily --keep={daily} //',
+                'when': 'daily',
+            },
+            'zfs-auto-snapshot-weekly': {
+                'command': f'/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=weekly --keep={weekly} //',
+                'when': 'weekly',
+                'persistent': True,
+            },
+            'zfs-auto-snapshot-monthly': {
+                'command': f'/usr/sbin/zfs-auto-snapshot --quiet --syslog --label=monthly --keep={monthly} //',
+                'when': 'monthly',
+                'persistent': True,
+            },
+        },
+    }
