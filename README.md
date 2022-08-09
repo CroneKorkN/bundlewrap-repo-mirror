@@ -20,10 +20,16 @@ pip3 install --editable git+file:///Users/mwiegand/Projekte/bundlewrap-fork#egg=
 # monitor timers
 
 ```sh
-Triggers=$(systemctl show logrotate.timer --property=Triggers --value)
+Timer=backup
+
+Triggers=$(systemctl show ${Timer}.timer --property=Triggers --value)
+echo $Triggers
 if systemctl is-failed "$Triggers"
-do
+then
   InvocationID=$(systemctl show "$Triggers" --property=InvocationID --value)
+  echo $InvocationID
+  ExitCode=$(systemctl show "$Triggers" -p ExecStartEx --value | sed 's/^{//' | sed 's/}$//' | tr ';' '\n' | xargs -n 1 | grep '^status=' | cut -d '=' -f 2)
+  echo $ExitCode
   journalctl INVOCATION_ID="$InvocationID" --output cat
 fi
 ```
