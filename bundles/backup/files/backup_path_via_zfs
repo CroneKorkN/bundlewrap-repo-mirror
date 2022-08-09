@@ -33,7 +33,7 @@ zfs snap "$source_dataset@$new_bookmark"
 if zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | wc -l | grep -q "^0$"
 then
   echo "INITIAL BACKUP"
-  # do in subshell, otherwise ctr+c will lead to 0 exitcode  
+  # do in subshell, otherwise ctr+c will lead to 0 exitcode
   $(zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv -F "$target_dataset")
 else
   echo "INCREMENTAL BACKUP"
@@ -44,6 +44,19 @@ fi
 
 if [[ "$?" == "0" ]]
 then
+
+  # delete old local bookmarks
+  for destroyable_bookmark in $(zfs list -t bookmark -H -o name "$dataset" | grep "^$dataset#$bookmark_prefix")
+  do
+    zfs destroy "$destroyable_bookmark"
+  done
+
+  # delete snapshots from bookmarks (except newest, even of not necessary; maybe for resuming tho)
+  for destroyable_snapshot in $($ssh sudo zfs list -t snapshot -H -o name "$dataset" | grep "^$dataset@$bookmark_prefix" | grep -v "$new_bookmark")
+  do
+    $ssh sudo zfs destroy "$destroyable_snapshot"
+  done
+
   zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
   zfs destroy "$source_dataset@$new_bookmark" # keep snapshots?
   echo "SUCCESS"
