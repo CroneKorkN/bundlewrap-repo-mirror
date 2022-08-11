@@ -20,6 +20,8 @@ defaults = {
                         'commands': ["sudo /usr/local/share/telegraf/apcupsd"],
                         'name_override': "apcupsd",
                         'data_format': "influx",
+                        'interval': '30s',
+                        'flush_interval': '30s',
                     }),
                 },
             },
