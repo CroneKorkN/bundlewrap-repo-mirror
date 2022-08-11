@@ -4,7 +4,7 @@
             'seome': {
                 'filters': {
                     '_measurement': 'pressure_stall',
-                    'ressource': [
+                    'resource': [
                         'cpu',
                     ],
                     'type': [
@@ -24,7 +24,7 @@
             'some': {
                 'filters': {
                     '_measurement': 'pressure_stall',
-                    'ressource': [
+                    'resource': [
                         'memory',
                     ],
                     'type': [
@@ -38,7 +38,7 @@
             'full': {
                 'filters': {
                     '_measurement': 'pressure_stall',
-                    'ressource': [
+                    'resource': [
                         'memory',
                     ],
                     'type': [
@@ -58,7 +58,7 @@
             'some': {
                 'filters': {
                     '_measurement': 'pressure_stall',
-                    'ressource': [
+                    'resource': [
                         'io',
                     ],
                     'type': [
@@ -72,7 +72,7 @@
             'full': {
                 'filters': {
                     '_measurement': 'pressure_stall',
-                    'ressource': [
+                    'resource': [
                         'io',
                     ],
                     'type': [
