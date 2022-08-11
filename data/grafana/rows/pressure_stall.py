@@ -1,35 +1,7 @@
 {
-    'avg10 some': {
+    'cpu': {
         'queries': {
-            'io': {
-                'filters': {
-                    '_measurement': 'pressure_stall',
-                    'ressource': [
-                        'io',
-                    ],
-                    'type': [
-                        'some',
-                    ],
-                    '_field': [
-                        'avg10',
-                    ],
-                },
-            },
-            'memory': {
-                'filters': {
-                    '_measurement': 'pressure_stall',
-                    'ressource': [
-                        'memory',
-                    ],
-                    'type': [
-                        'some',
-                    ],
-                    '_field': [
-                        'avg10',
-                    ],
-                },
-            },
-            'cpu': {
+            'seome': {
                 'filters': {
                     '_measurement': 'pressure_stall',
                     'ressource': [
@@ -44,26 +16,26 @@
                 },
             },
         },
-        'display_name': '__field.labels.ressource',
+        'display_name': '__field.labels.type',
         'unit': 'percent',
     },
-    'avg10 full': {
+    'memory': {
         'queries': {
-            'io': {
+            'some': {
                 'filters': {
                     '_measurement': 'pressure_stall',
                     'ressource': [
-                        'io',
+                        'memory',
                     ],
                     'type': [
-                        'full',
+                        'some',
                     ],
                     '_field': [
                         'avg10',
                     ],
                 },
             },
-            'memory': {
+            'full': {
                 'filters': {
                     '_measurement': 'pressure_stall',
                     'ressource': [
@@ -78,6 +50,41 @@
                 },
             },
         },
-        'display_name': '__field.labels.ressource',
+        'display_name': '__field.labels.type',
         'unit': 'percent',
-    },}
+    },
+    'io': {
+        'queries': {
+            'some': {
+                'filters': {
+                    '_measurement': 'pressure_stall',
+                    'ressource': [
+                        'io',
+                    ],
+                    'type': [
+                        'some',
+                    ],
+                    '_field': [
+                        'avg10',
+                    ],
+                },
+            },
+            'full': {
+                'filters': {
+                    '_measurement': 'pressure_stall',
+                    'ressource': [
+                        'io',
+                    ],
+                    'type': [
+                        'full',
+                    ],
+                    '_field': [
+                        'avg10',
+                    ],
+                },
+            },
+        },
+        'display_name': '__field.labels.type',
+        'unit': 'percent',
+    },
+}
