@@ -2,7 +2,9 @@
 
 date=$(date --utc +%s%N)
 
-for metric in TIMELEFT LOADPCT BCHARGE
+METRICS=$(apcaccess)
+
+for METRIC in TIMELEFT LOADPCT BCHARGE
 do
-  echo "apcupsd $metric=$(apcaccess -p $metric | cut -d' ' -f1) $date"
+  echo "apcupsd $METRIC=$(grep $METRIC <<< $METRICS | cut -d ':' -f 2 | xargs | cut -d ' ' -f 1 ) $date"
 done
