@@ -33,3 +33,5 @@ then
   journalctl INVOCATION_ID="$InvocationID" --output cat
 fi
 ```
+
+telegraf: execd for daemons
