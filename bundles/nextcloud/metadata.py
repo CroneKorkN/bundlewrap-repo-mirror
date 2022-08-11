@@ -17,6 +17,11 @@ defaults = {
             'php-zip': {},
             'php-pgsql': {},
             'php-bz2': {}, # face recognition
+            'php-intl': {},
+            'php-imagick': {},
+            'libmagickcore-6.q16-6-extra': {},
+            'php-gmp': {},
+            'php-bcmath': {},
         },
         'sources': {
             'deb https://repo.delellis.com.ar {release} {release}', # face recognition

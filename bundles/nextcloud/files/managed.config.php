@@ -28,7 +28,7 @@ $CONFIG = array (
   "redis" => [
     "host" => "/var/run/redis/nextcloud.sock",
   ],
-  'trusted_domains' => 
+  'trusted_domains' =>
   array (
     0 => 'localhost',
     1 => '127.0.0.1',
@@ -38,4 +38,5 @@ $CONFIG = array (
   "syslog_tag" => "nextcloud",
   "logfile" => "",
   "loglevel" => 3,
+  "default_phone_region" => "DE",
 );
