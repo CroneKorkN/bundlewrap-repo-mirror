@@ -20,6 +20,11 @@ files = {
         'source': f"https://dl.sublimity.de/telegraf-procio/telegraf-procio-{node.metadata.get('system/architecture')}-latest",
         'mode': '0755',
     },
+    '/usr/local/share/telegraf/pressure_stall': {
+        'content_type': 'download',
+        'source': f"https://dl.sublimity.de/telegraf-pressure-stall/telegraf-pressure-stall-{node.metadata.get('system/architecture')}-latest",
+        'mode': '0755',
+    },
 }
 
 svc_systemd['telegraf'] = {

@@ -52,13 +52,22 @@ defaults = {
                 'swap': {h({})},
                 'system': {h({})},
                 'net': {h({})},
-                'exec': {h({
-                    'commands': [
-                        f'sudo /usr/local/share/telegraf/procio',
-                    ],
-                    'data_format': 'influx',
-                    'interval': '20s',
-                })},
+                'exec': {
+                    h({
+                        'commands': [
+                            f'sudo /usr/local/share/telegraf/procio',
+                        ],
+                        'data_format': 'influx',
+                        'interval': '20s',
+                    }),
+                    h({
+                        'commands': [
+                            f'/usr/local/share/telegraf/pressure_stall',
+                        ],
+                        'data_format': 'influx',
+                        'interval': '10s',
+                    }),
+                },
             },
         },
     },
