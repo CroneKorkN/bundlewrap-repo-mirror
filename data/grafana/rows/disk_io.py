@@ -9,6 +9,9 @@
                         'read_bytes',
                     ],
                 },
+                'exists': [
+                    'ID_PART_ENTRY_NUMBER',
+                ],
                 'function': 'derivative',
             },
         },
@@ -26,6 +29,9 @@
                         'write_bytes',
                     ],
                 },
+                'exists': [
+                    'ID_PART_ENTRY_NUMBER',
+                ],
                 'function': 'derivative',
             },
         },

@@ -45,7 +45,9 @@ defaults = {
                         'memory_rss',
                     ],
                 })},
-                'diskio': {h({})},
+                'diskio': {h({
+                    'device_tags': ["ID_PART_ENTRY_NUMBER"],
+                })},
                 'kernel': {h({})},
                 'mem': {h({})},
                 'processes': {h({})},

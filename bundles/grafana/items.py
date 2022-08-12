@@ -151,6 +151,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                             'host': monitored_node.name,
                             **query_config['filters'],
                         },
+                        exists=query_config.get('exists', []),
                         function=query_config.get('function', None),
                     ).strip()
                 })
