@@ -13,7 +13,8 @@
             },
         },
         'unit': 'decbytes',
-        'display_name': '__field.labels.name'
+        'display_name': '__field.labels.name',
+        'tooltip': 'multi',
     },
     'write': {
         'stacked': True,
@@ -29,6 +30,7 @@
             },
         },
         'unit': 'decbytes',
-        'display_name': '__field.labels.name'
+        'display_name': '__field.labels.name',
+        'tooltip': 'multi',
     },
 }

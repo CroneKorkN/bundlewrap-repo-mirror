@@ -101,11 +101,11 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
     dashboard['title'] = monitored_node.name
     dashboard['uid'] = monitored_node.metadata.get('id')
     panel_id = count(start=1)
-    
+
     for row_id, row_name in enumerate(sorted(monitored_node.metadata.get('grafana_rows')), start=1):
         with open(repo.path.join([f'data/grafana/rows/{row_name}.py'])) as file:
             row = eval(file.read())
-        
+
         for panel_in_row, (panel_name, panel_config) in enumerate(row.items()):
             panel = deepcopy(panel_template)
             panel['id'] = next(panel_id)
@@ -113,7 +113,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
             panel['gridPos']['w'] = 24 // len(row)
             panel['gridPos']['x'] = (24 // len(row)) * panel_in_row
             panel['gridPos']['y'] = (row_id - 1) * panel['gridPos']['h']
-            
+
             if 'display_name' in panel_config:
                 panel['fieldConfig']['defaults']['displayName'] = '${'+panel_config['display_name']+'}'
 
@@ -127,13 +127,17 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                 panel['fieldConfig']['defaults']['min'] = panel_config['min']
             if 'max' in panel_config:
                 panel['fieldConfig']['defaults']['max'] = panel_config['max']
+            if 'soft_max' in panel_config:
+                panel['fieldConfig']['defaults']['custom']['axisSoftMax'] = panel_config['soft_max']
 
             if 'legend' in panel_config:
                 panel['options']['legend'].update(panel_config['legend'])
 
             if 'tooltip' in panel_config:
                 panel['options']['tooltip']['mode'] = panel_config['tooltip']
-            
+                if panel_config['tooltip'] == 'multi':
+                    panel['options']['tooltip']['sort'] = 'desc'
+
             for query_name, query_config in panel_config['queries'].items():
                 panel['targets'].append({
                     'refId': query_name,
@@ -150,13 +154,13 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                         function=query_config.get('function', None),
                     ).strip()
                 })
-                
+
             dashboard['panels'].append(panel)
-    
+
     files[f'/var/lib/grafana/dashboards/{monitored_node.name}.json'] = {
         'content': json.dumps(dashboard, indent=4),
         'triggers': [
             'svc_systemd:grafana-server:restart',
         ]
     }
-        
+

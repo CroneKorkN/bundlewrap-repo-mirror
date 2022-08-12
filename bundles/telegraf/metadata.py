@@ -80,7 +80,6 @@ defaults = {
         'proc_cpu',
         'proc_ram',
         'proc_io',
-        'pressure_stall',
     },
     'sudoers': {
         'telegraf': {'/usr/local/share/telegraf/procio'},

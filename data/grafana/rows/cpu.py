@@ -1,6 +1,6 @@
 {
     'usage': {
-        'stacked': False,
+        'stacked': True,
         'queries': {
             'usage': {
                 'filters': {
@@ -22,7 +22,12 @@
             },
         },
         'min': 0,
-        'max': 100,
+        'soft_max': 3,
+        'unit': 'percent',
+        'tooltip': 'multi',
+        'legend': {
+            'displayMode': 'hidden',
+        },
     },
     'load': {
         'stacked': False,
@@ -38,6 +43,41 @@
                 },
                 'function': 'mean',
             },
+        },
+        'min': 0,
+        'soft_max': 3,
+        'unit': 'percent',
+        'tooltip': 'multi',
+        'legend': {
+            'displayMode': 'hidden',
+        },
+    },
+    'pressure_stall': {
+        'queries': {
+            'pressure_stall': {
+                'filters': {
+                    '_measurement': 'pressure_stall',
+                    'resource': [
+                        'cpu',
+                        'io',
+                        'memory',
+                    ],
+                    'type': [
+                        'some',
+                    ],
+                    '_field': [
+                        'avg10',
+                    ],
+                },
+            },
+        },
+        'min': 0,
+        'soft_max': 3,
+        'display_name': '__field.labels.resource',
+        'unit': 'percent',
+        'tooltip': 'multi',
+        'legend': {
+            'displayMode': 'hidden',
         },
     },
 }

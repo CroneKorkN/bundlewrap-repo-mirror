@@ -13,7 +13,8 @@
             },
         },
         'unit': 'decbytes',
-        'display_name': '__field.labels.interface'
+        'display_name': '__field.labels.interface',
+        'tooltip': 'multi',
     },
     'out': {
         'stacked': True,
@@ -29,6 +30,7 @@
             },
         },
         'unit': 'decbytes',
-        'display_name': '__field.labels.interface'
+        'display_name': '__field.labels.interface',
+        'tooltip': 'multi',
     },
 }
