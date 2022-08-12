@@ -79,8 +79,7 @@ defaults = {
         'disk_io',
         'disk_usage',
         'net_io',
-        'proc_cpu',
-        'proc_ram',
+        'proc_cpu_ram',
         'proc_io',
     },
     'sudoers': {
