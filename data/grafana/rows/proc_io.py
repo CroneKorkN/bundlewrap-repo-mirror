@@ -19,8 +19,7 @@
             'displayMode': 'table',
             'placement': 'right',
             'calcs': [
-                'mean',
-                'max',
+                'last',
             ],
         },
     },
@@ -44,8 +43,7 @@
             'displayMode': 'table',
             'placement': 'right',
             'calcs': [
-                'mean',
-                'max',
+                'last',
             ],
         },
     },

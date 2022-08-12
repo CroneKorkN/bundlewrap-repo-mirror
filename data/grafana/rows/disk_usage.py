@@ -16,6 +16,7 @@
         },
         'min': 0,
         'unit': 'bytes',
+        'tooltip': 'multi',
     },
     'root_inodes': {
         'stacked': True,
@@ -33,5 +34,6 @@
             },
         },
         'min': 0,
+        'tooltip': 'multi',
     },
 }

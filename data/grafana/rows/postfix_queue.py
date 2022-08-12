@@ -9,7 +9,7 @@
                         'length',
                     ],
                 },
-                'function': 'mean',
+                'function': 'max',
             },
         },
         'display_name': '__field.labels.queue'
@@ -24,7 +24,7 @@
                         'size',
                     ],
                 },
-                'function': 'mean',
+                'function': 'max',
             },
         },
         'display_name': '__field.labels.queue'
@@ -39,7 +39,7 @@
                         'age',
                     ],
                 },
-                'function': 'mean',
+                'function': 'max',
             },
         },
         'display_name': '__field.labels.queue'

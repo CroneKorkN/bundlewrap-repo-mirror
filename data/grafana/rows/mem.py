@@ -16,6 +16,7 @@
             },
         },
         'unit': 'decbytes',
+        'tooltip': 'multi',
     },
     'swp': {
         'stacked': True,
@@ -32,5 +33,6 @@
             },
         },
         'unit': 'decbytes',
+        'tooltip': 'multi',
     },
 }

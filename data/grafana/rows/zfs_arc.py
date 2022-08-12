@@ -80,6 +80,6 @@
                 'negative': True,
             },
         },
-        'unit': 'bytes',
+        'unit': 'Bps',
     },
 }
