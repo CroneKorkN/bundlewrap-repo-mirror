@@ -27,17 +27,17 @@
         'backup-server': {
             'hostname': 'backups.sublimity.de',
         },
-        'smartctl': {
-            '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL': {
-                'apm': 1,
-            },
-            '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB': {
-                'apm': 1,
-            },
-            '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG': {
-                'apm': 1,
-            },
-        },
+        # 'smartctl': {
+        #     '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL': {
+        #         'apm': 1,
+        #     },
+        #     '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB': {
+        #         'apm': 1,
+        #     },
+        #     '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG': {
+        #         'apm': 1,
+        #     },
+        # },
         'wol-sleeper': {
             'network': 'internal',
             'waker': 'home.server',
