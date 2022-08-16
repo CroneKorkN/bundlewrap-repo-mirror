@@ -62,7 +62,7 @@ files = {
         'group': 'nagios',
         'mode': '0640',
         'context': {
-            'hostname': node.metadata.get('icinga2/hostname')
+            'hostname': node.metadata.get('hostname')
         },
         'triggers': [
             'svc_systemd:icinga2.service:restart',
