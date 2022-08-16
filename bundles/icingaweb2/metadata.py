@@ -91,7 +91,7 @@ defaults = {
             'commandtransports.ini': {
                 'icinga2': {
                     'transport': 'api',
-                    'host': 'lcoalhost',
+                    'host': 'localhost',
                     'port': '5665',
                     'username': 'root',
                 },
