@@ -6,6 +6,7 @@ defaults = {
             'icinga2': {},
             'icinga2-ido-pgsql': {},
             'icingacli': {},
+            'monitoring-plugins': {},
         },
         'sources': {
             'deb https://packages.icinga.com/debian icinga-{release} main',
