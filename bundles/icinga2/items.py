@@ -2,12 +2,12 @@
 
 directories = {
     '/etc/icinga2': {
-#        'purge': True,
+       'purge': True,
         'owner': 'nagios',
         'group': 'nagios',
         'mode': '0750',
-        'needs': [
-            'pkg_apt:icinga2',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
         ],
     },
     '/etc/icinga2/conf.d': {
@@ -15,46 +15,127 @@ directories = {
         'owner': 'nagios',
         'group': 'nagios',
         'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
     },
     '/etc/icinga2/hosts.d': {
         'purge': True,
         'owner': 'nagios',
         'group': 'nagios',
         'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
     },
-    # '/etc/icinga2/features.d': {
-    #     'purge': True,
-    #     'owner': 'nagios',
-    #     'group': 'nagios',
-    #     'mode': '0750',
-    # },
+    '/etc/icinga2/features.d': {
+        'purge': True,
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/scripts': {
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
 }
 
 files = {
-    # '/etc/icinga2/icinga2.conf': {
-    #     'owner': 'nagios',
-    # },
-    # '/etc/icinga2/constants.conf': {
-    #     'owner': 'nagios',
-    #     'context': {
-    #         'hostname': node.metadata.get('icinga2/hostname')
-    #     },
-    # },
+    '/etc/icinga2/icinga2.conf': {
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0640',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/constants.conf': {
+        'content_type': 'mako',
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0640',
+        'context': {
+            'hostname': node.metadata.get('icinga2/hostname')
+        },
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/zones.conf': {
+        'content_type': 'mako',
+        'context': {
+            'hostname': node.metadata.get('icinga2/hostname')
+        },
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0640',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/conf.d/api-users.conf': {
+        'source': 'conf.d/api-users.conf',
+        'content_type': 'mako',
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0640',
+        'context': {
+            'users': node.metadata.get('icinga2/api_users'),
+        },
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
     # '/etc/icinga2/conf.d/templates.conf': {
     #     'source': 'conf.d/templates.conf',
     #     'owner': 'nagios',
     # },
-    # '/etc/icinga2/features/ido-pgsql.conf': {
-    #     'source': 'features/ido-pgsql.conf',
-    #     'content_type': 'mako',
-    #     'owner': 'nagios',
-    #     'context': {
-    #         'db_password': node.metadata.get('postgresql/roles/icinga2/password')
-    #     },
-    #     'needs': [
-    #         'pkg_apt:icinga2-ido-pgsql',
-    #     ],
-    # },
+    '/etc/icinga2/features.d/ido-pgsql.conf': {
+        'source': 'features/ido-pgsql.conf',
+        'content_type': 'mako',
+        'owner': 'nagios',
+        'context': {
+            'db_password': node.metadata.get('postgresql/roles/icinga2/password')
+        },
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/features.d/syslog.conf': {
+        'source': 'features/syslog.conf',
+        'owner': 'nagios',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/features.d/notification.conf': {
+        'source': 'features/notification.conf',
+        'owner': 'nagios',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/features.d/checker.conf': {
+        'source': 'features/checker.conf',
+        'owner': 'nagios',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/features.d/api.conf': {
+        'source': 'features/api.conf',
+        'owner': 'nagios',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
 }
 
 for other_node in repo.nodes:
@@ -70,7 +151,7 @@ for other_node in repo.nodes:
     }
 
 svc_systemd = {
-    'icinga2': {
+    'icinga2.service': {
         'needs': [
             'pkg_apt:icinga2-ido-pgsql',
             'svc_systemd:postgresql',

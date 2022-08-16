@@ -11,6 +11,7 @@ defaults = {
             'php-gd': {},
             'php-imagick': {},
             'php-pgsql': {},
+            'icingaweb2-module-monitoring': {},
         },
         'sources': {
             'deb https://packages.icinga.com/debian icinga-{release} main',
@@ -28,7 +29,7 @@ defaults = {
             'global': {
                 'show_stacktraces': '1',
                 'show_application_state_messages': '1',
-                #'module_path': '/usr/share/icingaweb2/modules',
+                'module_path': '/usr/share/icingaweb2/modules',
                 'config_backend': 'db',
                 'config_resource': 'icingaweb2_db',
             },
@@ -57,12 +58,43 @@ defaults = {
                 'charset': '',
                 'use_ssl': '0',
             },
+            'icinga_ido': {
+                'type': 'db',
+                'db': 'pgsql',
+                'host': 'localhost',
+                'port': '5432',
+                'dbname': 'icinga2',
+                'username': 'icinga2',
+                'charset': '',
+                'use_ssl': '0',
+            },
         },
         'roles.ini': {
             'Administrators': {
                 'users': 'root',
                 'permissions': '*',
                 'groups': 'Administrators',
+            },
+        },
+        'monitoring': {
+            'config.ini': {
+                'security': {
+                    'protected_customvars': '*pw*,*pass*,community',
+                },
+            },
+            'backends.ini': {
+                'icinga2': {
+                    'type': 'ido',
+                    'resource': 'icinga_ido',
+                },
+            },
+            'commandtransports.ini': {
+                'icinga2': {
+                    'transport': 'api',
+                    'host': 'lcoalhost',
+                    'port': '5665',
+                    'username': 'root',
+                },
             },
         },
     },
@@ -86,11 +118,25 @@ defaults = {
 
 @metadata_reactor.provides(
     'icingaweb2/hostname',
+    'icingaweb2/resources.ini/icinga_ido/icinga2/password',
+    'icingaweb2/monitoring/commandtransports.ini/icinga2/password',
 )
-def hostname(metadata):
+def stuff(metadata):
     return {
         'icingaweb2': {
             'hostname': metadata.get('icinga2/hostname'),
+            'resources.ini': {
+                'icinga_ido': {
+                    'password': str(metadata.get('postgresql/roles/icinga2/password')),
+                },
+            },
+            'monitoring': {
+                'commandtransports.ini': {
+                    'icinga2': {
+                        'password': str(metadata.get('icinga2/api_users/root/password')),
+                    },
+                },
+            },
         },
     }
 

@@ -12,6 +12,14 @@ defaults = {
             'deb https://packages.icinga.com/debian icinga-{release} main',
         },
     },
+    'icinga2': {
+        'api_users': {
+            'root': {
+                'password': repo.vault.password_for(f'icinga2 api user root on {node.name}'),
+                'permissions': {'*'},
+            }
+        },
+    },
     'postgresql': {
         'databases': {
             'icinga2': {
