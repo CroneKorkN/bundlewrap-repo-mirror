@@ -31,7 +31,7 @@
         'systemd-swap',
         'raspberrymatic-cert',
         'tasmota-charge',
-        'web2ldap',
+#        'web2ldap',
         'wireguard',
         'wol-waker',
         'zfs',
