@@ -3,7 +3,6 @@ defaults = {
         'services': {
             'test': {
                 'vars.command': '/bin/ls /',
-                'host_name': node.name,
             },
         },
     },
@@ -13,18 +12,24 @@ defaults = {
 @metadata_reactor.provides(
     'monitoring/services',
 )
-def service_defaults(metadata):
+def default_check_command(metadata):
+    services = {}
+
+    for name, conf in metadata.get('monitoring/services').items():
+        services[name] = {}
+
+        if 'host_name' not in conf:
+            services[name]['host_name'] = node.name
+
+        if 'check_command' not in conf:
+            services[name]['check_command'] = 'sshmon'
+
     return {
         'monitoring': {
-            'services': {
-                name: {
-                    'check_command': 'sshmon',
-                }
-                    for name, conf in metadata.get('monitoring/services').items()
-                    if 'check_command' not in conf
-            },
+            'services': services,
         },
     }
+
 
 
 @metadata_reactor.provides(
