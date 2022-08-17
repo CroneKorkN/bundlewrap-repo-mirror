@@ -222,10 +222,15 @@ files = {
             'svc_systemd:icinga2.service:restart',
         ],
     },
+    '/usr/lib/nagios/plugins/check_by_sshmon': {
+        'mode': '0755',
+    },
 }
 
 for other_node in repo.nodes:
     if other_node.dummy:
+        continue
+    elif not other_node.in_group('monitored'):
         continue
 
     files[f'/etc/icinga2/hosts.d/{other_node.name}.conf'] = {
@@ -237,7 +242,7 @@ for other_node in repo.nodes:
             'host_settings': {
                 'address': str(ip_interface(other_node.metadata.get('network/internal/ipv4', None) or other_node.metadata.get('wireguard/my_ip')).ip),
             },
-            'services': other_node.metadata.get('monitoring', {}),
+            'services': other_node.metadata.get('monitoring/services'),
         },
         'triggers': [
             'svc_systemd:icinga2.service:restart',

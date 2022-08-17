@@ -1,0 +1,31 @@
+#!/bin/sh
+
+UNKNOWN=3
+
+if [ -z "$SSHMON_TEST" ]
+then
+    echo 'check_by_sshmon: Env SSHMON_TEST missing' >&2
+    exit $UNKNOWN
+elif [ -z "$SSHMON_COMMAND" ]
+then
+    echo 'check_by_sshmon: Env SSHMON_COMMAND missing' >&2
+    exit $UNKNOWN
+elif [ -z "$SSHMON_HOST" ]
+then
+    echo 'check_by_sshmon: Env SSHMON_HOST missing' >&2
+    exit $UNKNOWN
+fi
+
+ssh sshmon@"$SSHMON_HOST" "$SSHMON_COMMAND"
+
+if [ "$exitcode" = 124 ]
+then
+    echo 'check_by_sshmon: Timeout while running check remotely' >&2
+    exit $UNKNOWN
+elif [ "$exitcode" = 255 ]
+then
+    echo 'check_by_sshmon: SSH error' >&2
+    exit $UNKNOWN
+else
+    exit $exitcode
+fi

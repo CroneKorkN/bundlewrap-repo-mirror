@@ -32,6 +32,12 @@ defaults = {
             },
         },
     },
+    'users': {
+        'nagios': {
+            'home': '/var/lib/nagios',
+            'shell': '/usr/sbin/nologin',
+        },
+    },
     'zfs': {
         'datasets': {
             'tank/icinga2': {
