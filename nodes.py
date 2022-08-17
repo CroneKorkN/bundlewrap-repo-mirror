@@ -1,5 +1,6 @@
 from os import walk
 from os.path import join, basename, splitext
+from re import search
 
 converters = {
     '32_random_bytes_as_base64_for': lambda x: vault.random_bytes_as_base64_for(x, length=32),
@@ -10,9 +11,10 @@ converters = {
 
 def demagify(data):
     if isinstance(data, str):
-        for name, converter in converters.items():
-            if data.startswith(f'!{name}:'):
-                return converter(data[len(name) + 2:])
+        match = search(r'^\!([0-9a-zA-Z_-]{,255})\:(.*)$', data)
+        if match:
+            magicstring, content = match.groups()
+            return converters[magicstring](content)
         else:
             return data
     elif isinstance(data, dict):
