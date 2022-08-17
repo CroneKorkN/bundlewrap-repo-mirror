@@ -18,6 +18,8 @@ fi
 
 ssh sshmon@"$SSHMON_HOST" "$SSHMON_COMMAND"
 
+exitcode=$?
+
 if [ "$exitcode" = 124 ]
 then
     echo 'check_by_sshmon: Timeout while running check remotely' >&2
