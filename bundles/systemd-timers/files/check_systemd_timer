@@ -5,7 +5,9 @@ if systemctl is-failed "$Triggers"
 then
   InvocationID=$(systemctl show "$Triggers" --property=InvocationID --value)
   ExitCode=$(systemctl show "$Triggers" -p ExecStartEx --value | sed 's/^{//' | sed 's/}$//' | tr ';' '\n' | xargs -n 1 | grep '^status=' | cut -d '=' -f 2)
-  journalctl INVOCATION_ID="$InvocationID" --output cat
+  journalctl INVOCATION_ID="$InvocationID" --output cat # timer invocation output
+  echo "-----------------"
+  journalctl _SYSTEMD_INVOCATION_ID="$InvocationID" --output cat -n 32 # service invocation output
   exit 1
 else
   exit 0
