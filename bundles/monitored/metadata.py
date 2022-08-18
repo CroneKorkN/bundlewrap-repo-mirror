@@ -33,7 +33,8 @@ def default_check_command(metadata):
 
 
 @metadata_reactor.provides(
-    'users/sshmon/authorized_users'
+    'users/sshmon/authorized_users',
+    'sudoers/sshmon',
 )
 def user(metadata):
     return {
@@ -42,6 +43,13 @@ def user(metadata):
                 'authorized_users': {
                     'nagios@' + metadata.get('monitoring/icinga2_node'),
                 }
+            },
+        },
+        'sudoers': {
+            'sshmon': {
+                conf['vars.command']
+                    for conf in metadata.get('monitoring/services').values()
+                    if conf['check_command'] == 'sshmon'
             },
         },
     }

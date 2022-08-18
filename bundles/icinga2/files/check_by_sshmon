@@ -16,7 +16,7 @@ then
     exit $UNKNOWN
 fi
 
-ssh sshmon@"$SSHMON_HOST" "$SSHMON_COMMAND"
+ssh sshmon@"$SSHMON_HOST" "sudo $SSHMON_COMMAND"
 
 exitcode=$?
 
