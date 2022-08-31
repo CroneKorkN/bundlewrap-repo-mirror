@@ -26,19 +26,23 @@ deploy_cert() {
   CERTFILE="$3"
   FULLCHAINFILE="$4"
   CHAINFILE="$5"
-  
+
   case $DOMAIN in
   % for domain, conf in sorted(domains.items()):
 <%   if not conf: continue %>\
     ${domain})
       % if conf.get('location', None):
-      cat "$KEYFILE" > "${conf['location']}/privkey.pem"
-      cat "$CERTFILE" > "${conf['location']}/cert.pem"
-      cat "$FULLCHAINFILE" > "${conf['location']}/fullchain.pem"
-      cat "$CHAINFILE" > "${conf['location']}/chain.pem"
+      cat "$KEYFILE" > "${conf['location']}/${conf.get('privkey_name', 'privkey.pem')}"
+      cat "$CERTFILE" > "${conf['location']}/${conf.get('cert_name', 'cert.pem')}"
+      cat "$FULLCHAINFILE" > "${conf['location']}/${conf.get('fullchain_name', 'fullchain.pem')}"
+      cat "$CHAINFILE" > "${conf['location']}/${conf.get('chain_name', 'chain.pem')}"
       % endif
       % if conf.get('owner', None):
-      chown ${conf['owner']} "${conf['location']}/privkey.pem" "${conf['location']}/cert.pem" "${conf['location']}/fullchain.pem" "${conf['location']}/chain.pem"
+      chown ${conf['owner']}:${conf.get('group', '')} \
+        "${conf['location']}/${conf.get('privkey_name', 'privkey.pem')}" \
+        "${conf['location']}/${conf.get('cert_name', 'cert.pem')}" \
+        "${conf['location']}/${conf.get('fullchain_name', 'fullchain.pem')}" \
+        "${conf['location']}/${conf.get('chain_name', 'chain.pem')}"
       % endif
       % for service in sorted(conf.get('reload', [])):
       systemctl reload-or-restart ${service}

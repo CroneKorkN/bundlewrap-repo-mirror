@@ -45,3 +45,23 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts',
+)
+def letsencrypt(metadata):
+    return {
+        'letsencrypt': {
+            'domains': {
+                metadata.get('icingaweb2/hostname'): {
+                    'reload': {'icinga2'},
+                    'owner': 'nagios',
+                    'group': 'nagios',
+                    'location': '/var/lib/icinga2/certs',
+                    'privkey_name': metadata.get('hostname') + '.key',
+                    'cert_name': metadata.get('hostname') + '.crt',
+                },
+            },
+        },
+    }
