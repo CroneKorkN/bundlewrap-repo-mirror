@@ -18,7 +18,8 @@
         'gitea',
 #        'gollum',
         'grafana',
-        'grub',
+        'icinga2',
+        'icingaweb2',
         'influxdb2',
         'mirror',
         'postgresql',
@@ -72,6 +73,12 @@
         },
         'grub': {
             'kernel_params': {'nomodeset'}, # nvidia GT1030 freeze fix
+        },
+        'icinga2': {
+            'hostname': 'icinga.sublimity.de',
+        },
+        'icingaweb2': {
+            'hostname': 'icinga.sublimity.de',
         },
         'influxdb': {
             'hostname': 'influxdb.sublimity.de',

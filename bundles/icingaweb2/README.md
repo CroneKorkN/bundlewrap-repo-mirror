@@ -1,0 +1,4 @@
+- apply
+- open /icingaweb2/setup in browser
+- fill in values from metadata
+- apply

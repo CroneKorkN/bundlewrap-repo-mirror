@@ -48,3 +48,19 @@ def systemd(metadata):
             'services': services,
         },
     }
+
+
+@metadata_reactor.provides(
+    'monitoring/services',
+)
+def monitoring(metadata):
+    return {
+        'monitoring': {
+            'services': {
+                f'{name}.timer': {
+                    'vars.command': f'/usr/lib/nagios/plugins/check_systemd_timer {name}'
+                }
+                    for name in metadata.get('systemd-timers')
+            },
+        },
+    }
