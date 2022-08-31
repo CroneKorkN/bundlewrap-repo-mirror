@@ -17,6 +17,7 @@
         'crystal',
         'gitea',
 #        'gollum',
+        'grub',
         'grafana',
         'icinga2',
         'icingaweb2',
