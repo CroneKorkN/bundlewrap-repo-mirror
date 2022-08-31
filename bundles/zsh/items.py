@@ -36,7 +36,7 @@ files = {
 }
 
 for name, user_config in node.metadata.get('users').items():
-    if user_config.get('shell', None) != '/usr/bin/zsh':
+    if user_config.get('shell', None) == '/usr/bin/zsh':
         files[join(user_config['home'], '.zshrc')] = {
             'owner': name,
             'group': name,
