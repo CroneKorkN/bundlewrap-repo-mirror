@@ -14,6 +14,9 @@
         'max': 100,
         'min': 0,
         'unit': 'percent',
+        'legend': {
+            'displayMode': 'hidden',
+        },
     },
     'load': {
         'queries': {
@@ -29,6 +32,9 @@
         },
         'min': 0,
         'unit': 'watts',
+        'legend': {
+            'displayMode': 'hidden',
+        },
     },
     'time': {
         'queries': {
@@ -44,5 +50,8 @@
         },
         'min': 0,
         'unit': 'minutes',
+        'legend': {
+            'displayMode': 'hidden',
+        },
     },
 }
