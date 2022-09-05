@@ -2,11 +2,7 @@
 
 UNKNOWN=3
 
-if [ -z "$SSHMON_TEST" ]
-then
-    echo 'check_by_sshmon: Env SSHMON_TEST missing' >&2
-    exit $UNKNOWN
-elif [ -z "$SSHMON_COMMAND" ]
+if [ -z "$SSHMON_COMMAND" ]
 then
     echo 'check_by_sshmon: Env SSHMON_COMMAND missing' >&2
     exit $UNKNOWN
@@ -16,7 +12,14 @@ then
     exit $UNKNOWN
 fi
 
-ssh sshmon@"$SSHMON_HOST" "sudo $SSHMON_COMMAND"
+if [ -z "$SSHMON_SUDO" ]
+then
+    PREFIX=""
+else
+    PREFIX="sudo "
+fi
+
+ssh sshmon@"$SSHMON_HOST" "$PREFIX$SSHMON_COMMAND"
 
 exitcode=$?
 

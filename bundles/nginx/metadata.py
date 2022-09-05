@@ -122,8 +122,8 @@ def monitoring(metadata):
     return {
         'monitoring': {
             'services': {
-                f'HTTP {hostname}': {
-                    'vars.command': f"""/usr/bin/curl -X GET {quote(hostname + vhost.get('check_path', ''))} -IL --fail"""
+                hostname: {
+                    'vars.command': f"/usr/bin/curl -X GET -IL --fail {quote(hostname + vhost.get('check_path', ''))}",
                 }
                     for hostname, vhost in metadata.get('nginx/vhosts').items()
             },

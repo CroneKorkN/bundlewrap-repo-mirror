@@ -1,9 +1,10 @@
 defaults = {
     'monitoring': {
         'services': {
-            'test': {
-                'vars.command': '/bin/ls /',
-            },
+            # 'test': {
+            #     'vars.command': '/bin/ls /',
+            #     'vars.sudo': True,
+            # },
         },
     },
 }
@@ -50,6 +51,7 @@ def user(metadata):
                 conf['vars.command']
                     for conf in metadata.get('monitoring/services').values()
                     if conf['check_command'] == 'sshmon'
+                    and conf.get('vars.sudo', None)
             },
         },
     }

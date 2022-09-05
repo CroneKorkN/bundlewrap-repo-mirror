@@ -58,7 +58,7 @@ def monitoring(metadata):
         'monitoring': {
             'services': {
                 f'{name}.timer': {
-                    'vars.command': f'/usr/lib/nagios/plugins/check_systemd_timer {name}'
+                    'vars.command': f'/usr/lib/nagios/plugins/check_systemd_timer {name}',
                 }
                     for name in metadata.get('systemd-timers')
             },

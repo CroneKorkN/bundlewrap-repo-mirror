@@ -11,7 +11,7 @@ defaults = {
 )
 def units(metadata):
     units = {}
-    
+
     for name, config in metadata.get('systemd/units').items():
         if '/' in name:
             continue
@@ -47,10 +47,10 @@ def units(metadata):
 )
 def services(metadata):
     services = {}
-    
+
     for name, config in metadata.get('systemd/services').items():
         extension = name.split('.')[-1]
-        
+
         if extension not in ['timer', 'service', 'mount', 'swap']:
             raise Exception(f'unknown extension: {extension}')
 
@@ -58,4 +58,21 @@ def services(metadata):
         'systemd': {
             'services': services,
         }
+    }
+
+
+@metadata_reactor.provides(
+    'monitoring/services',
+)
+def monitoring(metadata):
+    return {
+        'monitoring': {
+            'services': {
+                name: {
+                    'vars.command': f"/bin/sh -c '/usr/bin/systemctl is-failed {name} && /usr/bin/systemctl status {name} && exit 2 || exit 0'"
+                }
+                    for name in metadata.get('systemd/units')
+                    if name.endswith('.service')
+            },
+        },
     }
