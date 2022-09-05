@@ -3,7 +3,14 @@ defaults = {
         'units': {},
         'services': {},
         'logind': {},
-    }
+    },
+    'monitoring': {
+        'services': {
+            'systemd': {
+                'vars.command': "systemctl --failed --no-legend | wc -l | grep -q '^0$' && exit 0 || systemctl --failed && exit 2",
+            },
+        },
+    },
 }
 
 @metadata_reactor.provides(
