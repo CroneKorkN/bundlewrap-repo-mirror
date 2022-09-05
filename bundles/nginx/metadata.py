@@ -123,7 +123,7 @@ def monitoring(metadata):
         'monitoring': {
             'services': {
                 f'HTTP {hostname}': {
-                    'vars.command': f"""/usr/bin/curl {quote(hostname + vhost.get('check_path', ''))} -IL --fail"""
+                    'vars.command': f"""/usr/bin/curl -X GET {quote(hostname + vhost.get('check_path', ''))} -IL --fail"""
                 }
                     for hostname, vhost in metadata.get('nginx/vhosts').items()
             },
