@@ -24,6 +24,7 @@ def nginx(metadata):
                     'context': {
                         'root': f"/var/www/{metadata.get('mailserver/autoconfig_hostname')}",
                     },
+                    'check_path': '/mail/config-v1.1.xml',
                 },
             },
         },
@@ -59,7 +60,7 @@ def letsencrypt(metadata):
 )
 def autoconfig(metadata):
     dns = {}
-    
+
     for domain in metadata.get('mailserver/domains'):
         dns.update({
             f'autoconfig.{domain}': {
@@ -87,7 +88,7 @@ def autoconfig(metadata):
                 'SRV': {f"0 1 993 {metadata.get('mailserver/hostname')}."},
             },
         })
-    
+
     return {
         'dns': dns,
     }

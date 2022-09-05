@@ -1,4 +1,6 @@
+from shlex import quote
 from ipaddress import ip_interface
+
 
 defaults = {
     'apt': {
@@ -62,7 +64,7 @@ def includes(metadata):
 )
 def vhosts(metadata):
     vhosts = {}
-    
+
     for name, config in metadata.get('nginx/vhosts').items():
         vhosts[name] = {
             'server_name': name,
@@ -76,7 +78,7 @@ def vhosts(metadata):
                 'alias': '/var/lib/dehydrated/acme-challenges/',
             },
         }
-    
+
     return {
         'nginx': {
             'vhosts': vhosts,
@@ -108,6 +110,22 @@ def letsencrypt(metadata):
                     'reload': {'nginx'},
                 }
                     for domain in metadata.get('nginx/vhosts').keys()
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'monitoring/services',
+)
+def monitoring(metadata):
+    return {
+        'monitoring': {
+            'services': {
+                f'HTTP {hostname}': {
+                    'vars.command': f"""/usr/bin/curl {quote(hostname + vhost.get('check_path', ''))} -IL --fail"""
+                }
+                    for hostname, vhost in metadata.get('nginx/vhosts').items()
             },
         },
     }
