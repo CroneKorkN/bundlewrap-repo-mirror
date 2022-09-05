@@ -28,7 +28,16 @@ directories = {
             'svc_systemd:icinga2.service:restart',
         ],
     },
-    '/etc/icinga2/features.d': {
+    '/etc/icinga2/features-available': {
+        'purge': True,
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+    '/etc/icinga2/features-enabled': {
         'purge': True,
         'owner': 'nagios',
         'group': 'nagios',
@@ -169,50 +178,6 @@ files = {
             'svc_systemd:icinga2.service:restart',
         ],
     },
-    '/etc/icinga2/features.d/ido-pgsql.conf': {
-        'source': 'features/ido-pgsql.conf',
-        'content_type': 'mako',
-        'owner': 'nagios',
-        'group': 'nagios',
-        'context': {
-            'db_password': node.metadata.get('postgresql/roles/icinga2/password')
-        },
-        'triggers': [
-            'svc_systemd:icinga2.service:restart',
-        ],
-    },
-    '/etc/icinga2/features.d/syslog.conf': {
-        'source': 'features/syslog.conf',
-        'owner': 'nagios',
-        'group': 'nagios',
-        'triggers': [
-            'svc_systemd:icinga2.service:restart',
-        ],
-    },
-    '/etc/icinga2/features.d/notification.conf': {
-        'source': 'features/notification.conf',
-        'owner': 'nagios',
-        'group': 'nagios',
-        'triggers': [
-            'svc_systemd:icinga2.service:restart',
-        ],
-    },
-    '/etc/icinga2/features.d/checker.conf': {
-        'source': 'features/checker.conf',
-        'owner': 'nagios',
-        'group': 'nagios',
-        'triggers': [
-            'svc_systemd:icinga2.service:restart',
-        ],
-    },
-    '/etc/icinga2/features.d/api.conf': {
-        'source': 'features/api.conf',
-        'owner': 'nagios',
-        'group': 'nagios',
-        'triggers': [
-            'svc_systemd:icinga2.service:restart',
-        ],
-    },
     '/var/lib/icinga2/certs/ca.crt': {
         'content_type': 'download',
         'source': f'https://letsencrypt.org/certs/isrg-root-x1-cross-signed.pem',
@@ -226,6 +191,38 @@ files = {
         'mode': '0755',
     },
 }
+
+# FEATURES
+
+for feature, context in {
+    'syslog': {},
+    'notification': {},
+    'checker': {},
+    'api': {},
+    'ido-pgsql': {
+        'db_password': node.metadata.get('postgresql/roles/icinga2/password'),
+    },
+}.items():
+    files[f'/etc/icinga2/features-available/{feature}.conf'] = {
+        'content_type': 'mako' if context else 'text',
+        'context':  context,
+        'source': f'features/{feature}.conf',
+        'owner': 'nagios',
+        'group': 'nagios',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    }
+    symlinks[f'/etc/icinga2/features-enabled/{feature}.conf'] = {
+        'target': f'/etc/icinga2/features-available/{feature}.conf',
+        'owner': 'nagios',
+        'group': 'nagios',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    }
+
+# HOSTS
 
 for other_node in repo.nodes:
     if other_node.dummy:
