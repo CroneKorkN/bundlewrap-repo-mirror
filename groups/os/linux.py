@@ -34,7 +34,7 @@
             'ckn': {
                 'shell': '/usr/bin/zsh',
                 'authorized_keys': {
-                    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAi6tA8JaeovsxyvNNY0g5OEfErHThJHAOWVLguqvVve mwiegand@macbook',
+                    'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILMVroYmswD4tLk6iH+2tvQiyaMe42yfONDsPDIdFv6I ckn',
                 },
             },
         },
