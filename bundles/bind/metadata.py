@@ -41,6 +41,12 @@ defaults = {
         },
         'zones': set(),
     },
+    'nftables': {
+        'input': {
+            'tcp dport 53 accept',
+            'udp dport 53 accept',
+        },
+    },
     'telegraf': {
         'config': {
             'inputs': {
@@ -97,7 +103,7 @@ def dns(metadata):
 def collect_records(metadata):
     if metadata.get('bind/type') == 'slave':
         return {}
-    
+
     views = {}
 
     for view_name, view_conf in metadata.get('bind/views').items():
@@ -117,7 +123,7 @@ def collect_records(metadata):
 
                 name = fqdn[0:-len(zone) - 1]
 
-                for type, values in records.items():                    
+                for type, values in records.items():
                     for value in values:
                         if repo.libs.bind.record_matches_view(value, type, name, zone, view_name, metadata):
                             views\
@@ -128,7 +134,7 @@ def collect_records(metadata):
                                 .add(
                                     h({'name': name, 'type': type, 'value': value})
                                 )
-    
+
     return {
         'bind': {
             'views': views,
@@ -160,7 +166,7 @@ def ns_records(metadata):
                                 # FIXME: bw currently cant handle lists of dicts :(
                                 h({'name': '@', 'type': 'NS', 'value': f"{nameserver}."})
                                     for nameserver in nameservers
-                            } 
+                            }
                         }
                             for zone_name, zone_conf in view_conf['zones'].items()
                     }
@@ -177,7 +183,7 @@ def ns_records(metadata):
 def slaves(metadata):
     if metadata.get('bind/type') == 'slave':
         return {}
-    
+
     return {
         'bind': {
             'slaves': [

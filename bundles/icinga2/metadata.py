@@ -20,6 +20,11 @@ defaults = {
             }
         },
     },
+    'nftables': {
+        'input': {
+            'tcp dport 5665 accept',
+        },
+    },
     'postgresql': {
         'databases': {
             'icinga2': {

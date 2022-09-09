@@ -17,6 +17,11 @@ defaults = {
             },
         },
     },
+    'nftables': {
+        'input': {
+            'tcp dport 51820 accept',
+        },
+    },
     'wireguard': {
         's2s': {},
         'clients': {},
@@ -106,7 +111,7 @@ def systemd_networkd_netdevs(metadata):
             'ListenPort': 51820,
         },
     }
-    
+
     for peer, config in {
         **metadata.get('wireguard/s2s'),
         **metadata.get('wireguard/clients'),
@@ -121,7 +126,7 @@ def systemd_networkd_netdevs(metadata):
         })
         if config.get('endpoint'):
             netdev[f'WireGuardPeer#{peer}']['Endpoint'] = config['endpoint']
-    
+
     return {
         'systemd': {
             'units': {

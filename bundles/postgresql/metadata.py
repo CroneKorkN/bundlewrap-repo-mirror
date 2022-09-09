@@ -14,6 +14,11 @@ defaults = {
             '/var/lib/postgresql',
         },
     },
+    'nftables': {
+        'input': {
+            'tcp dport 5432 accept',
+        },
+    },
     'postgresql': {
         'conf': {},
         'roles': {

@@ -10,6 +10,11 @@ defaults = {
             'deb https://repos.influxdata.com/debian {release} stable',
         },
     },
+    'nftables': {
+        'input': {
+            'tcp dport 8200 accept',
+        },
+    },
     'influxdb': {
         'port': '8200',
         'username': 'admin',

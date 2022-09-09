@@ -13,15 +13,20 @@ defaults = {
             'catdoc':               {}, # catdoc, catppt, xls2csv
         },
     },
+    'dovecot': {
+        'database': {
+            'dbname': 'mailserver',
+            'dbuser': 'mailserver',
+        },
+    },
     'letsencrypt': {
         'reload_after': {
             'dovecot',
         },
     },
-    'dovecot': {
-        'database': {
-            'dbname': 'mailserver',
-            'dbuser': 'mailserver',
+    'nftables': {
+        'input': {
+            'tcp dport {143, 993, 4190} accept',
         },
     },
 }

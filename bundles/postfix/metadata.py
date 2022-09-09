@@ -11,10 +11,18 @@ defaults = {
             '/var/vmail',
         },
     },
+    'grafana_rows': {
+        'postfix_queue',
+    },
     'letsencrypt': {
         'reload_after': {
             'postfix',
-        }, 
+        },
+    },
+    'nftables': {
+        'input': {
+            'tcp dport {25, 465, 587} accept',
+        },
     },
     'telegraf': {
         'config': {
@@ -22,8 +30,5 @@ defaults = {
                 'postfix': [{}],
             },
         },
-    },
-    'grafana_rows': {
-        'postfix_queue',
     },
 }

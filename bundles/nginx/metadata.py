@@ -8,26 +8,12 @@ defaults = {
             'nginx': {},
         },
     },
-    'nginx': {
-        'default_vhosts': {
-            '80': {
-                'listen': [
-                    '80',
-                    '[::]:80',
-                ],
-                'location /.well-known/acme-challenge/': {
-                    'alias': '/var/lib/dehydrated/acme-challenges/',
-                },
-                'location /': {
-                    'return': '301 https://$host$request_uri',
-                },
-            },
-            'stub_status': {
-               'listen': '127.0.0.1:22999 default_server',
-               'server_name': '_',
-               'stub_status': '',
-            },
+    'nftables': {
+        'input': {
+            'tcp dport {80, 443} accept',
         },
+    },
+    'nginx': {
         'vhosts': {
             # '80': {
             #     'content': 'nginx/80.conf',

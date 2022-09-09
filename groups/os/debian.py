@@ -4,6 +4,7 @@
     ],
     'bundles': [
         'apt',
+        'nftables',
     ],
     'metadata': {
         'apt': {
