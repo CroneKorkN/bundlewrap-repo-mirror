@@ -19,7 +19,7 @@ defaults = {
     },
     'nftables': {
         'input': {
-            'tcp dport 51820 accept',
+            'udp dport 51820 accept',
         },
     },
     'wireguard': {
