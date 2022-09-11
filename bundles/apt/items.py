@@ -28,6 +28,9 @@ files = {
     '/etc/apt/sources.list': {
         'content': '# managed'
     },
+    '/usr/lib/nagios/plugins/check_apt_upgradable': {
+        'mode': '0755',
+    },
 }
 
 actions = {
@@ -72,7 +75,7 @@ for host, sources in hosts.items():
             'action:apt_update',
         },
     }
-    
+
     files[destination_path] = {
         'source': join(repo.path, 'data', 'apt', 'keys', keyfile),
         'content_type': 'binary',
@@ -83,7 +86,7 @@ for host, sources in hosts.items():
 
 # create backport pinnings
 
-for package, options in node.metadata.get('apt/packages', {}).items():    
+for package, options in node.metadata.get('apt/packages', {}).items():
     pkg_apt[package] = options
 
     if pkg_apt[package].pop('backports', False):

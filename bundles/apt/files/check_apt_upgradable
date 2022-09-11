@@ -1,0 +1,15 @@
+#!/bin/bash
+
+apt update -qq --silent 2> /dev/null
+
+UPGRADABLE=$(apt list --upgradable -qq 2> /dev/null | cut -d '/' -f 1)
+
+if test "$UPGRADABLE" != ""
+then
+  echo "$(wc -l <<< $UPGRADABLE) package(s) upgradable:"
+  echo
+  echo "$UPGRADABLE"
+  exit 1
+else
+  exit 0
+fi
