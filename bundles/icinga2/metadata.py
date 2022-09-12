@@ -59,7 +59,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'nginx/vhosts',
+    'letsencrypt/domains',
 )
 def letsencrypt(metadata):
     return {

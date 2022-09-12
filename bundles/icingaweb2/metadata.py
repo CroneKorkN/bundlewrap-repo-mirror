@@ -118,7 +118,7 @@ defaults = {
 
 @metadata_reactor.provides(
     'icingaweb2/hostname',
-    'icingaweb2/resources.ini/icinga_ido/icinga2/password',
+    'icingaweb2/resources.ini/icinga_ido/password',
     'icingaweb2/monitoring/commandtransports.ini/icinga2/password',
 )
 def stuff(metadata):
