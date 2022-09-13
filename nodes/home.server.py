@@ -25,6 +25,7 @@
         'mirror',
         'postgresql',
         'redis',
+        'samba',
         'smartctl',
         'steam-chat-logger',
         'steam-chat-viewer',
@@ -107,6 +108,11 @@
         'raspberrymatic-cert': {
             'domain': 'homematic.ckn.li',
             'node': 'home.homematic',
+        },
+        'samba': {
+            'shares': {
+                'windows-backup': {},
+            },
         },
         'steam_chat_logger': {
             'STEAM_USERNAME': 'snake_452',
