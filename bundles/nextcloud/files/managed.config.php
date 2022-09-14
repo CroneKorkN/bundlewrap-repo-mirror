@@ -39,4 +39,5 @@ $CONFIG = array (
   "logfile" => "",
   "loglevel" => 3,
   "default_phone_region" => "DE",
+  "versions_retention_obligation" => "auto, 90",
 );
