@@ -4,6 +4,7 @@ Host *
     GSSAPIAuthentication yes
     StrictHostKeyChecking yes
     GlobalKnownHostsFile /etc/ssh/ssh_known_hosts
-    ControlMaster auto
-    ControlPath ~/.ssh/multiplex-%C
-    ControlPersist 5m
+    # fixme: prevents backup server from sleeping
+    # ControlMaster auto
+    # ControlPath ~/.ssh/multiplex-%C
+    # ControlPersist 5m
