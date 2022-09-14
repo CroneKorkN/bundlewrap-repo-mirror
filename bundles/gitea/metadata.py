@@ -11,18 +11,7 @@ defaults = {
         },
     },
     'gitea': {
-        'database': {
-            'host': 'localhost',
-            'port': '5432',
-            'username': 'gitea',
-            'password': database_password,
-            'database': 'gitea',
-        },
-        'app_name': 'Gitea',
-        'lfs_secret_key': repo.vault.password_for(f'{node.name} gitea lfs_secret_key', length=43),
-        'security_secret_key': repo.vault.password_for(f'{node.name} gitea security_secret_key'),
-        'oauth_secret_key': repo.vault.password_for(f'{node.name} gitea oauth_secret_key', length=43),
-        'internal_token': repo.vault.password_for(f'{node.name} gitea internal_token'),
+        'conf': {},
     },
     'postgresql': {
         'roles': {
@@ -67,6 +56,45 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'gitea/conf',
+)
+def conf(metadata):
+    domain = metadata.get('gitea/domain')
+
+    return {
+        'gitea': {
+            'conf': {
+                'server': {
+                    'SSH_DOMAIN': domain,
+                    'DOMAIN': domain,
+                    'ROOT_URL': f'https://{domain}/',
+                    'LFS_JWT_SECRET': repo.vault.password_for(f'{node.name} gitea lfs_secret_key', length=43),
+                },
+                'security': {
+                    'INTERNAL_TOKEN': repo.vault.password_for(f'{node.name} gitea internal_token'),
+                    'SECRET_KEY': repo.vault.password_for(f'{node.name} gitea security_secret_key'),
+                },
+                'database': {
+                    'DB_TYPE': 'postgres',
+                    'HOST': 'localhost:5432',
+                    'NAME': 'gitea',
+                    'USER': 'gitea',
+                    'PASSWD': database_password,
+                    'SSL_MODE': 'disable',
+                    'LOG_SQL': 'false',
+                },
+                'service': {
+                    'NO_REPLY_ADDRESS': f'noreply.{domain}',
+                },
+                'oauth2': {
+                    'JWT_SECRET': repo.vault.password_for(f'{node.name} gitea oauth_secret_key', length=43),
+                },
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(

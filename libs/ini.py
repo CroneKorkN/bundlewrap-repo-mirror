@@ -1,5 +1,7 @@
 from configparser import ConfigParser
 import json
+from bundlewrap.metadata import MetadataJSONEncoder
+
 
 class Writable():
     data = ''
@@ -14,14 +16,14 @@ class CaseSensitiveConfigParser(ConfigParser):
 def parse(text):
     config = CaseSensitiveConfigParser()
     config.read_string(text)
-    
+
     return {
         section: dict(config.items(section))
             for section in config.sections()
     }
 
 def dumps(dict):
-    sorted_dict = json.loads(json.dumps(dict, sort_keys=True))
+    sorted_dict = json.loads(json.dumps(dict, sort_keys=True, cls=MetadataJSONEncoder))
 
     parser = CaseSensitiveConfigParser()
     parser.read_dict(sorted_dict)

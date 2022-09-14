@@ -63,6 +63,16 @@
             'version': '1.17.1',
             'sha256': 'eafd476ee2a303d758448314272add00898d045439ab0d353ff4286c5e63496f',
             'domain': 'git.sublimity.de',
+            'conf': {
+                'mailer': {
+                    'ENABLED': True,
+                    'FROM': 'gitea@sublimity.de',
+                    'MAILER_TYPE': 'smtp',
+                    'HOST': 'mail.sublimity.de:587',
+                    'USER': 'gitea@sublimity.de',
+                    'PASSWD': '!decrypt:encrypt$gAAAAABjIlbZprmcIe_YktYgTU85VRSRz1MkyA7lNSDptWzGMrZ1N_YUXWoAIjWp4Lrmi8J0XYH9Pazhmz1vaIGUqUEsEnJXNh5n6-0Z0gcpePFC7x-Aj_M=',
+                },
+            },
         },
         'gollum': {
             'domain': 'wiki.sublimity.de',

@@ -1,3 +1,7 @@
+from os.path import join
+from bundlewrap.utils.dicts import merge_dict
+
+
 version = version=node.metadata.get('gitea/version')
 
 downloads['/usr/local/bin/gitea'] = {
@@ -34,7 +38,12 @@ actions = {
 }
 
 files['/etc/gitea/app.ini'] = {
-    'content_type': 'mako',
+    'content': repo.libs.ini.dumps(
+        merge_dict(
+            repo.libs.ini.parse(open(join(repo.path, 'bundles', 'gitea', 'files', 'app.ini')).read()),
+            node.metadata.get('gitea/conf'),
+        ),
+    ),
     'owner': 'git',
     'context': node.metadata['gitea'],
     'triggers': {
