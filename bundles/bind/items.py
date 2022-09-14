@@ -1,7 +1,5 @@
 from ipaddress import ip_address, ip_interface
 from datetime import datetime
-import json
-from bundlewrap.metadata import MetadataJSONEncoder
 from hashlib import sha3_512
 
 
@@ -132,7 +130,7 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
                 'svc_systemd:bind9:restart',
             ],
         }
-        
+
 
 svc_systemd['bind9'] = {}
 
