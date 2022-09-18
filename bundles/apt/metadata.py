@@ -10,6 +10,10 @@ defaults = {
                 'vars.sudo': True,
                 'check_interval': '1d',
             },
+            'current kernel': {
+                'vars.command': 'ls /boot/vmlinuz-* | sort -V | tail -n 1 | xargs -n1 basename | cut -d "-" -f 2- | grep -q "^$(uname -r)$"',
+                'check_interval': '1h',
+            },
         },
     },
 }
