@@ -29,30 +29,8 @@
             'displayMode': 'hidden',
         },
     },
-    'load': {
-        'stacked': False,
-        'queries': {
-            'load': {
-                'filters': {
-                    '_measurement': 'system',
-                    '_field': [
-                        'load1',
-                        'load5',
-                        'load15',
-                    ],
-                },
-                'function': 'mean',
-            },
-        },
-        'min': 0,
-        'soft_max': 3,
-        'unit': 'percent',
-        'tooltip': 'multi',
-        'legend': {
-            'displayMode': 'hidden',
-        },
-    },
     'pressure_stall': {
+        'stacked': True,
         'queries': {
             'pressure_stall': {
                 'filters': {
