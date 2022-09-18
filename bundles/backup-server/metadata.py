@@ -16,7 +16,14 @@ defaults = {
             '/usr/bin/rsync',
             '/sbin/zfs',
         },
-    }
+    },
+    'zfs': {
+        'datasets': {
+            'tank': {
+                'recordsize': "1048576",
+            },
+        },
+    },
 }
 
 
@@ -25,7 +32,7 @@ defaults = {
 )
 def zfs(metadata):
     datasets = {}
-    
+
     for other_node in repo.nodes:
         if (
             other_node.has_bundle('backup') and
@@ -42,7 +49,7 @@ def zfs(metadata):
                 'com.sun:auto-snapshot': 'false',
                 'backup': False,
             }
-            
+
             # for rsync backups
             datasets[f'{base_dataset}/fs'] = {
                 'mountpoint': f"/mnt/backups/{id}",
@@ -51,10 +58,10 @@ def zfs(metadata):
                 'com.sun:auto-snapshot': 'true',
                 'backup': False,
             }
-            
+
             # for zfs send/recv
             if other_node.has_bundle('zfs'):
-                
+
                 # base datasets for each tank
                 for pool in other_node.metadata.get('zfs/pools'):
                     datasets[f'{base_dataset}/{pool}'] = {
@@ -64,7 +71,7 @@ def zfs(metadata):
                         'com.sun:auto-snapshot': 'false',
                         'backup': False,
                     }
-                
+
                 # actual datasets
                 for path in other_node.metadata.get('backup/paths'):
                     for dataset, config in other_node.metadata.get('zfs/datasets').items():
