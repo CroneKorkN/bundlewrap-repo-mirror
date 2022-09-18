@@ -103,3 +103,27 @@ for package, options in node.metadata.get('apt/packages', {}).items():
                 'action:apt_update',
             },
         }
+
+# unattended upgrades
+#
+# unattended-upgrades.service: delays shutdown if necessary
+# apt-daily.timer: performs apt update
+# apt-daily-upgrade.timer: performs apt upgrade
+
+files['/etc/apt/apt.conf.d/20auto-upgrades'] = {}
+files['/etc/apt/apt.conf.d/50unattended-upgrades'] = {}
+svc_systemd['unattended-upgrades.service'] = {
+    'needs': [
+        'pkg_apt:unattended-upgrades',
+    ],
+}
+svc_systemd['apt-daily.timer'] = {
+    'needs': [
+        'pkg_apt:unattended-upgrades',
+    ],
+}
+svc_systemd['apt-daily-upgrade.timer'] = {
+    'needs': [
+        'pkg_apt:unattended-upgrades',
+    ],
+}
