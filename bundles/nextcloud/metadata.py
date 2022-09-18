@@ -98,17 +98,25 @@ defaults = {
             'user': 'www-data',
         },
     },
-    'zfs': {
-        'datasets': {
-            'tank/nextcloud': {
-                'mountpoint': '/var/lib/nextcloud',
-                'needed_by': [
-                    'bundle:nextcloud',
-                ],
+}
+
+
+@metadata_reactor.provides(
+    'zfs/datasets',
+)
+def zfs(metadata):
+    return {
+        'zfs': {
+            'datasets': {
+                f"{metadata.get('zfs/storage_classes/hdd')}/nextcloud": {
+                    'mountpoint': '/var/lib/nextcloud',
+                    'needed_by': [
+                        'bundle:nextcloud',
+                    ],
+                },
             },
         },
-    },
-}
+    }
 
 
 @metadata_reactor.provides(

@@ -52,7 +52,7 @@ def zfs(metadata):
     return {
         'zfs': {
             'datasets': {
-                f"{metadata.get('zfs/storage_classes/ssd')}/influxdb": {
+                'tank/influxdb': {
                     'mountpoint': '/var/lib/influxdb',
                     'recordsize': '8192',
                     'atime': 'off',

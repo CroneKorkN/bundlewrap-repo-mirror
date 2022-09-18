@@ -61,7 +61,7 @@ defaults = {
         'pools': {},
         'kernel_params': {},
         'storage_classes': {
-            'ssd': 'tank',
+            'hdd': 'tank',
         },
         'auto_snapshots': {
             'hourly': 24,

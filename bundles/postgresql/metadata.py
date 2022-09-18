@@ -64,7 +64,7 @@ def zfs(metadata):
     return {
         'zfs': {
             'datasets': {
-                f"{metadata.get('zfs/storage_classes/ssd')}/postgresql": {
+                'tank/postgresql': {
                     'mountpoint': '/var/lib/postgresql',
                     'recordsize': '8192',
                     'atime': 'off',

@@ -15,13 +15,6 @@ defaults = {
     'samba': {
         'shares': {},
     },
-    'zfs': {
-        'datasets': {
-            'tank/samba': {
-                'mountpoint': '/var/lib/samba',
-            },
-        },
-    },
 }
 
 
@@ -32,10 +25,15 @@ def zfs(metadata):
     return {
         'zfs': {
             'datasets': {
-                f'tank/samba/{name}': {
-                    'mountpoint': f'/var/lib/samba/usershares/{name}',
-                }
-                    for name in metadata.get('samba/shares')
+                f"{metadata.get('zfs/storage_classes/hdd')}/samba": {
+                    'mountpoint': '/var/lib/samba',
+                },
+                **{
+                    f"{metadata.get('zfs/storage_classes/hdd')}/samba/{name}": {
+                        'mountpoint': f'/var/lib/samba/usershares/{name}',
+                    }
+                        for name in metadata.get('samba/shares')
+                },
             },
         },
     }

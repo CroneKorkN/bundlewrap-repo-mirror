@@ -9,7 +9,7 @@ directories = {
         'group': 'postgres',
         'needs': [
             'pkg_apt:postgresql',
-            f"zfs_dataset:{node.metadata.get('zfs/storage_classes/ssd')}/postgresql",
+            'zfs_dataset:tank/postgresql',
         ],
         'needed_by': [
             'svc_systemd:postgresql',

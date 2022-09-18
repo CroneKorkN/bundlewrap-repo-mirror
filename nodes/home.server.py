@@ -168,27 +168,35 @@
         'zfs': {
             'zfs_arc_max_percent': 80,
             'storage_classes': {
-                'ssd': 'ssd',
+                'hdd': 'hdd',
             },
             'pools': {
                 'tank': {
+                    'type': 'mirror',
+                    'devices': [
+                        '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part1',
+                        '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01566-part1',
+                    ],
+                },
+                'hdd': {
                     'type': 'mirror',
                     'devices': [
                         '/dev/disk/by-partlabel/zfs-data-1',
                         '/dev/disk/by-partlabel/zfs-data-2',
                     ],
                 },
-                'ssd': {
-                    'devices': [
-                        '/dev/disk/by-id/nvme-SAMSUNG_MZVL22T0HBLB-00B00_S677NF0RA01551-part3',
-                    ],
-                },
-                },
+            },
             'datasets': {
-                'ssd/nextcloud-appdata': {
+                'tank/nextcloud-appdata': {
                     'mountpoint': '/var/lib/nextcloud/appdata_oci6dw1woodz',
                     'backup': False,
-                }
+                },
+                'hdd/nextcloud/ckn': {
+                    'mountpoint': '/var/lib/nextcloud/ckn/files',
+                },
+                'hdd/nextcloud/ckn-privat': {
+                    'mountpoint': '/var/lib/nextcloud/ckn-privat/files',
+                },
             },
         },
     },
