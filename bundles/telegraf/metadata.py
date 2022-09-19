@@ -4,6 +4,9 @@ defaults = {
     'apt': {
         'packages': {
             'telegraf': {},
+            # needed by crystal plugins:
+            'libgc-dev': {},
+            'libevent-dev': {},
         },
     },
     'telegraf': {
