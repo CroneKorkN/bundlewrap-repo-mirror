@@ -34,12 +34,21 @@ do
   fi
 done
 
-# CHECK FOR ACTIVE LOGINS
+# CHECK FOR INCOMING SSH CONNECTIONS
 
-LOGINS=$(netstat -tnpa | grep 'ESTABLISHED.*sshd' | tr -s ' ' | cut -d' ' -f5,7-8 | paste -d',' -s | sed 's/,/, /')
+LOGINS=$(netstat -np | grep 'ESTABLISHED.*sshd' | tr -s ' ' | cut -d' ' -f5,7,8)
 if ! [[ -z "$LOGINS" ]]
 then
-  echo "ABORT: users logged in: $LOGINS"
+  echo "ABORT: incoming ssh connections: $LOGINS"
+  exit 75
+fi
+
+# CHECK FOR OUTGOING SSH CONNECTIONS
+
+LOGINS=$(netstat -np | grep 'ESTABLISHED.*ssh[^d]' | tr -s ' ' | cut -d' ' -f5,7,8)
+if ! [[ -z "$LOGINS" ]]
+then
+  echo "ABORT: outgoing ssh connections: $LOGINS"
   exit 75
 fi
 
