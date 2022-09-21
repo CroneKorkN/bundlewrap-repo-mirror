@@ -39,7 +39,7 @@ else
   echo "INCREMENTAL BACKUP"
   last_bookmark=$(zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
   [[ -z "$last_bookmark" ]] && echo "ERROR - last_bookmark is empty" && exit 98
-  $(zfs send -v -L -c -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv "$target_dataset")
+  $(zfs send -v -L -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv "$target_dataset")
 fi
 
 if [[ "$?" == "0" ]]
