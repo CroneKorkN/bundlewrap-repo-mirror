@@ -1,6 +1,12 @@
 from ipaddress import ip_interface
 from base64 import b64decode
 
+defaults = {
+    'ssh': {
+        'multiplex_incoming': True,
+    },
+}
+
 
 @metadata_reactor.provides(
     'ssh/allow_users',

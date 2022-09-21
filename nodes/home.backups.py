@@ -38,6 +38,10 @@
         #         'apm': 1,
         #     },
         # },
+        'ssh': {
+            # multipling prevents server from sleeping
+            'multiplex_incoming': False,
+        },
         'wol-sleeper': {
             'network': 'internal',
             'waker': 'home.server',

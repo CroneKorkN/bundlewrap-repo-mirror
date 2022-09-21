@@ -1,3 +1,6 @@
+from ipaddress import ip_interface
+
+
 # on debian bullseye raspberry images, starting the systemd ssh
 # daemon seems to collide with an existing sysv daemon
 dont_touch_sshd = node.metadata.get('FIXME_dont_touch_sshd', False)
@@ -24,6 +27,13 @@ files = {
     '/etc/ssh/ssh_config': {
         'content_type': 'mako',
         'context': {
+            'multiplex_hosts': set(
+                str(ip_interface(other_node.metadata.get('network/internal/ipv4')).ip)
+                    for other_node in repo.nodes
+                    if other_node.has_bundle('ssh')
+                    and other_node.metadata.get('network/internal/ipv4', None)
+                    and other_node.metadata.get('ssh/multiplex_incoming')
+            ),
         },
         'triggers': [
             'svc_systemd:ssh:restart'
