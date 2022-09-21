@@ -15,7 +15,7 @@ Raspberry pi as soundcard
 
 # install bw fork
 
-pip3 install --editable git+file:///Users/mwiegand/Projekte/bundlewrap-fork#egg=bundlewrap
+pip3 install --editable git+file:///Users/mwiegand/Projekte/bundlewrap-fork@main#egg=bundlewrap
 
 # monitor timers
 
