@@ -5,7 +5,9 @@ Host *
     StrictHostKeyChecking yes
     GlobalKnownHostsFile /etc/ssh/ssh_known_hosts
 
+% if multiplex_incoming:
 Host ${' '.join(sorted(multiplex_hosts))}
     ControlMaster auto
     ControlPath ~/.ssh/multiplex-%C
     ControlPersist 5m
+% endif

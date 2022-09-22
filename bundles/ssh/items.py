@@ -27,6 +27,7 @@ files = {
     '/etc/ssh/ssh_config': {
         'content_type': 'mako',
         'context': {
+            'multiplex_incoming': node.metadata.get('ssh/multiplex_incoming'),
             'multiplex_hosts': set(
                 str(ip_interface(other_node.metadata.get('network/internal/ipv4')).ip)
                     for other_node in repo.nodes
