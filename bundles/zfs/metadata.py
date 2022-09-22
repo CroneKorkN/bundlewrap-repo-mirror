@@ -99,6 +99,7 @@ def backup(metadata):
                 options['mountpoint']
                     for options in metadata.get('zfs/datasets').values()
                     if options.get('backup', True)
+                    and not options.get('mountpoint', None) in [None, 'none']
             },
         },
     }
