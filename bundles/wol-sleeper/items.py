@@ -7,3 +7,10 @@ files = {
         'mode': '550',
     },
 }
+
+svc_systemd = {
+    'wakeonlan-remove-downtime.service': {
+        'enabled': True,
+        'running': False,
+    },
+}
