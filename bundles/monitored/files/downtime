@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+
+from requests import Session
+from sys import argv
+from time import time
+
+if len(argv) > 1 and argv[1] == "remove":
+    action = "remove"
+else:
+    action = "add"
+    duration_seconds = int(argv[1]) if len(argv) == 2 else 60 * 60 * 24
+
+author = 'downtime-script'
+node_name = '${node_name}'
+api_url = 'https://${icinga_hostname}/api/v1'
+session = Session()
+session.auth = ('root', '${icinga_password}')
+now = int(time())
+
+# look for existing downtimes
+
+response = session.get(
+    f'{api_url}/objects/downtimes',
+    headers={
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    },
+    json={
+        'filter': f'match("{node_name}", host.name), match("{author}", downtime.author)',
+    }
+)
+response.raise_for_status()
+
+# remove existing downtimes
+
+if response.json()['results']:
+    response = session.post(
+        f'{api_url}/actions/remove-downtime',
+        headers={
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        json={
+            'type': 'Downtime',
+            'filter': f'match("{node_name}", host.name), match("{author}", downtime.author)',
+            'pretty': True,
+        }
+    )
+    response.raise_for_status()
+    print('removed downtime')
+
+# add downtime
+
+if action == 'add':
+    response = session.post(
+        f'{api_url}/actions/schedule-downtime',
+        headers={
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        json={
+            'author': author,
+            'comment': f'downtime by {argv[0]}',
+            'start_time': now,
+            'end_time': now + duration_seconds,
+            'type': 'Host',
+            'child_options': 'DowntimeTriggeredChildren',
+            'filter':  f'match("{node_name}", host.name)',
+            'pretty': True,
+        }
+    )
+    response.raise_for_status()
+    print('added downtime')
