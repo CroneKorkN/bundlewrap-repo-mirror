@@ -9,6 +9,27 @@ defaults = {
             'net-tools': {},
         },
     },
+    'systemd': {
+        'units': {
+            'wakeonlan-remove-downtime.service': {
+                'Unit': {
+                    'Description': 'remove icinga downtime after wakeup',
+                    'After': {
+                        'network.target',
+                        'suspend.target',
+                    },
+                },
+                'Service': {
+                    'ExecStart': '/usr/local/bin/downtime remove',
+                },
+                'Install': {
+                    'WantedBy': {
+                        'suspend.target',
+                    },
+                },
+            },
+        },
+    },
 }
 
 
