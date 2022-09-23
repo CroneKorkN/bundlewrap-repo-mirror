@@ -43,7 +43,16 @@ svc_systemd = {
 
 for name, config in node.metadata.get('zfs/datasets', {}).items():
     zfs_datasets[name] = config
+
     zfs_datasets[name].pop('backup', None)
+
+    encrypted = zfs_datasets[name].pop('encrypted', None)
+    if encrypted:
+        zfs_datasets[name]['encryption'] = 'aes-256-gcm'
+        zfs_datasets[name]['keylocation'] = 'prompt'
+        zfs_datasets[name]['keyformat'] = 'hex'
+        zfs_datasets[name]['password'] = node.metadata.get('zfs/password')
+
 
 for name, config in node.metadata.get('zfs/pools', {}).items():
     zfs_pools[name] = {

@@ -1,4 +1,6 @@
-#import re
+from uuid import UUID
+from base64 import b64encode, b64decode
+
 
 defaults = {
     'apt': {
@@ -85,6 +87,17 @@ def dataset_defaults(metadata):
                     'relatime': 'on',
                 } for name, config in metadata.get('zfs/datasets').items()
             },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'zfs/password'
+)
+def encryption_key(metadata):
+    return {
+        'zfs': {
+            'password': b64decode(repo.vault.random_bytes_as_base64_for(b64encode(UUID(metadata.get('id')).bytes).decode(), length=32).value).hex(),
         },
     }
 

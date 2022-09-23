@@ -197,6 +197,12 @@
                 'hdd/nextcloud/ckn-privat': {
                     'mountpoint': '/var/lib/nextcloud/ckn-privat/files',
                 },
+
+
+                'tank/enctest1': {
+                    'mountpoint': 'none',
+                    'encrypted': True,
+                },
             },
         },
     },
