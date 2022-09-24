@@ -15,7 +15,7 @@ defaults = {
                 'Unit': {
                     'Description': 'remove icinga downtime after wakeup',
                     'After': {
-                        'network.target',
+                        'network-online.target',
                         'suspend.target',
                     },
                 },
