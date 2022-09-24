@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 from requests import Session
+from requests.exceptions import ConnectionError
 from sys import argv
-from time import time
+from time import sleep, time
+
 
 if len(argv) > 1 and argv[1] == "remove":
     action = "remove"
@@ -16,6 +18,18 @@ api_url = 'https://${icinga_hostname}/api/v1'
 session = Session()
 session.auth = ('root', '${icinga_password}')
 now = int(time())
+
+
+# wait online
+
+for _ in range(10):
+    try:
+        session.get(api_url).raise_for_status()
+    except ConnectionError as error:
+        print(f'{error}: retrying...')
+        sleep(3)
+    else:
+        break
 
 # look for existing downtimes
 
