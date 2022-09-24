@@ -59,8 +59,8 @@ def wake_command(metadata):
 
 
 @metadata_reactor.provides(
-    'systemd/units/enable-wol.service',
-    'systemd/services/enable-wol.service',
+    'systemd/units/wakeonline-setup.service',
+    'systemd/services/wakeonline-setup.service',
 )
 def systemd(metadata):
     interface = metadata.get(f"network/{metadata.get('wol-sleeper/network')}/interface")
@@ -68,7 +68,7 @@ def systemd(metadata):
     return {
         'systemd': {
             'units': {
-                'enable-wol.service': {
+                'wakeonline-setup.service': {
                     'Unit': {
                         'After': 'network.target',
                     },
@@ -80,7 +80,7 @@ def systemd(metadata):
                 },
             },
             'services': {
-                'enable-wol.service': {},
+                'wakeonline-setup.service': {},
             },
         },
     }
