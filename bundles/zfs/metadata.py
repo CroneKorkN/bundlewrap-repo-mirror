@@ -34,6 +34,13 @@ defaults = {
             'zfs-auto-snapshot': {},
         },
     },
+    'monitoring': {
+        'services': {
+            'zpool space': {
+                'vars.command': f'/usr/lib/nagios/plugins/check_zpool_space',
+            },
+        },
+    },
     'systemd-timers': {
         'zfs-trim': {
             'command': '/usr/lib/zfs-linux/trim',

@@ -14,6 +14,9 @@ files = {
                 for k, v in node.metadata.get('zfs/kernel_params').items()
         ) + '\n',
     },
+    '/usr/lib/nagios/plugins/check_zpool_space': {
+        'mode': '0755',
+    },
 }
 
 actions = {
