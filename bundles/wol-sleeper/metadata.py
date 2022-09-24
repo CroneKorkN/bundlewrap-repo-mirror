@@ -29,15 +29,6 @@ defaults = {
                 },
             },
         },
-    },
-}
-
-
-@metadata_reactor.provides(
-    'systemd-timers/suspend-if-idle',
-)
-def timer(metadata):
-    return {
         'systemd-timers': {
             'suspend-if-idle': {
                 'command': f'suspend_if_idle',
@@ -48,7 +39,8 @@ def timer(metadata):
                 },
             },
         },
-    }
+    },
+}
 
 
 @metadata_reactor.provides(
