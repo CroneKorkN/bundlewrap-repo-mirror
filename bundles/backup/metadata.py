@@ -20,7 +20,8 @@ defaults = {
     'systemd-timers': {
         f'backup': {
             'command': '/opt/backup/backup_all',
-            'when': 'daily',
+            'when': '1:00',
+            'persistent': True,
         },
     },
 }
