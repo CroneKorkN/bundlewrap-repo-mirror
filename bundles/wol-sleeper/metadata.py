@@ -29,14 +29,14 @@ defaults = {
                 },
             },
         },
-        'systemd-timers': {
-            'suspend-if-idle': {
-                'command': f'suspend_if_idle',
-                'when': 'minutely',
-                'success_exit_status': '75',
-                'env': {
-                    'THIS_SERVICE': 'suspend-if-idle.service',
-                },
+    },
+    'systemd-timers': {
+        'suspend-if-idle': {
+            'command': f'suspend_if_idle',
+            'when': 'minutely',
+            'success_exit_status': '75',
+            'env': {
+                'THIS_SERVICE': 'suspend-if-idle.service',
             },
         },
     },
