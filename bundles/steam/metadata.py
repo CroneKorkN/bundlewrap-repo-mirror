@@ -6,19 +6,24 @@ defaults = {
         },
     },
     'steam': {
-        'games': {},
-    }
+        'games': {
+            'left4dead2': 222860,
+        },
+    },
+    'zfs': {
+        'datasets': {
+            'tank/steam': {
+                'mountpoint': '/opt/steam',
+                'backup': False,
+            },
+        },
+    },
 }
 
 @metadata_reactor.provides(
     'systemd/units',
 )
 def initial_unit(metadata):
-    install_games = ' '.join(
-        f'+force_install_dir /opt/{name} +app_update {id}'
-            for name, id in metadata.get('steam/games').items()
-    )
-    
     return {
         'systemd': {
             'units': {
@@ -32,7 +37,10 @@ def initial_unit(metadata):
                         'User': 'steam',
                         'Group': 'steam',
                         'WorkingDirectory': '/opt/steam',
-                        'ExecStart': f'/opt/steam/steamcmd.sh +login anonymous {install_games} validate +quit',
+                        'ExecStart': {
+                            f'/opt/steam/steam/steamcmd.sh +force_install_dir /opt/steam/{name} +login anonymous +app_update {id} validate +quit'
+                                for name, id in metadata.get('steam/games').items()
+                        }
                     },
                     'Install': {
                         'WantedBy': {'multi-user.target'},
