@@ -20,6 +20,7 @@ defaults = {
     },
 }
 
+
 @metadata_reactor.provides(
     'systemd/units',
 )
@@ -38,8 +39,8 @@ def initial_unit(metadata):
                         'Group': 'steam',
                         'WorkingDirectory': '/opt/steam',
                         'ExecStart': {
-                            f'/opt/steam/steam/steamcmd.sh +force_install_dir /opt/steam/{name} +login anonymous +app_update {id} validate +quit'
-                                for name, id in metadata.get('steam/games').items()
+                            f'/opt/steam/steam/steamcmd.sh +force_install_dir /opt/steam/{game} +login anonymous +app_update {id} validate +quit'
+                                for game, id in metadata.get('steam/games').items()
                         }
                     },
                     'Install': {
