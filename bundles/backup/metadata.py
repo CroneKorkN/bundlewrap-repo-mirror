@@ -22,6 +22,9 @@ defaults = {
             'command': '/opt/backup/backup_all',
             'when': '1:00',
             'persistent': True,
+            'after': {
+                'network-online.target',
+            },
         },
     },
 }

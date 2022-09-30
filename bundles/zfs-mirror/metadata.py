@@ -4,6 +4,9 @@ defaults = {
             'command': '/opt/zfs-mirror',
             'when': '2:00',
             'persistent': True,
+            'after': {
+                'network-online.target',
+            },
         },
     },
 }
