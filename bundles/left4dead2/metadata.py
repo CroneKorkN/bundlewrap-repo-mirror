@@ -17,43 +17,20 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'systemd/units',
+    'steam-workshop-download/left4dead',
 )
-def workshop(metadata):
-    command = (
-        'set -x; '
-        'for ID in ' + ' '.join(metadata.get('left4dead2/workshop')) + '; '
-        'do '
-            'if ! ls /opt/left4dead2/left4dead2/addons/$ID/*.vpk; '
-            'then '
-                'cd /opt/left4dead2/left4dead2/addons/$ID; '
-                '/opt/steam-workshop-downloader https://steamcommunity.com/sharedfiles/filedetails\?id\=$ID; '
-                'unzip $ID.zip; '
-            'fi; '
-        'done'
-    )
-    
+def workshop_download(metadata):
+    if not metadata.get('left4dead2/workshop'):
+        return {}
+
     return {
-        'systemd': {
-            'units': {
-                'left4dead2-workshop.service': {
-                    'Unit': {
-                        'Description': 'install workshop items',
-                        'After': 'network.target',
-                        'Requires': 'steam-update.service',
-                        'PartOf': 'steam-update.service'
-                    },
-                    'Service': {
-                        'Type': 'oneshot',
-                        'User': 'steam',
-                        'ExecStart': f'/bin/bash -c {quote(command)}',
-                    },
-                    'Install': {
-                        'WantedBy': {'multi-user.target'},
-                    },
-                }
-            }
-        }
+        'steam-workshop-download': {
+            'left4dead': {
+                'ids': metadata.get('left4dead2/workshop'),
+                'path': '/opt/steam/left4dead2/left4dead2/addons',
+                'user': 'steam',
+            },
+        },
     }
 
 
@@ -62,19 +39,18 @@ def workshop(metadata):
 )
 def server_units(metadata):
     units = {}
-    
+
     for name, config in metadata.get('left4dead2/servers').items():
-        units[f'left4dead2-server-{name}.service'] = {
+        units[f'left4dead2-{name}.service'] = {
             'Unit': {
                 'Description': f'left4dead2 server {name}',
-                'After': 'network.target',
-                'Requires': 'steam-update.service',
+                'After': {'steam.target'},
             },
             'Service': {
                 'User': 'steam',
                 'Group': 'steam',
-                'WorkingDirectory': '/opt/left4dead2',
-                'ExecStart': f'/opt/left4dead2/srcds_run -port {config["port"]} -insecure +map {config["map"]} +exec server-{name}.cfg',
+                'WorkingDirectory': '/opt/steam/left4dead2',
+                'ExecStart': f'/opt/steam/left4dead2/srcds_run -port {config["port"]} +exec server/{name}.cfg',
                 'Restart': 'on-failure',
             },
             'Install': {
@@ -85,5 +61,21 @@ def server_units(metadata):
     return {
         'systemd': {
             'units': units,
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'nftables/input',
+)
+def firewall(metadata):
+    ports = set(str(server['port']) for server in metadata.get('left4dead2/servers').values())
+
+    return {
+        'nftables': {
+            'input': {
+                f"tcp dport {{ {', '.join(ports)} }} accept",
+                f"udp dport {{ {', '.join(ports)} }} accept",
+            },
         },
     }

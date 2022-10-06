@@ -14,7 +14,7 @@ actions = {
         'command': 'systemctl daemon-reload',
         'cascade_skip': False,
         'triggered': True,
-    }, 
+    },
 }
 
 for name, unit in node.metadata.get('systemd/units').items():
@@ -30,7 +30,7 @@ for name, unit in node.metadata.get('systemd/units').items():
                 'svc_systemd:systemd-networkd:restart',
             ],
         }
-    elif extension in ['timer', 'service', 'mount', 'swap']:
+    elif extension in ['timer', 'service', 'mount', 'swap', 'target']:
         path = f'/usr/local/lib/systemd/system/{name}'
         dependencies = {
             'triggers': [

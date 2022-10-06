@@ -25,9 +25,6 @@ def units(metadata):
 
         type = name.split('.')[-1]
 
-        if type not in ['timer', 'service', 'network', 'netdev', 'mount', 'swap']:
-            raise Exception(f'unknown type {type}')
-
         if not config.get('Install/WantedBy'):
             if type == 'service':
                 units[name] = {

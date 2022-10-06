@@ -7,6 +7,7 @@
         'monitored',
         'webserver',
         'dnsserver',
+        'left4dead2',
     ],
     'bundles': [
         'bind-acme',
@@ -67,6 +68,26 @@
         },
         'download-server': {
             'hostname': 'dl.sublimity.de',
+        },
+        'left4dead2': {
+            'servers': {
+                'standard': {
+                    'port': 27020,
+                },
+            },
+            'admins': {
+                'STEAM_1:0:12376499', # CroneKorkN ☮️UKRAINE❤
+                'STEAM_1:1:169960486', # *RED*
+                'STEAM_1:1:112940736', # Ðark-AnGeℓ❤
+                'STEAM_1:1:34263261', # Alekc
+                'STEAM_1:1:79349632', # VOID
+            },
+            'workshop': {
+                214630948,
+                1229957234,
+                698857882,
+            },
+            'steamgroups': {'103582791467869287'},
         },
         'letsencrypt': {
             'domains': {

@@ -22,7 +22,7 @@ for game in node.metadata.get('steam/games'):
         'owner': 'steam',
         'group': 'steam',
         'needed_by': [
-            'svc_systemd:steam-update',
+            'svc_systemd:steam-update.service',
         ],
     }
 
@@ -33,21 +33,7 @@ files = {
         'owner': 'steam',
         'group': 'steam',
     },
-    '/opt/steam/steam/workshop-downloader': {
-        'content_type': 'download',
-        'source': 'https://github.com/SegoCode/swd/releases/download/1.1/swd-linux-amd64',
-        'owner': 'steam',
-        'group': 'steam',
-        'mode': '750',
-    },
 }
-
-# symlinks = {
-#     # /opt/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
-#     '/opt/steam/.steam/sdk32': {
-#         'target': '/opt/steam/linux32',
-#     }
-# }
 
 actions = {
     'extract_steamcmd': {
@@ -59,7 +45,7 @@ actions = {
     },
 }
 
-svc_systemd['steam-update'] = {
+svc_systemd['steam-update.service'] = {
     'running': False,
     'enabled': False,
     'needs': {
