@@ -24,6 +24,15 @@ defaults = {
         },
         'includes': {},
     },
+    'systemd': {
+        'units': {
+            'nginx.service.d/override.conf': {
+                'Unit': {
+                    'After': {'network-online.target'},
+                },
+            },
+        },
+    },
 }
 
 @metadata_reactor.provides(

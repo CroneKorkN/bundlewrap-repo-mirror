@@ -16,6 +16,7 @@ def systemd(metadata):
             f'{name}.timer': {
                 'Unit':{
                     'Description': f'{name} timer',
+                    'After': config.get('after', set()),
                 },
                 'Timer': {
                     'OnCalendar': config['when'],
