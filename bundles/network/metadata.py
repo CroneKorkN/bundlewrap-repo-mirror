@@ -1,8 +1,7 @@
 from ipaddress import ip_interface
 
 defaults = {
-    'network': {
-    }
+    'network': {},
 }
 
 
@@ -11,7 +10,7 @@ defaults = {
 )
 def units(metadata):
     units = {}
-    
+
     for type, network in metadata.get('network').items():
         units[f'{type}.network'] = {
             'Match': {
@@ -22,7 +21,7 @@ def units(metadata):
                 'IPv6AcceptRA': 'no',
             }
         }
-        
+
         for i in [4, 6]:
             if network.get(f'ipv{i}', None):
                 units[f'{type}.network'].update({
@@ -38,7 +37,7 @@ def units(metadata):
                         }
                     })
 
-    
+
     return {
         'systemd': {
             'units': units,
