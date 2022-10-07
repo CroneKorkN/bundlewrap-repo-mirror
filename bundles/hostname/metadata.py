@@ -23,6 +23,6 @@ def hostname_file(metadata):
 def dns(metadata):
     return {
         'dns': {
-            metadata.get('hostname'): repo.libs.dns.get_a_records(metadata, external=False),
+            metadata.get('hostname'): repo.libs.dns.get_a_records(metadata),
         },
     }
