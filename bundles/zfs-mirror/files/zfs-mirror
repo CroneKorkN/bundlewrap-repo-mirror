@@ -1,5 +1,10 @@
 #!/bin/bash
 
+while ! ping -c1 -t2 "${server_ip}"
+do
+  sleep 3
+done
+
 set -exu
 
 ssh="ssh -o ConnectTimeout=5 root@${server_ip}"
