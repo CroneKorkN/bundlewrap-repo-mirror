@@ -1,10 +1,13 @@
 defaults = {
     'apt': {
         'packages': {
-            'resolvconf': {
+            'ifupdown': {
                 'installed': False,
             },
             'openresolv': {
+                'installed': False,
+            },
+            'resolvconf': {
                 'installed': False,
             },
         },
