@@ -5,7 +5,7 @@ from shlex import quote
 defaults = {
     'steam': {
         'games': {
-            'left4dead2': '222860',
+            'left4dead2': 222860,
         },
     },
     'left4dead2': {
