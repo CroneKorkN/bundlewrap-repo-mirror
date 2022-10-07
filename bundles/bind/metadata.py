@@ -92,7 +92,7 @@ def master_slave(metadata):
 def dns(metadata):
     return {
         'dns': {
-            metadata.get('bind/hostname'): repo.libs.dns.get_a_records(metadata),
+            metadata.get('bind/hostname'): repo.libs.ip.get_a_records(metadata),
         }
     }
 

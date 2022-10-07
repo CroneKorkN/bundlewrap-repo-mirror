@@ -1,4 +1,5 @@
-from ipaddress import ip_interface
+from ipaddress import ip_address, ip_interface
+
 
 defaults = {
     'apt': {
@@ -6,7 +7,7 @@ defaults = {
             'clamav': {},
             'clamav-daemon': {},
             'clamav-freshclam': {},
-            'clamav-unofficial-sigs': {}, 
+            'clamav-unofficial-sigs': {},
             'rspamd': {},
         },
     },
@@ -44,10 +45,6 @@ def nginx_vhost(metadata):
 def ignored_ips(metadata):
     return {
         'rspamd': {
-            'ip_whitelist': {
-                str(ip_interface(network['ipv4']).ip)
-                    for other_node in repo.nodes
-                    for network in other_node.metadata.get('network').values()
-            }
+            'ip_whitelist': repo.libs.ip.get_all_ips(repo.nodes),
         },
     }

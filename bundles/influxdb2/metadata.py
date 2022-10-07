@@ -68,7 +68,7 @@ def zfs(metadata):
 def dns(metadata):
     return {
         'dns': {
-            metadata.get('influxdb/hostname'): repo.libs.dns.get_a_records(metadata),
+            metadata.get('influxdb/hostname'): repo.libs.ip.get_a_records(metadata),
         }
     }
 

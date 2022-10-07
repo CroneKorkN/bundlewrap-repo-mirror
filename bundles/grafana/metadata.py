@@ -66,7 +66,7 @@ def domain(metadata):
                     'domain': metadata.get('grafana/hostname'),
                 },
             },
-        },    
+        },
     }
 
 @metadata_reactor.provides(
@@ -74,7 +74,7 @@ def domain(metadata):
 )
 def influxdb2(metadata):
     influxdb_metadata = repo.get_node(metadata.get('grafana/influxdb_node')).metadata.get('influxdb')
-    
+
     return {
         'grafana': {
             'datasources': {
@@ -93,7 +93,7 @@ def influxdb2(metadata):
                     'isDefault': True,
                 },
             },
-        },    
+        },
     }
 
 
@@ -106,7 +106,7 @@ def datasource_key_to_name(metadata):
             'datasources': {
                 name: {'name': name} for name in metadata.get('grafana/datasources').keys()
             },
-        },    
+        },
     }
 
 
@@ -116,7 +116,7 @@ def datasource_key_to_name(metadata):
 def dns(metadata):
     return {
         'dns': {
-            metadata.get('grafana/hostname'): repo.libs.dns.get_a_records(metadata),
+            metadata.get('grafana/hostname'): repo.libs.ip.get_a_records(metadata),
         }
     }
 
