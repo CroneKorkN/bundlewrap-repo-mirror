@@ -55,6 +55,7 @@
             },
         },
         'zfs': {
+            'import-cache': False,
             'pools': {
                 'tank': {
                     'devices': [

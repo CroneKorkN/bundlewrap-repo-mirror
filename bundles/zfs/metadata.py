@@ -76,6 +76,7 @@ defaults = {
             'weekly': 4,
             'monthly': 24,
         },
+        'import-cache': True,
     },
 }
 

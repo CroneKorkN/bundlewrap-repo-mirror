@@ -42,6 +42,13 @@ svc_systemd = {
             'pkg_apt:zfs-zed'
         },
     },
+    'zfs-import-cache': {
+        'enabled': node.metadata.get('zfs/import-cache'),
+        'running': None,
+        'needs': {
+            'pkg_apt:zfs-zed'
+        },
+    },
 }
 
 for name, config in node.metadata.get('zfs/datasets', {}).items():
