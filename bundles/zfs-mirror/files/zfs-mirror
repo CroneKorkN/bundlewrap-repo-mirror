@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while ! ping -c1 -t2 "${server_ip}"
+while ! ping -c1 -W2 "${server_ip}"
 do
   sleep 3
 done
