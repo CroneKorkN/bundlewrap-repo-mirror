@@ -22,7 +22,7 @@ class PRNG(object):
         return result
 
 
-@cache_to_disk()
+@cache_to_disk(30)
 def _generate_deterministic_rsa_private_key(secret_bytes):
     return RSA.generate(2048, randfunc=PRNG(secret_bytes)).export_key('DER')
 
