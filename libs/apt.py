@@ -11,9 +11,10 @@ class AptSource():
         # parse options, which are optional
         if search(r'\[.*\]', string):
             self.options = {
-                k:v.split(',') for k,v in (
-                    e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
-                )
+                k:v.split(',')
+                    for k,v in (
+                        e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
+                    )
             }
             string_without_options = sub(r'\[.*\]', '', string)
         else:
@@ -26,7 +27,7 @@ class AptSource():
         self.url = urlparse(parts[1])
         self.suite = parts[2]
         self.components = parts[3:]
-    
+
     def __str__(self):
         parts = [
             self.type,
@@ -47,13 +48,13 @@ class AptSource():
                     )
                 )
             )
-        
+
         return ' '.join(parts)
 
-        
+
     def __eq__(self, other):
         return str(self) == str(other)
-        
+
     def __lt__(self, other):
         return str(self) < str(other)
 
