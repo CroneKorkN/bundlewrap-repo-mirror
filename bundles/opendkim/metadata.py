@@ -2,7 +2,8 @@ from os.path import join, exists
 from re import sub
 from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.hazmat.primitives.serialization import load_der_private_key
+from base64 import b64decode
 
 
 defaults = {
@@ -25,37 +26,21 @@ def keys(metadata):
     keys = {}
 
     for domain in metadata.get('mailserver/domains'):
-        if domain in metadata.get(f'opendkim/keys'):
-            continue
-
-        privkey_path = join(repo.path, 'data', 'dkim', f'{domain}.privkey.enc')
-
-        if not exists(privkey_path):
-            with open(privkey_path, 'w') as file:
-                file.write(
-                    repo.vault.encrypt(
-                        rsa.generate_private_key(
-                            public_exponent=65537,
-                            key_size=2048
-                        ).private_bytes(
-                            crypto_serialization.Encoding.PEM,
-                            crypto_serialization.PrivateFormat.PKCS8,
-                            crypto_serialization.NoEncryption()
-                        ).decode()
-                    )
-                )
-
-        with open(privkey_path, 'r') as file:
-            privkey = str(repo.vault.decrypt(file.read()))
-
+        privkey = repo.libs.rsa.generate_deterministic_rsa_private_key(
+            b64decode(str(repo.vault.random_bytes_as_base64_for('dkim' + domain)))
+        )
         keys[domain] = {
+            'private': privkey.private_bytes(
+                crypto_serialization.Encoding.PEM,
+                crypto_serialization.PrivateFormat.PKCS8,
+                crypto_serialization.NoEncryption()
+            ).decode(),
             'public': ''.join(
-                load_pem_private_key(privkey.encode(), password=None).public_key().public_bytes(
+                privkey.public_key().public_bytes(
                     crypto_serialization.Encoding.PEM,
                     crypto_serialization.PublicFormat.SubjectPublicKeyInfo
                 ).decode().split('\n')[1:-2]
             ),
-            'private': privkey,
         }
 
     return {
