@@ -3,3 +3,4 @@ pycryptodome
 PyNaCl
 PyYAML
 pyqrcode
+cache_to_disk
