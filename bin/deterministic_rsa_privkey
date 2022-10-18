@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+# https://stackoverflow.com/a/18266970
+
+from Crypto.PublicKey import RSA
+from struct import pack
+from hashlib import sha3_512
+from sys import argv
+from base64 import b64decode, b64encode
+
+
+class PRNG(object):
+    def __init__(self, seed):
+        self.index = 0
+        self.seed = sha3_512(seed).digest()
+        self.buffer = b""
+
+    def __call__(self, n):
+        while len(self.buffer) < n:
+            self.buffer += sha3_512(self.seed + pack("<d", self.index)).digest()
+            self.index += 1
+
+        result, self.buffer = self.buffer[:n], self.buffer[n:]
+        return result
+
+
+bits = int(argv[1])
+secret = b64decode(argv[2])
+key = RSA.generate(bits, randfunc=PRNG(secret))
+
+print(
+    b64encode(key.export_key('DER')).decode()
+)

@@ -1,8 +1,5 @@
-from os.path import join, exists
 from re import sub
 from cryptography.hazmat.primitives import serialization as crypto_serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.serialization import load_der_private_key
 from base64 import b64decode
 
 
@@ -27,6 +24,7 @@ def keys(metadata):
 
     for domain in metadata.get('mailserver/domains'):
         privkey = repo.libs.rsa.generate_deterministic_rsa_private_key(
+            repo.path,
             b64decode(str(repo.vault.random_bytes_as_base64_for('dkim' + domain)))
         )
         keys[domain] = {
