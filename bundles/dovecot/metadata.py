@@ -29,6 +29,12 @@ defaults = {
             'tcp dport {143, 993, 4190} accept',
         },
     },
+    'systemd-timers': {
+        'dovecot-optimize-index': {
+            'command': '/usr/bin/doveadm fts optimize -A',
+            'when': 'daily',
+        },
+    },
 }
 
 @metadata_reactor.provides(
