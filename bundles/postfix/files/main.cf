@@ -54,4 +54,4 @@ milter_protocol = 6
 milter_default_action = accept
 
 # rspamd
-milter_mail_macros = "i {mail_addr} {client_addr} {client_name} {auth_authen}"
+milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen}
