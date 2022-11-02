@@ -72,7 +72,7 @@ if [ "$SCAN" == "TRUE" ]; then
   sudo -u www-data php /opt/nextcloud/occ files:scan --path "$REL_SOURCE_PATH"
   sudo -u www-data php /opt/nextcloud/occ files:scan --path "$REL_UNSORTABLE_PATH"
   sudo -u www-data php /opt/nextcloud/occ files:scan --path "$REL_DEST_PATH"
-  sudo -u www-data php /opt/nextcloud/occ preview:pre-generate
+  #sudo -u www-data php /opt/nextcloud/occ preview:pre-generate
 fi
 
 echo "FINISH."
