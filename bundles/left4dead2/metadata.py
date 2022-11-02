@@ -74,8 +74,8 @@ def firewall(metadata):
     return {
         'nftables': {
             'input': {
-                f"tcp dport {{ {', '.join(ports)} }} accept",
-                f"udp dport {{ {', '.join(ports)} }} accept",
+                f"tcp dport {{ {', '.join(sorted(ports))} }} accept",
+                f"udp dport {{ {', '.join(sorted(ports))} }} accept",
             },
         },
     }
