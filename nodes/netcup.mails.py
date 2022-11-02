@@ -74,13 +74,18 @@
                 'standard': {
                     'port': 27020,
                 },
+                'standard-2': {
+                    'port': 27021,
+                },
             },
             'admins': {
                 'STEAM_1:0:12376499', # CroneKorkN ☮️UKRAINE❤
                 'STEAM_1:1:169960486', # *RED*
                 'STEAM_1:1:112940736', # Ðark-AnGeℓ❤
                 'STEAM_1:1:34263261', # Alekc
-                'STEAM_1:1:79349632', # VOID
+                'STEAM_1:0:583132949', # Cat
+                'STEAM_1:0:610180592', # SonovaBeach
+                'STEAM_1:1:157619181', # Null
             },
             'workshop': {
                 214630948,
