@@ -33,4 +33,20 @@
         'min': 0,
         'tooltip': 'multi',
     },
+    'errors': {
+        'stacked': True,
+        'queries': {
+            'power_level': {
+                'filters': {
+                    '_measurement': 'smart_errors',
+                },
+            },
+        },
+        'display_name': '__field.labels.device} ${__field.name',
+        'min': 0,
+        'tooltip': 'multi',
+        'legend': {
+            'displayMode': 'hidden',
+        },
+    },
 }

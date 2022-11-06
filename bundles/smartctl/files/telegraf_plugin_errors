@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+from subprocess import check_output
+from json import loads
+import time
+
+
+nanosecond = time.time_ns()
+
+for line in check_output(['/usr/sbin/smartctl', '--scan', '-d', 'scsi']).splitlines():
+    device = line.split()[0].decode()
+    smart = loads(check_output(['/usr/sbin/smartctl', '-a', device, '-j']))
+    attributes = {
+        attribute['name']: attribute['flags']['value']
+            for attribute in smart['ata_smart_attributes']['table']
+            if int(attribute['id']) in [
+                # https://www.backblaze.com/blog/what-smart-stats-indicate-hard-drive-failures/
+                5,
+                187,
+                188,
+                197,
+                198,
+            ]
+    }
+    attributes_string = ','.join(f'{k}={v}' for k, v in attributes.items())
+
+    print(f"smart_errors,host=${node.name},device={device} {attributes_string} {nanosecond}")

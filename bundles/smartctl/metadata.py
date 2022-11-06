@@ -13,17 +13,29 @@ defaults = {
     'telegraf': {
         'config': {
             'inputs': {
-                'exec': {h({
-                    'commands': [
-                        f'sudo /usr/local/share/telegraf/smartctl',
-                    ],
-                    'data_format': 'influx',
-                    'interval': '20s',
-                })},
+                'exec': {
+                    h({
+                        'commands': [
+                            f'sudo /usr/local/share/telegraf/smartctl_power_mode',
+                        ],
+                        'data_format': 'influx',
+                        'interval': '20s',
+                    }),
+                    h({
+                        'commands': [
+                            f'sudo /usr/local/share/telegraf/smartctl_errors',
+                        ],
+                        'data_format': 'influx',
+                        'interval': '6h',
+                    })
+                },
             },
         },
     },
     'sudoers': {
-        'telegraf': {'/usr/local/share/telegraf/smartctl'},
+        'telegraf': {
+            '/usr/local/share/telegraf/smartctl_power_mode',
+            '/usr/local/share/telegraf/smartctl_errors',
+        },
     },
 }

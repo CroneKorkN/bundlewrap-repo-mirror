@@ -1,6 +1,11 @@
 files = {
-    '/usr/local/share/telegraf/smartctl': {
-        'source': 'telegraf_plugin',
+    '/usr/local/share/telegraf/smartctl_power_mode': {
+        'source': 'telegraf_plugin_power_mode',
+        'content_type': 'mako',
+        'mode': '0755',
+    },
+    '/usr/local/share/telegraf/smartctl_errors': {
+        'source': 'telegraf_plugin_errors',
         'content_type': 'mako',
         'mode': '0755',
     },
@@ -22,5 +27,5 @@ for device, conf in node.metadata.get('smartctl').items():
             }
         else:
             raise ValueError(f'{node.name}: unkown smartctl option: {option}')
-        
+
         previous_action = [f'action:{action_name}']
