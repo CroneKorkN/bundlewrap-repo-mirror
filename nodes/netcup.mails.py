@@ -50,20 +50,25 @@
                 'hausamsilberberg.de',
                 'wiegand.tel',
                 'lonercrew.io',
+                'left4.me',
             },
         },
         'dns': {
             'ckn.li': {
                 'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::2'],
+                'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
             'sublimity.de': {
                 'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::2'],
+                'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
             'freibrief.net': {
                 'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::2'],
+                'AAAA': ['2a01:4f8:1c1c:4121::1'],
+            },
+            'left4.me': {
+                'A': ['202.61.255.108'],
+                'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
         },
         'download-server': {
@@ -112,6 +117,7 @@
                 'naeder.net',
                 'wettengl.net',
                 'wiegand.tel',
+                'left4.me',
             },
         },
         'rspamd': {
