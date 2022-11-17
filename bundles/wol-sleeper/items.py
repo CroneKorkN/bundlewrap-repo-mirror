@@ -11,6 +11,6 @@ files = {
 svc_systemd = {
     'wakeonlan-remove-downtime.service': {
         'enabled': True,
-        'running': False,
+        'running': None,
     },
 }
