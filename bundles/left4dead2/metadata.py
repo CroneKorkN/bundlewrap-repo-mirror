@@ -17,6 +17,23 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'left4dead2/servers',
+)
+def rconn_password(metadata):
+    # only works from localhost!
+    return {
+        'left4dead2': {
+            'servers': {
+                server: {
+                    'rcon_password': repo.vault.password_for(f'{node.name} left4dead2 {server} rcon', length=24),
+                }
+                    for server in metadata.get('left4dead2/servers')
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
     'steam-workshop-download/left4dead',
 )
 def workshop_download(metadata):

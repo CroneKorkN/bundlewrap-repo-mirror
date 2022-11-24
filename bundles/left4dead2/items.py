@@ -32,6 +32,7 @@ for name, config in node.metadata.get('left4dead2/servers').items():
         'context': {
             'name': name,
             'steamgroups': node.metadata.get('left4dead2/steamgroups'),
+            'rcon_password': config['rcon_password'],
         },
         'owner': 'steam',
         'group': 'steam',
