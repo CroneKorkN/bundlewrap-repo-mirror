@@ -34,7 +34,7 @@ def rconn_password(metadata):
 
 
 @metadata_reactor.provides(
-    'steam-workshop-download/left4dead',
+    'steam-workshop-download',
 )
 def workshop_download(metadata):
     if not metadata.get('left4dead2/workshop'):
