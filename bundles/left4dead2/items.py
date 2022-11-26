@@ -97,7 +97,10 @@ for name, config in node.metadata.get('left4dead2/servers').items():
         'owner': 'steam',
         'group': 'steam',
     }
-    for id in node.metadata.get('left4dead2/workshop'):
+    for id in [
+        *config.get('workshop', []),
+        *node.metadata.get('left4dead2/workshop'),
+    ]:
         files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/{id}.vpk'] = {
             'content_type': 'any',
             'owner': 'steam',
