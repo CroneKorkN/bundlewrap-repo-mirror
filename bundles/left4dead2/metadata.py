@@ -66,12 +66,38 @@ def server_units(metadata):
             'Service': {
                 'User': 'steam',
                 'Group': 'steam',
-                'WorkingDirectory': '/opt/steam/left4dead2',
-                'ExecStart': f'/opt/steam/left4dead2/srcds_run -port {config["port"]} +exec server/{name}.cfg',
+                'WorkingDirectory': f'/opt/steam/left4dead2-servers/{name}',
+                'ExecStart': f'/opt/steam/left4dead2-servers/{name}/srcds_run -port {config["port"]} +exec server/{name}.cfg',
                 'Restart': 'on-failure',
             },
             'Install': {
                 'WantedBy': {'multi-user.target'},
+            },
+        }
+
+        mountpoint = f'/opt/steam/left4dead2-servers/{name}'
+        formatted_name = mountpoint[1:].replace('-', '\\x2d').replace('/', '-') + '.mount'
+        units[formatted_name] = {
+            'Unit': {
+                'Description': f"Mount left4dead2 server {name} overlay",
+                'Conflicts': 'umount.target',
+                'Before': 'umount.target',
+            },
+            'Mount': {
+                'What': 'overlay',
+                'Where': mountpoint,
+                'Type': 'overlay',
+                'Options': ','.join([
+                    'auto',
+                    'lowerdir=/opt/steam/left4dead2',
+                    f'upperdir=/opt/steam-zfs-overlay-workarounds/{name}/upper',
+                    f'workdir=/opt/steam-zfs-overlay-workarounds/{name}/workdir',
+                ]),
+            },
+            'Install': {
+                'WantedBy': {
+                    'multi-user.target',
+                },
             },
         }
 

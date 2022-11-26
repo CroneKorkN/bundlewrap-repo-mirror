@@ -16,6 +16,13 @@ directories = {
         'group': 'steam',
         'purge': True,
     },
+    # Current zfs doesnt support zfs upperdir. The support was added in October 2022. Move upperdir - unused anyway -
+    # to another dir. Also move workdir alongside it, as it has to be on same fs.
+    '/opt/steam-zfs-overlay-workarounds': {
+        'owner': 'steam',
+        'group': 'steam',
+        'mode': '0744',
+    },
 }
 
 files = {
@@ -26,6 +33,10 @@ files = {
 }
 
 for name, config in node.metadata.get('left4dead2/servers').items():
+    directories[f'/opt/steam/left4dead2-servers/{name}'] = {}
+    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/upper'] = {}
+    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/workdir'] = {}
+
     files[f'/opt/steam/left4dead2/left4dead2/cfg/server/{name}.cfg'] = {
         'content_type': 'mako',
         'source': 'server.cfg',
@@ -46,14 +57,28 @@ for name, config in node.metadata.get('left4dead2/servers').items():
             f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
         ],
     }
-
+    directories[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons'] = {
+        'owner': 'steam',
+        'group': 'steam',
+        'purge': True,
+    }
+    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/readme.txt'] = {
+        'content_type': 'any',
+        'owner': 'steam',
+        'group': 'steam',
+    }
+    for id in node.metadata.get('left4dead2/workshop'):
+        files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/{id}.vpk'] = {
+            'content_type': 'any',
+            'owner': 'steam',
+            'group': 'steam',
+        }
 
 files[f'/opt/steam/left4dead2/left4dead2/addons/readme.txt'] = {
     'content_type': 'any',
     'owner': 'steam',
     'group': 'steam',
 }
-
 
 for id in node.metadata.get('left4dead2/workshop'):
     files[f'/opt/steam/left4dead2/left4dead2/addons/{id}.vpk'] = {
