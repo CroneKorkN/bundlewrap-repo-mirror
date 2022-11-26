@@ -15,6 +15,9 @@ directories = {
         'owner': 'steam',
         'group': 'steam',
         'purge': True,
+        'triggers': [
+            *[f'svc_systemd:left4dead2-{name}.service:restart' for name in node.metadata.get('left4dead2/servers')],
+        ],
     },
     # Current zfs doesnt support zfs upperdir. The support was added in October 2022. Move upperdir - unused anyway -
     # to another dir. Also move workdir alongside it, as it has to be on same fs.
@@ -29,6 +32,30 @@ files = {
     '/opt/steam/left4dead2/left4dead2/ems/admin system/admins.txt': {
         'owner': 'steam',
         'content': '\n'.join(sorted(node.metadata.get('left4dead2/admins'))),
+    },
+    '/opt/steam/left4dead2/left4dead2/addons/readme.txt': {
+        'content_type': 'any',
+        'owner': 'steam',
+        'group': 'steam',
+    }
+}
+
+for id in node.metadata.get('left4dead2/workshop'):
+    files[f'/opt/steam/left4dead2/left4dead2/addons/{id}.vpk'] = {
+        'content_type': 'any',
+        'owner': 'steam',
+        'group': 'steam',
+        'triggers': [
+            *[f'svc_systemd:left4dead2-{name}.service:restart' for name in node.metadata.get('left4dead2/servers')],
+        ],
+    }
+
+# /opt/steam/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
+symlinks = {
+    '/opt/steam/steam/.steam/sdk32': {
+        'target': '/opt/steam/steam/linux32',
+        'owner': 'steam',
+        'group': 'steam',
     }
 }
 
@@ -61,6 +88,9 @@ for name, config in node.metadata.get('left4dead2/servers').items():
         'owner': 'steam',
         'group': 'steam',
         'purge': True,
+        'triggers': [
+            f'svc_systemd:left4dead2-{name}.service:restart',
+        ],
     }
     files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/readme.txt'] = {
         'content_type': 'any',
@@ -72,26 +102,8 @@ for name, config in node.metadata.get('left4dead2/servers').items():
             'content_type': 'any',
             'owner': 'steam',
             'group': 'steam',
+            'triggers': [
+                f'svc_systemd:left4dead2-{name}.service:restart',
+            ],
         }
 
-files[f'/opt/steam/left4dead2/left4dead2/addons/readme.txt'] = {
-    'content_type': 'any',
-    'owner': 'steam',
-    'group': 'steam',
-}
-
-for id in node.metadata.get('left4dead2/workshop'):
-    files[f'/opt/steam/left4dead2/left4dead2/addons/{id}.vpk'] = {
-        'content_type': 'any',
-        'owner': 'steam',
-        'group': 'steam',
-    }
-
-# /opt/steam/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
-symlinks = {
-    '/opt/steam/steam/.steam/sdk32': {
-        'target': '/opt/steam/steam/linux32',
-        'owner': 'steam',
-        'group': 'steam',
-    }
-}

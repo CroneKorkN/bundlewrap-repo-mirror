@@ -81,6 +81,9 @@
                 },
                 'standard-2': {
                     'port': 27021,
+                    'workshop': {
+                        2256379828, # bhop detect
+                    },
                 },
             },
             'admins': {

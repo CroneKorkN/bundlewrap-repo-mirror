@@ -40,14 +40,24 @@ def workshop_download(metadata):
     if not metadata.get('left4dead2/workshop'):
         return {}
 
-    return {
-        'steam-workshop-download': {
-            'left4dead': {
-                'ids': metadata.get('left4dead2/workshop'),
-                'path': '/opt/steam/left4dead2/left4dead2/addons',
-                'user': 'steam',
-            },
+    result = {
+        'left4dead-global': {
+            'ids': metadata.get('left4dead2/workshop'),
+            'path': '/opt/steam/left4dead2/left4dead2/addons',
+            'user': 'steam',
         },
+    }
+
+    for name, config in metadata.get('left4dead2/servers').items():
+        if 'workshop' in config:
+            result[f'left4dead2-{name}'] = {
+                'ids': config['workshop'],
+                'path': f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons',
+                'user': 'steam',
+            }
+
+    return {
+        'steam-workshop-download': result,
     }
 
 
