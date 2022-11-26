@@ -1,0 +1,33 @@
+#!/bin/bash -l
+
+xcode-select --install
+
+git -C ~/.zsh/oh-my-zsh pull
+
+brew upgrade
+brew upgrade --cask --greedy
+
+sudo softwareupdate -ia --verbose
+
+mwi /U/m/Pr/c git:(master) defaults write com.apple.dock autohide-time-modifier -float 0.2
+mwi /U/m/Pr/c git:(master) killall Dock
+mwi /U/m/Pr/c git:(master) defaults write com.apple.dock autohide-time-modifier -float 0.16
+
+if test "$(defaults read com.apple.dock autohide-time-modifier)" -ne 0.16
+then
+    defaults write com.apple.dock autohide-time-modifier -float 0.16
+    RESTART_DOCK=TRUE
+fi
+
+if test "$(defaults read com.apple.dock autohide-delay)" -ne 0
+then
+    defaults write com.apple.dock autohide-delay -float 0
+    RESTART_DOCK=TRUE
+fi
+
+if test "$RESTART_DOCK" = TRUE
+then
+    killall Dock
+fi
+
+sudo systemsetup -setremotelogin on

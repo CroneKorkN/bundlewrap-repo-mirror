@@ -16,7 +16,7 @@ def user(metadata):
                 'authorized_users': {
                     f'root@{node.name}'
                         for node in repo.nodes
-                        if node.dummy == False
+                        if node.dummy == False and node.has_bundle('ssh')
                 },
             },
         },
