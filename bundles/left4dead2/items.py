@@ -59,11 +59,18 @@ symlinks = {
     }
 }
 
+#
+# SERVERS
+#
+
 for name, config in node.metadata.get('left4dead2/servers').items():
+
+    #overlay
     directories[f'/opt/steam/left4dead2-servers/{name}'] = {}
     directories[f'/opt/steam-zfs-overlay-workarounds/{name}/upper'] = {}
     directories[f'/opt/steam-zfs-overlay-workarounds/{name}/workdir'] = {}
 
+    # conf
     files[f'/opt/steam/left4dead2/left4dead2/cfg/server/{name}.cfg'] = {
         'content_type': 'mako',
         'source': 'server.cfg',
@@ -78,12 +85,8 @@ for name, config in node.metadata.get('left4dead2/servers').items():
             f'svc_systemd:left4dead2-{name}.service:restart',
         ],
     }
-    svc_systemd[f'left4dead2-{name}.service'] = {
-        'needs': [
-            f'file:/opt/steam/left4dead2/left4dead2/cfg/server/{name}.cfg',
-            f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
-        ],
-    }
+
+    # addons
     directories[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons'] = {
         'owner': 'steam',
         'group': 'steam',
@@ -110,3 +113,10 @@ for name, config in node.metadata.get('left4dead2/servers').items():
             ],
         }
 
+    # service
+    svc_systemd[f'left4dead2-{name}.service'] = {
+        'needs': [
+            f'file:/opt/steam/left4dead2/left4dead2/cfg/server/{name}.cfg',
+            f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
+        ],
+    }
