@@ -4,12 +4,7 @@ directories = {
     '/opt/steam/left4dead2/left4dead2/ems/admin system': {
         'owner': 'steam',
         'group': 'steam',
-        'mode': '0744',
-    },
-    '/opt/steam/left4dead2/left4dead2/cfg/server': {
-        'owner': 'steam',
-        'group': 'steam',
-        'purge': True,
+        'mode': '0755',
     },
     '/opt/steam/left4dead2/left4dead2/addons': {
         'owner': 'steam',
@@ -19,12 +14,19 @@ directories = {
             *[f'svc_systemd:left4dead2-{name}.service:restart' for name in node.metadata.get('left4dead2/servers')],
         ],
     },
+    '/opt/steam/left4dead2-servers': {
+        'owner': 'steam',
+        'group': 'steam',
+        'mode': '0755',
+        'purge': True,
+    },
     # Current zfs doesnt support zfs upperdir. The support was added in October 2022. Move upperdir - unused anyway -
     # to another dir. Also move workdir alongside it, as it has to be on same fs.
     '/opt/steam-zfs-overlay-workarounds': {
         'owner': 'steam',
         'group': 'steam',
-        'mode': '0744',
+        'mode': '0755',
+        'purge': True,
     },
 }
 
@@ -71,7 +73,7 @@ for name, config in node.metadata.get('left4dead2/servers').items():
     directories[f'/opt/steam-zfs-overlay-workarounds/{name}/workdir'] = {}
 
     # conf
-    files[f'/opt/steam/left4dead2/left4dead2/cfg/server/{name}.cfg'] = {
+    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg'] = {
         'content_type': 'mako',
         'source': 'server.cfg',
         'context': {
@@ -116,7 +118,7 @@ for name, config in node.metadata.get('left4dead2/servers').items():
     # service
     svc_systemd[f'left4dead2-{name}.service'] = {
         'needs': [
-            f'file:/opt/steam/left4dead2/left4dead2/cfg/server/{name}.cfg',
+            f'file:/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg',
             f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
         ],
     }
