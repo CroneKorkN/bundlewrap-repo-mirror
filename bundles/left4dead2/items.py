@@ -33,6 +33,8 @@ directories = {
 files = {
     '/opt/steam/left4dead2/left4dead2/ems/admin system/admins.txt': {
         'owner': 'steam',
+        'group': 'steam',
+        'mode': '0755',
         'content': '\n'.join(sorted(node.metadata.get('left4dead2/admins'))),
     },
     '/opt/steam/left4dead2/left4dead2/addons/readme.txt': {
@@ -68,9 +70,18 @@ symlinks = {
 for name, config in node.metadata.get('left4dead2/servers').items():
 
     #overlay
-    directories[f'/opt/steam/left4dead2-servers/{name}'] = {}
-    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/upper'] = {}
-    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/workdir'] = {}
+    directories[f'/opt/steam/left4dead2-servers/{name}'] = {
+        'owner': 'steam',
+        'group': 'steam',
+    }
+    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/upper'] = {
+        'owner': 'steam',
+        'group': 'steam',
+    }
+    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/workdir'] = {
+        'owner': 'steam',
+        'group': 'steam',
+    }
 
     # conf
     files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg'] = {

@@ -45,7 +45,7 @@ def workshop_download(metadata):
                     'path': '/opt/steam/left4dead2/left4dead2/addons',
                     'user': 'steam',
                     'requires': {
-                        'steam.target',
+                        'steam-update.service',
                     },
                     'required_by': {
                         f'left4dead2-{name}.service'
@@ -73,8 +73,8 @@ def server_units(metadata):
         units[mount_unit_name] = {
             'Unit': {
                 'Description': f"Mount left4dead2 server {name} overlay",
-                'Conflicts': 'umount.target',
-                'Before': 'umount.target',
+                'Conflicts': {'umount.target'},
+                'Before': {'umount.target'},
             },
             'Mount': {
                 'What': 'overlay',
@@ -112,8 +112,8 @@ def server_units(metadata):
         units[f'left4dead2-{name}.service'] = {
             'Unit': {
                 'Description': f'left4dead2 server {name}',
-                'After': {'steam.target'},
-                'Requires': {'steam.target'},
+                'After': {'steam-update.service'},
+                'Requires': {'steam-update.service'},
             },
             'Service': {
                 'User': 'steam',

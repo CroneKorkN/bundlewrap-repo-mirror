@@ -10,15 +10,6 @@ defaults = {
             'left4dead2': 222860,
         },
     },
-    'systemd': {
-        'units': {
-            'steam.target': {
-                'Unit': {
-                    'Description': 'steam is ready',
-                },
-            },
-        },
-    },
     'zfs': {
         'datasets': {
             'tank/steam': {
@@ -41,7 +32,6 @@ def initial_unit(metadata):
                     'Unit': {
                         'Description': 'steam: install and update games',
                         'After': 'network-online.target',
-                        'Before': 'steam.target',
                     },
                     'Service': {
                         'Type': 'oneshot',
@@ -54,7 +44,7 @@ def initial_unit(metadata):
                         }
                     },
                     'Install': {
-                        'RequiredBy': {'steam.target'},
+                        'WantedBy': {'multi-user.target'},
                     },
                 },
             },

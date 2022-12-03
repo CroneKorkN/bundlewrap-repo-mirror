@@ -20,7 +20,7 @@ def workshop(metadata):
                     'network-online.target',
                     'steam-update.target',
                 },
-                'Before': 'steam.target',
+                'Before': 'steam-update.service',
                 'Requires': conf['requires'],
             },
             'Service': {
