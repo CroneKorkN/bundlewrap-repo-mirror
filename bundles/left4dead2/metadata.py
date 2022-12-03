@@ -37,57 +37,40 @@ def rconn_password(metadata):
     'steam-workshop-download',
 )
 def workshop_download(metadata):
-    if not metadata.get('left4dead2/workshop'):
+    if metadata.get('left4dead2/workshop'):
+        return {
+            'steam-workshop-download': {
+                'left4dead2-global': {
+                    'ids': metadata.get('left4dead2/workshop'),
+                    'path': '/opt/steam/left4dead2/left4dead2/addons',
+                    'user': 'steam',
+                    'requires': {
+                        'steam.target',
+                    },
+                    'required_by': {
+                        f'left4dead2-{name}.service'
+                            for name in metadata.get('left4dead2/servers')
+                    },
+                },
+            },
+        }
+    else:
         return {}
-
-    result = {
-        'left4dead-global': {
-            'ids': metadata.get('left4dead2/workshop'),
-            'path': '/opt/steam/left4dead2/left4dead2/addons',
-            'user': 'steam',
-        },
-    }
-
-    for name, config in metadata.get('left4dead2/servers').items():
-        if 'workshop' in config:
-            result[f'left4dead2-{name}'] = {
-                'ids': config['workshop'],
-                'path': f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons',
-                'user': 'steam',
-            }
-
-    return {
-        'steam-workshop-download': result,
-    }
 
 
 @metadata_reactor.provides(
+    'steam-workshop-download',
     'systemd/units',
 )
 def server_units(metadata):
     units = {}
+    workshop = {}
 
     for name, config in metadata.get('left4dead2/servers').items():
-        units[f'left4dead2-{name}.service'] = {
-            'Unit': {
-                'Description': f'left4dead2 server {name}',
-                'After': {'steam.target'},
-            },
-            'Service': {
-                'User': 'steam',
-                'Group': 'steam',
-                'WorkingDirectory': f'/opt/steam/left4dead2-servers/{name}',
-                'ExecStart': f'/opt/steam/left4dead2-servers/{name}/srcds_run -port {config["port"]} +exec server.cfg',
-                'Restart': 'on-failure',
-            },
-            'Install': {
-                'WantedBy': {'multi-user.target'},
-            },
-        }
-
+        # mount overlay
         mountpoint = f'/opt/steam/left4dead2-servers/{name}'
-        formatted_name = mountpoint[1:].replace('-', '\\x2d').replace('/', '-') + '.mount'
-        units[formatted_name] = {
+        mount_unit_name = mountpoint[1:].replace('-', '\\x2d').replace('/', '-') + '.mount'
+        units[mount_unit_name] = {
             'Unit': {
                 'Description': f"Mount left4dead2 server {name} overlay",
                 'Conflicts': 'umount.target',
@@ -105,13 +88,47 @@ def server_units(metadata):
                 ]),
             },
             'Install': {
-                'WantedBy': {
-                    'multi-user.target',
+                'RequiredBy': {
+                    f'left4dead2-{name}.service',
                 },
             },
         }
 
+        # individual workshop
+        if 'workshop' in config:
+            workshop[f'left4dead2-{name}'] = {
+                'ids': config['workshop'],
+                'path': f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons',
+                'user': 'steam',
+                'requires': {
+                    mount_unit_name,
+                },
+                'required_by': {
+                    f'left4dead2-{name}.service',
+                },
+            }
+
+        # left4dead2 server unit
+        units[f'left4dead2-{name}.service'] = {
+            'Unit': {
+                'Description': f'left4dead2 server {name}',
+                'After': {'steam.target'},
+                'Requires': {'steam.target'},
+            },
+            'Service': {
+                'User': 'steam',
+                'Group': 'steam',
+                'WorkingDirectory': f'/opt/steam/left4dead2-servers/{name}',
+                'ExecStart': f'/opt/steam/left4dead2-servers/{name}/srcds_run -port {config["port"]} +exec server.cfg',
+                'Restart': 'on-failure',
+            },
+            'Install': {
+                'WantedBy': {'multi-user.target'},
+            },
+        }
+
     return {
+        'steam-workshop-download': workshop,
         'systemd': {
             'units': units,
         },

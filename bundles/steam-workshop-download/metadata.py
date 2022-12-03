@@ -21,6 +21,7 @@ def workshop(metadata):
                     'steam-update.target',
                 },
                 'Before': 'steam.target',
+                'Requires': conf['requires'],
             },
             'Service': {
                 'Type': 'oneshot',
@@ -28,7 +29,7 @@ def workshop(metadata):
                 'ExecStart': f"/opt/steam-workshop-download {' '.join(quote(str(id)) for id in conf['ids'])} --out {quote(conf['path'])}",
             },
             'Install': {
-                'WantedBy': {'multi-user.target'},
+                'RequiredBy': conf['required_by'],
             },
         }
 

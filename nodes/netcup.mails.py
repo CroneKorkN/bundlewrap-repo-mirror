@@ -79,12 +79,12 @@
                 'standard': {
                     'port': 27020,
                 },
-                'standard-2': {
-                    'port': 27021,
-                    'workshop': {
-                        #2256379828, # bhop detect
-                    },
-                },
+                # 'standard-2': {
+                #     'port': 27021,
+                #     'workshop': {
+                #         #2256379828, # bhop detect
+                #     },
+                # },
             },
             'admins': {
                 'STEAM_1:0:12376499', # CroneKorkN ☮️UKRAINE❤

@@ -54,7 +54,7 @@ def initial_unit(metadata):
                         }
                     },
                     'Install': {
-                        'WantedBy': {'multi-user.target'},
+                        'RequiredBy': {'steam.target'},
                     },
                 },
             },
