@@ -46,8 +46,8 @@ actions = {
 }
 
 svc_systemd['steam-update.service'] = {
-    'running': False,
-    'enabled': False,
+    'running': None,
+    'enabled': True,
     'needs': {
         'file:/usr/local/lib/systemd/system/steam-update.service',
     }

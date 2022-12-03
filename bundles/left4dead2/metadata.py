@@ -35,31 +35,6 @@ def rconn_password(metadata):
 
 @metadata_reactor.provides(
     'steam-workshop-download',
-)
-def workshop_download(metadata):
-    if metadata.get('left4dead2/workshop'):
-        return {
-            'steam-workshop-download': {
-                'left4dead2-global': {
-                    'ids': metadata.get('left4dead2/workshop'),
-                    'path': '/opt/steam/left4dead2/left4dead2/addons',
-                    'user': 'steam',
-                    'requires': {
-                        'steam-update.service',
-                    },
-                    'required_by': {
-                        f'left4dead2-{name}.service'
-                            for name in metadata.get('left4dead2/servers')
-                    },
-                },
-            },
-        }
-    else:
-        return {}
-
-
-@metadata_reactor.provides(
-    'steam-workshop-download',
     'systemd/units',
 )
 def server_units(metadata):
@@ -95,9 +70,10 @@ def server_units(metadata):
         }
 
         # individual workshop
-        if 'workshop' in config:
+        workshop_ids = config.get('workshop', set()) | metadata.get('left4dead2/workshop', set())
+        if  workshop_ids:
             workshop[f'left4dead2-{name}'] = {
-                'ids': config['workshop'],
+                'ids': workshop_ids,
                 'path': f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons',
                 'user': 'steam',
                 'requires': {

@@ -1,19 +1,6 @@
 assert node.has_bundle('steam') and node.has_bundle('steam-workshop-download')
 
 directories = {
-    '/opt/steam/left4dead2/left4dead2/ems/admin system': {
-        'owner': 'steam',
-        'group': 'steam',
-        'mode': '0755',
-    },
-    '/opt/steam/left4dead2/left4dead2/addons': {
-        'owner': 'steam',
-        'group': 'steam',
-        'purge': True,
-        'triggers': [
-            *[f'svc_systemd:left4dead2-{name}.service:restart' for name in node.metadata.get('left4dead2/servers')],
-        ],
-    },
     '/opt/steam/left4dead2-servers': {
         'owner': 'steam',
         'group': 'steam',
@@ -29,30 +16,6 @@ directories = {
         'purge': True,
     },
 }
-
-files = {
-    '/opt/steam/left4dead2/left4dead2/ems/admin system/admins.txt': {
-        'owner': 'steam',
-        'group': 'steam',
-        'mode': '0755',
-        'content': '\n'.join(sorted(node.metadata.get('left4dead2/admins'))),
-    },
-    '/opt/steam/left4dead2/left4dead2/addons/readme.txt': {
-        'content_type': 'any',
-        'owner': 'steam',
-        'group': 'steam',
-    }
-}
-
-for id in node.metadata.get('left4dead2/workshop'):
-    files[f'/opt/steam/left4dead2/left4dead2/addons/{id}.vpk'] = {
-        'content_type': 'any',
-        'owner': 'steam',
-        'group': 'steam',
-        'triggers': [
-            *[f'svc_systemd:left4dead2-{name}.service:restart' for name in node.metadata.get('left4dead2/servers')],
-        ],
-    }
 
 # /opt/steam/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
 symlinks = {
@@ -99,7 +62,24 @@ for name, config in node.metadata.get('left4dead2/servers').items():
         ],
     }
 
-    # addons
+    # service
+    svc_systemd[f'left4dead2-{name}.service'] = {
+        'needs': [
+            f'file:/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg',
+            f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
+        ],
+    }
+
+    #
+    # ADDONS
+    #
+
+    # base
+    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/readme.txt'] = {
+        'content_type': 'any',
+        'owner': 'steam',
+        'group': 'steam',
+    }
     directories[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons'] = {
         'owner': 'steam',
         'group': 'steam',
@@ -107,11 +87,6 @@ for name, config in node.metadata.get('left4dead2/servers').items():
         'triggers': [
             f'svc_systemd:left4dead2-{name}.service:restart',
         ],
-    }
-    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/readme.txt'] = {
-        'content_type': 'any',
-        'owner': 'steam',
-        'group': 'steam',
     }
     for id in [
         *config.get('workshop', []),
@@ -126,10 +101,22 @@ for name, config in node.metadata.get('left4dead2/servers').items():
             ],
         }
 
-    # service
-    svc_systemd[f'left4dead2-{name}.service'] = {
-        'needs': [
-            f'file:/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg',
-            f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
+    # admin system
+
+    directories[f'/opt/steam/left4dead2-servers/{name}/left4dead2/ems/admin system'] = {
+        'owner': 'steam',
+        'group': 'steam',
+        'mode': '0755',
+        'triggers': [
+            f'svc_systemd:left4dead2-{name}.service:restart',
+        ],
+    }
+    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/ems/admin system/admins.txt'] = {
+        'owner': 'steam',
+        'group': 'steam',
+        'mode': '0755',
+        'content': '\n'.join(sorted(node.metadata.get('left4dead2/admins'))),
+        'triggers': [
+            f'svc_systemd:left4dead2-{name}.service:restart',
         ],
     }

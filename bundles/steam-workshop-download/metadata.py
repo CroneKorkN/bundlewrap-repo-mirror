@@ -3,6 +3,9 @@ from shlex import quote
 
 defaults = {
     'steam-workshop-download': {},
+    'pip': {
+        'vpk': {},
+    },
 }
 
 

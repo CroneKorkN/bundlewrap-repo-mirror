@@ -5,6 +5,7 @@
     'bundles': [
         'apt',
         'nftables',
+        'pip',
     ],
     'metadata': {
         'apt': {
