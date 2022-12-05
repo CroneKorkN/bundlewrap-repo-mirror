@@ -11,13 +11,14 @@
     ],
     'bundles': [
         'bind-acme',
+        'build-ci',
         'download-server',
         'islamicstate.eu',
+        'lonercrew',
+        'nginx-rtmps',
+        'steam',
         'wireguard',
         'zfs',
-        'lonercrew',
-        'build-ci',
-        'steam',
     ],
     'metadata': {
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
@@ -164,6 +165,9 @@
                     'internal_dns': False,
                 },
             },
+        },
+        'nginx-rtmps': {
+            'hostname': 'rtmp.sublimity.de',
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',

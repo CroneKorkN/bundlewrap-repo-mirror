@@ -9,6 +9,12 @@ directories = {
             'svc_systemd:nginx:restart',
         },
     },
+    '/etc/nginx/conf.d': {
+        'purge': True,
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    },
     '/etc/nginx/ssl': {
         'purge': True,
         'triggers': {
@@ -26,22 +32,22 @@ files = {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
-    }, 
+    },
     '/etc/nginx/fastcgi.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
-    }, 
+    },
     '/etc/nginx/sites/80.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
-    }, 
+    },
     '/etc/nginx/sites/stub_status.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
-    }, 
+    },
     '/etc/nginx/sites-available': {
         'delete': True,
         'needs': {
@@ -88,7 +94,7 @@ for name, config in node.metadata.get('nginx/vhosts').items():
             'svc_systemd:nginx:restart',
         },
     }
-    
+
     if name in node.metadata.get('letsencrypt/domains'):
         files[f'/etc/nginx/sites/{name}']['needs'].append(
             f'action:letsencrypt_ensure-some-certificate_{name}',
