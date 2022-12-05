@@ -7,7 +7,7 @@ defaults = {
     },
     'nftables': {
         'input': {
-            'tcp dport 1937 accept',
+            'tcp dport 1936 accept',
         },
     },
 }

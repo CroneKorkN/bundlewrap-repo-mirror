@@ -4,6 +4,9 @@ files = {
         'context': {
             'server_name': node.metadata.get('nginx-rtmps/hostname'),
             'stream_key': node.metadata.get('nginx-rtmps/stream_key'),
-        }
+        },
+        'triggers': [
+            'svc_systemd:nginx:restart',
+        ],
     },
 }
