@@ -195,7 +195,7 @@ files = {
 # FEATURES
 
 for feature, context in {
-    'syslog': {},
+    'journald': {},
     'notification': {},
     'checker': {},
     'api': {},
