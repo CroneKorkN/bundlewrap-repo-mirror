@@ -8,4 +8,3 @@ server=$(jq -r .server_hostname < /etc/backup/config.json)
 ssh="ssh -o ConnectTimeout=5 backup-receiver@$server"
 
 rsync -av --rsync-path="sudo rsync" "$path/" "backup-receiver@$server:/mnt/backups/$uuid$path/"
-$ssh sudo zfs snap "tank/$uuid/fs@auto-backup_$(date +"%Y-%m-%d_%H:%M:%S")" 
