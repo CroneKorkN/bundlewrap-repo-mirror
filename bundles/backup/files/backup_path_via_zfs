@@ -46,13 +46,13 @@ if [[ "$?" == "0" ]]
 then
 
   # delete old local bookmarks
-  for destroyable_bookmark in $(zfs list -t bookmark -H -o name "$dataset" | grep "^$dataset#$bookmark_prefix")
+  for destroyable_bookmark in $(zfs list -t bookmark -H -o name "$source_dataset" | grep "^$source_dataset#$bookmark_prefix")
   do
     zfs destroy "$destroyable_bookmark"
   done
 
-  # delete snapshots from bookmarks (except newest, even of not necessary; maybe for resuming tho)
-  for destroyable_snapshot in $($ssh sudo zfs list -t snapshot -H -o name "$dataset" | grep "^$dataset@$bookmark_prefix" | grep -v "$new_bookmark")
+  # delete remote snapshots from bookmarks (except newest, even of not necessary; maybe for resuming tho)
+  for destroyable_snapshot in $($ssh sudo zfs list -t snapshot -H -o name "$target_dataset" | grep "^$target_dataset@$bookmark_prefix" | grep -v "$new_bookmark")
   do
     $ssh sudo zfs destroy "$destroyable_snapshot"
   done
