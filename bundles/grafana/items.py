@@ -25,10 +25,8 @@ actions['reset_grafana_admin_password'] = {
 }
 
 directories = {
-    '/etc/grafana': {
-    },
-    '/etc/grafana/provisioning': {
-    },
+    '/etc/grafana': {},
+    '/etc/grafana/provisioning': {},
     '/etc/grafana/provisioning/datasources': {
         'purge': True,
     },
@@ -160,8 +158,6 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
 
     files[f'/var/lib/grafana/dashboards/{monitored_node.name}.json'] = {
         'content': json.dumps(dashboard, indent=4),
-        'owner': 'grafana',
-        'group': 'grafana',
         'triggers': [
             'svc_systemd:grafana-server:restart',
         ]
