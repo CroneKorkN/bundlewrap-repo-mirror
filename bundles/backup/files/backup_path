@@ -1,11 +1,13 @@
 #!/bin/bash
 
+set -exu
+
 path=$1
 
-if zfs list -H -o mountpoint | grep -q "$path"
+if zfs list -H -o mountpoint | grep -q "^$path$"
 then
   /opt/backup/backup_path_via_zfs "$path"
-elif test -d "$path"
+elif test -e "$path"
 then
   /opt/backup/backup_path_via_rsync "$path"
 else

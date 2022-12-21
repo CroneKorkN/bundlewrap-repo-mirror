@@ -7,4 +7,14 @@ uuid=$(jq -r .client_uuid < /etc/backup/config.json)
 server=$(jq -r .server_hostname < /etc/backup/config.json)
 ssh="ssh -o ConnectTimeout=5 backup-receiver@$server"
 
-rsync -av --rsync-path="sudo rsync" "$path/" "backup-receiver@$server:/mnt/backups/$uuid$path/"
+if test -d "$path"
+then
+  postfix="/"
+elif test -f "$path"
+then
+  postfix=""
+else
+  exit 1
+fi
+
+rsync -av --rsync-path="sudo rsync" "$path$postfix" "backup-receiver@$server:/mnt/backups/$uuid$path$postfix"

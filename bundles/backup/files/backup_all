@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -exu
+
 # FIXME: inelegant
 % if wol_command:
 ${wol_command}
