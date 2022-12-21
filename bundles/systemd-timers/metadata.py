@@ -40,6 +40,8 @@ def systemd(metadata):
             units[f'{name}.service']['Service']['WorkingDirectory'] = config['working_dir']
         if config.get('success_exit_status'):
             units[f'{name}.service']['Service']['SuccessExitStatus'] = config['success_exit_status']
+        if config.get('kill_mode'):
+            units[f'{name}.service']['Service']['KillMode'] = config['kill_mode']
 
         services[f'{name}.timer'] = {}
 

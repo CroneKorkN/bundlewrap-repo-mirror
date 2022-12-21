@@ -82,6 +82,7 @@ defaults = {
             'command': '/usr/bin/php -f /opt/nextcloud/cron.php',
             'when': '*:0/5',
             'user': 'www-data',
+            'kill_mode': 'process',
         },
         'nextcloud-rescan': {
             'command': '/opt/nextcloud_rescan',
