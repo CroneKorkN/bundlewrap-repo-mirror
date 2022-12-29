@@ -27,3 +27,5 @@ then
 fi
 
 sudo systemsetup -setremotelogin on # enable ssh
+
+pip install --upgrade pip
