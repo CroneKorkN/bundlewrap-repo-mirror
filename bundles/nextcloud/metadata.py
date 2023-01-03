@@ -125,10 +125,10 @@ def config(metadata):
                 'memcache.local': '\OC\Memcache\Redis',
                 'memcache.locking': '\OC\Memcache\Redis',
                 'memcache.distributed': '\OC\Memcache\Redis',
-                'redis':{
+                'redis': {
                     'host': '/var/run/redis/nextcloud.sock'
                 },
-                'trusted_domains':[
+                'trusted_domains': [
                     'localhost',
                     '127.0.0.1',
                     metadata.get('nextcloud/hostname'),
@@ -136,7 +136,7 @@ def config(metadata):
                 'log_type': 'syslog',
                 'syslog_tag': 'nextcloud',
                 'logfile': '',
-                'loglevel':3,
+                'loglevel': 3,
                 'default_phone_region': 'DE',
                 'versions_retention_obligation': 'auto, 90',
                 'simpleSignUpLink.shown': False,
