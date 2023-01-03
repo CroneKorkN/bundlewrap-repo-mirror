@@ -45,7 +45,8 @@ defaults = {
     },
     'nextcloud': {
         'admin_user': 'admin',
-        'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw'),
+        'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw').value,
+        'config': {},
     },
     'php': {
         'post_max_size': '32G',
@@ -65,7 +66,7 @@ defaults = {
     'postgresql': {
         'roles': {
             'nextcloud': {
-                'password': repo.vault.password_for(f'{node.name} nextcloud db pw'),
+                'password': repo.vault.password_for(f'{node.name} nextcloud db pw').value,
             },
         },
         'databases': {
@@ -91,6 +92,57 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'nextcloud/config',
+)
+def config(metadata):
+    return {
+        'nextcloud': {
+            'config': {
+                'dbuser': 'nextcloud',
+                'dbpassword': metadata.get('postgresql/roles/nextcloud/password'),
+                'dbname': 'nextcloud',
+                'dbhost': 'localhost',
+                'dbtype': 'pgsql',
+                'datadirectory': '/var/lib/nextcloud',
+                'dbport': '5432',
+                'apps_paths': [
+                    {
+                        'path': '/opt/nextcloud/apps',
+                        'url': '/apps',
+                        'writable': False
+                    },
+                    {
+                        'path': '/var/lib/nextcloud/.userapps',
+                        'url': '/userapps',
+                        'writable': True
+                    }
+                ],
+                'cache_path': '/var/lib/nextcloud/.cache',
+                'upgrade.disable-web': True,
+                'memcache.local': '\OC\Memcache\Redis',
+                'memcache.locking': '\OC\Memcache\Redis',
+                'memcache.distributed': '\OC\Memcache\Redis',
+                'redis':{
+                    'host': '/var/run/redis/nextcloud.sock'
+                },
+                'trusted_domains':[
+                    'localhost',
+                    '127.0.0.1',
+                    metadata.get('nextcloud/hostname'),
+                ],
+                'log_type': 'syslog',
+                'syslog_tag': 'nextcloud',
+                'logfile': '',
+                'loglevel':3,
+                'default_phone_region': 'DE',
+                'versions_retention_obligation': 'auto, 90',
+                'simpleSignUpLink.shown': False,
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(

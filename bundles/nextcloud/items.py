@@ -1,8 +1,7 @@
-assert node.has_bundle('php')
+import json
 
-from shlex import quote
-from os.path import join
-from mako.template import Template
+
+assert node.has_bundle('php')
 
 version = node.metadata.get('nextcloud/version')
 
@@ -69,19 +68,22 @@ symlinks = {
 
 files = {
     '/etc/nextcloud/managed.config.php': {
-        'content_type': 'mako',
         'owner': 'www-data',
         'group': 'www-data',
         'mode': '640',
-        'context': {
-            'db_password': node.metadata.get('postgresql/roles/nextcloud/password'),
-            'hostname': node.metadata.get('nextcloud/hostname'),
-        },
         'needs': [
             'directory:/etc/nextcloud',
         ],
     },
-}
+    '/etc/nextcloud/managed.config.json': {
+        'content': json.dumps(node.metadata.get('nextcloud/config'), indent=4, sort_keys=True),
+        'owner': 'www-data',
+        'group': 'www-data',
+        'mode': '640',
+        'needs': [
+            'directory:/etc/nextcloud',
+        ],
+    },}
 
 # SETUP
 
@@ -124,7 +126,7 @@ files['/opt/nextcloud_upgrade_status.php'] = {
         'action:extract_nextcloud',
     ],
 }
-    
+
 actions['upgrade_nextcloud'] = {
     'command': repo.libs.nextcloud.occ('upgrade'),
     'unless': 'sudo -u www-data php /opt/nextcloud_upgrade_status.php; test $? -ne 99',
