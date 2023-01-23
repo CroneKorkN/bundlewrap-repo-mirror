@@ -9,7 +9,7 @@ brew upgrade --cask --greedy
 
 sudo softwareupdate -ia --verbose
 
-if test "$(defaults read com.apple.dock autohide-time-modifier)" -ne 0.16
+if test "$(defaults read com.apple.dock autohide-time-modifier)" == 0.16
 then
     defaults write com.apple.dock autohide-time-modifier -float 0.16
     RESTART_DOCK=TRUE
