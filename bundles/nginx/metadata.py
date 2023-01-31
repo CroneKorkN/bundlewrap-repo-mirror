@@ -29,6 +29,7 @@ defaults = {
             'nginx.service.d/override.conf': {
                 'Unit': {
                     'After': {'network-online.target'},
+                    'Wants': {'network-online.target'},
                 },
             },
         },
