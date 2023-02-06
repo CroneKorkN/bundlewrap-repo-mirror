@@ -1,3 +1,5 @@
+# TODO pin repo: https://superuser.com/a/1595920
+
 from os.path import join
 from urllib.parse import urlparse
 from glob import glob
@@ -35,7 +37,7 @@ files = {
 
 actions = {
     'apt_update': {
-        'command': 'apt-get update',
+        'command': 'apt-get update -o APT::Update::Error-Mode=any',
         'needed_by': {
             'pkg_apt:',
         },
