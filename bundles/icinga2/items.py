@@ -10,6 +10,24 @@ directories = {
             'svc_systemd:icinga2.service:restart',
         ],
     },
+   '/etc/icinga2/pki': { # required for apt install
+       'purge': True,
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
+   '/etc/icinga2/zones.d': { # required for apt install
+       'purge': True,
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0750',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
     '/etc/icinga2/conf.d': {
         'purge': True,
         'owner': 'nagios',
@@ -195,7 +213,8 @@ files = {
 # FEATURES
 
 for feature, context in {
-    'journald': {},
+    'mainlog': {},
+#    'journald': {}, FIXME
     'notification': {},
     'checker': {},
     'api': {},

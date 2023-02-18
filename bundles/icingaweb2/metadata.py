@@ -3,7 +3,6 @@ from hashlib import sha3_256
 defaults = {
     'apt': {
         'packages': {
-            'icingaweb2': {},
             'php-ldap': {},
             'php-json': {},
             'php-intl': {},
@@ -11,11 +10,11 @@ defaults = {
             'php-gd': {},
             'php-imagick': {},
             'php-pgsql': {},
+            'icingaweb2': {},
             'icingaweb2-module-monitoring': {},
         },
         'sources': {
             'deb https://packages.icinga.com/debian icinga-{release} main',
-            'deb https://packages.icinga.com/debian icinga-{release}-snapshots main',
         },
     },
     'icingaweb2': {

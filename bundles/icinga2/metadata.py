@@ -49,7 +49,6 @@ defaults = {
                 'mountpoint': '/var/lib/icinga2',
                 'needed_by': {
                     'pkg_apt:icinga2',
-                    'pkg_apt:icingaweb2',
                     'pkg_apt:icinga2-ido-pgsql',
                 },
             },
