@@ -106,6 +106,7 @@ def config(metadata):
                 'dbname': 'nextcloud',
                 'dbhost': 'localhost',
                 'dbtype': 'pgsql',
+                'dbtableprefix': 'oc_',
                 'datadirectory': '/var/lib/nextcloud',
                 'dbport': '5432',
                 'apps_paths': [
@@ -140,6 +141,7 @@ def config(metadata):
                 'default_phone_region': 'DE',
                 'versions_retention_obligation': 'auto, 90',
                 'simpleSignUpLink.shown': False,
+                'allow_local_remote_servers': True, # FIXME?
             },
         },
     }
