@@ -14,7 +14,7 @@ def demagify(data):
         match = search(r'^\!([0-9a-zA-Z_-]{,255})\:(.*)$', data)
         if match:
             magicstring, content = match.groups()
-            return converters[magicstring](content)
+            return converters[magicstring](content).value
         else:
             return data
     elif isinstance(data, dict):
