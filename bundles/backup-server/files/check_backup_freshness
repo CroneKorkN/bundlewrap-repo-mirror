@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+import json
+from subprocess import check_output
+from datetime import datetime, timedelta
+
+
+now = datetime.now()
+two_days_ago = now - timedelta(days=2)
+
+with open('/etc/backup-server.json', 'r') as file:
+    conf = json.load(file)
+
+local_datasets = check_output(['zfs', 'list', '-H', '-o', 'name']).decode().splitlines()
+errors = set()
+
+for dataset in conf['datasets']:
+    if f'tank/{dataset}' not in local_datasets:
+        errors.add(f'dataset "{dataset}" not present at all')
+        continue
+
+    snapshots = [
+        snapshot
+            for snapshot in check_output(['zfs', 'list', '-H', '-o', 'name', '-t', 'snapshot', f'tank/{dataset}', '-s', 'creation']).decode().splitlines()
+            if '@auto-backup_' in snapshot
+    ]
+
+    if not snapshots:
+        errors.add(f'dataset "{dataset}" has no backup snapshots')
+        continue
+
+    newest_backup_snapshot = snapshots[-1]
+    snapshot_datetime = datetime.utcfromtimestamp(
+        int(check_output(['zfs', 'list', '-p', '-H', '-o', 'creation', '-t', 'snapshot', newest_backup_snapshot]).decode())
+    )
+
+    if snapshot_datetime < two_days_ago:
+        days_ago = (now - snapshot_datetime).days
+        errors.add(f'dataset "{dataset}" has no backups sind {days_ago} days')
+        continue
+
+if errors:
+    for error in errors:
+        print(error)
+    exit(2)
