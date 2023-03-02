@@ -8,13 +8,13 @@ from datetime import datetime, timedelta
 now = datetime.now()
 two_days_ago = now - timedelta(days=2)
 
-with open('/etc/backup-server.json', 'r') as file:
-    conf = json.load(file)
+with open('/etc/backup-freshness-check.json', 'r') as file:
+    config = json.load(file)
 
 local_datasets = check_output(['zfs', 'list', '-H', '-o', 'name']).decode().splitlines()
 errors = set()
 
-for dataset in conf['datasets']:
+for dataset in config['datasets']:
     if f'tank/{dataset}' not in local_datasets:
         errors.add(f'dataset "{dataset}" not present at all')
         continue
@@ -22,7 +22,7 @@ for dataset in conf['datasets']:
     snapshots = [
         snapshot
             for snapshot in check_output(['zfs', 'list', '-H', '-o', 'name', '-t', 'snapshot', f'tank/{dataset}', '-s', 'creation']).decode().splitlines()
-            if '@auto-backup_' in snapshot
+            if f"@{config['prefix']}" in snapshot
     ]
 
     if not snapshots:
@@ -43,3 +43,5 @@ if errors:
     for error in errors:
         print(error)
     exit(2)
+else:
+    print(f"all {len(config['datasets'])} datasets have fresh backups.")

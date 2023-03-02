@@ -6,6 +6,7 @@
         'raspberry-pi',
     ],
     'bundles': [
+        'backup-freshness-check',
         'dm-crypt',
         'smartctl',
         'wireguard',
@@ -19,6 +20,10 @@
                 'ipv4': '192.168.179.20/24',
                 'gateway4': '192.168.179.1',
             },
+        },
+        'backup-freshness-check': {
+            'server': 'home.backups',
+            'prefix': 'auto-mirror_'
         },
         'users': {
             'root': {

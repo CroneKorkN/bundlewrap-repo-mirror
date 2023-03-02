@@ -6,18 +6,6 @@ defaults = {
             'rsync': {},
         },
     },
-    'backup-receiver': {
-        'datasets': {},
-    },
-    'monitoring': {
-        'services': {
-            'backup freshness': {
-                'vars.command': '/usr/lib/nagios/plugins/check_backup_freshness',
-                'check_interval': '6h',
-                'vars.sudo': True,
-            },
-        },
-    },
     'users': {
         'backup-receiver': {
             'authorized_keys': set(),
@@ -128,26 +116,6 @@ def backup_authorized_keys(metadata):
                         if other_node.has_bundle('backup')
                         and other_node.metadata.get('backup/server') == node.name
                 },
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'backup-receiver/datasets'
-)
-def check_datasets(metadata):
-    return {
-        'backup-receiver': {
-            'datasets': {
-                f"{other_node.metadata.get('id')}/{dataset}"
-                    for other_node in repo.nodes
-                    if other_node.has_bundle('backup')
-                    and other_node.has_bundle('zfs')
-                    and other_node.metadata.get('backup/server') == node.name
-                    for dataset, options in other_node.metadata.get('zfs/datasets').items()
-                    if options.get('backup', True)
-                    and not options.get('mountpoint', None) in [None, 'none']
             },
         },
     }
