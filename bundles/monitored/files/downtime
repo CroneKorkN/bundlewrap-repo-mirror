@@ -79,6 +79,7 @@ if action == 'add':
             'end_time': now + duration_seconds,
             'type': 'Host',
             'child_options': 'DowntimeTriggeredChildren',
+            'all_services': True,
             'filter':  f'match("{node_name}", host.name)',
             'pretty': True,
         }
