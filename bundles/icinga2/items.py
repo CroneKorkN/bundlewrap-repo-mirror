@@ -156,6 +156,16 @@ files = {
             'svc_systemd:icinga2.service:restart',
         ],
     },
+    '/etc/icinga2/conf.d/users.conf': {
+        'source': 'conf.d/users.conf',
+        'content_type': 'mako',
+        'owner': 'nagios',
+        'group': 'nagios',
+        'mode': '0640',
+        'triggers': [
+            'svc_systemd:icinga2.service:restart',
+        ],
+    },
     '/etc/icinga2/conf.d/groups.conf': {
         'source': 'conf.d/groups.conf',
         'content_type': 'mako',
