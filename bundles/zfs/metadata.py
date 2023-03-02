@@ -36,6 +36,11 @@ defaults = {
     },
     'monitoring': {
         'services': {
+            'zpool online': {
+                'vars.command': f'/usr/lib/nagios/plugins/check_zpool_online',
+                'check_interval': '1h',
+                'vars.sudo': True,
+            },
             'zpool space': {
                 'vars.command': f'/usr/lib/nagios/plugins/check_zpool_space',
             },

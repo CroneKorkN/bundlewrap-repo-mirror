@@ -1,0 +1,16 @@
+#!/bin/bash
+
+for pool in $(zpool get name -H -o value)
+do
+    status=$(zpool get health -H -o value $pool)
+    if [ "$status" != ONLINE ]
+    then
+        errors="$error\"$pool\" status is $status\n"
+    fi
+done
+
+if [ "$errors" != "" ]
+then
+    echo "CRITICAL - $errors"
+    exit 2
+fi
