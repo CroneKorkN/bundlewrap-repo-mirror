@@ -1,6 +1,3 @@
-from json import dumps
-from bundlewrap.metadata import MetadataJSONEncoder
-
 files = {
     '/etc/cron.d/zfsutils-linux': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
     '/etc/cron.d/zfs-auto-snapshot': {'delete': True, 'needs': {'pkg_apt:zfs-auto-snapshot'}},
