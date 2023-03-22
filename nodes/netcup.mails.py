@@ -19,6 +19,8 @@
         'steam',
         'wireguard',
         'zfs',
+        'blog',
+        'flask',
     ],
     'metadata': {
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
@@ -34,6 +36,10 @@
                 'ipv6': '2a03:4000:55:a89::1/64',
                 'gateway6': 'fe80::1',
             }
+        },
+        'blog': {
+            'hostname': 'wiegand.tel',
+            'repo': 'https://git.sublimity.de/cronekorkn/blog.git',
         },
         'bind': {
             'hostname': 'resolver.name',
