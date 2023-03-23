@@ -6,11 +6,13 @@ defaults = {
             'git_url': "https://git.sublimity.de/cronekorkn/flask-blog.git",
             'port': 5010,
             'app_module': 'blog',
+            'env': {
+                'DATA_PATH': '/var/blog',
+            },
         },
     },
     'users': {
-        'blog': {
-        },
+        'blog': {},
     },
 }
 
