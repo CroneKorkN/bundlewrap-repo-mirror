@@ -4,7 +4,7 @@ set -o pipefail
 
 deploy_challenge() {
   echo "
-    server 10.0.11.3
+    server ${server}
     zone ${zone}.
     update add $1.${zone}. 60 IN TXT \"$3\"
     send
@@ -13,7 +13,7 @@ deploy_challenge() {
 
 clean_challenge() {
   echo "
-    server 10.0.11.3
+    server ${server}
     zone ${zone}.
     update delete $1.${zone}. TXT
     send
