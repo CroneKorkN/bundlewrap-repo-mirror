@@ -9,7 +9,7 @@
         'postgresql': {
             'version': '13',
         },
-        'os_release': 'bullseye',
+        'os_codename': 'bullseye',
     },
     'os_version': (11,),
 }
