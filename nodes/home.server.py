@@ -30,6 +30,7 @@
         'steam-chat-logger',
         'steam-chat-viewer',
         'systemd-swap',
+        'twitch-clip-download',
         'raspberrymatic-cert',
         'tasmota-charge',
         'wireguard',
@@ -152,6 +153,9 @@
                 'min': 45,
                 'max': 70,
             },
+        },
+        'twitch-clip-download': {
+            'channel_name': 'cronekorkn_',
         },
         'vm': {
             'cores': 16,
