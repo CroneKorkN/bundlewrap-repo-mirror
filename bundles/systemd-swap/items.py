@@ -1,4 +1,4 @@
-size_mb = node.metadata.get('systemd-swap')//1_000_000
+size = node.metadata.get('systemd-swap')
 
 actions = {
     'stop_swap': {
@@ -15,8 +15,8 @@ actions = {
         },
     },
     'create_swapfile': {
-        'command': f'dd if=/dev/zero of=/swapfile bs=1000000 count={size_mb}',
-        'unless': f'stat -c %s /swapfile | grep ^{size_mb*1_000_000}$',
+        'command': f'fallocate -l {size} /swapfile',
+        'unless': f'stat -c %s /swapfile | grep ^{size}$',
         'preceded_by': {
             'action:stop_swap',
             'action:remove_swapfile',
