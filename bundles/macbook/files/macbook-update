@@ -1,5 +1,15 @@
 #!/bin/bash -l
 
+sudo tee /etc/pam.d/sudo << EOT
+# sudo: auth account password session
+auth       sufficient     pam_tid.so
+auth       sufficient     pam_smartcard.so
+auth       required       pam_opendirectory.so
+account    required       pam_permit.so
+password   required       pam_deny.so
+session    required       pam_permit.so
+EOT
+
 xcode-select --install
 
 git -C ~/.zsh/oh-my-zsh pull
@@ -7,7 +17,7 @@ git -C ~/.zsh/oh-my-zsh pull
 brew upgrade
 brew upgrade --cask --greedy
 
-pyenv install
+pyenv install --keep-existing
 
 sudo softwareupdate -ia --verbose
 
