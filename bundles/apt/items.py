@@ -68,7 +68,7 @@ for host, sources in hosts.items():
     files[f'/etc/apt/sources.list.d/{host}.list'] = {
         'content': '\n'.join(sorted(set(
             str(source).format(
-                release=node.metadata.get('os_release'),
+                codename=node.metadata.get('os_codename'),
                 version=node.os_version[0], # WIP crystal
             )
                 for source in sources
@@ -95,7 +95,7 @@ for package, options in node.metadata.get('apt/packages', {}).items():
         files[f'/etc/apt/preferences.d/{package}'] = {
             'content': '\n'.join([
                 f"Package: {package}",
-                f"Pin: release a={node.metadata.get('os_release')}-backports",
+                f"Pin: release a={node.metadata.get('os_codename')}-backports",
                 f"Pin-Priority: 900",
             ]),
             'needed_by': [

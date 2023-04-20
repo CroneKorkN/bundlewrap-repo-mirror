@@ -30,8 +30,7 @@ defaults = {
             'gitea.service': {
                 'Unit': {
                     'Description': 'gitea',
-                    'After': 'syslog.target',
-                    'After': 'network.target',
+                    'After': {'syslog.target', 'network.target'},
                     'Requires': 'postgresql.service',
                 },
                 'Service': {

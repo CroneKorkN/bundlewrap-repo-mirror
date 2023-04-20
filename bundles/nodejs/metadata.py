@@ -23,8 +23,8 @@ def sources(metadata):
     return {
         'apt': {
             'sources': {
-                f'deb https://deb.nodesource.com/node_{version}.x {{release}} main',
-                f'deb-src https://deb.nodesource.com/node_{version}.x {{release}} main',
+                f'deb https://deb.nodesource.com/node_{version}.x {{codename}} main',
+                f'deb-src https://deb.nodesource.com/node_{version}.x {{codename}} main',
             },
         },
     }

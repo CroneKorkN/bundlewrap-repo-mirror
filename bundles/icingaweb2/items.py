@@ -4,18 +4,27 @@ directories = {
         'owner': 'www-data',
         'group': 'icingaweb2',
         'mode': '2770',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     },
     '/etc/icingaweb2/enabledModules': {
 #        'purge': True,
         'owner': 'www-data',
         'group': 'icingaweb2',
         'mode': '2770',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     },
     '/etc/icingaweb2/modules': {
 #        'purge': True,
         'owner': 'www-data',
         'group': 'icingaweb2',
         'mode': '2770',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     },
 }
 
@@ -25,6 +34,9 @@ files = {
         'owner': 'www-data',
         'group': 'icingaweb2',
         'mode': '0660',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     },
 }
 
@@ -33,6 +45,9 @@ symlinks = {
         'target': '/usr/share/icingaweb2/modules/monitoring',
         'owner': 'www-data',
         'group': 'icingaweb2',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     },
 }
 
@@ -48,6 +63,9 @@ for name in [
         'owner': 'www-data',
         'group': 'icingaweb2',
         'mode': '0660',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     }
 
 for name in [
@@ -60,4 +78,7 @@ for name in [
         'owner': 'www-data',
         'group': 'icingaweb2',
         'mode': '0660',
+        'needs': [
+            'pkg_apt:icingaweb2',
+        ],
     }

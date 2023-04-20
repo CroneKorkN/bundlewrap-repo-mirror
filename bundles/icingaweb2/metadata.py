@@ -14,7 +14,7 @@ defaults = {
             'icingaweb2-module-monitoring': {},
         },
         'sources': {
-            'deb https://packages.icinga.com/debian icinga-{release} main',
+            'deb https://packages.icinga.com/debian icinga-{codename} main',
         },
     },
     'icingaweb2': {

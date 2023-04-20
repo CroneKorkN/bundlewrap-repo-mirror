@@ -9,7 +9,7 @@
         'postgresql': {
             'version': '14',
         },
-        'os_release': 'bookworm',
+        'os_codename': 'bookworm',
     },
     'os_version': (12,),
 }

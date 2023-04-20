@@ -1,5 +1,4 @@
 from shlex import quote
-from ipaddress import ip_interface
 
 
 defaults = {

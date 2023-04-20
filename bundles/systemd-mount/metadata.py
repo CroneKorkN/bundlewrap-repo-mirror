@@ -15,16 +15,14 @@ defaults = {
 def units(metadata):
     units = {}
     services = {}
-    
+
     for mountpoint, conf in metadata.get('systemd-mount').items():
         formatted_name = mountpoint[1:].replace('-', '\\x2d').replace('/', '-') + '.mount'
-        
+
         units[formatted_name] = {
             'Unit': {
                 'Description': f"Mount {conf['source']} -> {mountpoint}",
                 'DefaultDependencies': 'no',
-                'Conflicts': 'umount.target',
-                'Before': 'umount.target',
             },
             'Mount': {
                 'What': conf['source'],
@@ -32,16 +30,11 @@ def units(metadata):
                 'Type': 'fuse.bindfs',
                 'Options': f"nonempty",
             },
-            'Install': {
-                'WantedBy': {
-                    'local-fs.target',
-                },
-            },
         }
-        
+
         if conf.get('user'):
             units[formatted_name]['Mount']['Options'] += f",force-user={conf.get('user')}"
-        
+
         services[formatted_name] = {}
 
     return {

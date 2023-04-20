@@ -30,6 +30,7 @@
         'steam-chat-logger',
         'steam-chat-viewer',
         'systemd-swap',
+        'twitch-clip-download',
         'raspberrymatic-cert',
         'tasmota-charge',
         'wireguard',
@@ -60,8 +61,7 @@
             'download_server': 'netcup.mails',
         },
         'gitea': {
-            'version': '1.17.1',
-            'sha256': 'eafd476ee2a303d758448314272add00898d045439ab0d353ff4286c5e63496f',
+            'version': '1.19.1',
             'domain': 'git.sublimity.de',
             'conf': {
                 'mailer': {
@@ -152,6 +152,9 @@
                 'min': 45,
                 'max': 70,
             },
+        },
+        'twitch-clip-download': {
+            'channel_name': 'cronekorkn_',
         },
         'vm': {
             'cores': 16,

@@ -25,19 +25,14 @@ def units(metadata):
 
         type = name.split('.')[-1]
 
-        if not config.get('Install/WantedBy'):
-            if type == 'service':
-                units[name] = {
-                    'Install': {
-                        'WantedBy': {'multi-user.target'},
-                    }
-                }
-            elif type == 'timer':
-                units[name] = {
-                    'Install': {
-                        'WantedBy': {'timers.target'},
-                    }
-                }
+        if type == 'service':
+            units.setdefault(name, {}).setdefault('Install', {}).setdefault('WantedBy', {'multi-user.target'})
+        elif type == 'timer':
+            units.setdefault(name, {}).setdefault('Install', {}).setdefault('WantedBy', {'timers.target'})
+        elif type == 'mount':
+            units.setdefault(name, {}).setdefault('Install', {}).setdefault('WantedBy', {'local-fs.target'})
+            units.setdefault(name, {}).setdefault('Unit', {}).setdefault('Conflicts', {'umount.target'})
+            units.setdefault(name, {}).setdefault('Unit', {}).setdefault('Before', {'umount.target'})
 
     return {
         'systemd': {

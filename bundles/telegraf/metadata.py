@@ -95,11 +95,11 @@ defaults = {
     'apt/sources',
 )
 def apt(metadata):
-    release = {
+    codename = {
         'buster': 'buster',
         'bullseye': 'bullseye',
         'bookworm': 'bullseye',
-    }[metadata.get('os_release')]
+    }[metadata.get('os_codename')]
 
     return {
         'apt': {
@@ -107,7 +107,7 @@ def apt(metadata):
                 'telegraf': {},
             },
             'sources': {
-                f"deb https://repos.influxdata.com/debian {release} stable",
+                f"deb https://repos.influxdata.com/debian {codename} stable",
             },
         },
     }

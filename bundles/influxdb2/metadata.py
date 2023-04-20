@@ -7,7 +7,7 @@ defaults = {
             'influxdb2-cli': {},
         },
         'sources': {
-            'deb https://repos.influxdata.com/debian {release} stable',
+            'deb https://repos.influxdata.com/debian {codename} stable',
         },
     },
     'nftables': {
