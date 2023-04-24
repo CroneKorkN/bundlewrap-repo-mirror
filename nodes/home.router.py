@@ -1,5 +1,6 @@
 {
     'hostname': '10.0.0.119',
+    'dummy': True,
     'groups': [
         'autologin',
         'debian-11',
