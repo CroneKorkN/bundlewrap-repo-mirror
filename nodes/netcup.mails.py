@@ -23,17 +23,19 @@
     'metadata': {
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
-            'internal': {
-                'interface': 'eth1',
-                'ipv4': '10.0.11.3/24',
+            'interfaces': {
+                'internal': {
+                    'match': 'eth1',
+                    'ipv4': '10.0.11.3/24',
+                },
+                'external': {
+                    'match': 'eth0',
+                    'ipv4': '202.61.255.108/22',
+                    'gateway4': '202.61.252.1',
+                    'ipv6': '2a03:4000:55:a89::1/64',
+                    'gateway6': 'fe80::1',
+                },
             },
-            'external': {
-                'interface': 'eth0',
-                'ipv4': '202.61.255.108/22',
-                'gateway4': '202.61.252.1',
-                'ipv6': '2a03:4000:55:a89::1/64',
-                'gateway6': 'fe80::1',
-            }
         },
         'bind': {
             'hostname': 'resolver.name',

@@ -15,10 +15,12 @@
     'metadata': {
         'id': '23b898bd-203b-42d5-8150-cdb459915d77',
         'network': {
-            'internal': {
-                'interface': 'eth0',
-                'ipv4': '192.168.179.20/24',
-                'gateway4': '192.168.179.1',
+            'interfaces': {
+                'internal': {
+                    'match': 'eth0',
+                    'ipv4': '192.168.179.20/24',
+                    'gateway4': '192.168.179.1',
+                },
             },
         },
         'backup-freshness-check': {

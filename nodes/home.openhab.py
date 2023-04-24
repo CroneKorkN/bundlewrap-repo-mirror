@@ -19,10 +19,12 @@
     'metadata': {
         'id': '34199b24-4621-42f4-85ae-ec354f9c43e6',
         'network': {
-            'internal': {
-                'interface': 'eth0',
-                'ipv4': '10.0.0.17/24',
-                'gateway4': '10.0.0.1',
+            'interfaces': {
+                'internal': {
+                    'match': 'eth0',
+                    'ipv4': '10.0.0.17/24',
+                    'gateway4': '10.0.0.1',
+                },
             },
         },
         'nginx': {

@@ -12,8 +12,10 @@
     'metadata': {
         'id': 'cc1c08ba-8a2e-4cda-9b82-1b88a940e8e8',
         'network': {
-            'internal': {
-                'ipv4': '10.0.2.8/24',
+            'interfaces': {
+                'internal': {
+                    'ipv4': '10.0.2.8/24',
+                },
             },
         },
         'dns': {

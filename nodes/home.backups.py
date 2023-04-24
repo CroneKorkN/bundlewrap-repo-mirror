@@ -17,11 +17,13 @@
     'metadata': {
         'id': '9cf52515-63a1-4659-a8ec-6c3c881727e5',
         'network': {
-            'internal': {
-                'interface': 'enp0s31f6',
-                'ipv4': '10.0.0.5/24',
-                'gateway4': '10.0.0.1',
-                'mac': '4c:cc:6a:d5:96:f8',
+            'interfaces': {
+                'internal': {
+                    'match': 'enp0s31f6',
+                    'ipv4': '10.0.0.5/24',
+                    'gateway4': '10.0.0.1',
+                    'mac': '4c:cc:6a:d5:96:f8',
+                },
             },
         },
         'backup-server': {

@@ -48,8 +48,8 @@ defaults = {
 )
 def wake_command(metadata):
     waker_hostname = repo.get_node(metadata.get('wol-sleeper/waker')).hostname
-    mac = metadata.get(f"network/{metadata.get('wol-sleeper/network')}/mac")
-    ip = ip_interface(metadata.get(f"network/{metadata.get('wol-sleeper/network')}/ipv4")).ip
+    mac = metadata.get(f"network/interfaces{metadata.get('wol-sleeper/network')}/mac")
+    ip = ip_interface(metadata.get(f"network/interfaces/{metadata.get('wol-sleeper/network')}/ipv4")).ip
 
     return {
         'wol-sleeper': {
@@ -63,7 +63,7 @@ def wake_command(metadata):
     'systemd/services/wakeonline-setup.service',
 )
 def systemd(metadata):
-    interface = metadata.get(f"network/{metadata.get('wol-sleeper/network')}/interface")
+    interface = metadata.get(f"network/interfaces/{metadata.get('wol-sleeper/network')}/match")
 
     return {
         'systemd': {

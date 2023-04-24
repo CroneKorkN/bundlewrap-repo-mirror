@@ -6,7 +6,7 @@ files = {
         'content_type': 'mako',
         'context': {
             'server_ip': ip_interface(
-                repo.get_node(node.metadata.get('zfs-mirror/server')).metadata.get('network/internal/ipv4')
+                repo.get_node(node.metadata.get('zfs-mirror/server')).metadata.get('network/internal_ipv4')
             ).ip,
         },
     }

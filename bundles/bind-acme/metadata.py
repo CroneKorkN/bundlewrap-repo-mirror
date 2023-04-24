@@ -6,12 +6,12 @@ from ipaddress import ip_interface
 )
 def acme_records(metadata):
     domains = set()
-    
+
     for other_node in repo.nodes:
         for domain, conf in other_node.metadata.get('letsencrypt/domains', {}).items():
             domains.add(domain)
             domains.update(conf.get('aliases', []))
-    
+
     return {
         'dns': {
             f'_acme-challenge.{domain}': {
@@ -30,7 +30,7 @@ def acme_records(metadata):
 def acme_zone(metadata):
     allowed_ips = {
         *{
-            str(ip_interface(other_node.metadata.get('network/internal/ipv4')).ip)
+            str(ip_interface(other_node.metadata.get('network/internal_ipv4')).ip)
                 for other_node in repo.nodes
                 if other_node.metadata.get('letsencrypt/domains', {})
         },
@@ -40,7 +40,7 @@ def acme_zone(metadata):
                 if other_node.has_bundle('wireguard')
         },
     }
-    
+
     return {
         'bind': {
             'acls': {

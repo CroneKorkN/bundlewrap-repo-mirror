@@ -29,10 +29,10 @@ files = {
         'context': {
             'multiplex_incoming': node.metadata.get('ssh/multiplex_incoming'),
             'multiplex_hosts': set(
-                str(ip_interface(other_node.metadata.get('network/internal/ipv4')).ip)
+                str(ip_interface(other_node.metadata.get('network/internal_ipv4')).ip)
                     for other_node in repo.nodes
                     if other_node.has_bundle('ssh')
-                    and other_node.metadata.get('network/internal/ipv4', None)
+                    and other_node.metadata.get('network/internal_ipv4', None)
                     and other_node.metadata.get('ssh/multiplex_incoming')
             ),
         },

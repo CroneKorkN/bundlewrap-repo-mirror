@@ -256,7 +256,7 @@ for other_node in repo.nodes:
         'context': {
             'host_name': other_node.name,
             'host_settings': {
-                'address': str(ip_interface(other_node.metadata.get('network/internal/ipv4', None) or other_node.metadata.get('wireguard/my_ip')).ip),
+                'address': str(ip_interface(other_node.metadata.get('network/internal_ipv4', None) or other_node.metadata.get('wireguard/my_ip')).ip),
             },
             'services': other_node.metadata.get('monitoring/services'),
         },

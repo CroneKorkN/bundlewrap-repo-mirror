@@ -6,33 +6,68 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'network/internal_interface',
+)
+def internal_interface(metadata):
+    if (
+        metadata.get('network/interfaces/internal', None)
+        and not metadata.get('network/internal_interface', None)
+    ):
+        return {
+            'network': {
+                'internal_interface': 'internal',
+            }
+        }
+    else:
+        return {}
+
+
+@metadata_reactor.provides(
+    'network/internal_ipv4',
+)
+def internal_ipv4(metadata):
+    if (
+        metadata.get('network/internal_interface', None)
+        and not metadata.get('network/internal_ipv4', None)
+    ):
+        internal_interface = metadata.get('network/internal_interface', None)
+        return {
+            'network': {
+                'internal_ipv4': metadata.get(f'network/interfaces/{internal_interface}/ipv4'),
+            }
+        }
+    else:
+        return {}
+
+
+@metadata_reactor.provides(
     'systemd/units',
 )
 def units(metadata):
     units = {}
 
-    for type, network in metadata.get('network').items():
-        units[f'{type}.network'] = {
+    for name, conf in metadata.get('network/interfaces').items():
+        units[f'{name}.network'] = {
             'Match': {
-                'Name': network['interface'],
+                'Name': conf['match'],
             },
             'Network': {
-                'DHCP': network.get('dhcp', 'no'),
-                'IPv6AcceptRA': network.get('dhcp', 'no'),
+                'DHCP': conf.get('dhcp', 'no'),
+                'IPv6AcceptRA': conf.get('dhcp', 'no'),
             }
         }
 
         for i in [4, 6]:
-            if network.get(f'ipv{i}', None):
-                units[f'{type}.network'].update({
+            if conf.get(f'ipv{i}', None):
+                units[f'{name}.network'].update({
                     f'Address#ipv{i}': {
-                        'Address': network[f'ipv{i}'],
+                        'Address': conf[f'ipv{i}'],
                     },
                 })
-                if f'gateway{i}' in network:
-                    units[f'{type}.network'].update({
+                if f'gateway{i}' in conf:
+                    units[f'{name}.network'].update({
                         f'Route#ipv{i}': {
-                            'Gateway': network[f'gateway{i}'],
+                            'Gateway': conf[f'gateway{i}'],
                             'GatewayOnlink': 'yes',
                         }
                     })

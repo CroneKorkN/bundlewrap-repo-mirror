@@ -32,11 +32,11 @@ def agent_conf(metadata):
         'build-server': {
             'architectures': {
                 architecture: {
-                    'ip': str(ip_interface(repo.get_node(conf['node']).metadata.get('network/internal/ipv4')).ip),
+                    'ip': str(ip_interface(repo.get_node(conf['node']).metadata.get('network/internal_ipv4')).ip),
                 }
                     for architecture, conf in metadata.get('build-server/architectures').items()
             },
-            'download_server_ip': str(ip_interface(download_server.metadata.get('network/internal/ipv4')).ip),
+            'download_server_ip': str(ip_interface(download_server.metadata.get('network/internal_ipv4')).ip),
         },
     }
 

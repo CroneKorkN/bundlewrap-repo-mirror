@@ -11,12 +11,14 @@
     'metadata': {
         'id': 'd5080b1a-b310-48be-bd5a-02cfcecf0c90',
         'network': {
-            'external': {
-                'interface': 'ens3',
-                'ipv4': '135.125.239.125/32',
-                'gateway4': '135.125.238.1',
-                'ipv6': '2001:41d0:701:1100::3dea/56',
-                'gateway6': '2001:41d0:701:1100::1',
+            'interfaces': {
+                'external': {
+                    'match': 'ens3',
+                    'ipv4': '135.125.239.125/32',
+                    'gateway4': '135.125.238.1',
+                    'ipv6': '2001:41d0:701:1100::3dea/56',
+                    'gateway6': '2001:41d0:701:1100::1',
+                },
             },
         },
         'bind': {

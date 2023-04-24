@@ -5,10 +5,10 @@ from ipaddress import ip_network, ip_interface
     'systemd/units',
 )
 def network(metadata):
-    interface = ip_interface(metadata.get('network/internal/ipv4'))
+    interface = ip_interface(metadata.get('network/internal_ipv4'))
     network = ip_interface(f'{interface.ip}/24').network
     gateway = network[1]
-    
+
     return {
         'systemd': {
             'units': {

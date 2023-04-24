@@ -1,5 +1,7 @@
 from ipaddress import ip_interface
 from json import dumps
+
+
 h = repo.libs.hashable.hashable
 repo.libs.bind.repo = repo
 
@@ -168,7 +170,7 @@ def ns_records(metadata):
                                     for nameserver in nameservers
                             }
                         }
-                            for zone_name, zone_conf in view_conf['zones'].items()
+                            for zone_name in view_conf['zones']
                     }
                 }
                     for view_name, view_conf in metadata.get('bind/views').items()
