@@ -17,8 +17,8 @@ def units(metadata):
                 'Name': network['interface'],
             },
             'Network': {
-                'DHCP': 'no',
-                'IPv6AcceptRA': 'no',
+                'DHCP': network.get('dhcp', 'no'),
+                'IPv6AcceptRA': network.get('dhcp', 'no'),
             }
         }
 
