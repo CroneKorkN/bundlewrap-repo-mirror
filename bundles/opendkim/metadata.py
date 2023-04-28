@@ -1,7 +1,5 @@
-from os.path import join, exists
 from re import sub
 from cryptography.hazmat.primitives import serialization as crypto_serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
 from base64 import b64decode
 
 

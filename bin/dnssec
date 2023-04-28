@@ -1,31 +1,38 @@
 #!/usr/bin/env python3
 
+from sys import argv
+from os.path import realpath, dirname
 from bundlewrap.repo import Repository
 from base64 import b64decode, urlsafe_b64encode
-from jwkest import long_to_base64
 from cryptography.utils import int_to_bytes
+from cryptography.hazmat.primitives import serialization as crypto_serialization
+from struct import pack
+from hashlib import sha1, sha256
+
 
 def long_to_base64(n):
     return urlsafe_b64encode(int_to_bytes(n, None)).decode()
 
-#repo = Repository(dirname(dirname(realpath(__file__))))
-repo = Repository('.')
-domain = 'ckn.li'
+domain = argv[1]
+repo = Repository(dirname(dirname(realpath(__file__))))
+#repo = Repository('.')
 
-pk = repo.libs.rsa.generate_deterministic_rsa_private_key(
+# Private Key
+
+priv = repo.libs.rsa.generate_deterministic_rsa_private_key(
     b64decode(str(repo.vault.random_bytes_as_base64_for('dnssec' + domain)))
 )
 
 # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
 # https://crypto.stackexchange.com/a/21104
-public_exponent = pk.private_numbers().public_numbers.e
-modulo = pk.private_numbers().public_numbers.n
-private_exponent = pk.private_numbers().d
-prime1 = pk.private_numbers().p
-prime2 = pk.private_numbers().q
-exponent1 = pk.private_numbers().dmp1
-exponent2 = pk.private_numbers().dmq1
-coefficient = pk.private_numbers().iqmp
+public_exponent = priv.private_numbers().public_numbers.e
+modulo = priv.private_numbers().public_numbers.n
+private_exponent = priv.private_numbers().d
+prime1 = priv.private_numbers().p
+prime2 = priv.private_numbers().q
+exponent1 = priv.private_numbers().dmp1
+exponent2 = priv.private_numbers().dmq1
+coefficient = priv.private_numbers().iqmp
 
 print(f"""
 Private-key-format: v1.3
@@ -42,3 +49,30 @@ Created: 20230428110109
 Publish: 20230428110109
 Activate: 20230428110109
 """)
+
+# DNSKEY
+
+pub = priv.public_key()
+
+dnskey = ''.join(pub.public_bytes(
+    crypto_serialization.Encoding.PEM,
+    crypto_serialization.PublicFormat.SubjectPublicKeyInfo
+).decode().split('\n')[1:-2])
+
+value = f"256 3 8 {dnskey}"
+print(f"""
+{domain}. IN DNSKEY {value}
+""")
+
+# DS
+# https://gist.github.com/wido/4c6288b2f5ba6d16fce37dca3fc2cb4a#file-dnskey_to_dsrecord-py-L40
+
+signature = bytes()
+for i in domain.split('.'):
+    signature += pack('B', len(i)) + i.encode()
+
+signature += pack('!HBB', 256, 3, 8)
+signature += dnskey.encode()
+
+print(sha1(signature).hexdigest().upper())
+print(sha256(signature).hexdigest().upper())
