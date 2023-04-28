@@ -51,7 +51,21 @@ def dns(metadata):
         }
         report_email = metadata.get('mailserver/dmarc_report_email')
         dns[f'_dmarc.{domain}'] = {
-            'TXT': [f'v=DMARC1; p=reject; rua=mailto:{report_email}; ruf=mailto:{report_email}; fo=1;'],
+            'TXT': ['; '.join(f'{k}={v}' for k, v in {
+                # dmarc version
+                'v': 'DMARC1',
+                # reject on failure
+                'p': 'reject',
+                # standard reports
+                'rua': f'mailto:{report_email}',
+                # forensic reports
+                'fo': 1,
+                'ruf': f'mailto:{report_email}',
+                # require alignment between the DKIM domain and the parent Header From domain
+                'adkim': 's',
+                # require alignment between the SPF domain (the sender) and the Header From domain
+                'aspf': 's',
+            }.items())]
         }
 
     return {
