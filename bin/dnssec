@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+
+from os.path import realpath, dirname
+from bundlewrap.repo import Repository
+from base64 import b64decode, urlsafe_b64encode
+from jwkest import long_to_base64
+from cryptography.utils import int_to_bytes
+
+def long_to_base64(n):
+    return urlsafe_b64encode(int_to_bytes(n, None)).decode()
+
+#repo = Repository(dirname(dirname(realpath(__file__))))
+repo = Repository('.')
+domain = 'ckn.li'
+
+pk = repo.libs.rsa.generate_deterministic_rsa_private_key(
+    b64decode(str(repo.vault.random_bytes_as_base64_for('dnssec' + domain)))
+)
+
+# https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
+# https://crypto.stackexchange.com/a/21104
+public_exponent = pk.private_numbers().public_numbers.e
+modulo = pk.private_numbers().public_numbers.n
+private_exponent = pk.private_numbers().d
+prime1 = pk.private_numbers().p
+prime2 = pk.private_numbers().q
+exponent1 = pk.private_numbers().dmp1
+exponent2 = pk.private_numbers().dmq1
+coefficient = pk.private_numbers().iqmp
+
+print(f"""
+Private-key-format: v1.3
+Algorithm: 8 (RSASHA256)
+Modulus: {long_to_base64(modulo)}
+PublicExponent: {long_to_base64(public_exponent)}
+PrivateExponent: {long_to_base64(private_exponent)}
+Prime1: {long_to_base64(prime1)}
+Prime2: {long_to_base64(prime2)}
+Exponent1: {long_to_base64(exponent1)}
+Exponent2: {long_to_base64(exponent2)}
+Coefficient: {long_to_base64(coefficient)}
+Created: 20230428110109
+Publish: 20230428110109
+Activate: 20230428110109
+""")
