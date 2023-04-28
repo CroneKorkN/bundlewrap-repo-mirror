@@ -43,11 +43,15 @@ defaults = {
 )
 def dns(metadata):
     dns = {}
-    
+
     for domain in metadata.get('mailserver/domains'):
         dns[domain] = {
             'MX': [f"5 {metadata.get('mailserver/hostname')}."],
             'TXT': ['v=spf1 a mx -all'],
+        }
+        report_email = metadata.get('mailserver/dmarc_report_email')
+        dns[f'_dmarc.{domain}'] = {
+            'TXT': [f'v=DMARC1; p=reject; rua=mailto:{report_email}; ruf=mailto:{report_email}; fo=1;'],
         }
 
     return {
@@ -66,4 +70,4 @@ def letsencrypt(metadata):
                 },
             },
         },
-    } 
+    }

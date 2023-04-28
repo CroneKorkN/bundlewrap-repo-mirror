@@ -113,6 +113,7 @@
         'mailserver': {
             'hostname': 'mail.sublimity.de',
             'admin_email': 'postmaster@sublimity.de',
+            'dmarc_report_email': 'dmarc@sublimity.de',
             'domains': {
                 'ckn.li',
                 'sublimity.de',
