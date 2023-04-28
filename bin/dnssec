@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from os.path import realpath, dirname
 from bundlewrap.repo import Repository
 from base64 import b64decode, urlsafe_b64encode
 from jwkest import long_to_base64
