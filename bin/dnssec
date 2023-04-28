@@ -16,20 +16,22 @@ def long_to_base64(n):
 
 zone = argv[1]
 repo = Repository(dirname(dirname(realpath(__file__))))
-#repo = Repository('.')
 
 flags = 256
 protocol = 3
 algorithm = 8
 algorithm_name = 'RSASHA256'
 
+# ZSK/KSK DNSKEY
+#
+# https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
+# https://crypto.stackexchange.com/a/21104
+
 def generate_signing_key_pair(zone, salt=''):
     priv = repo.libs.rsa.generate_deterministic_rsa_private_key(
         b64decode(str(repo.vault.random_bytes_as_base64_for(f'dnssec {salt} ' + zone)))
     )
 
-    # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
-    # https://crypto.stackexchange.com/a/21104
     public_exponent = priv.private_numbers().public_numbers.e
     modulo = priv.private_numbers().public_numbers.n
     private_exponent = priv.private_numbers().d
@@ -64,14 +66,9 @@ def generate_signing_key_pair(zone, salt=''):
         },
     }
 
-# ZSK
-
-
-# DNSKEY
-
-
 
 # DS
+#
 # https://gist.github.com/wido/4c6288b2f5ba6d16fce37dca3fc2cb4a#file-dnskey_to_dsrecord-py-L40
 
 def _calc_ds(zone, flags, protocol, algorithm, dnskey):
@@ -112,6 +109,8 @@ def dnskey_to_ds(zone, flags, protocol, algorithm, dnskey):
         f"{zone}. IN DS {str(keyid)} {str(algorithm)} 1 {ds['sha1'].lower()}",
         f"{zone}. IN DS {str(keyid)} {str(algorithm)} 2 {ds['sha256'].lower()}",
     ]
+
+# Result
 
 def generate_dnssec_for_zone(zone):
     zsk_data = generate_signing_key_pair(zone, salt='zsk')
