@@ -8,12 +8,13 @@ from cryptography.utils import int_to_bytes
 from cryptography.hazmat.primitives import serialization as crypto_serialization
 from struct import pack, unpack
 from hashlib import sha1, sha256
+from json import dumps
 
 
 def long_to_base64(n):
     return urlsafe_b64encode(int_to_bytes(n, None)).decode()
 
-domain = argv[1]
+zone = argv[1]
 repo = Repository(dirname(dirname(realpath(__file__))))
 #repo = Repository('.')
 
@@ -22,63 +23,63 @@ protocol = 3
 algorithm = 8
 algorithm_name = 'RSASHA256'
 
-# Private Key
+def generate_signing_key_pair(zone, salt=''):
+    priv = repo.libs.rsa.generate_deterministic_rsa_private_key(
+        b64decode(str(repo.vault.random_bytes_as_base64_for(f'dnssec {salt} ' + zone)))
+    )
 
-priv = repo.libs.rsa.generate_deterministic_rsa_private_key(
-    b64decode(str(repo.vault.random_bytes_as_base64_for('dnssec' + domain)))
-)
+    # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
+    # https://crypto.stackexchange.com/a/21104
+    public_exponent = priv.private_numbers().public_numbers.e
+    modulo = priv.private_numbers().public_numbers.n
+    private_exponent = priv.private_numbers().d
+    prime1 = priv.private_numbers().p
+    prime2 = priv.private_numbers().q
+    exponent1 = priv.private_numbers().dmp1
+    exponent2 = priv.private_numbers().dmq1
+    coefficient = priv.private_numbers().iqmp
 
-# https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
-# https://crypto.stackexchange.com/a/21104
-public_exponent = priv.private_numbers().public_numbers.e
-modulo = priv.private_numbers().public_numbers.n
-private_exponent = priv.private_numbers().d
-prime1 = priv.private_numbers().p
-prime2 = priv.private_numbers().q
-exponent1 = priv.private_numbers().dmp1
-exponent2 = priv.private_numbers().dmq1
-coefficient = priv.private_numbers().iqmp
+    dnskey = ''.join(priv.public_key().public_bytes(
+        crypto_serialization.Encoding.PEM,
+        crypto_serialization.PublicFormat.SubjectPublicKeyInfo
+    ).decode().split('\n')[1:-2])
 
-print(f"""
-Private-key-format: v1.3
-Algorithm: {algorithm} ({algorithm_name})
-Modulus: {long_to_base64(modulo)}
-PublicExponent: {long_to_base64(public_exponent)}
-PrivateExponent: {long_to_base64(private_exponent)}
-Prime1: {long_to_base64(prime1)}
-Prime2: {long_to_base64(prime2)}
-Exponent1: {long_to_base64(exponent1)}
-Exponent2: {long_to_base64(exponent2)}
-Coefficient: {long_to_base64(coefficient)}
-Created: 20230428110109
-Publish: 20230428110109
-Activate: 20230428110109
-""")
+    return {
+        'dnskey': dnskey,
+        'dnskey_record': f'{zone}. IN DNSKEY {flags} {protocol} {algorithm} {dnskey}',
+        'privkey': {
+            'Private-key-format': 'v1.3',
+            'Algorithm': f'{algorithm} ({algorithm_name})',
+            'Modulus': long_to_base64(modulo),
+            'PublicExponent': long_to_base64(public_exponent),
+            'PrivateExponent': long_to_base64(private_exponent),
+            'Prime1': long_to_base64(prime1),
+            'Prime2': long_to_base64(prime2),
+            'Exponent1': long_to_base64(exponent1),
+            'Exponent2': long_to_base64(exponent2),
+            'Coefficient': long_to_base64(coefficient),
+            'Created': 20230428110109,
+            'Publish': 20230428110109,
+            'Activate': 20230428110109,
+        },
+    }
+
+# ZSK
+
 
 # DNSKEY
 
-pub = priv.public_key()
 
-dnskey = ''.join(pub.public_bytes(
-    crypto_serialization.Encoding.PEM,
-    crypto_serialization.PublicFormat.SubjectPublicKeyInfo
-).decode().split('\n')[1:-2])
-
-value = f"{flags} {protocol} {algorithm} {dnskey}"
-print(f"""
-{domain}. IN DNSKEY {value}
-""")
 
 # DS
 # https://gist.github.com/wido/4c6288b2f5ba6d16fce37dca3fc2cb4a#file-dnskey_to_dsrecord-py-L40
 
-
-def _calc_ds(domain, flags, protocol, algorithm, dnskey):
-    if domain.endswith('.') is False:
-        domain += '.'
+def _calc_ds(zone, flags, protocol, algorithm, dnskey):
+    if zone.endswith('.') is False:
+        zone += '.'
 
     signature = bytes()
-    for i in domain.split('.'):
+    for i in zone.split('.'):
         signature += pack('B', len(i)) + i.encode()
 
     signature += pack('!HBB', int(flags), int(protocol), int(algorithm))
@@ -103,8 +104,27 @@ def _calc_keyid(flags, protocol, algorithm, dnskey):
 
     return ((cnt & 0xFFFF) + (cnt >> 16)) & 0xFFFF
 
-keyid = _calc_keyid(flags, protocol, algorithm, dnskey)
-ds = _calc_ds(domain, flags, protocol, algorithm, dnskey)
+def dnskey_to_ds(zone, flags, protocol, algorithm, dnskey):
+    keyid = _calc_keyid(flags, protocol, algorithm, dnskey)
+    ds = _calc_ds(zone, flags, protocol, algorithm, dnskey)
 
-print(f"{domain}. IN DS {str(keyid)} {str(algorithm)} 1 {ds['sha1'].lower()}")
-print(f"{domain}. IN DS {str(keyid)} {str(algorithm)} 2 {ds['sha256'].lower()}")
+    return[
+        f"{zone}. IN DS {str(keyid)} {str(algorithm)} 1 {ds['sha1'].lower()}",
+        f"{zone}. IN DS {str(keyid)} {str(algorithm)} 2 {ds['sha256'].lower()}",
+    ]
+
+def generate_dnssec_for_zone(zone):
+    zsk_data = generate_signing_key_pair(zone, salt='zsk')
+    ksk_data = generate_signing_key_pair(zone, salt='ksk')
+    ds_records = dnskey_to_ds(zone, flags, protocol, algorithm, ksk_data['dnskey'])
+
+    return {
+        'zsk_data': zsk_data,
+        'ksk_data': ksk_data,
+        'ds_records': ds_records,
+    }
+
+print(dumps(
+    generate_dnssec_for_zone(zone),
+    indent=4,
+))
