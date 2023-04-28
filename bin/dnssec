@@ -6,7 +6,7 @@ from bundlewrap.repo import Repository
 from base64 import b64decode, urlsafe_b64encode
 from cryptography.utils import int_to_bytes
 from cryptography.hazmat.primitives import serialization as crypto_serialization
-from struct import pack
+from struct import pack, unpack
 from hashlib import sha1, sha256
 
 
@@ -16,6 +16,11 @@ def long_to_base64(n):
 domain = argv[1]
 repo = Repository(dirname(dirname(realpath(__file__))))
 #repo = Repository('.')
+
+flags = 256
+protocol = 3
+algorithm = 8
+algorithm_name = 'RSASHA256'
 
 # Private Key
 
@@ -36,7 +41,7 @@ coefficient = priv.private_numbers().iqmp
 
 print(f"""
 Private-key-format: v1.3
-Algorithm: 8 (RSASHA256)
+Algorithm: {algorithm} ({algorithm_name})
 Modulus: {long_to_base64(modulo)}
 PublicExponent: {long_to_base64(public_exponent)}
 PrivateExponent: {long_to_base64(private_exponent)}
@@ -59,7 +64,7 @@ dnskey = ''.join(pub.public_bytes(
     crypto_serialization.PublicFormat.SubjectPublicKeyInfo
 ).decode().split('\n')[1:-2])
 
-value = f"256 3 8 {dnskey}"
+value = f"{flags} {protocol} {algorithm} {dnskey}"
 print(f"""
 {domain}. IN DNSKEY {value}
 """)
@@ -67,12 +72,39 @@ print(f"""
 # DS
 # https://gist.github.com/wido/4c6288b2f5ba6d16fce37dca3fc2cb4a#file-dnskey_to_dsrecord-py-L40
 
-signature = bytes()
-for i in domain.split('.'):
-    signature += pack('B', len(i)) + i.encode()
 
-signature += pack('!HBB', 256, 3, 8)
-signature += dnskey.encode()
+def _calc_ds(domain, flags, protocol, algorithm, dnskey):
+    if domain.endswith('.') is False:
+        domain += '.'
 
-print(sha1(signature).hexdigest().upper())
-print(sha256(signature).hexdigest().upper())
+    signature = bytes()
+    for i in domain.split('.'):
+        signature += pack('B', len(i)) + i.encode()
+
+    signature += pack('!HBB', int(flags), int(protocol), int(algorithm))
+    signature += b64decode(dnskey)
+
+    return {
+        'sha1':    sha1(signature).hexdigest().upper(),
+        'sha256':  sha256(signature).hexdigest().upper(),
+    }
+
+def _calc_keyid(flags, protocol, algorithm, dnskey):
+    st = pack('!HBB', int(flags), int(protocol), int(algorithm))
+    st += b64decode(dnskey)
+
+    cnt = 0
+    for idx in range(len(st)):
+        s = unpack('B', st[idx:idx+1])[0]
+        if (idx % 2) == 0:
+            cnt += s << 8
+        else:
+            cnt += s
+
+    return ((cnt & 0xFFFF) + (cnt >> 16)) & 0xFFFF
+
+keyid = _calc_keyid(flags, protocol, algorithm, dnskey)
+ds = _calc_ds(domain, flags, protocol, algorithm, dnskey)
+
+print(f"{domain}. IN DS {str(keyid)} {str(algorithm)} 1 {ds['sha1'].lower()}")
+print(f"{domain}. IN DS {str(keyid)} {str(algorithm)} 2 {ds['sha256'].lower()}")
