@@ -23,4 +23,7 @@ DNSKEY:
 
 DS
 
+### sub
 
+ZSK/KSK:
+  https://www.cloudflare.com/de-de/dns/dnssec/how-dnssec-works/
