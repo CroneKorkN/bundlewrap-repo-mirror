@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+# https://medium.com/iocscan/how-dnssec-works-9c652257be0
+# https://de.wikipedia.org/wiki/RRSIG_Resource_Record
+# https://metebalci.com/blog/a-minimum-complete-tutorial-of-dnssec/
+# https://bind9.readthedocs.io/en/latest/dnssec-guide.html
+
 from sys import argv
 from os.path import realpath, dirname
 from bundlewrap.repo import Repository
@@ -9,6 +14,7 @@ from cryptography.hazmat.primitives import serialization as crypto_serialization
 from struct import pack, unpack
 from hashlib import sha1, sha256
 from json import dumps
+from cache_to_disk import cache_to_disk
 
 
 def long_to_base64(n):
@@ -27,21 +33,21 @@ algorithm_name = 'RSASHA256'
 # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#cryptography.hazmat.primitives.asymmetric.rsa.RSAPrivateNumbers
 # https://crypto.stackexchange.com/a/21104
 
-def generate_signing_key_pair(zone, salt=''):
-    priv = repo.libs.rsa.generate_deterministic_rsa_private_key(
+def generate_signing_key_pair(zone, salt):
+    privkey = repo.libs.rsa.generate_deterministic_rsa_private_key(
         b64decode(str(repo.vault.random_bytes_as_base64_for(f'dnssec {salt} ' + zone)))
     )
 
-    public_exponent = priv.private_numbers().public_numbers.e
-    modulo = priv.private_numbers().public_numbers.n
-    private_exponent = priv.private_numbers().d
-    prime1 = priv.private_numbers().p
-    prime2 = priv.private_numbers().q
-    exponent1 = priv.private_numbers().dmp1
-    exponent2 = priv.private_numbers().dmq1
-    coefficient = priv.private_numbers().iqmp
+    public_exponent = privkey.private_numbers().public_numbers.e
+    modulo = privkey.private_numbers().public_numbers.n
+    private_exponent = privkey.private_numbers().d
+    prime1 = privkey.private_numbers().p
+    prime2 = privkey.private_numbers().q
+    exponent1 = privkey.private_numbers().dmp1
+    exponent2 = privkey.private_numbers().dmq1
+    coefficient = privkey.private_numbers().iqmp
 
-    dnskey = ''.join(priv.public_key().public_bytes(
+    dnskey = ''.join(privkey.public_key().public_bytes(
         crypto_serialization.Encoding.PEM,
         crypto_serialization.PublicFormat.SubjectPublicKeyInfo
     ).decode().split('\n')[1:-2])
@@ -49,7 +55,8 @@ def generate_signing_key_pair(zone, salt=''):
     return {
         'dnskey': dnskey,
         'dnskey_record': f'{zone}. IN DNSKEY {flags} {protocol} {algorithm} {dnskey}',
-        'privkey': {
+        'privkey': privkey,
+        'privkey_file': {
             'Private-key-format': 'v1.3',
             'Algorithm': f'{algorithm} ({algorithm_name})',
             'Modulus': long_to_base64(modulo),
@@ -112,6 +119,7 @@ def dnskey_to_ds(zone, flags, protocol, algorithm, dnskey):
 
 # Result
 
+#@cache_to_disk(30)
 def generate_dnssec_for_zone(zone):
     zsk_data = generate_signing_key_pair(zone, salt='zsk')
     ksk_data = generate_signing_key_pair(zone, salt='ksk')
@@ -123,7 +131,65 @@ def generate_dnssec_for_zone(zone):
         'ds_records': ds_records,
     }
 
-print(dumps(
+print(
     generate_dnssec_for_zone(zone),
-    indent=4,
-))
+)
+
+
+# #########################
+
+# from dns import rrset, rdatatype, rdata
+# from dns.rdataclass import IN
+# from dns.dnssec import sign, make_dnskey
+# from dns.name import Name
+# from dns.rdtypes.IN.A import A
+
+# data = generate_dnssec_for_zone(zone)
+# zone_name = Name(f'{zone}.'.split('.'))
+# assert zone_name.is_absolute()
+
+# # rrset = rrset.from_text_list(
+# #     name=Name(['test']).derelativize(zone_name),
+# #     origin=zone_name,
+# #     relativize=False,
+# #     ttl=60,
+# #     rdclass=IN,
+# #     rdtype=rdatatype.from_text('A'),
+# #     text_rdatas=[
+# #       '100.2.3.4',
+# #       '10.0.0.55',
+# #     ],
+# # )
+
+# rrset = rrset.from_rdata_list(
+#     name=Name(['test']).derelativize(zone_name),
+#     ttl=60,
+#     rdatas=[
+#         rdata.from_text(
+#             rdclass=IN,
+#             rdtype=rdatatype.from_text('A'),
+#             origin=zone_name,
+#             tok='1.2.3.4',
+#             relativize=False,
+#         ),
+#         A(IN, rdatatype.from_text('A'), '10.20.30.40')
+#     ],
+# )
+
+# # for e in rrset:
+# #     print(e.is_absolute())
+
+# dnskey = make_dnskey(
+#     public_key=data['zsk_data']['privkey'].public_key(),
+#     algorithm=algorithm,
+#     flags=flags,
+#     protocol=protocol,
+# )
+
+# sign(
+#     rrset=rrset,
+#     private_key=data['zsk_data']['privkey'],
+#     signer=Name(f'{zone}.'),
+#     dnskey=dnskey,
+#     lifetime=99999,
+# )
