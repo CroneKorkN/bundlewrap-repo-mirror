@@ -28,6 +28,7 @@ order = [
     'Unit',
     'Timer',
     'Service',
+    'Swap',
     'Install',
 ]
 
