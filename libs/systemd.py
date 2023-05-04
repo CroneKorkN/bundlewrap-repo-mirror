@@ -13,7 +13,7 @@ template = '''
 ${option}=${k}=${v}
 %             endfor
 %         elif isinstance(value, (list, set, tuple)):
-%             for item in sorted(value):
+%             for item in (sorted(value) if isinstance(value, set) else value):
 ${option}=${item}
 %             endfor
 %         elif isinstance(value, type(None)):
