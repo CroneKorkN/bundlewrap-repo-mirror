@@ -6,6 +6,11 @@ defaults = {
                 'Swap': {
                     'What': '/swapfile',
                 },
+                'Install': {
+                    'WantedBy': {
+                        'swap.target',
+                    },
+                },
             },
         },
     },
