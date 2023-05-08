@@ -1,0 +1,47 @@
+import dns.zone
+import dns.rdatatype
+import dns.rdataclass
+import dns.dnssec
+
+# Define the zone name and domain names
+zone_name = 'example.com.'
+a_name = 'www.example.com.'
+txt_name = 'example.com.'
+mx_name = 'example.com.'
+
+# Define the DNSKEY algorithm and size
+algorithm = 8
+key_size = 2048
+
+# Generate the DNSSEC key pair
+keypair = dns.dnssec.make_dnskey(algorithm, key_size)
+
+# Create the zone
+zone = dns.zone.Zone(origin=zone_name)
+
+# Add A record to zone
+a_rrset = zone.get_rdataset(a_name, rdtype=dns.rdatatype.A, create=True)
+a_rrset.add(dns.rdataclass.IN, dns.rdatatype.A, '192.0.2.1')
+
+# Add TXT record to zone
+txt_rrset = zone.get_rdataset(txt_name, rdtype=dns.rdatatype.TXT, create=True)
+txt_rrset.add(dns.rdataclass.IN, dns.rdatatype.TXT, 'Hello, world!')
+
+# Add MX record to zone
+mx_rrset = zone.get_rdataset(mx_name, rdtype=dns.rdatatype.MX, create=True)
+mx_rrset.add(dns.rdataclass.IN, dns.rdatatype.MX, '10 mail.example.com.')
+
+# Create the DNSKEY record for the zone
+key_name = f'{keypair.name}-K{keypair.fingerprint()}'
+dnskey_rrset = dns.rrset.RRset(name=keypair.name, rdclass=dns.rdataclass.IN, rdtype=dns.rdatatype.DNSKEY)
+dnskey_rrset.ttl = 86400
+dnskey_rrset.add(dns.rdataclass.IN, dns.rdatatype.DNSKEY, keypair.key, key_name=key_name)
+
+# Add the DNSKEY record to the zone
+zone.replace_rdataset(keypair.name, dnskey_rrset)
+
+# Sign the zone with the DNSSEC key pair
+dns.dnssec.sign_zone(zone, keypair, inception=0, expiration=3600)
+
+# Print the resulting zone with the RRSIG records
+print(zone.to_text())
