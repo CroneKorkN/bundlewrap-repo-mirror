@@ -22,7 +22,6 @@ actions = {
             'action:remove_swapfile',
         },
         'triggers': {
-            'action:initialize_swapfile',
             'svc_systemd:swapfile.swap:restart',
         },
     },
@@ -38,7 +37,7 @@ actions = {
     },
     'initialize_swapfile': {
         'command': f'mkswap /swapfile',
-        'triggered': True,
+        'unless': 'blkid -o value -s TYPE /swapfile | grep -q "^swap$"',
         'needs': {
             'action:swapfile_mode',
         }
@@ -47,9 +46,6 @@ actions = {
 
 svc_systemd = {
     'swapfile.swap': {
-        'preceded_by': {
-            'action:initialize_swapfile',
-        },
         'needs': {
             'action:initialize_swapfile',
             'action:systemd-reload',
