@@ -1,0 +1,8 @@
+#!/bin/bash
+
+gpio=$(gpiofind SCL1)
+
+while gpiomon --num-events=1 --falling-edge $gpio 2&> /dev/null
+do
+  systemctl stop rufbereitschafts-klingel
+done
