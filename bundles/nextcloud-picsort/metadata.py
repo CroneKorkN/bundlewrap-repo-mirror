@@ -17,8 +17,14 @@ def systemd_timers(metadata):
     return {
         'systemd-timers': {
             f'nextcloud-picsort-{user}': {
-                'command': f'/opt/nextcloud-picsort {q(user)} {q(paths["source"])} {q(paths["destination"])} {q(paths["unsortable"])}',
+                'command': f'/opt/nextcloud-picsort',
                 'when': '*:0/30',
+                'env': {
+                    'USER': user,
+                    'SOURCE_DIR': paths["source"],
+                    'DESTINATION_DIR': paths["destination"],
+                    'UNSORTABLE_DIR': paths["unsortable"],
+                },
             }
                 for user, paths in metadata.get('nextcloud-picsort').items()
         }
