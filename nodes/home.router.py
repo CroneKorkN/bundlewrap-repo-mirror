@@ -1,5 +1,5 @@
 {
-    'hostname': '10.0.0.119',
+    'hostname': '10.0.0.120',
     'dummy': True,
     'groups': [
         'autologin',
@@ -13,10 +13,10 @@
         'network': {
             'internal': {
                 'interface': 'eno1',
-                'ipv4': '10.0.0.119/24',
+                'ipv4': '10.0.0.120/24',
                 'gateway4': '10.0.0.1',
             },
-            'exernal': {
+            'external': {
                 'interface': 'enx00e04c00135b',
                 'mac': '00:e0:4c:00:13:5b',
                 'dhcp': 'yes',
