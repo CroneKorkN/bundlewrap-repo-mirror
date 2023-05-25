@@ -35,7 +35,7 @@ def host_key(metadata):
         'ssh': {
             'host_key': {
                 'private': private + '\n',
-                'public': public + f' root@{node.name}',
+                'public': f'{public} {node.name}',
             }
         },
     }
