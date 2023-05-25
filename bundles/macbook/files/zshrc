@@ -1,0 +1,28 @@
+export PATH=~/.bin:$PATH
+export ZSH=~/.zsh/oh-my-zsh
+ZSH_THEME="ckn"
+HIST_STAMPS="yyyy/mm/dd"
+plugins=(
+  zsh-autosuggestions
+  git
+)
+source $ZSH/oh-my-zsh.sh
+
+ulimit -S -n 24000
+
+sshn() {
+    ssh "$(tr '.' ' ' <<< "$1" | tac -s ' ' | xargs | tr ' ' '.').smhss.de"
+}
+pingn() {
+    ping "$(tr '.' ' ' <<< "$1" | tac -s ' ' | xargs | tr ' ' '.').smhss.de"
+}
+
+antivir() {
+    printf 'scanning for viruses' && sleep 1 && printf '.' && sleep 1 && printf '.' && sleep 1 && printf '.' &&
+sleep 1 && echo '\nyour computer is safe!'
+}
+
+eval "$(rbenv init -)"
+eval "$(pyenv init -)"
+eval "$(direnv hook zsh)"
+eval "$(op completion zsh)"; compdef _op op

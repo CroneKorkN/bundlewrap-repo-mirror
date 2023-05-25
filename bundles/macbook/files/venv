@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+cd "$OLDPWD"
+
+python3 -m venv .venv
+source ./.venv/bin/activate
+PATH_add .venv/bin
+
+NOW=$(date +%s)
+if test -e .pip_upgrade_timestamp
+then
+  LAST=$(cat .pip_upgrade_timestamp)
+else
+  LAST=0
+fi
+DELTA=$(expr "$NOW" - "$LAST")
+echo "last pip upgrade $DELTA seconds ago"
+if test "$DELTA" -gt 86400
+then
+  python3 -m pip --require-virtualenv install pip wheel --upgrade
+  python3 -m pip --require-virtualenv install -r requirements.txt --upgrade
+  date +%s > .pip_upgrade_timestamp
+fi

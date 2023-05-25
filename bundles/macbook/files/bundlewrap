@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+cd "$OLDPWD"
+
+export BW_ITEM_WORKERS=$(expr $(nproc) '*' 2)
+export BW_NODE_WORKERS=$(expr 256 '/' "$BW_ITEM_WORKERS")
