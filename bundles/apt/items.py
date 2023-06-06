@@ -112,6 +112,7 @@ for package, options in node.metadata.get('apt/packages', {}).items():
 # apt-daily.timer: performs apt update
 # apt-daily-upgrade.timer: performs apt upgrade
 
+files['/etc/apt/apt.conf.d/00disable-package-cache'] = {}
 files['/etc/apt/apt.conf.d/20auto-upgrades'] = {}
 files['/etc/apt/apt.conf.d/50unattended-upgrades'] = {}
 svc_systemd['unattended-upgrades.service'] = {
