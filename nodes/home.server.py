@@ -106,7 +106,7 @@
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
-            'version': '25.0.5',
+            'version': '25.0.7',
             'config': {
                 'instanceid': 'oci6dw1woodz',
                 'secret': '!decrypt:encrypt$gAAAAABj96CFynVtEgsje7173zjQAcY7xQG3uyf5cxE-sJAvhyPh_KUykTKdwnExc8NTDJ8RIGUmVfgC6or5crnYaggARPIEg5-Cb0xVdEPPZ3oZ01ImLmynLu3qXT9O8kVM-H21--OKeztMRn7bySsbXdWEGtETFQ==',
