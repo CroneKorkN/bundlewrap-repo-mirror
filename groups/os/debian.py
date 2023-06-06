@@ -6,6 +6,7 @@
         'apt',
         'nftables',
         'pip',
+        'iperf3',
     ],
     'metadata': {
         'apt': {
