@@ -18,7 +18,7 @@ admin_password = node.metadata.get('grafana/config/security/admin_password')
 port = node.metadata.get('grafana/config/server/http_port')
 actions['reset_grafana_admin_password'] = {
     'command': f"sleep 5 && grafana-cli admin reset-admin-password {quote(admin_password)}",
-    'unless': f"curl http://admin:{quote(admin_password)}@localhost:{port}/api/org",
+    'unless': f"curl http://admin:{quote(admin_password)}@localhost:{port}/api/org --fail-with-body",
     'needs': [
         'svc_systemd:grafana-server',
     ],
@@ -35,6 +35,8 @@ directories = {
     },
     '/var/lib/grafana': {},
     '/var/lib/grafana/dashboards': {
+        'owner': 'grafana',
+        'group': 'grafana',
         'purge': True,
         'triggers': [
             'svc_systemd:grafana-server:restart',
