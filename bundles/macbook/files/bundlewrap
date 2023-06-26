@@ -2,5 +2,5 @@
 
 cd "$OLDPWD"
 
-export BW_ITEM_WORKERS=$(expr $(nproc) '*' 2)
-export BW_NODE_WORKERS=$(expr 256 '/' "$BW_ITEM_WORKERS")
+export BW_ITEM_WORKERS=$(expr "$(nproc)" '*' 15 '/' 10)
+export BW_NODE_WORKERS=$(expr 320 '/' "$BW_ITEM_WORKERS")
