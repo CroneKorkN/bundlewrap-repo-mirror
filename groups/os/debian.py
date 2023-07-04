@@ -12,6 +12,7 @@
             'packages': {
                 'mtr-tiny': {},
             },
+            # https://ftp-master.debian.org/keys.html
         },
     },
     'os': 'debian',
