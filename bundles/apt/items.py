@@ -1,7 +1,6 @@
 # TODO pin repo: https://superuser.com/a/1595920
 
 from os.path import join
-from urllib.parse import urlparse
 from glob import glob
 from os.path import join, basename
 
@@ -59,7 +58,9 @@ for source_string in node.metadata.get('apt/sources'):
 # create sources lists and keyfiles
 
 for host, sources in hosts.items():
-    keyfile = basename(glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))[0])
+    paths = glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))
+    assert len(paths) == 1
+    keyfile = basename(paths[0])
     destination_path = f'/etc/apt/trusted.gpg.d/{keyfile}'
 
     for source in sources:
