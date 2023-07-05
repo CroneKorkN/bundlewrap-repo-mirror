@@ -3,7 +3,7 @@
     'groups': [
         'autologin',
         'backup-server',
-        'debian-11',
+        'debian-12',
         'home',
         'monitored',
     ],
