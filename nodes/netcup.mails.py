@@ -18,6 +18,7 @@
         'nginx-rtmps',
         'steam',
         'wireguard',
+        'wordpress',
         'zfs',
     ],
     'metadata': {
@@ -171,14 +172,19 @@
                     },
                     'internal_dns': False,
                 },
-                'elimu-kwanza.de': {
-                    'content': 'nginx/message.conf',
-                    'context': {
-                        'title': 'Im Aufbau/under construction',
-                        'message': '<a href=mailto:info@elimu-kwanza.de>info@elimu-kwanza.de</a>',
-                    },
-                    'internal_dns': False,
-                },
+                # 'elimu-kwanza.de': {
+                #     'content': 'nginx/message.conf',
+                #     'context': {
+                #         'title': 'Im Aufbau/under construction',
+                #         'message': '<a href=mailto:info@elimu-kwanza.de>info@elimu-kwanza.de</a>',
+                #     },
+                #     'internal_dns': False,
+                # },
+            },
+        },
+        'wordpress': {
+            'elimu-kwanza.de': {
+                'internal_dns': False,
             },
         },
         'nginx-rtmps': {
