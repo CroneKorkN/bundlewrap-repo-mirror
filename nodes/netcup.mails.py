@@ -2,7 +2,7 @@
     'hostname': '202.61.255.108',
     'groups': [
         'backup',
-        'debian-11',
+        'debian-12',
         'mailserver',
         'monitored',
         'webserver',
