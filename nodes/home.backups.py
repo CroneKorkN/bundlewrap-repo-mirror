@@ -57,6 +57,8 @@
                         '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL',
                         '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB',
                         '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG',
+                        # mdadm --create --metadata 1.0 --verbose /dev/md0 --level=stripe --raid-devices=2 /dev/disk/by-id/ata-WDC_WD30EZRX-00D8PB0_WD-WMC4N1776003 /dev/disk/by-id/ata-ST1750LM000_HN-M171RAD_S385J9EH700665
+                        # ARRAY /dev/md/backups.home.ckn.li:0 metadata=1.0 name=backups.home.ckn.li:0 UUID=5209d078:d4d2db11:00ec4fcf:f4b71683
                     ],
                 },
             },
