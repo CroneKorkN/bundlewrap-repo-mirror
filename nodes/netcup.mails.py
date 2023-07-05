@@ -7,7 +7,7 @@
         'monitored',
         'webserver',
         'dnsserver',
-        'left4dead2',
+        #'left4dead2',
     ],
     'bundles': [
         'bind-acme',
@@ -52,6 +52,7 @@
                 'wiegand.tel',
                 'lonercrew.io',
                 'left4.me',
+                'elimu-kwanza.de',
             },
         },
         'dns': {
@@ -68,6 +69,10 @@
                 'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
             'left4.me': {
+                'A': ['202.61.255.108'],
+                'AAAA': ['2a01:4f8:1c1c:4121::1'],
+            },
+            'elimu-kwanza.de': {
                 'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
@@ -123,6 +128,7 @@
                 'wettengl.net',
                 'wiegand.tel',
                 'left4.me',
+                'elimu-kwanza.de',
             },
         },
         'rspamd': {
@@ -162,6 +168,14 @@
                     'content': 'nginx/redirect.conf',
                     'context': {
                         'target': 'https://www.internationaler-bund.de/standort/204516',
+                    },
+                    'internal_dns': False,
+                },
+                'elimu-kwanza.de': {
+                    'content': 'nginx/message.conf',
+                    'context': {
+                        'title': 'Im Aufbau/under construction',
+                        'message': '<a href=mailto:info@elimu-kwanza.de>info@elimu-kwanza.de</a>',
                     },
                     'internal_dns': False,
                 },
