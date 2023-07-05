@@ -3,7 +3,7 @@
     'groups': [
         'autologin',
         'backup',
-        'debian-11',
+        'debian-12',
         'home',
         'nextcloud',
         'monitored',
@@ -44,6 +44,11 @@
                 'interface': 'enp42s0',
                 'ipv4': '10.0.0.2/24',
                 'gateway4': '10.0.0.1',
+            },
+        },
+        'apt': {
+            'packages': {
+                'firmware-realtek': {},
             },
         },
         'build-server': {
@@ -106,7 +111,7 @@
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
-            'version': '25.0.8',
+            'version': '27.0.0',
             'config': {
                 'instanceid': 'oci6dw1woodz',
                 'secret': '!decrypt:encrypt$gAAAAABj96CFynVtEgsje7173zjQAcY7xQG3uyf5cxE-sJAvhyPh_KUykTKdwnExc8NTDJ8RIGUmVfgC6or5crnYaggARPIEg5-Cb0xVdEPPZ3oZ01ImLmynLu3qXT9O8kVM-H21--OKeztMRn7bySsbXdWEGtETFQ==',

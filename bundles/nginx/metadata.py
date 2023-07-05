@@ -5,6 +5,9 @@ defaults = {
     'apt': {
         'packages': {
             'nginx': {},
+            'apache2': {
+                'installed': False,
+            },
         },
     },
     'nftables': {

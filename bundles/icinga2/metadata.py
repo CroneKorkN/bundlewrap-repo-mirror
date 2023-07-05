@@ -10,6 +10,7 @@ defaults = {
         },
         'sources': {
             'deb https://packages.icinga.com/debian icinga-{codename} main',
+            'deb-src https://packages.icinga.com/debian icinga-{codename} main',
         },
     },
     'icinga2': {

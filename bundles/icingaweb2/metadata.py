@@ -163,6 +163,7 @@ def nginx(metadata):
                 metadata.get('icingaweb2/hostname'): {
                     'content': 'icingaweb2/vhost.conf',
                     'context': {
+                        'php_version': metadata.get('php/version'),
                     },
                 },
             },
