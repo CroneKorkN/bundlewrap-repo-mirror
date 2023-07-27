@@ -3,7 +3,7 @@
     'groups': [
         'autologin',
         'backup',
-        'debian-11',
+        'debian-12',
         'home',
         'monitored',
         'raspberry-pi',
@@ -36,7 +36,7 @@
             },
         },
         'java': {
-            'version': 11,
+            'version': 17,
         },
         'zfs': {
             'pools': {

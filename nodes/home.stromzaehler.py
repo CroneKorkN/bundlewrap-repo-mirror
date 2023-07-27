@@ -2,7 +2,7 @@
     'hostname': '10.0.0.15',
     'groups': [
         'autologin',
-        'debian-11',
+        'debian-12',
         'home',
         'raspberry-pi',
         'monitored',
