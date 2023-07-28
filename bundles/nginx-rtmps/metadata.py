@@ -10,6 +10,12 @@ defaults = {
             'tcp dport 1936 accept',
         },
     },
+    'nginx': {
+        'modules': {
+            'rtmp',
+            'stream',
+        },
+    },
 }
 
 

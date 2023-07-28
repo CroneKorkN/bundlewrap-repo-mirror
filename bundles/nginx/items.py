@@ -3,25 +3,26 @@ from mako.template import Template
 from os.path import join
 
 directories = {
+    '/etc/nginx': {
+        'purge': True,
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    },
     '/etc/nginx/sites': {
         'purge': True,
         'triggers': {
             'svc_systemd:nginx:restart',
         },
     },
-    '/etc/nginx/conf.d': {
-        'purge': True,
-        'triggers': {
-            'svc_systemd:nginx:restart',
-        },
-    },
-    '/etc/nginx/ssl': {
+    '/etc/nginx/params': {
         'purge': True,
         'triggers': {
             'svc_systemd:nginx:restart',
         },
     },
     '/var/www': {
+        'purge': True,
         'owner': 'www-data',
     },
 }
@@ -29,11 +30,34 @@ directories = {
 files = {
     '/etc/nginx/nginx.conf': {
         'content_type': 'mako',
+        'context': {
+            'modules': node.metadata.get('nginx/modules'),
+        },
         'triggers': {
             'svc_systemd:nginx:restart',
         },
     },
-    '/etc/nginx/fastcgi.conf': {
+    '/etc/nginx/params/fastcgi': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    },
+    '/etc/nginx/params/proxy': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    },
+    '/etc/nginx/params/uwsgi': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    },
+    '/etc/nginx/params/scgi': {
+        'triggers': {
+            'svc_systemd:nginx:restart',
+        },
+    },
+    '/etc/nginx/mime.types': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
@@ -46,18 +70,6 @@ files = {
     '/etc/nginx/sites/stub_status.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
-        },
-    },
-    '/etc/nginx/sites-available': {
-        'delete': True,
-        'needs': {
-            'pkg_apt:nginx',
-        },
-    },
-    '/etc/nginx/sites-enabled': {
-        'delete': True,
-        'needs': {
-            'pkg_apt:nginx',
         },
     },
 }

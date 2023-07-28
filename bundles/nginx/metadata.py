@@ -16,15 +16,8 @@ defaults = {
         },
     },
     'nginx': {
-        'vhosts': {
-            # '80': {
-            #     'content': 'nginx/80.conf',
-            # },
-            # 'stub_status': {
-            #     'content': 'nginx/stub_status.conf',
-            # },
-        },
-        'includes': {},
+        'vhosts': {},
+        'modules': set(),
     },
     'systemd': {
         'units': {
@@ -37,24 +30,6 @@ defaults = {
         },
     },
 }
-
-@metadata_reactor.provides(
-    'nginx/includes',
-)
-def includes(metadata):
-    return {
-        'nginx': {
-            'includes': {
-                'php': {
-                    'location ~ \.php$': {
-                        'include': 'fastcgi.conf',
-                        'fastcgi_split_path_info': '^(.+\.php)(/.+)$',
-                        'fastcgi_pass': f"unix:/run/php/php{metadata.get('php/version')}-fpm.sock",
-                    },
-                },
-            },
-        },
-    }
 
 
 @metadata_reactor.provides(
@@ -124,6 +99,20 @@ def monitoring(metadata):
                     'vars.command': f"/usr/bin/curl -X GET -L --fail --no-progress-meter -o /dev/null {quote(hostname + vhost.get('check_path', ''))}",
                 }
                     for hostname, vhost in metadata.get('nginx/vhosts').items()
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'apt/packages',
+)
+def modules(metadata):
+    return {
+        'apt': {
+            'packages': {
+                f'libnginx-mod-{module}': {}
+                    for module in metadata.get('nginx/modules')
             },
         },
     }
