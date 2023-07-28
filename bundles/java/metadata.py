@@ -19,7 +19,7 @@ def apt(metadata):
     return {
         'apt': {
             'packages': {
-                f'openjdk-{metadata.get("java/version")}-jre': {},
+                f'openjdk-{metadata.get("java/version")}-jre-headless': {},
             }
         }
     }
