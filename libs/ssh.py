@@ -12,7 +12,7 @@ def generate_ed25519_key_pair(secret):
     privkey_bytes = Ed25519PrivateKey.from_private_bytes(secret)
 
     # PRIVATE KEY
-    
+
     nondeterministic_privatekey = privkey_bytes.private_bytes(
         encoding=Encoding.PEM,
         format=PrivateFormat.OpenSSH,
@@ -21,15 +21,15 @@ def generate_ed25519_key_pair(secret):
 
     # get relevant lines from string
     nondeterministic_bytes = b64decode(''.join(nondeterministic_privatekey.split('\n')[1:-2]))
-    
+
     # sanity check
     if nondeterministic_bytes[98:102] != nondeterministic_bytes[102:106]:
         raise Exception("checksums should be the same: whats going on here?")
-    
+
     # replace random bytes with deterministic values
     random_bytes = sha3_224(secret).digest()[0:4]
     deterministic_bytes = nondeterministic_bytes[:98] + random_bytes + random_bytes + nondeterministic_bytes[106:]
-    
+
     # reassemble file
     deterministic_privatekey = '\n'.join([
         '-----BEGIN OPENSSH PRIVATE KEY-----',
@@ -43,9 +43,9 @@ def generate_ed25519_key_pair(secret):
         encoding=Encoding.OpenSSH,
         format=PublicFormat.OpenSSH,
     ).decode()
-    
+
     # RETURN
-    
+
     return (deterministic_privatekey, public_key)
 
 
@@ -66,7 +66,7 @@ def known_hosts_entry_for(node, test_salt=None):
 
         hash = hmac.new(salt, hostname.encode(), sha1).digest()
         pubkey = node.metadata.get('ssh/host_key/public')
-        
+
         lines.add(f'|1|{b64encode(salt).decode()}|{b64encode(hash).decode()} {" ".join(pubkey.split()[:2])}')
-        
+
     return '\n'.join(sorted(lines))
