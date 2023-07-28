@@ -48,6 +48,14 @@ svc_systemd = {
             'pkg_apt:rspamd',
         },
     },
+    # FIXME: broken since debian 12
+    'clamav-clamonacc': {
+        'enabled': False,
+        'running': False,
+        'needs': {
+            'pkg_apt:clamav',
+        },
+    },
 }
 
 actions = {
