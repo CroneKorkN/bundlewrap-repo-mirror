@@ -1,7 +1,5 @@
 # TODO pin repo: https://superuser.com/a/1595920
 
-from os.path import join
-from glob import glob
 from os.path import join, basename
 
 directories = {
@@ -71,43 +69,22 @@ actions = {
     },
 }
 
-# group sources by apt server hostname
+# create sources.lists and respective keyfiles
 
-hosts = {}
-
-for source_string in node.metadata.get('apt/sources'):
-    source = repo.libs.apt.AptSource(source_string)
-    hosts\
-        .setdefault(source.url.hostname, list())\
-        .append(source)
-
-# create sources lists and keyfiles
-
-for host, sources in hosts.items():
-    paths = glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))
-    assert len(paths) == 1
-    keyfile = basename(paths[0])
-    destination_path = f'/etc/apt/keyrings/{keyfile}'
-
-    for source in sources:
-        source.options['signed-by'] = [destination_path]
-
-    files[f'/etc/apt/sources.list.d/{host}.list'] = {
-        'content': '\n'.join(sorted(set(
-            str(source).format(
-                codename=node.metadata.get('os_codename'),
-                version=node.os_version[0], # WIP crystal
-            )
-                for source in sources
-        ))),
+for name, config in node.metadata.get('apt/sources').items():
+    # place keyfile
+    keyfile_destination_path = config['options']['Signed-By']
+    files[keyfile_destination_path] = {
+        'source': join(repo.path, 'data', 'apt', 'keys', basename(keyfile_destination_path)),
+        'content_type': 'binary',
         'triggers': {
             'action:apt_update',
         },
     }
 
-    files[destination_path] = {
-        'source': join(repo.path, 'data', 'apt', 'keys', keyfile),
-        'content_type': 'binary',
+    # place sources.list
+    files[f'/etc/apt/sources.list.d/{name}.sources'] = {
+        'content': repo.libs.apt.render_source(node, name),
         'triggers': {
             'action:apt_update',
         },

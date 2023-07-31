@@ -9,7 +9,15 @@ defaults = {
             },
         },
         'sources': {
-            'deb https://openhab.jfrog.io/artifactory/openhab-linuxpkg stable main',
+            'jfrog': {
+                'url': 'https://openhab.jfrog.io/artifactory/openhab-linuxpkg',
+                'suites': {
+                    'stable',
+                },
+                'components': {
+                    'main',
+                },
+            },
         },
     },
     'zfs': {

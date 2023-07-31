@@ -1,13 +1,20 @@
 # https://manpages.debian.org/jessie/apt/sources.list.5.de.html
 
-from urllib.parse import urlparse
-from re import search, sub
-from functools import total_ordering
 from re import match
+from glob import glob
+from os.path import join, basename, exists
+
+
+def find_keyfile_extension(repo, key_name):
+    for extension in ('asc', 'gpg'):
+        if exists(join(repo.path, 'data', 'apt', 'keys', f'{key_name}.{extension}')):
+            return extension
+    else:
+        raise Exception(f"no keyfile '{key_name}.(asc|gpg)' found")
 
 
 def render_apt_conf(section, depth=0):
-    buffer = ""
+    buffer = ''
 
     for k,v in sorted(section.items()):
         if isinstance(v, dict):
@@ -29,72 +36,52 @@ def render_apt_conf(section, depth=0):
     return buffer
 
 
-@total_ordering
-class AptSource():
-    def __init__(self, string):
-        # parse options, which are optional
-        if search(r'\[.*\]', string):
-            self.options = {
-                k:v.split(',')
-                    for k,v in (
-                        e.split('=') for e in search(r'\[(.*)\]', string)[1].split()
-                    )
-            }
-            string_without_options = sub(r'\[.*\]', '', string)
-        else:
-            self.options = {}
-            string_without_options = string
 
-        # parse rest of source, now in defined order
-        parts = string_without_options.split()
-        self.type = parts[0]
-        self.url = urlparse(parts[1])
-        self.suite = parts[2]
-        self.components = parts[3:]
+# https://repolib.readthedocs.io/en/latest/deb822-format.html
+def render_source(node, source_name):
+    config = node.metadata.get(f'apt/sources/{source_name}')
+    lines = []
 
-    def __str__(self):
-        parts = [
-            self.type,
-            self.url.geturl(),
-            self.suite,
-            ' '.join(self.components),
-        ]
+    # X-Repolib-Name
+    lines.append(
+        f'X-Repolib-Name: ' + source_name
+    )
 
-        if self.options:
-            parts.insert(
-                1,
-                "[{}]".format(
-                    ' '.join(
-                        '{}={}'.format(
-                            k,
-                            ','.join(v)
-                        ) for k,v in self.options.items()
-                    )
-                )
-            )
+    # types
+    lines.append(
+        f'Types: ' + ' '.join(sorted(config.get('types', {'deb'})))
+    )
 
-        return ' '.join(parts)
+    # url
+    lines.append(
+        f'URIs: ' + config['url']
+    )
 
+    # suites
+    lines.append(
+        f'Suites: ' + ' '.join(sorted(config['suites']))
+    )
 
-    def __eq__(self, other):
-        return str(self) == str(other)
+    # components
+    if 'components' in config:
+        lines.append(
+            f'Components: ' + ' '.join(sorted(config['components']))
+        )
 
-    def __lt__(self, other):
-        return str(self) < str(other)
+    # options
+    for key, value in sorted(config['options'].items()):
+        if isinstance(value, (set, list)):
+            value = ' '.join(value)
 
-    def __hash__(self):
-        return hash(str(self))
+        lines.append(
+            f'{key}: ' + value
+        )
 
-    def __repr__(self):
-        return f"{type(self).__name__}('{str(self)}')"
+    # render to string and replace version/codename
+    string = '\n'.join(lines).format(
+        codename=node.metadata.get('os_codename'),
+        version=node.os_version[0], # WIP crystal
+    ) + '\n'
 
-
-# source = AptSource('deb [arch=amd64 trusted=true] http://deb.debian.org/debian buster-backports main contrib non-free')
-# print(repr(source))
-# print(source.type)
-# print(source.options)
-# source.options['test'] = ['was', 'ist', 'das']
-# print(source.url)
-# print(source.suite)
-# print(source.components)
-# print(str(source))
+    # return
+    return string

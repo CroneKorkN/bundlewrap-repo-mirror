@@ -8,8 +8,17 @@ defaults = {
             'grafana': {},
         },
         'sources': {
-            'deb https://packages.grafana.com/oss/deb stable main',
+            'grafana': {
+                'url': 'https://packages.grafana.com/oss/deb',
+                'suites': {
+                    'stable',
+                },
+                'components': {
+                    'main',
+                },
+            },
         },
+
     },
     'grafana': {
         'config': {

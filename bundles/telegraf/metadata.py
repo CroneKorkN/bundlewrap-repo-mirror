@@ -8,6 +8,17 @@ defaults = {
             'libgc-dev': {},
             'libevent-dev': {},
         },
+        'sources': {
+            'influxdata': {
+                'url': 'https://repos.influxdata.com/debian',
+                'suites': {
+                    'stable',
+                },
+                'components': {
+                    'main',
+                },
+            },
+        },
     },
     'telegraf': {
         'config': {
@@ -89,28 +100,6 @@ defaults = {
         'telegraf': {'/usr/local/share/telegraf/procio'},
     },
 }
-
-
-@metadata_reactor.provides(
-    'apt/sources',
-)
-def apt(metadata):
-    codename = {
-        'buster': 'buster',
-        'bullseye': 'bullseye',
-        'bookworm': 'bullseye',
-    }[metadata.get('os_codename')]
-
-    return {
-        'apt': {
-            'packages': {
-                'telegraf': {},
-            },
-            'sources': {
-                f"deb https://repos.influxdata.com/debian {codename} stable",
-            },
-        },
-    }
 
 
 @metadata_reactor.provides(

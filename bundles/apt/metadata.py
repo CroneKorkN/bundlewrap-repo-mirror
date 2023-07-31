@@ -32,7 +32,7 @@ defaults = {
                 'Move-Autobit-Sections': 'oldlibs',
             },
         },
-        'sources': set(),
+        'sources': {},
     },
     'monitoring': {
         'services': {
@@ -52,6 +52,42 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'apt/sources',
+)
+def key(metadata):
+    return {
+        'apt': {
+            'sources': {
+                source_name: {
+                    'key': source_name,
+                }
+                    for source_name, source_config in metadata.get('apt/sources').items()
+                    if 'key' not in source_config
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'apt/sources',
+)
+def signed_by(metadata):
+    return {
+        'apt': {
+            'sources': {
+                source_name: {
+                    'options': {
+                        #'Signed-By': 'XXXXXXXX',
+                        'Signed-By': '/etc/apt/keyrings/' + metadata.get(f'apt/sources/{source_name}/key') + '.' + repo.libs.apt.find_keyfile_extension(repo, metadata.get(f'apt/sources/{source_name}/key')),
+                    },
+                }
+                    for source_name in metadata.get('apt/sources')
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(

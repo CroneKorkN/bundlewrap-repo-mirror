@@ -9,8 +9,16 @@ defaults = {
             'monitoring-plugins': {},
         },
         'sources': {
-            'deb https://packages.icinga.com/debian icinga-{codename} main',
-            'deb-src https://packages.icinga.com/debian icinga-{codename} main',
+            'icinga': {
+                'types': {'deb', 'deb-src'},
+                'url': 'https://packages.icinga.com/debian',
+                'suites': {
+                    'icinga-{codename}',
+                },
+                'components': {
+                    'main',
+                },
+            },
         },
     },
     'icinga2': {
