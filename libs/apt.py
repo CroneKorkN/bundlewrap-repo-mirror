@@ -3,6 +3,30 @@
 from urllib.parse import urlparse
 from re import search, sub
 from functools import total_ordering
+from re import match
+
+
+def render_apt_conf(section, depth=0):
+    buffer = ""
+
+    for k,v in sorted(section.items()):
+        if isinstance(v, dict):
+            # element is a sub section
+            assert match(r'^[a-zA-Z/\-\:\.\_\+]*$', k) and not match(r'::', k)
+            buffer += ' '*4*depth + k + ' {\n'
+            buffer += render_apt_conf(v, depth=depth+1)
+            buffer += ' '*4*depth + '}\n'
+        elif isinstance(v, (set, list)):
+            # element is a value list
+            buffer += ' '*4*depth + k + ' {\n'
+            for e in sorted(v):
+                buffer += ' '*4*(depth+1) + '"' + e + '";\n'
+            buffer += ' '*4*depth + '}\n'
+        else:
+            # element is a single value
+            buffer += ' '*4*depth + k + ' "' + v + '";\n'
+
+    return buffer
 
 
 @total_ordering

@@ -12,6 +12,8 @@ directories = {
         },
     },
     '/etc/apt/apt.conf.d': {
+        # existance is expected
+        'purge': True,
         'triggers': {
             'action:apt_update',
         },
@@ -44,11 +46,14 @@ directories = {
 }
 
 files = {
-    '/etc/apt/listchanges.conf.d/managed.conf': {
-        'content': repo.libs.ini.dumps(node.metadata.get('apt/list_changes')),
+    '/etc/apt/apt.conf': {
+        'content': repo.libs.apt.render_apt_conf(node.metadata.get('apt/config')),
+        'triggers': {
+            'action:apt_update',
+        },
     },
-    '/etc/apt/trusted.gpg.d': {
-        'delete': True,
+    '/etc/apt/listchanges.conf': {
+        'content': repo.libs.ini.dumps(node.metadata.get('apt/list_changes')),
     },
     '/usr/lib/nagios/plugins/check_apt_upgradable': {
         'mode': '0755',
@@ -134,9 +139,6 @@ for package, options in node.metadata.get('apt/packages', {}).items():
 # apt-daily.timer: performs apt update
 # apt-daily-upgrade.timer: performs apt upgrade
 
-files['/etc/apt/apt.conf.d/00disable-package-cache'] = {}
-files['/etc/apt/apt.conf.d/20auto-upgrades'] = {}
-files['/etc/apt/apt.conf.d/50unattended-upgrades'] = {}
 svc_systemd['unattended-upgrades.service'] = {
     'needs': [
         'pkg_apt:unattended-upgrades',

@@ -1,21 +1,38 @@
 defaults = {
     'apt': {
-        'packages': {
-            'unattended-upgrades': {},
-        },
-        'sources': set(),
-        'list_changes': {
-            'apt': {
-                'frontend': 'pager',
-                'which': 'news',
-                'email_address': 'root',
-                'email_format': 'text',
-                'confirm': 'false',
-                'headers': 'false',
-                'reverse': 'false',
-                'save_seen': '/var/lib/apt/listchanges.db',
+        'config': {
+            'DPkg': {
+                'Pre-Install-Pkgs': {
+                    '/usr/sbin/dpkg-preconfigure --apt || true',
+                },
+                'Post-Invoke': {
+                    '/bin/rm -f /var/cache/apt/archives/*.deb || true',
+                },
+            },
+            'APT': {
+                'NeverAutoRemove': {
+                    '^firmware-linux.*',
+                    '^linux-firmware$',
+                    '^linux-image-[a-z0-9]*$',
+                    '^linux-image-[a-z0-9]*-[a-z0-9]*$',
+                },
+                'VersionedKernelPackages': {
+                    # kernels
+                    'linux-.*',
+                    'kfreebsd-.*',
+                    'gnumach-.*',
+                    # (out-of-tree) modules
+                    '.*-modules',
+                    '.*-kernel',
+                },
+                'Never-MarkAuto-Sections': {
+                    'metapackages',
+                    'tasks',
+                },
+                'Move-Autobit-Sections': 'oldlibs',
             },
         },
+        'sources': set(),
     },
     'monitoring': {
         'services': {
@@ -35,3 +52,74 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'apt/config',
+    'apt/packages',
+)
+def unattended_upgrades(metadata):
+    return {
+        'apt': {
+            'config': {
+                'APT': {
+                    'Periodic': {
+                        'Update-Package-Lists': '1',
+                        'Unattended-Upgrade': '1',
+                    },
+                },
+                'Unattended-Upgrade': {
+                    'Origins-Pattern': {
+                        "origin=*",
+                    },
+                },
+            },
+            'packages': {
+                'unattended-upgrades': {},
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'apt/config',
+    'apt/list_changes',
+)
+def listchanges(metadata):
+    return {
+        'apt': {
+            'config': {
+                'DPkg': {
+                    'Pre-Install-Pkgs': {
+                        '/usr/bin/apt-listchanges --apt || test $? -lt 10',
+                    },
+                },
+                'Tools': {
+                    'Options': {
+                        '/usr/bin/apt-listchanges': {
+                            'Version': '2',
+                            'InfoFD': '20',
+                        },
+                    },
+                },
+                'Dir': {
+                    'Etc': {
+                        'apt-listchanges-main': 'listchanges.conf',
+                        'apt-listchanges-parts': 'listchanges.conf.d',
+                    },
+                },
+            },
+            'list_changes': {
+                'apt': {
+                    'frontend': 'pager',
+                    'which': 'news',
+                    'email_address': 'root',
+                    'email_format': 'text',
+                    'confirm': 'false',
+                    'headers': 'false',
+                    'reverse': 'false',
+                    'save_seen': '/var/lib/apt/listchanges.db',
+                },
+            },
+        },
+    }
