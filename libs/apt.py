@@ -5,12 +5,21 @@ from glob import glob
 from os.path import join, basename, exists
 
 
-def find_keyfile_extension(repo, key_name):
+def format_variables(node, string):
+    return string.format(
+        codename=node.metadata.get('os_codename'),
+        version=node.os_version[0],
+    )
+
+
+def find_keyfile_extension(node, key_name):
+    formatted_key_name = format_variables(node, key_name)
+
     for extension in ('asc', 'gpg'):
-        if exists(join(repo.path, 'data', 'apt', 'keys', f'{key_name}.{extension}')):
+        if exists(join(node.repo.path, 'data', 'apt', 'keys', f'{formatted_key_name}.{extension}')):
             return extension
     else:
-        raise Exception(f"no keyfile '{key_name}.(asc|gpg)' found")
+        raise Exception(f"no keyfile '{formatted_key_name}.(asc|gpg)' found")
 
 
 def render_apt_conf(section, depth=0):
@@ -77,11 +86,5 @@ def render_source(node, source_name):
             f'{key}: ' + value
         )
 
-    # render to string and replace version/codename
-    string = '\n'.join(lines).format(
-        codename=node.metadata.get('os_codename'),
-        version=node.os_version[0], # WIP crystal
-    ) + '\n'
-
-    # return
-    return string
+    # render to string and format variables
+    return format_variables(node, '\n'.join(lines) + '\n')

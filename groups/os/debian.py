@@ -24,6 +24,7 @@
                         'contrib',
                         'non-free',
                     },
+                    'key': 'debian-{version}',
                 },
                 'debian-security': {
                     'url': 'https://security.debian.org/',
@@ -35,6 +36,7 @@
                         'contrib',
                         'non-free',
                     },
+                    'key': 'debian-{version}-security',
                 },
             },
             'packages': {

@@ -80,8 +80,7 @@ def signed_by(metadata):
             'sources': {
                 source_name: {
                     'options': {
-                        #'Signed-By': 'XXXXXXXX',
-                        'Signed-By': '/etc/apt/keyrings/' + metadata.get(f'apt/sources/{source_name}/key') + '.' + repo.libs.apt.find_keyfile_extension(repo, metadata.get(f'apt/sources/{source_name}/key')),
+                        'Signed-By': '/etc/apt/keyrings/' + metadata.get(f'apt/sources/{source_name}/key') + '.' + repo.libs.apt.find_keyfile_extension(node, metadata.get(f'apt/sources/{source_name}/key')),
                     },
                 }
                     for source_name in metadata.get('apt/sources')

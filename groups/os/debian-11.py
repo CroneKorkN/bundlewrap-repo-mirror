@@ -3,16 +3,6 @@
         'debian',
     ],
     'metadata': {
-        'apt': {
-            'sources': {
-                'debian': {
-                    'key': 'debian-11',
-                },
-                'debian-security': {
-                    'key': 'debian-11-security',
-                },
-            },
-        },
         'php': {
             'version': '7.4',
         },

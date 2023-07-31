@@ -9,13 +9,11 @@
                     'components': {
                         'non-free-firmware',
                     },
-                    'key': 'debian-12',
                 },
                 'debian-security': {
                     'components': {
                         'non-free-firmware',
                     },
-                    'key': 'debian-12-security',
                 },
             },
         },

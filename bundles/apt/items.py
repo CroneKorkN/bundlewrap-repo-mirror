@@ -73,7 +73,7 @@ actions = {
 
 for name, config in node.metadata.get('apt/sources').items():
     # place keyfile
-    keyfile_destination_path = config['options']['Signed-By']
+    keyfile_destination_path = repo.libs.apt.format_variables(node, config['options']['Signed-By'])
     files[keyfile_destination_path] = {
         'source': join(repo.path, 'data', 'apt', 'keys', basename(keyfile_destination_path)),
         'content_type': 'binary',
