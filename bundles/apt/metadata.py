@@ -4,6 +4,18 @@ defaults = {
             'unattended-upgrades': {},
         },
         'sources': set(),
+        'list_changes': {
+            'apt': {
+                'frontend': 'pager',
+                'which': 'news',
+                'email_address': 'root',
+                'email_format': 'text',
+                'confirm': 'false',
+                'headers': 'false',
+                'reverse': 'false',
+                'save_seen': '/var/lib/apt/listchanges.db',
+            },
+        },
     },
     'monitoring': {
         'services': {

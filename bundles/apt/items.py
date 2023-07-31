@@ -5,13 +5,25 @@ from glob import glob
 from os.path import join, basename
 
 directories = {
-    '/etc/apt/sources.list.d': {
+    '/etc/apt': {
         'purge': True,
         'triggers': {
             'action:apt_update',
         },
     },
-    '/etc/apt/trusted.gpg.d': {
+    '/etc/apt/apt.conf.d': {
+        'triggers': {
+            'action:apt_update',
+        },
+    },
+    '/etc/apt/keyrings': {
+        # https://askubuntu.com/a/1307181
+        'purge': True,
+        'triggers': {
+            'action:apt_update',
+        },
+    },
+    '/etc/apt/listchanges.conf.d': {
         'purge': True,
         'triggers': {
             'action:apt_update',
@@ -23,11 +35,20 @@ directories = {
             'action:apt_update',
         },
     },
+    '/etc/apt/sources.list.d': {
+        'purge': True,
+        'triggers': {
+            'action:apt_update',
+        },
+    },
 }
 
 files = {
-    '/etc/apt/sources.list': {
-        'content': '# managed'
+    '/etc/apt/listchanges.conf.d/managed.conf': {
+        'content': repo.libs.ini.dumps(node.metadata.get('apt/list_changes')),
+    },
+    '/etc/apt/trusted.gpg.d': {
+        'delete': True,
     },
     '/usr/lib/nagios/plugins/check_apt_upgradable': {
         'mode': '0755',
@@ -61,7 +82,7 @@ for host, sources in hosts.items():
     paths = glob(join(repo.path, 'data', 'apt', 'keys', f'{host}.*'))
     assert len(paths) == 1
     keyfile = basename(paths[0])
-    destination_path = f'/etc/apt/trusted.gpg.d/{keyfile}'
+    destination_path = f'/etc/apt/keyrings/{keyfile}'
 
     for source in sources:
         source.options['signed-by'] = [destination_path]
