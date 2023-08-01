@@ -39,7 +39,7 @@ defaults = {
                 'zones': {},
             },
         },
-        'zones': set(),
+        'zones': {},
     },
     'nftables': {
         'input': {
@@ -59,6 +59,22 @@ defaults = {
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'bind/zones',
+)
+def dnssec(metadata):
+    return {
+        'bind': {
+            'zones': {
+                zone: {
+                    'dnssec': repo.libs.dnssec.generate_dnssec_for_zone(zone, node),
+                }
+                    for zone in metadata.get('bind/zones')
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(
