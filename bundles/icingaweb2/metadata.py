@@ -15,8 +15,13 @@ defaults = {
         },
         'sources': {
             'icinga': {
-                'types': {'deb', 'deb-src'},
-                'url': 'https://packages.icinga.com/debian',
+                'types': {
+                    'deb',
+                    'deb-src',
+                },
+                'urls': {
+                    'https://packages.icinga.com/debian',
+                },
                 'suites': {
                     'icinga-{codename}',
                 },

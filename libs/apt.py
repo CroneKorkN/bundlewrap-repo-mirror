@@ -1,6 +1,3 @@
-# https://manpages.debian.org/latest/apt/sources.list.5.de.html
-# https://repolib.readthedocs.io/en/latest/deb822-format.html
-
 from re import match
 from glob import glob
 from os.path import join, basename, exists
@@ -23,6 +20,7 @@ def find_keyfile_extension(node, key_name):
         raise Exception(f"no keyfile '{formatted_key_name}.(asc|gpg)' found")
 
 
+# https://manpages.ubuntu.com/manpages/latest/en/man5/apt.conf.5.html
 def render_apt_conf(section, depth=0):
     buffer = ''
 
@@ -47,9 +45,26 @@ def render_apt_conf(section, depth=0):
 
 
 
+# https://manpages.debian.org/latest/apt/sources.list.5.de.html
+# https://repolib.readthedocs.io/en/latest/deb822-format.html
 def render_source(node, source_name):
     config = node.metadata.get(f'apt/sources/{source_name}')
     lines = []
+
+    keys_and_types = {
+        'types': (set, list),
+        'urls': (set, list),
+        'suites': (set, list),
+        'components': (set, list),
+        'options': dict,
+        'key': str,
+    }
+
+    for key, value in config.items():
+        if key not in keys_and_types:
+            raise Exception(f"{node}: invalid source '{source_name}' conf key: '{key}' (expecting one of: {', '.join(keys_and_types)})")
+        elif not isinstance(value, keys_and_types[key]):
+            raise Exception(f"{node}: invalid source '{source_name}' conf value type for '{key}': '{type(value)}' (expecting: '{keys_and_types[key]}')")
 
     # X-Repolib-Name
     lines.append(
@@ -63,7 +78,7 @@ def render_source(node, source_name):
 
     # url
     lines.append(
-        f'URIs: ' + config['url']
+        f'URIs: ' + ' '.join(sorted(config['urls']))
     )
 
     # suites

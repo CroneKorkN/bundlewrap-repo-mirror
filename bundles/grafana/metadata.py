@@ -9,7 +9,9 @@ defaults = {
         },
         'sources': {
             'grafana': {
-                'url': 'https://packages.grafana.com/oss/deb',
+                'urls': {
+                    'https://packages.grafana.com/oss/deb',
+                },
                 'suites': {
                     'stable',
                 },

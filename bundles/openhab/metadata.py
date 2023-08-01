@@ -10,7 +10,9 @@ defaults = {
         },
         'sources': {
             'jfrog': {
-                'url': 'https://openhab.jfrog.io/artifactory/openhab-linuxpkg',
+                'urls': {
+                    'https://openhab.jfrog.io/artifactory/openhab-linuxpkg',
+                },
                 'suites': {
                     'stable',
                 },

@@ -10,7 +10,9 @@ defaults = {
         },
         'sources': {
             'influxdata': {
-                'url': 'https://repos.influxdata.com/debian',
+                'urls': {
+                    'https://repos.influxdata.com/debian',
+                },
                 'suites': {
                     'stable',
                 },

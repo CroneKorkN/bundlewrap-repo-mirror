@@ -9,7 +9,13 @@
         },
         'sources': {
             'debian': {
-                'urls': 'https://deb.debian.org/debian',
+                'types': { # optional, defaults to `{'deb'}``
+                    'deb',
+                    'deb-src',
+                },
+                'urls': {
+                    'https://deb.debian.org/debian',
+                },
                 'suites': { # at least one
                     '{codename}',
                     '{codename}-updates',

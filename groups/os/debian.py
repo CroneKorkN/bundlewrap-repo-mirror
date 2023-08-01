@@ -13,7 +13,9 @@
         'apt': {
             'sources': {
                 'debian': {
-                    'url': 'https://deb.debian.org/debian',
+                    'urls': {
+                        'https://deb.debian.org/debian',
+                    },
                     'suites': {
                         '{codename}',
                         '{codename}-updates',
@@ -27,7 +29,9 @@
                     'key': 'debian-{version}',
                 },
                 'debian-security': {
-                    'url': 'https://security.debian.org/',
+                    'urls': {
+                        'https://security.debian.org/',
+                    },
                     'suites': {
                         '{codename}-security',
                     },
