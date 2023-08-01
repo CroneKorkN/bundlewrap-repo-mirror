@@ -1,4 +1,5 @@
-# https://manpages.debian.org/jessie/apt/sources.list.5.de.html
+# https://manpages.debian.org/latest/apt/sources.list.5.de.html
+# https://repolib.readthedocs.io/en/latest/deb822-format.html
 
 from re import match
 from glob import glob
@@ -46,7 +47,6 @@ def render_apt_conf(section, depth=0):
 
 
 
-# https://repolib.readthedocs.io/en/latest/deb822-format.html
 def render_source(node, source_name):
     config = node.metadata.get(f'apt/sources/{source_name}')
     lines = []
