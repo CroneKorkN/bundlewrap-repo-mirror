@@ -6,7 +6,5 @@ def apply_start(repo, target, nodes, interactive=False, **kwargs):
         file.write('\n'.join(sorted(
             line
                 for node in repo.nodes
-                if node.has_bundle('ssh')
-                for line in node.metadata.get('ssh/is_known_as')
-
+                for line in node.metadata.get('ssh/is_known_as', set())
         )))
