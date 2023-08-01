@@ -55,18 +55,17 @@ def generate_ed25519_key_pair(secret):
 # - take the salt from the ssh-ed25519 entry (first field after '|1|')
 # - `bw debug -c 'repo.libs.ssh.known_hosts_entry_for(repo.get_node(<node with hostname 10.0.0.5>), <salt from ssh-keygen>)'`
 @cache
-def known_hosts_entry_for(node, test_salt=None):
+def known_hosts_entry_for(node_id, hostnames, pubkey, test_salt=None):
     lines = set()
 
-    for hostname in sorted(node.metadata.get('ssh/hostnames')):
+    for hostname in hostnames:
         if test_salt:
             salt = b64decode(test_salt)
         else:
-            salt = sha1((node.metadata.get('id') + hostname).encode()).digest()
+            salt = sha1((node_id + hostname).encode()).digest()
 
         hash = hmac.new(salt, hostname.encode(), sha1).digest()
-        pubkey = node.metadata.get('ssh/host_key/public')
 
         lines.add(f'|1|{b64encode(salt).decode()}|{b64encode(hash).decode()} {" ".join(pubkey.split()[:2])}')
 
-    return '\n'.join(sorted(lines))
+    return lines

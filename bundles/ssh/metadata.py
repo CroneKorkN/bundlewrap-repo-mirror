@@ -4,6 +4,7 @@ from base64 import b64decode
 defaults = {
     'ssh': {
         'multiplex_incoming': True,
+        'is_known_as': set(), # known_hosts for other nodes
     },
 }
 
@@ -47,7 +48,7 @@ def host_key(metadata):
 def hostnames(metadata):
     ips = set()
 
-    for network in node.metadata.get('network').values():
+    for network in metadata.get('network').values():
         if network.get('ipv4', None):
             ips.add(str(ip_interface(network['ipv4']).ip))
         if network.get('ipv6', None):
@@ -55,7 +56,7 @@ def hostnames(metadata):
 
     domains = {
         domain
-            for domain, records in node.metadata.get('dns').items()
+            for domain, records in metadata.get('dns').items()
             for type, values in records.items()
             if type in {'A', 'AAAA'}
             and set(values) & ips
@@ -68,5 +69,20 @@ def hostnames(metadata):
                 *ips,
                 *domains,
             }
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'ssh/is_known_as',
+)
+def is_known_as(metadata):
+    return {
+        'ssh': {
+            'is_known_as': repo.libs.ssh.known_hosts_entry_for(
+                node_id=metadata.get('id'),
+                hostnames=tuple(sorted(metadata.get('ssh/hostnames'))),
+                pubkey=metadata.get('ssh/host_key/public'),
+            ),
         },
     }
