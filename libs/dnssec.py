@@ -46,9 +46,13 @@ def generate_signing_key_pair(zone, salt, repo):
         crypto_serialization.PublicFormat.SubjectPublicKeyInfo
     ).decode().split('\n')[1:-2])
 
+    dnskey_chunks = ' '.join(
+        dnskey[i:i+56] for i in range(0, len(dnskey), 56)
+    )
+
     return {
         'dnskey': dnskey,
-        'dnskey_record': f'{zone}. IN DNSKEY {flags} {protocol} {algorithm} {dnskey}',
+        'dnskey_record': f'{zone}. IN DNSKEY {flags} {protocol} {algorithm} {dnskey_chunks}',
         'key_id': _calc_keyid(flags, protocol, algorithm, dnskey),
         'privkey_file': {
             'Private-key-format': 'v1.3',
