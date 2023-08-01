@@ -1,4 +1,4 @@
-database_password = repo.vault.password_for(f'{node.name} postgresql gitea')
+database_password = repo.vault.password_for(f'{node.name} postgresql gitea').value
 
 defaults = {
     'apt': {
