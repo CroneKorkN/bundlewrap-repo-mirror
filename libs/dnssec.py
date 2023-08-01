@@ -30,11 +30,6 @@ def generate_signing_key_pair(zone, salt, repo):
     privkey = repo.libs.rsa.generate_deterministic_rsa_private_key(
         b64decode(str(repo.vault.random_bytes_as_base64_for(f'dnssec {salt} ' + zone)))
     )
-    privkey_pem = privkey.private_bytes(
-        crypto_serialization.Encoding.PEM,
-        crypto_serialization.PrivateFormat.PKCS8,
-        crypto_serialization.NoEncryption()
-    ).decode()
 
     public_exponent = privkey.private_numbers().public_numbers.e
     modulo = privkey.private_numbers().public_numbers.n
@@ -44,6 +39,7 @@ def generate_signing_key_pair(zone, salt, repo):
     exponent1 = privkey.private_numbers().dmp1
     exponent2 = privkey.private_numbers().dmq1
     coefficient = privkey.private_numbers().iqmp
+    flags = 256 if salt == 'zsk' else 257
 
     dnskey = ''.join(privkey.public_key().public_bytes(
         crypto_serialization.Encoding.PEM,
@@ -53,7 +49,7 @@ def generate_signing_key_pair(zone, salt, repo):
     return {
         'dnskey': dnskey,
         'dnskey_record': f'{zone}. IN DNSKEY {flags} {protocol} {algorithm} {dnskey}',
-        'privkey': privkey_pem,
+        'key_id': _calc_keyid(flags, protocol, algorithm, dnskey),
         'privkey_file': {
             'Private-key-format': 'v1.3',
             'Algorithm': f'{algorithm} ({algorithm_name})',
@@ -106,13 +102,12 @@ def _calc_keyid(flags, protocol, algorithm, dnskey):
 
     return ((cnt & 0xFFFF) + (cnt >> 16)) & 0xFFFF
 
-def dnskey_to_ds(zone, flags, protocol, algorithm, dnskey):
-    keyid = _calc_keyid(flags, protocol, algorithm, dnskey)
+def dnskey_to_ds(zone, flags, protocol, algorithm, dnskey, key_id):
     ds = _calc_ds(zone, flags, protocol, algorithm, dnskey)
 
     return[
-        f"{zone}. IN DS {str(keyid)} {str(algorithm)} 1 {ds['sha1'].lower()}",
-        f"{zone}. IN DS {str(keyid)} {str(algorithm)} 2 {ds['sha256'].lower()}",
+        f"{zone}. IN DS {str(key_id)} {str(algorithm)} 1 {ds['sha1'].lower()}",
+        f"{zone}. IN DS {str(key_id)} {str(algorithm)} 2 {ds['sha256'].lower()}",
     ]
 
 # Result
@@ -120,7 +115,7 @@ def dnskey_to_ds(zone, flags, protocol, algorithm, dnskey):
 def generate_dnssec_for_zone(zone, node):
     zsk_data = generate_signing_key_pair(zone, salt='zsk', repo=node.repo)
     ksk_data = generate_signing_key_pair(zone, salt='ksk', repo=node.repo)
-    ds_records = dnskey_to_ds(zone, flags, protocol, algorithm, ksk_data['dnskey'])
+    ds_records = dnskey_to_ds(zone, flags, protocol, algorithm, ksk_data['dnskey'], ksk_data['key_id'])
 
     return {
         'zsk_data': zsk_data,

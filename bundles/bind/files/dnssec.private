@@ -1,0 +1,13 @@
+Private-key-format: ${data['Private-key-format']}
+Algorithm: ${data['Algorithm']}
+Modulus: ${data['Modulus']}
+PublicExponent: ${data['PublicExponent']}
+PrivateExponent: ${data['PrivateExponent']}
+Prime1: ${data['Prime1']}
+Prime2: ${data['Prime2']}
+Exponent1: ${data['Exponent1']}
+Exponent2: ${data['Exponent2']}
+Coefficient: ${data['Coefficient']}
+Created: ${data['Created']}
+Publish: ${data['Publish']}
+Activate: ${data['Activate']}

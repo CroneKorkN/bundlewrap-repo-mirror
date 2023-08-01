@@ -23,6 +23,20 @@ directories[f'/var/lib/bind'] = {
     ],
 }
 
+directories[f'/var/cache/bind/keys'] = {
+    'group': 'bind',
+    'purge': True,
+    'needs': [
+        'pkg_apt:bind9',
+    ],
+    'needed_by': [
+        'svc_systemd:bind9',
+    ],
+    'triggers': [
+        'svc_systemd:bind9:restart',
+    ],
+}
+
 files['/etc/default/bind9'] = {
     'source': 'defaults',
     'needed_by': [
@@ -132,32 +146,20 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
         }
 
 
-for zone, conf in master_node.metadata.get('bind/zones').items():
-    directories[f"/var/lib/bind/{view_name}"] = {
-        'owner': 'bind',
-        'group': 'bind',
-        'purge': True,
-        'needed_by': [
-            'svc_systemd:bind9',
-        ],
-        'triggers': [
-            'svc_systemd:bind9:restart',
-        ],
-    }
+for zone_name, zone_conf in master_node.metadata.get('bind/zones').items():
+    for sk in ('zsk_data', 'ksk_data'):
+        data = zone_conf['dnssec'][sk]
 
-    for zone_name, zone_conf in view_conf['zones'].items():
-        files[f"/var/lib/bind/{view_name}/{zone_name}"] = {
-            'source': 'db',
+        files[f"/var/cache/bind/keys/K{zone_name}.+008+{data['key_id']}.private"] = {
             'content_type': 'mako',
-            'unless': f"test -f /var/lib/bind/{view_name}/{zone_name}" if zone_conf.get('allow_update', False) else 'false',
+            'source': 'dnssec.private',
             'context': {
-                'serial': datetime.now().strftime('%Y%m%d%H'),
-                'records': zone_conf['records'],
-                'hostname': node.metadata.get('bind/hostname'),
-                'type': node.metadata.get('bind/type'),
+                'data': data['privkey_file'],
             },
-            'owner': 'bind',
             'group': 'bind',
+            'needs': [
+                'pkg_apt:bind9',
+            ],
             'needed_by': [
                 'svc_systemd:bind9',
             ],
@@ -165,6 +167,27 @@ for zone, conf in master_node.metadata.get('bind/zones').items():
                 'svc_systemd:bind9:restart',
             ],
         }
+
+        files[f"/var/cache/bind/keys/K{zone_name}.+008+{data['key_id']}.key"] = {
+            'content_type': 'mako',
+            'source': 'dnssec.key',
+            'context': {
+                'type': sk,
+                'key_id': data['key_id'],
+                'record': data['dnskey_record'],
+            },
+            'group': 'bind',
+            'needs': [
+                'pkg_apt:bind9',
+            ],
+            'needed_by': [
+                'svc_systemd:bind9',
+            ],
+            'triggers': [
+                'svc_systemd:bind9:restart',
+            ],
+        }
+
 
 svc_systemd['bind9'] = {}
 
