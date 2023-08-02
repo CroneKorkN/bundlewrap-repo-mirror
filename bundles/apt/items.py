@@ -50,6 +50,12 @@ files = {
             'action:apt_update',
         },
     },
+    '/etc/apt/sources.list': {
+        'content': '# managed by bundlewrap\n',
+        'triggers': {
+            'action:apt_update',
+        },
+    },
     '/etc/apt/listchanges.conf': {
         'content': repo.libs.ini.dumps(node.metadata.get('apt/list_changes')),
     },
