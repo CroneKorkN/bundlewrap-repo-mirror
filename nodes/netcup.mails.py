@@ -53,6 +53,7 @@
                 'lonercrew.io',
                 'left4.me',
                 'elimu-kwanza.de',
+                'cronekorkn.de',
             },
         },
         'dns': {
@@ -176,6 +177,13 @@
                     'context': {
                         'title': 'Im Aufbau/under construction',
                         'message': '<a href=mailto:info@elimu-kwanza.de>info@elimu-kwanza.de</a>',
+                    },
+                    'internal_dns': False,
+                },
+                'cronekorkn.de': {
+                    'content': 'nginx/redirect.conf',
+                    'context': {
+                        'target': 'https://cloud.sublimity.de/',
                     },
                     'internal_dns': False,
                 },
