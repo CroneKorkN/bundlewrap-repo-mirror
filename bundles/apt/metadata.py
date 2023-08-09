@@ -8,6 +8,11 @@ defaults = {
                 'Post-Invoke': {
                     '/bin/rm -f /var/cache/apt/archives/*.deb || true',
                 },
+                'Options': {
+                    # https://unix.stackexchange.com/a/642541/357916
+                    '--force-confold',
+                    '--force-confdef',
+                },
             },
             'APT': {
                 'NeverAutoRemove': {
@@ -30,6 +35,10 @@ defaults = {
                     'tasks',
                 },
                 'Move-Autobit-Sections': 'oldlibs',
+                'Update': {
+                    # https://unix.stackexchange.com/a/653377/357916
+                    'Error-Mode': 'any',
+                },
             },
         },
         'sources': {},

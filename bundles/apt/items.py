@@ -66,7 +66,7 @@ files = {
 
 actions = {
     'apt_update': {
-        'command': 'apt-get update -o APT::Update::Error-Mode=any',
+        'command': 'apt-get update',
         'needed_by': {
             'pkg_apt:',
         },
