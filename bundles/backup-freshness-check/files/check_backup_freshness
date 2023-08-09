@@ -36,7 +36,7 @@ for dataset in config['datasets']:
 
     if snapshot_datetime < two_days_ago:
         days_ago = (now - snapshot_datetime).days
-        errors.add(f'dataset "{dataset}" has no backups sind {days_ago} days')
+        errors.add(f'dataset "{dataset}" has not been backed up for {days_ago} days')
         continue
 
 if errors:
