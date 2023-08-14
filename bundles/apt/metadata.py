@@ -1,5 +1,10 @@
 defaults = {
     'apt': {
+        'packages': {
+            'apt-listchanges': {
+                'installed': False,
+            },
+        },
         'config': {
             'DPkg': {
                 'Pre-Install-Pkgs': {
@@ -125,45 +130,45 @@ def unattended_upgrades(metadata):
     }
 
 
-@metadata_reactor.provides(
-    'apt/config',
-    'apt/list_changes',
-)
-def listchanges(metadata):
-    return {
-        'apt': {
-            'config': {
-                'DPkg': {
-                    'Pre-Install-Pkgs': {
-                        '/usr/bin/apt-listchanges --apt || test $? -lt 10',
-                    },
-                    'Tools': {
-                        'Options': {
-                            '/usr/bin/apt-listchanges': {
-                                'Version': '2',
-                                'InfoFD': '20',
-                            },
-                        },
-                    },
-                },
-                'Dir': {
-                    'Etc': {
-                        'apt-listchanges-main': 'listchanges.conf',
-                        'apt-listchanges-parts': 'listchanges.conf.d',
-                    },
-                },
-            },
-            'list_changes': {
-                'apt': {
-                    'frontend': 'pager',
-                    'which': 'news',
-                    'email_address': 'root',
-                    'email_format': 'text',
-                    'confirm': 'false',
-                    'headers': 'false',
-                    'reverse': 'false',
-                    'save_seen': '/var/lib/apt/listchanges.db',
-                },
-            },
-        },
-    }
+# @metadata_reactor.provides(
+#     'apt/config',
+#     'apt/list_changes',
+# )
+# def listchanges(metadata):
+#     return {
+#         'apt': {
+#             'config': {
+#                 'DPkg': {
+#                     'Pre-Install-Pkgs': {
+#                         '/usr/bin/apt-listchanges --apt || test $? -lt 10',
+#                     },
+#                     'Tools': {
+#                         'Options': {
+#                             '/usr/bin/apt-listchanges': {
+#                                 'Version': '2',
+#                                 'InfoFD': '20',
+#                             },
+#                         },
+#                     },
+#                 },
+#                 'Dir': {
+#                     'Etc': {
+#                         'apt-listchanges-main': 'listchanges.conf',
+#                         'apt-listchanges-parts': 'listchanges.conf.d',
+#                     },
+#                 },
+#             },
+#             'list_changes': {
+#                 'apt': {
+#                     'frontend': 'pager',
+#                     'which': 'news',
+#                     'email_address': 'root',
+#                     'email_format': 'text',
+#                     'confirm': 'false',
+#                     'headers': 'false',
+#                     'reverse': 'false',
+#                     'save_seen': '/var/lib/apt/listchanges.db',
+#                 },
+#             },
+#         },
+#     }

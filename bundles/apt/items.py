@@ -23,12 +23,12 @@ directories = {
             'action:apt_update',
         },
     },
-    '/etc/apt/listchanges.conf.d': {
-        'purge': True,
-        'triggers': {
-            'action:apt_update',
-        },
-    },
+    # '/etc/apt/listchanges.conf.d': {
+    #     'purge': True,
+    #     'triggers': {
+    #         'action:apt_update',
+    #     },
+    # },
     '/etc/apt/preferences.d': {
         'purge': True,
         'triggers': {
@@ -56,9 +56,9 @@ files = {
             'action:apt_update',
         },
     },
-    '/etc/apt/listchanges.conf': {
-        'content': repo.libs.ini.dumps(node.metadata.get('apt/list_changes')),
-    },
+    # '/etc/apt/listchanges.conf': {
+    #     'content': repo.libs.ini.dumps(node.metadata.get('apt/list_changes')),
+    # },
     '/usr/lib/nagios/plugins/check_apt_upgradable': {
         'mode': '0755',
     },
