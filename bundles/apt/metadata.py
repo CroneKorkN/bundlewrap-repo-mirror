@@ -137,12 +137,12 @@ def listchanges(metadata):
                     'Pre-Install-Pkgs': {
                         '/usr/bin/apt-listchanges --apt || test $? -lt 10',
                     },
-                },
-                'Tools': {
-                    'Options': {
-                        '/usr/bin/apt-listchanges': {
-                            'Version': '2',
-                            'InfoFD': '20',
+                    'Tools': {
+                        'Options': {
+                            '/usr/bin/apt-listchanges': {
+                                'Version': '2',
+                                'InfoFD': '20',
+                            },
                         },
                     },
                 },
