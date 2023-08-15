@@ -40,7 +40,9 @@ defaults = {
                     'metapackages',
                     'tasks',
                 },
-                'Move-Autobit-Sections': 'oldlibs',
+                'Move-Autobit-Sections': {
+                    'oldlibs',
+                },
                 'Update': {
                     # https://unix.stackexchange.com/a/653377/357916
                     'Error-Mode': 'any',
