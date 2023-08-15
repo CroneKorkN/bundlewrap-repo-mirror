@@ -11,6 +11,7 @@ defaults = {
                     '/usr/sbin/dpkg-preconfigure --apt || true',
                 },
                 'Post-Invoke': {
+                    # keep package cache empty
                     '/bin/rm -f /var/cache/apt/archives/*.deb || true',
                 },
                 'Options': {
