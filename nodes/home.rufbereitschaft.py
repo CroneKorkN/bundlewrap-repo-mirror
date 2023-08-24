@@ -1,8 +1,8 @@
 {
-    'hostname': '10.0.0.106',
+    'hostname': '10.0.0.190',
     'groups': [
         'autologin',
-        'debian-11',
+        'debian-12',
         'hardware',
         'home',
         'monitored',
@@ -12,7 +12,7 @@
         'network': {
             'internal': {
                 'interface': 'eth0',
-                'ipv4': '10.0.0.106/24',
+                'ipv4': '10.0.0.190/24',
                 'gateway4': '10.0.0.1',
             },
         },
