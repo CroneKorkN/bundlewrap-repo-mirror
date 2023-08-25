@@ -6,6 +6,7 @@
         'hardware',
         'home',
         'monitored',
+        'webserver',
     ],
     'bundles': [
         'wireguard',
@@ -19,8 +20,22 @@
                 'gateway4': '10.0.0.1',
             },
         },
-        'wireguard': {
-            'my_ip': '10.200.128.11/24',
+        'apt': {
+            'packages': {
+                'alsa-utils': {},
+                'espeak': {},
+                'libnginx-mod-http-lua': {},
+            },
+        },
+        'nginx': {
+            'vhosts': {
+                'rufbereitschaftsalarm.ckn.li': {
+                    'content': 'nginx/run_program.conf',
+                    'context': {
+                        'script': 'hello',
+                    },
+                },
+            },
         },
         'systemd': {
             'units': {
@@ -49,6 +64,9 @@
                     }
                 },
             },
+        },
+        'wireguard': {
+            'my_ip': '10.200.128.11/24',
         },
     },
 }
