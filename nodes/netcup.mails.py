@@ -183,7 +183,7 @@
                 'cronekorkn.de': {
                     'content': 'nginx/redirect.conf',
                     'context': {
-                        'target': 'https://cloud.sublimity.de/',
+                        'target': 'https://www.twitch.tv/cronekorkn_',
                     },
                     'internal_dns': False,
                 },
