@@ -1,4 +1,5 @@
 {
+    'dummy': True,
     'hostname': '10.0.0.17',
     'groups': [
         'autologin',
