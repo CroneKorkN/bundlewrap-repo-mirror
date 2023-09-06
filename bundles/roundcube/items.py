@@ -43,7 +43,7 @@ actions['extract_roundcube'] = {
     ],
     'triggers': [
         'action:chown_roundcube',
-        'action:composer_install',
+        'action:composer_lock_reset',
     ],
 }
 actions['chown_roundcube'] = {
@@ -75,7 +75,16 @@ files['/opt/roundcube/plugins/password/config.inc.php'] = {
         'action:chown_roundcube',
     ],
 }
-
+actions['composer_lock_reset'] = {
+    'command': 'rm /opt/roundcube/composer.lock',
+    'triggered': True,
+    'needs': [
+        'action:chown_roundcube',
+    ],
+    'triggers': [
+        'action:composer_install',
+    ],
+}
 actions['composer_install'] = {
     'command': "cp /opt/roundcube/composer.json-dist /opt/roundcube/composer.json && su www-data -s /bin/bash -c '/usr/bin/composer -d /opt/roundcube install'",
     'triggered': True,
