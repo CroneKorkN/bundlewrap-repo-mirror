@@ -31,7 +31,7 @@ $config['db_dsnw'] = '${database['provider']}://${database['user']}:${database['
 // For example %n = mail.domain.tld, %t = domain.tld
 // WARNING: After hostname change update of mail_host column in users table is
 //          required to match old user data records with the new host.
-$config['default_host'] = 'localhost';
+$config['imap_host'] = 'localhost';
 
 // ----------------------------------
 // SMTP
@@ -46,7 +46,7 @@ $config['default_host'] = 'localhost';
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = 'tls://localhost';
+$config['smtp_host'] = 'tls://localhost';
 
 // SMTP username (if required) if you use %u as the username Roundcube
 // will use the current username for login
