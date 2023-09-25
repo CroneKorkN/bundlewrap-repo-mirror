@@ -10,7 +10,6 @@ nodes = [
         for node in sorted(repo.nodes_in_group('debian'))
         if not node.dummy
 ]
-reboot_nodes = []
 
 print('updating nodes:', sorted(node.name for node in nodes))
 
@@ -25,13 +24,12 @@ for node in nodes:
     print(node.run('DEBIAN_FRONTEND=noninteractive apt list --upgradable').stdout.decode())
     if int(node.run('DEBIAN_FRONTEND=noninteractive apt list --upgradable 2> /dev/null | grep upgradable | wc -l').stdout.decode()):
         print(node.run('DEBIAN_FRONTEND=noninteractive apt -y dist-upgrade').stdout.decode())
-        reboot_nodes.append(node)
 
 # REBOOT IN ORDER
 
 wireguard_servers = [
     node
-        for node in reboot_nodes
+        for node in nodes
         if node.has_bundle('wireguard')
         and (
             ip_interface(node.metadata.get('wireguard/my_ip')).network.prefixlen <
@@ -41,7 +39,7 @@ wireguard_servers = [
 
 wireguard_s2s = [
     node
-        for node in reboot_nodes
+        for node in nodes
         if node.has_bundle('wireguard')
         and (
             ip_interface(node.metadata.get('wireguard/my_ip')).network.prefixlen ==
@@ -51,7 +49,7 @@ wireguard_s2s = [
 
 everything_else = [
     node
-        for node in reboot_nodes
+        for node in nodes
         if not node.has_bundle('wireguard')
 ]
 
@@ -62,8 +60,9 @@ for node in [
     *wireguard_s2s,
     *wireguard_servers,
 ]:
-    print('rebooting', node.name)
     try:
-        print(node.run('systemctl reboot').stdout.decode())
+        if node.run('test -e /var/run/reboot-required').return_code == 0:
+            print('rebooting', node.name)
+            print(node.run('systemctl reboot').stdout.decode())
     except Exception as e:
         print(e)
