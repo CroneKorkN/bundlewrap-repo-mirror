@@ -35,6 +35,7 @@ def zfs(metadata):
 
     for other_node in repo.nodes:
         if (
+            not other_node.dummy and
             other_node.has_bundle('backup') and
             other_node.metadata.get('backup/server') == node.name
         ):

@@ -25,7 +25,8 @@ def backup_freshness_check(metadata):
             'datasets': {
                 f"{other_node.metadata.get('id')}/{dataset}"
                     for other_node in repo.nodes
-                    if other_node.has_bundle('backup')
+                    if not other_node.dummy
+                    and other_node.has_bundle('backup')
                     and other_node.has_bundle('zfs')
                     and other_node.metadata.get('backup/server') == metadata.get('backup-freshness-check/server')
                     for dataset, options in other_node.metadata.get('zfs/datasets').items()
