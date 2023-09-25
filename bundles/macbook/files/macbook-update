@@ -10,6 +10,7 @@ password   required       pam_deny.so
 session    required       pam_permit.so
 EOT
 
+sudo xcodebuild -license accept
 xcode-select --install
 
 git -C ~/.zsh/oh-my-zsh pull
@@ -41,3 +42,5 @@ fi
 sudo systemsetup -setremotelogin on # enable ssh
 
 pip install --upgrade pip
+
+# https://sysadmin-journal.com/apache-directory-studio-on-the-apple-m1/
