@@ -2,10 +2,15 @@ from os.path import join
 from bundlewrap.utils.dicts import merge_dict
 
 
-version = version=node.metadata.get('gitea/version')
+version = node.metadata.get('gitea/version')
+assert not version.startswith('v')
+arch = node.metadata.get('system/architecture')
+
+print(f'https://codeberg.org/forgejo/forgejo/releases/download/v{version}/forgejo-{version}-linux-{arch}')
 
 downloads['/usr/local/bin/gitea'] = {
-    'url': f'https://dl.gitea.io/gitea/{version}/gitea-{version}-linux-amd64',
+    # https://forgejo.org/releases/
+    'url': f'https://codeberg.org/forgejo/forgejo/releases/download/v{version}/forgejo-{version}-linux-{arch}',
     'sha256_url': '{url}.sha256',
     'triggers': {
         'svc_systemd:gitea:restart',

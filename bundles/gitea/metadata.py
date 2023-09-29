@@ -11,7 +11,17 @@ defaults = {
         },
     },
     'gitea': {
-        'conf': {},
+        'conf': {
+            'database': {
+                'DB_TYPE': 'postgres',
+                'HOST': 'localhost:5432',
+                'NAME': 'gitea',
+                'USER': 'gitea',
+                'PASSWD': database_password,
+                'SSL_MODE': 'disable',
+                'LOG_SQL': 'false',
+            },
+        },
     },
     'postgresql': {
         'roles': {
@@ -82,15 +92,6 @@ def conf(metadata):
                 'security': {
                     'INTERNAL_TOKEN': repo.vault.password_for(f'{node.name} gitea internal_token'),
                     'SECRET_KEY': repo.vault.password_for(f'{node.name} gitea security_secret_key'),
-                },
-                'database': {
-                    'DB_TYPE': 'postgres',
-                    'HOST': 'localhost:5432',
-                    'NAME': 'gitea',
-                    'USER': 'gitea',
-                    'PASSWD': database_password,
-                    'SSL_MODE': 'disable',
-                    'LOG_SQL': 'false',
                 },
                 'service': {
                     'NO_REPLY_ADDRESS': f'noreply.{domain}',
