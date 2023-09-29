@@ -6,8 +6,6 @@ version = node.metadata.get('gitea/version')
 assert not version.startswith('v')
 arch = node.metadata.get('system/architecture')
 
-print(f'https://codeberg.org/forgejo/forgejo/releases/download/v{version}/forgejo-{version}-linux-{arch}')
-
 downloads['/usr/local/bin/gitea'] = {
     # https://forgejo.org/releases/
     'url': f'https://codeberg.org/forgejo/forgejo/releases/download/v{version}/forgejo-{version}-linux-{arch}',
