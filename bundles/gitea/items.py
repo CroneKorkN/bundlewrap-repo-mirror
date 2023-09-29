@@ -48,6 +48,7 @@ files['/etc/gitea/app.ini'] = {
         ),
     ),
     'owner': 'git',
+    'mode': '0600',
     'context': node.metadata['gitea'],
     'triggers': {
         'svc_systemd:gitea:restart',

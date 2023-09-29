@@ -12,6 +12,9 @@ defaults = {
     },
     'gitea': {
         'conf': {
+            'DEFAULT': {
+                'WORK_PATH': '/var/lib/gitea',
+            },
             'database': {
                 'DB_TYPE': 'postgres',
                 'HOST': 'localhost:5432',
