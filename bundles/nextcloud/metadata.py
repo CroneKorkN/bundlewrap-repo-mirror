@@ -29,8 +29,8 @@ defaults = {
                 'exclude': [
                     '^appdata_',
                     '^updater-',
-                    '^nextcloud\.log',
-                    '^updater\.log',
+                    '^nextcloud\\.log',
+                    '^updater\\.log',
                     '^[^/]+/cache',
                     '^[^/]+/files_versions',
                     '^[^/]+/files_trashbin',
@@ -123,9 +123,9 @@ def config(metadata):
                 ],
                 'cache_path': '/var/lib/nextcloud/.cache',
                 'upgrade.disable-web': True,
-                'memcache.local': '\OC\Memcache\Redis',
-                'memcache.locking': '\OC\Memcache\Redis',
-                'memcache.distributed': '\OC\Memcache\Redis',
+                'memcache.local': '\\OC\\Memcache\\Redis',
+                'memcache.locking': '\\OC\\Memcache\\Redis',
+                'memcache.distributed': '\\OC\\Memcache\\Redis',
                 'redis': {
                     'host': '/var/run/redis/nextcloud.sock'
                 },

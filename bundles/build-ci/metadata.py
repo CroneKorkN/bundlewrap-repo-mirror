@@ -18,7 +18,7 @@ def ssh_keys(metadata):
         },
         'sudoers': {
             'build-ci': {
-                f"/usr/bin/chown -R build-ci\:{quote(ci['group'])} {quote(ci['path'])}"
+                f"/usr/bin/chown -R build-ci\\:{quote(ci['group'])} {quote(ci['path'])}"
                     for ci in metadata.get('build-ci').values()
             }
         },

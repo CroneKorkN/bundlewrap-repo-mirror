@@ -4,3 +4,4 @@ PyNaCl
 PyYAML
 pyqrcode
 cache_to_disk
+setuptools
