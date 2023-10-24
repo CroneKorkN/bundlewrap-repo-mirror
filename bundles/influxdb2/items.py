@@ -4,7 +4,7 @@ from shlex import quote
 directories['/var/lib/influxdb'] = {
     'owner': 'influxdb',
     'group': 'influxdb',
-    'mode': '0750',
+    'mode': '0755',
     'needs': [
         'zfs_dataset:tank/influxdb',
     ],

@@ -61,8 +61,10 @@ for node in [
     *wireguard_servers,
 ]:
     try:
-        if node.run('test -e /var/run/reboot-required').return_code == 0:
+        if node.run('test -e /var/run/reboot-required', may_fail=True).return_code == 0:
             print('rebooting', node.name)
             print(node.run('systemctl reboot').stdout.decode())
+        else:
+            print('not rebooting', node.name)
     except Exception as e:
         print(e)
