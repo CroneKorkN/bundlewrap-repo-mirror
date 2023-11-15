@@ -9,7 +9,7 @@ defaults = {
             'crystal': {
                 # https://software.opensuse.org/download.html?project=devel%3Alanguages%3Acrystal&package=crystal
                 'urls': {
-                    'https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_Testing/',
+                    'http://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_Testing/',
                 },
                 'suites': {
                     '/',
