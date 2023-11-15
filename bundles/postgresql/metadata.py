@@ -55,6 +55,25 @@ def conf(metadata):
 
 
 @metadata_reactor.provides(
+    'apt/config/APT/NeverAutoRemove',
+)
+def apt(metadata):
+    return {
+        'apt': {
+            'config': {
+                'APT': {
+                    'NeverAutoRemove': {
+                        # https://github.com/credativ/postgresql-common/blob/master/pg_updateaptconfig#L17-L21
+                        f"^postgresql.*-{metadata.get('postgresql/version')}",
+                    },
+                },
+            },
+        },
+    }
+
+
+
+@metadata_reactor.provides(
     'zfs/datasets',
 )
 def zfs(metadata):
