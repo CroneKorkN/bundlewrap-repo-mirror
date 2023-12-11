@@ -34,18 +34,19 @@ defaults = {
 )
 def systemd_timer(metadata):
     return {
-        'systemd-timers': {
-            f'steam-chat-logger': {
-                'command': '/opt/steam_chat_logger/steam_chat_logger.py',
-                'when': 'hourly',
-                'user': 'steam_chat_logger',
-                'env': {
-                    'DB_NAME': 'steam_chat_logger',
-                    'DB_USER': 'steam_chat_logger',
-                    'DB_PASSWORD': metadata.get('postgresql/roles/steam_chat_logger/password'),
-                    **metadata.get('steam_chat_logger'),
-                },
-                'working_dir': '/var/lib/steam_chat_logger',
-            },
-        },
+        # steam python login is broken: https://github.com/ValvePython/steam/issues/442
+        # 'systemd-timers': {
+        #     f'steam-chat-logger': {
+        #         'command': '/opt/steam_chat_logger/steam_chat_logger.py',
+        #         'when': 'hourly',
+        #         'user': 'steam_chat_logger',
+        #         'env': {
+        #             'DB_NAME': 'steam_chat_logger',
+        #             'DB_USER': 'steam_chat_logger',
+        #             'DB_PASSWORD': metadata.get('postgresql/roles/steam_chat_logger/password'),
+        #             **metadata.get('steam_chat_logger'),
+        #         },
+        #         'working_dir': '/var/lib/steam_chat_logger',
+        #     },
+        # },
     }
