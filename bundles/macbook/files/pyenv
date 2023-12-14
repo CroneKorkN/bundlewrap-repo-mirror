@@ -5,5 +5,5 @@ cd "$OLDPWD"
 if test -f .venv/bin/python && test "$(realpath .venv/bin/python)" != "$(realpath "$(pyenv which python)")"
 then
   echo "rebuilding venv für new python version"
-  rm -rf .venv
+  rm -rf .venv .pip_upgrade_timestamp
 fi
