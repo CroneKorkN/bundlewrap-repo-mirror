@@ -73,7 +73,6 @@ def dns(metadata):
 
 @metadata_reactor.provides(
     'letsencrypt/domains',
-    'letsencrypt/reload_after',
 )
 def letsencrypt(metadata):
     return {
