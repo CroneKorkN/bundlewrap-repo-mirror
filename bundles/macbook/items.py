@@ -22,6 +22,12 @@ files['/Users/mwiegand/.bin/macbook-update'] = {
     'mode': '755',
 }
 
+with open(f'{repo.path}/bundles/zsh/files/bw.zsh-theme') as f:
+    files['/Users/mwiegand/.zsh/oh-my-zsh/themes/bw.zsh-theme'] = {
+        'content': f.read(),
+        'mode': '0644',
+    }
+
 # direnv
 
 directories['/Users/mwiegand/.local/share/direnv'] = {}
@@ -29,15 +35,6 @@ files['/Users/mwiegand/.local/share/direnv/gnu'] = {}
 files['/Users/mwiegand/.local/share/direnv/pyenv'] = {}
 files['/Users/mwiegand/.local/share/direnv/venv'] = {}
 files['/Users/mwiegand/.local/share/direnv/bundlewrap'] = {}
-
-
-# clamav
-
-files['/opt/homebrew/etc/clamav/freshclam.conf'] = {
-    'group': 'admin',
-}
-# run me baby one more time:
-# freshclam && clamscan --infected --recursive --exclude-dir ~/Library/Mail ~
 
 
 ##################

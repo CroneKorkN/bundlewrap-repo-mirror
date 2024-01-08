@@ -2,7 +2,8 @@ export PATH=~/.bin:$PATH
 export PATH=~/.cargo/bin:$PATH
 
 export ZSH=~/.zsh/oh-my-zsh
-ZSH_THEME="ckn"
+export ZSH_HOSTNAME='sm'
+ZSH_THEME="bw"
 HIST_STAMPS="yyyy/mm/dd"
 plugins=(
   zsh-autosuggestions

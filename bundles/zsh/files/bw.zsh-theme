@@ -34,7 +34,16 @@ function zsh_exitcode_color {
   echo "%(?:%{$fg_bold[green]%}:%{$fg_bold[red]%})"
 }
 
-PROMPT='$(zsh_root_color)$(whoami)%{$reset_color%}@$(zsh_exitcode_color)$(hostname -s) %{$fg[cyan]%}$(zsh_spwd)%{$reset_color%} $(git_prompt_info)'
+function zsh_hostname {
+  if [ -z "$ZSH_HOSTNAME" ]
+  then
+    hostname -s
+  else
+    echo "$ZSH_HOSTNAME"
+  fi
+}
+
+PROMPT='$(zsh_root_color)$(whoami)%{$reset_color%}@$(zsh_exitcode_color)$(zsh_hostname) %{$fg[cyan]%}$(zsh_spwd)%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "

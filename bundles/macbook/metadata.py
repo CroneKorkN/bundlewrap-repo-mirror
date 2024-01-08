@@ -1,5 +1,3 @@
 defaults = {
-    'brew': {
-        'clamav',
-    },
+    'brew': {},
 }
