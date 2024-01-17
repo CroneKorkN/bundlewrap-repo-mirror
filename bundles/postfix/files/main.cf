@@ -44,7 +44,9 @@ smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
 smtpd_restriction_classes = mua_sender_restrictions, mua_client_restrictions, mua_helo_restrictions
 mua_client_restrictions = permit_sasl_authenticated, reject
 mua_sender_restrictions = permit_sasl_authenticated, reject
-mua_helo_restrictions = permit_mynetworks, reject_non_fqdn_hostname, reject_invalid_hostname, permit
+## MS Outlook, incompatible with reject_non_fqdn_hostname and/or reject_invalid_hostname
+## https://unix.stackexchange.com/a/91753/357916
+mua_helo_restrictions = permit_mynetworks, permit
 
 smtpd_milters = inet:localhost:8891 inet:127.0.0.1:11332
 non_smtpd_milters = inet:localhost:8891 inet:127.0.0.1:11332
