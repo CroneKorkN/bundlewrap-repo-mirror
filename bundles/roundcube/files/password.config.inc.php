@@ -1,5 +1,7 @@
 <?php
 
+// https://github.com/roundcube/roundcubemail/blob/357cc90001f997fd223fb48fcede6040f527c2f4/plugins/password/config.inc.php.dist
+
 $config['password_driver'] = 'sql';
 $config['password_strength_driver'] = null;
 $config['password_confirm_current'] = true;
@@ -14,4 +16,4 @@ $config['password_dovecotpw'] = '/usr/bin/sudo /usr/bin/doveadm pw';
 $config['password_dovecotpw_method'] = 'ARGON2ID';
 $config['password_dovecotpw_with_method'] = true;
 $config['password_db_dsn'] = 'pgsql://mailserver:${mailserver_db_password}@localhost/mailserver';
-$config['password_query'] = "UPDATE users SET password=%D FROM domains WHERE domains.id = domain_id AND domains.name = %d AND users.name = %l";
+$config['password_query'] = "UPDATE users SET password = %P FROM domains WHERE domains.id = users.domain_id AND domains.name = %d AND users.name = %l";
