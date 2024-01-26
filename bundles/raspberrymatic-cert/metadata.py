@@ -1,6 +1,3 @@
-from shlex import quote
-
-
 @metadata_reactor.provides(
     'letsencrypt/domains',
 )
@@ -20,8 +17,6 @@ def letsencrypt(metadata):
     'systemd-timers/raspberrymatic-cert',
 )
 def systemd_timers(metadata):
-    domain = metadata.get('raspberrymatic-cert/domain')
-    
     return {
         'systemd-timers': {
             'raspberrymatic-cert': {

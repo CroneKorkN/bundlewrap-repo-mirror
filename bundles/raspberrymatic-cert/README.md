@@ -1,0 +1,3 @@
+- Homematic > Settings > Control panel > Security > SSH > active & set password
+- ssh to node > `ssh-copy-id -o StrictHostKeyChecking=no root@{homematic}`
+- Homematic > Settings > Control panel > Security > Automatic forwarding to HTTPS > active
