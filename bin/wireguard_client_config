@@ -5,9 +5,17 @@ from os.path import realpath, dirname
 from sys import argv
 from ipaddress import ip_network, ip_interface
 
-repo = Repository(dirname(dirname(realpath(__file__))))
+if len(argv) != 3:
+    print(f'usage: {argv[0]} <node> <client>')
+    exit(1)
 
+repo = Repository(dirname(dirname(realpath(__file__))))
 server_node = repo.get_node(argv[1])
+
+if argv[2] not in server_node.metadata.get('wireguard/clients'):
+    print(f'client {argv[2]} not found in: {server_node.metadata.get("wireguard/clients").keys()}')
+    exit(1)
+
 data = server_node.metadata.get(f'wireguard/clients/{argv[2]}')
 
 vpn_network = ip_interface(server_node.metadata.get('wireguard/my_ip')).network
@@ -20,9 +28,7 @@ for peer in server_node.metadata.get('wireguard/s2s').values():
         if not ip_network(network).subnet_of(vpn_network):
             allowed_ips.append(ip_network(network))
 
-conf = \
-f'''>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+conf = f'''
 [Interface]
 PrivateKey = {repo.libs.wireguard.privkey(data['peer_id'])}
 ListenPort = 51820
@@ -35,11 +41,12 @@ PresharedKey = {repo.libs.wireguard.psk(data['peer_id'], server_node.metadata.ge
 AllowedIPs = {', '.join(str(client_route) for client_route in sorted(allowed_ips))}
 Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:51820
 PersistentKeepalive = 10
+'''
 
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'''
-
+print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 print(conf)
+print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
 
-if input("print qrcode? [yN]: ").upper() == 'Y':
+if input("print qrcode? [Yn]: ").upper() in ['', 'Y']:
     import pyqrcode
     print(pyqrcode.create(conf).terminal(quiet_zone=1))
