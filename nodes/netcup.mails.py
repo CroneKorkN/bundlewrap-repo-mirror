@@ -79,10 +79,6 @@
                 'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
-            'elimu-kwanza.de': {
-                'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::1'],
-            },
         },
         'download-server': {
             'hostname': 'dl.sublimity.de',
@@ -175,14 +171,6 @@
                     'content': 'nginx/redirect.conf',
                     'context': {
                         'target': 'https://www.internationaler-bund.de/standort/204516',
-                    },
-                    'internal_dns': False,
-                },
-                'elimu-kwanza.de': {
-                    'content': 'nginx/message.conf',
-                    'context': {
-                        'title': 'Im Aufbau/under construction',
-                        'message': '<a href=mailto:info@elimu-kwanza.de>info@elimu-kwanza.de</a>',
                     },
                     'internal_dns': False,
                 },

@@ -1,6 +1,6 @@
-for domain, conf in node.metadata.get('wordpress').items():
+for site, conf in node.metadata.get('wordpress').items():
     directories = {
-        f'/opt/wordpress/{domain}': {
+        f'/opt/wordpress/{site}': {
             'owner': 'www-data',
             'group': 'www-data',
             'mode': '0755',

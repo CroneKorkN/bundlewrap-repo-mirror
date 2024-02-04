@@ -29,3 +29,22 @@ def mariadb(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts'
+)
+def vhost(metadata):
+    return {
+        'nginx': {
+            'vhosts': {
+                conf['domain']: {
+                    'content': 'wordpress/vhost.conf',
+                    'context': {
+                        'root': f'/opt/{site}',
+                    },
+                }
+                    for site, conf in metadata.get('wordpress').items()
+            },
+        },
+    }
