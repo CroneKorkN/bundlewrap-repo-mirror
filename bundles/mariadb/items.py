@@ -57,10 +57,10 @@ for db, conf in node.metadata.get('mariadb/databases', {}).items():
             f'action:mariadb_user_{db}_create',
         ],
     }
-    print(mariadb(f"SHOW GRANTS FOR {db}") + f"grep -q '^GRANT ALL PRIVILEGES'")
+    print(mariadb(f"SHOW GRANTS FOR {db}") + f" | grep -q '^GRANT ALL PRIVILEGES ON `{db}`.`{db}` TO `{db}`@`%`$'")
     actions[f'mariadb_grant_privileges_to_{db}'] = {
-        'command': mariadb(f"GRANT ALL PRIVILEGES ON *.* TO '{db}'", database=db),
-        'unless': mariadb(f"SHOW GRANTS FOR {db}") + f" | grep -q '^GRANT USAGE ON *.* TO `{db}`'",
+        'command': mariadb(f"GRANT ALL PRIVILEGES ON {db} TO '{db}'", database=db),
+        'unless': mariadb(f"SHOW GRANTS FOR {db}") + f" | grep -q '^GRANT ALL PRIVILEGES ON `{db}`.`{db}` TO `{db}`@`%`$'",
         'needs': [
             f'action:mariadb_user_{db}_create',
         ],
