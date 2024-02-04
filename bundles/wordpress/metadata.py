@@ -16,7 +16,7 @@ def wordpress(metadata):
 
 
 @metadata_reactor.provides(
-    'mariadb',
+    'mariadb/databases',
 )
 def mariadb(metadata):
     return {
@@ -59,6 +59,23 @@ def zfs(metadata):
             'datasets': {
                 f'tank/{site}': {
                     'mountpoint': f'/opt/{site}',
+                }
+                    for site in metadata.get('wordpress')
+            },
+        },
+    }
+
+@metadata_reactor.provides(
+    'monitoring/services',
+)
+def check_insecure(metadata):
+    return {
+        'monitoring': {
+            'services': {
+                f'wordpress {site} insecure': {
+                    'vars.command': f'/usr/lib/nagios/plugins/check_wordpress_insecure {site}',
+                    'check_interval': '1h',
+                    'vars.sudo': True,
                 }
                     for site in metadata.get('wordpress')
             },
