@@ -8,7 +8,7 @@ def wordpress(metadata):
     return {
         'wordpress': {
             site: {
-                'db_password': repo.vault.password_for(f"wordpress {site} db"),
+                'db_password': repo.vault.password_for(f"wordpress {site} db").value,
             }
                 for site in metadata.get('wordpress', {})
         },

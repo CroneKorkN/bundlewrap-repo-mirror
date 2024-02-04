@@ -1,5 +1,8 @@
 from shlex import quote
 
+def mariadb(sql):
+    return f"mariadb -Bsr --execute {quote(sql)}"
+
 directories = {
     '/var/lib/mysql': {
         'owner': 'mysql',
@@ -32,9 +35,24 @@ svc_systemd = {
 
 for db, conf in node.metadata.get('mariadb/databases', {}).items():
     actions[f'mariadb_create_database_{db}'] = {
-        'command': 'mariadb -Bsr --execute ' + quote(f"CREATE DATABASE {db}"),
-        'unless': '! mariadb -Bsr --execute ' + quote(f"SHOW DATABASES LIKE '{db}'") + ' | grep -q ^db$',
+        'command': mariadb(f"CREATE DATABASE {db}"),
+        'unless': mariadb(f"SHOW DATABASES LIKE '{db}'") + f' | grep -q ^{db}$',
         'needs': [
             'svc_systemd:mariadb.service',
+        ],
+    }
+    actions[f'mariadb_user_{db}_create'] = {
+        'command': mariadb(f"CREATE USER {db}"),
+        'unless': mariadb(f"SELECT User FROM mysql.user WHERE User = '{db}'") + f' | grep -q ^{db}$',
+        'needs': [
+            f'action:mariadb_create_database_{db}',
+        ],
+    }
+    pw = conf['password']
+    actions[f'mariadb_user_{db}_password'] = {
+        'command': mariadb(f"SET PASSWORD FOR {db} = PASSWORD('{conf['password']}')"),
+        'unless': f'echo {quote(pw)} | mariadb -u {db} -e quit -p',
+        'needs': [
+            f'action:mariadb_user_{db}_create',
         ],
     }
