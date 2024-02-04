@@ -1,7 +1,8 @@
 from shlex import quote
 
-def mariadb(sql):
-    return f"mariadb -Bsr --execute {quote(sql)}"
+def mariadb(sql, **kwargs):
+    kwargs_string = ''.join(f" --{k} {v}" for k, v in kwargs.items())
+    return f"mariadb{kwargs_string} -Bsr --execute {quote(sql)}"
 
 directories = {
     '/var/lib/mysql': {
@@ -52,6 +53,14 @@ for db, conf in node.metadata.get('mariadb/databases', {}).items():
     actions[f'mariadb_user_{db}_password'] = {
         'command': mariadb(f"SET PASSWORD FOR {db} = PASSWORD('{conf['password']}')"),
         'unless': f'echo {quote(pw)} | mariadb -u {db} -e quit -p',
+        'needs': [
+            f'action:mariadb_user_{db}_create',
+        ],
+    }
+    print(mariadb(f"SHOW GRANTS FOR {db}") + f"grep -q '^GRANT ALL PRIVILEGES'")
+    actions[f'mariadb_grant_privileges_to_{db}'] = {
+        'command': mariadb(f"GRANT ALL PRIVILEGES ON *.* TO '{db}'", database=db),
+        'unless': mariadb(f"SHOW GRANTS FOR {db}") + f" | grep -q '^GRANT USAGE ON *.* TO `{db}`'",
         'needs': [
             f'action:mariadb_user_{db}_create',
         ],
