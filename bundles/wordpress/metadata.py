@@ -65,6 +65,7 @@ def zfs(metadata):
         },
     }
 
+
 @metadata_reactor.provides(
     'monitoring/services',
 )
@@ -74,7 +75,7 @@ def check_insecure(metadata):
             'services': {
                 f'wordpress {site} insecure': {
                     'vars.command': f'/usr/lib/nagios/plugins/check_wordpress_insecure {site}',
-                    'check_interval': '1h',
+                    'check_interval': '30m',
                     'vars.sudo': True,
                 }
                     for site in metadata.get('wordpress')
