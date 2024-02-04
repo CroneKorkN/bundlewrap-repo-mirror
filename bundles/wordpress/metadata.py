@@ -10,7 +10,7 @@ def wordpress(metadata):
             site: {
                 'db_password': repo.vault.password_for(f"wordpress {site} db").value,
             }
-                for site in metadata.get('wordpress', {})
+                for site in metadata.get('wordpress')
         },
     }
 
@@ -25,7 +25,7 @@ def mariadb(metadata):
                 site: {
                     'password': metadata.get(f'wordpress/{site}/db_password')
                 }
-                    for site in metadata.get('wordpress', {})
+                    for site in metadata.get('wordpress')
             },
         },
     }
@@ -45,6 +45,22 @@ def vhost(metadata):
                     },
                 }
                     for site, conf in metadata.get('wordpress').items()
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'zfs/datasets',
+)
+def zfs(metadata):
+    return {
+        'zfs': {
+            'datasets': {
+                f'tank/{site}': {
+                    'mountpoint': f'/opt/{site}',
+                }
+                    for site in metadata.get('wordpress')
             },
         },
     }
