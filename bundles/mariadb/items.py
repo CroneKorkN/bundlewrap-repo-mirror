@@ -34,17 +34,40 @@ svc_systemd = {
     },
 }
 
+actions = {
+    'mariadb_sec_remove_anonymous_users': {
+        'command': mariadb("DELETE FROM mysql.global_priv WHERE User=''"),
+        'unless': mariadb("SELECT count(0) FROM mysql.global_priv WHERE User = ''") + " | grep -q '^0$'",
+        'needs': [
+            'svc_systemd:mariadb.service',
+        ],
+        'triggers': [
+            'svc_systemd:mariadb.service:restart',
+        ],
+    },
+    'mariadb_sec_remove_remote_root': {
+        'command': mariadb("DELETE FROM mysql.global_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"),
+        'unless': mariadb("SELECT count(0) FROM mysql.global_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')") + " | grep -q '^0$'",
+        'needs': [
+            'svc_systemd:mariadb.service',
+        ],
+        'triggers': [
+            'svc_systemd:mariadb.service:restart',
+        ],
+    },
+}
+
 for db, conf in node.metadata.get('mariadb/databases', {}).items():
     actions[f'mariadb_create_database_{db}'] = {
         'command': mariadb(f"CREATE DATABASE {db}"),
-        'unless': mariadb(f"SHOW DATABASES LIKE '{db}'") + f' | grep -q ^{db}$',
+        'unless': mariadb(f"SHOW DATABASES LIKE '{db}'") + f" | grep -q '^{db}$'",
         'needs': [
             'svc_systemd:mariadb.service',
         ],
     }
     actions[f'mariadb_user_{db}_create'] = {
         'command': mariadb(f"CREATE USER {db}"),
-        'unless': mariadb(f"SELECT User FROM mysql.user WHERE User = '{db}'") + f' | grep -q ^{db}$',
+        'unless': mariadb(f"SELECT User FROM mysql.user WHERE User = '{db}'") + f" | grep -q '^{db}$'",
         'needs': [
             f'action:mariadb_create_database_{db}',
         ],
