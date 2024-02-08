@@ -1,4 +1,12 @@
-defaults = {}
+defaults = {
+    'php': {
+        'php.ini': {
+            'cgi': {
+                'fix_pathinfo': '0',
+            },
+        },
+    },
+}
 
 
 @metadata_reactor.provides(
