@@ -1,9 +1,3 @@
-from os.path import join
-import json
-
-from bundlewrap.utils.dicts import merge_dict
-
-
 version = node.metadata.get('php/version')
 
 files = {
@@ -21,7 +15,7 @@ files = {
             f'pkg_apt:php{version}-fpm',
         },
         'triggers': {
-            f'svc_systemd:php{version}-fpm:restart',
+            f'svc_systemd:php{version}-fpm.service:restart',
         },
     },
     f'/etc/php/{version}/fpm/pool.d/www.conf': {
@@ -33,13 +27,13 @@ files = {
             f'pkg_apt:php{version}-fpm',
         },
         'triggers': {
-            f'svc_systemd:php{version}-fpm:restart',
+            f'svc_systemd:php{version}-fpm.service:restart',
         },
     },
 }
 
 svc_systemd = {
-    f'php{version}-fpm': {
+    f'php{version}-fpm.service': {
         'needs': {
             'pkg_apt:',
             f'file:/etc/php/{version}/fpm/php.ini',
