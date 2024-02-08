@@ -86,3 +86,9 @@ def require_bundle(node, bundle, hint=''):
     # way of defining bundle requirements in other bundles.
     if not node.has_bundle(bundle):
         raise BundleError(f'{node.name} requires bundle {bundle}, but wasn\'t found! {hint}')
+
+
+from shlex import quote
+
+def run_as(user, command):
+    return f'sudo su - {user} -s /bin/bash -c {quote(command)}'

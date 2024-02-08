@@ -19,7 +19,7 @@ directories[f'/var/lib/bind'] = {
         'svc_systemd:bind9',
     ],
     'triggers': [
-        'svc_systemd:bind9:restart',
+        'svc_systemd:bind9:reload',
     ],
 }
 
@@ -29,7 +29,7 @@ files['/etc/default/bind9'] = {
         'svc_systemd:bind9',
     ],
     'triggers': [
-        'svc_systemd:bind9:restart',
+        'svc_systemd:bind9:reload',
     ],
 }
 
@@ -43,7 +43,7 @@ files['/etc/bind/named.conf'] = {
         'svc_systemd:bind9',
     ],
     'triggers': [
-        'svc_systemd:bind9:restart',
+        'svc_systemd:bind9:reload',
     ],
 }
 
@@ -63,7 +63,7 @@ files['/etc/bind/named.conf.options'] = {
         'svc_systemd:bind9',
     ],
     'triggers': [
-        'svc_systemd:bind9:restart',
+        'svc_systemd:bind9:reload',
     ],
 }
 
@@ -93,7 +93,7 @@ files['/etc/bind/named.conf.local'] = {
         'svc_systemd:bind9',
     ],
     'triggers': [
-        'svc_systemd:bind9:restart',
+        'svc_systemd:bind9:reload',
     ],
 }
 
@@ -106,7 +106,7 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
             'svc_systemd:bind9',
         ],
         'triggers': [
-            'svc_systemd:bind9:restart',
+            'svc_systemd:bind9:reload',
         ],
     }
 
@@ -127,7 +127,7 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
                 'svc_systemd:bind9',
             ],
             'triggers': [
-                'svc_systemd:bind9:restart',
+                'svc_systemd:bind9:reload',
             ],
         }
 
@@ -139,6 +139,6 @@ actions['named-checkconf'] = {
     'unless': 'named-checkconf -z',
     'needs': [
         'svc_systemd:bind9',
-        'svc_systemd:bind9:restart',
+        'svc_systemd:bind9:reload',
     ]
 }

@@ -16,7 +16,7 @@
         'download-server',
         'islamicstate.eu',
         'nginx-rtmps',
-        'steam',
+        #'steam',
         'wireguard',
         'zfs',
     ],
@@ -53,6 +53,7 @@
                 'left4.me',
                 'elimu-kwanza.de',
                 'cronekorkn.de',
+                'foerderkreis.oranienschule-wiesbaden-wiki.de',
             },
         },
         'dns': {
@@ -214,6 +215,11 @@
                 'wb.offsite-backups': {
                     'allowed_ips': [
                         '192.168.179.0/24',
+                    ],
+                },
+                'mseibert.freescout': {
+                    'allowed_ips': [
+                        '10.0.227.0/24',
                     ],
                 },
             },

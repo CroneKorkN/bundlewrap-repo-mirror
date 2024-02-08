@@ -118,7 +118,7 @@ def nginx(metadata):
                     'content': 'nginx/proxy_pass.conf',
                     'context': {
                         'target': 'http://127.0.0.1:3500',
-                    }
+                    },
                 },
             },
         },
