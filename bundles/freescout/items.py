@@ -41,15 +41,15 @@ actions = {
     },
 }
 
-files = {
-    '/opt/freescout/.env': {
-        'content': '\n'.join(
-            f'{k}={v}' for k, v in
-                sorted(node.metadata.get('freescout/env').items())
-        ),
-        'needs': [
-            'directory:/opt/freescout',
-            'action:clone_freescout',
-        ],
-    },
-}
+# files = {
+#     '/opt/freescout/.env': {
+#         'content': '\n'.join(
+#             f'{k}={v}' for k, v in
+#                 sorted(node.metadata.get('freescout/env').items())
+#         ),
+#         'needs': [
+#             'directory:/opt/freescout',
+#             'action:clone_freescout',
+#         ],
+#     },
+# }
