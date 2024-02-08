@@ -3,8 +3,9 @@ database_password = repo.vault.password_for(f'{node.name} postgresql freescout')
 defaults = {
     'apt': {
         'packages': {
+            'git': {},
             'php': {},
-            'php-mysql': {},
+            'php-pgsql': {},
             'php-fpm': {},
             'php-mbstring': {},
             'php-xml': {},
@@ -13,6 +14,18 @@ defaults = {
             'php-gd': {},
             'php-curl': {},
             'php-intl': {},
+        },
+    },
+    'freescout': {
+        'env': {
+            'APP_TIMEZONE': 'Europe/Berlin',
+            'DB_CONNECTION': 'pgsql',
+            'DB_HOST': '127.0.0.1',
+            'DB_PORT': '5432',
+            'DB_DATABASE': 'freescout',
+            'DB_USERNAME': 'freescout',
+            'DB_PASSWORD': database_password,
+            'APP_KEY': 'base64:' + repo.vault.random_bytes_as_base64_for(f'{node.name} freescout APP_KEY', length=32).value
         },
     },
     'php': {
@@ -34,7 +47,27 @@ defaults = {
             },
         },
     },
+    'zfs': {
+        'datasets': {
+            'tank/freescout': {
+                'mountpoint': '/opt/freescout',
+            },
+        },
+    },
 }
+
+
+@metadata_reactor.provides(
+    'freescout/env/APP_URL',
+)
+def freescout(metadata):
+    return {
+        'freescout': {
+            'env': {
+                'APP_URL': 'https://' + metadata.get('freescout/domain') + '/',
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(
