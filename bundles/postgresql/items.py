@@ -12,7 +12,7 @@ directories = {
             'zfs_dataset:tank/postgresql',
         ],
         'needed_by': [
-            'svc_systemd:postgresql',
+            'svc_systemd:postgresql.service',
         ],
     }
 }
@@ -25,16 +25,19 @@ files = {
         ) + '\n',
         'owner': 'postgres',
         'group': 'postgres',
+        'needs': [
+            'pkg_apt:postgresql',
+        ],
         'needed_by': [
-            'svc_systemd:postgresql',
+            'svc_systemd:postgresql.service',
         ],
         'triggers': [
-            'svc_systemd:postgresql:restart',
+            'svc_systemd:postgresql.service:restart',
         ],
     },
 }
 
-svc_systemd['postgresql'] = {
+svc_systemd['postgresql.service'] = {
     'needs': [
         'pkg_apt:postgresql',
     ],
@@ -43,13 +46,13 @@ svc_systemd['postgresql'] = {
 for user, config in node.metadata.get('postgresql/roles').items():
     postgres_roles[user] = merge_dict(config, {
         'needs': [
-            'svc_systemd:postgresql',
+            'svc_systemd:postgresql.service',
         ],
     })
 
 for database, config in node.metadata.get('postgresql/databases').items():
     postgres_dbs[database] = merge_dict(config, {
         'needs': [
-            'svc_systemd:postgresql',
+            'svc_systemd:postgresql.service',
         ],
     })

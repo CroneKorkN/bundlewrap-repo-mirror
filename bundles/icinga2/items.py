@@ -269,7 +269,7 @@ svc_systemd = {
     'icinga2.service': {
         'needs': [
             'pkg_apt:icinga2-ido-pgsql',
-            'svc_systemd:postgresql',
+            'svc_systemd:postgresql.service',
         ],
     },
 }

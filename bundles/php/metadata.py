@@ -113,7 +113,7 @@ def php_ini(metadata):
             'opcache.revalidate_freq': '60',
         },
     }
-    
+
     return {
         'php': {
             'php.ini': {
@@ -145,7 +145,7 @@ def www_conf(metadata):
                 'pm': 'dynamic',
                 'pm.max_children': int(threads*2),
                 'pm.start_servers': int(threads),
-                'pm.min_spare_servers': int(threads/2),
+                'pm.min_spare_servers': max([1, int(threads/2)]),
                 'pm.max_spare_servers': int(threads),
                 'pm.max_requests': int(threads*32),
             },
