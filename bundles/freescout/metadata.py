@@ -16,18 +16,18 @@ defaults = {
             'php-intl': {},
         },
     },
-    'freescout': {
-        'env': {
-            'APP_TIMEZONE': 'Europe/Berlin',
-            'DB_CONNECTION': 'pgsql',
-            'DB_HOST': '127.0.0.1',
-            'DB_PORT': '5432',
-            'DB_DATABASE': 'freescout',
-            'DB_USERNAME': 'freescout',
-            'DB_PASSWORD': database_password,
-            'APP_KEY': 'base64:' + repo.vault.random_bytes_as_base64_for(f'{node.name} freescout APP_KEY', length=32).value
-        },
-    },
+    # 'freescout': {
+    #     'env': {
+    #         'APP_TIMEZONE': 'Europe/Berlin',
+    #         'DB_CONNECTION': 'pgsql',
+    #         'DB_HOST': '127.0.0.1',
+    #         'DB_PORT': '5432',
+    #         'DB_DATABASE': 'freescout',
+    #         'DB_USERNAME': 'freescout',
+    #         'DB_PASSWORD': database_password,
+    #         'APP_KEY': 'base64:' + repo.vault.random_bytes_as_base64_for(f'{node.name} freescout APP_KEY', length=32).value
+    #     },
+    # },
     'php': {
         'php.ini': {
             'cgi': {
@@ -57,17 +57,17 @@ defaults = {
 }
 
 
-@metadata_reactor.provides(
-    'freescout/env/APP_URL',
-)
-def freescout(metadata):
-    return {
-        'freescout': {
-            'env': {
-                'APP_URL': 'https://' + metadata.get('freescout/domain') + '/',
-            },
-        },
-    }
+# @metadata_reactor.provides(
+#     'freescout/env/APP_URL',
+# )
+# def freescout(metadata):
+#     return {
+#         'freescout': {
+#             'env': {
+#                 'APP_URL': 'https://' + metadata.get('freescout/domain') + '/',
+#             },
+#         },
+#     }
 
 
 @metadata_reactor.provides(
