@@ -1,0 +1,25 @@
+#!/bin/bash
+
+SITE=$1
+VERSION=$(php -r "require('/opt/$SITE/wp-includes/version.php'); echo \$wp_version;")
+STATUS=$(curl -ssL http://api.wordpress.org/core/stable-check/1.0/ | jq -r '.["'$VERSION'"]')
+
+echo "WordPress $VERSION is '$STATUS'"
+
+if [[ "$STATUS" == latest ]]
+then
+  exit 0
+elif [[ "$STATUS" == outdated ]]
+then
+  exit 1
+elif [[ "$STATUS" == insecure ]]
+then
+  if test -f /etc/nginx/sites/$SITE
+  then
+    rm /etc/nginx/sites/$SITE
+    systemctl restart nginx
+  fi
+  exit 2
+else
+  exit 2
+fi

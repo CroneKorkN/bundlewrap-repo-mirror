@@ -7,6 +7,7 @@
         'monitored',
         'webserver',
         'dnsserver',
+        'wordpress',
         #'left4dead2',
     ],
     'bundles': [
@@ -21,6 +22,11 @@
         'zfs',
     ],
     'metadata': {
+        'wordpress': {
+            'elimukwanza': {
+                'domain': 'elimu-kwanza.de',
+            },
+        },
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
             'internal': {
@@ -70,10 +76,6 @@
                 'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
             'left4.me': {
-                'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::1'],
-            },
-            'elimu-kwanza.de': {
                 'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
@@ -169,14 +171,6 @@
                     'content': 'nginx/redirect.conf',
                     'context': {
                         'target': 'https://www.internationaler-bund.de/standort/204516',
-                    },
-                    'internal_dns': False,
-                },
-                'elimu-kwanza.de': {
-                    'content': 'nginx/message.conf',
-                    'context': {
-                        'title': 'Im Aufbau/under construction',
-                        'message': '<a href=mailto:info@elimu-kwanza.de>info@elimu-kwanza.de</a>',
                     },
                     'internal_dns': False,
                 },
