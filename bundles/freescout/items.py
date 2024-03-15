@@ -41,15 +41,19 @@ actions = {
     },
 }
 
-# files = {
-#     '/opt/freescout/.env': {
-#         'content': '\n'.join(
-#             f'{k}={v}' for k, v in
-#                 sorted(node.metadata.get('freescout/env').items())
-#         ),
-#         'needs': [
-#             'directory:/opt/freescout',
-#             'action:clone_freescout',
-#         ],
-#     },
-# }
+files = {
+    '/opt/freescout/.env': {
+        # https://github.com/freescout-helpdesk/freescout/blob/dist/.env.example
+        # Every time you are making changes in .env file, in order changes to take an effect you need to run:
+        # ´sudo su - www-data -c 'php /opt/freescout/artisan freescout:clear-cache' -s /bin/bash´
+        'owner': 'www-data',
+        'content': '\n'.join(
+            f'{k}={v}' for k, v in
+                sorted(node.metadata.get('freescout/env').items())
+        ) + '\n',
+        'needs': [
+            'directory:/opt/freescout',
+            'action:clone_freescout',
+        ],
+    },
+}

@@ -91,4 +91,4 @@ def require_bundle(node, bundle, hint=''):
 from shlex import quote
 
 def run_as(user, command):
-    return f'sudo su - {user} -c {quote(command)} -s /bin/bash'
+    return f'sudo su - {user} -s /bin/bash -c {quote(command)}'
