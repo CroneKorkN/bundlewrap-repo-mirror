@@ -20,6 +20,10 @@ directories = {
         'owner': 'vmail',
         'group': 'vmail',
     },
+    '/var/vmail/index': {
+        'owner': 'vmail',
+        'group': 'vmail',
+    },
     '/var/vmail/sieve': {
         'owner': 'vmail',
         'group': 'vmail',

@@ -33,6 +33,12 @@ defaults = {
                 'mountpoint': '/var/vmail',
                 'compression': 'on',
             },
+            'tank/vmail/index': {
+                'mountpoint': '/var/vmail/index',
+                'compression': 'on',
+                'com.sun:auto-snapshot': 'false',
+                'backup': False,
+            },
         },
     },
 }
