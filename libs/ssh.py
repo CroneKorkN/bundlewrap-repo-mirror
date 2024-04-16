@@ -49,7 +49,7 @@ def generate_ed25519_key_pair(secret):
     return (deterministic_privatekey, public_key)
 
 
-#https://www.fragmentationneeded.net/2017/10/ssh-hashknownhosts-file-format.html
+# https://www.fragmentationneeded.net/2017/10/ssh-hashknownhosts-file-format.html
 # test this:
 # - `ssh-keyscan -H 10.0.0.5`
 # - take the salt from the ssh-ed25519 entry (first field after '|1|')
