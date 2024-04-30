@@ -1,9 +1,9 @@
 {
-    'hostname': '88.198.202.28',
+    'hostname': '159.69.117.89',
     'groups': [
-        'backup',
+#        'backup',
         'debian-12',
-        'monitored',
+#        'monitored',
         'webserver',
         'freescout',
     ],
@@ -16,13 +16,13 @@
         'network': {
             'internal': {
                 'interface': 'ens10',
-                'ipv4': '10.0.238.2/32',
+                'ipv4': '10.0.227.2/24',
             },
             'external': {
                 'interface': 'eth0',
-                'ipv4': '88.198.202.28/32',
+                'ipv4': '159.69.117.89/32',
                 'gateway4': '172.31.1.1',
-                'ipv6': '2a01:4f8:c012:8e8f::1/64',
+                'ipv6': '2a01:4f8:c013:3d0b::1/64',
                 'gateway6': 'fe80::1',
             },
         },
@@ -51,7 +51,7 @@
             'pools': {
                 'tank': {
                     'devices': [
-                        '/dev/disk/by-id/scsi-0HC_Volume_100356294',
+                        '/dev/disk/by-id/scsi-0HC_Volume_100662393',
                     ],
                 },
             },

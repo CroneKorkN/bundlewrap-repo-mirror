@@ -47,6 +47,13 @@ defaults = {
             },
         },
     },
+    'systemd-timers': {
+        'freescout-cron': {
+            'command': '/usr/bin/php /opt/freescout/artisan schedule:run',
+            'when': 'Minutely',
+            'user': 'www-data',
+        },
+    },
     'zfs': {
         'datasets': {
             'tank/freescout': {
