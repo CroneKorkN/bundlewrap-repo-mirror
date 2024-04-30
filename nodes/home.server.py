@@ -66,7 +66,7 @@
             'download_server': 'netcup.mails',
         },
         'gitea': {
-            'version': '1.21.11-1',
+            'version': '7.0.1',
             'domain': 'git.sublimity.de',
             'conf': {
                 'mailer': {
