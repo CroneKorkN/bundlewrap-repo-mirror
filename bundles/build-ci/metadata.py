@@ -1,6 +1,10 @@
 from shlex import quote
 
 
+defaults = {
+    'build-ci': {},
+}
+
 @metadata_reactor.provides(
     'users/build-ci/authorized_users',
     'sudoers/build-ci',
