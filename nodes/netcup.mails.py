@@ -77,6 +77,9 @@
                 'A': ['202.61.255.108'],
                 'AAAA': ['2a01:4f8:1c1c:4121::1'],
             },
+            'elimu-kwanza.de': {
+                'TXT': ['google-site-verification=JwgcfXQ6nIXKxjMqUGHVBDISgMCQXgzMryPBsP2ZXnE'],
+            },
         },
         'download-server': {
             'hostname': 'dl.sublimity.de',
