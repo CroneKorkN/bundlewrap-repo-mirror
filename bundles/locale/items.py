@@ -20,18 +20,19 @@ files = {
 }
 
 actions = {
+    'systemd-locale': {
+        'command': f'localectl set-locale LANG="{default_locale}"',
+        'unless': f'localectl | grep -Fi "system locale" | grep -Fi "{default_locale}"',
+        'triggers': {
+            'action:locale-gen',
+        },
+    },
     'locale-gen': {
         'command': 'locale-gen',
         'triggered': True,
         'needs': {
             'pkg_apt:locales',
-        },
-    },
-    'systemd-locale': {
-        'command': f'localectl set-locale LANG="{default_locale}"',
-        'unless': f'localectl | grep -Fi "system locale" | grep -Fi "{default_locale}"',
-        'preceded_by': {
-            'action:locale-gen',
+            'action:systemd-locale',
         },
     },
 }
