@@ -14,7 +14,7 @@ defaults = {
             'libopenjp2-7': {},
             'libturbojpeg0-dev': {},
             'tzdata': {},
-            #'bluez': {},
+            'bluez': {},
             'libtiff6': {},
             'ffmpeg': {},
             'liblapack3': {},
