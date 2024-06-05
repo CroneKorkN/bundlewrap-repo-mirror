@@ -76,7 +76,7 @@ files = {
 
 actions = {
     'nginx-generate-dhparam': {
-        'command': 'openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048',
+        'command': 'openssl dhparam -dsaparam -out /etc/ssl/certs/dhparam.pem 4096',
         'unless': 'test -f /etc/ssl/certs/dhparam.pem',
     },
 }
