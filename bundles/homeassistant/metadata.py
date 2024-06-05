@@ -34,7 +34,7 @@ defaults = {
                     'User': 'homeassistant',
                     'Group': 'homeassistant',
                     'WorkingDirectory': "/opt/homeassistant",
-                    'ExecStart': "/opt/homeassistant/venv/bin/python3 /opt/homeassistant/venv/bin/hass -c /opt/homeassistant/data",
+                    'ExecStart': "/opt/homeassistant/venv/bin/python3 /opt/homeassistant/venv/bin/hass -c /opt/homeassistant/data --debug",
                 },
                 'Install': {
                     'WantedBy': {
