@@ -122,10 +122,7 @@ def backup(metadata):
     'apt/packages'
 )
 def headers(metadata):
-    if node.in_group('raspberry-pi'):
-        arch = 'arm64'
-    else:
-        arch = 'amd64'
+    arch = metadata.get('system/architecture')
 
     return {
         'apt': {
