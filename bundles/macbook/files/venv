@@ -19,5 +19,10 @@ if test "$DELTA" -gt 86400
 then
   python3 -m pip --require-virtualenv install pip wheel --upgrade
   python3 -m pip --require-virtualenv install -r requirements.txt --upgrade
+  if test -e optional-requirements.txt
+  then
+    python3 -m pip --require-virtualenv install -r optional-requirements.txt --upgrade
+  fi
+  python3 -m pip --require-virtualenv install -r optional-requirements.txt --upgrade
   date +%s > .pip_upgrade_timestamp
 fi
