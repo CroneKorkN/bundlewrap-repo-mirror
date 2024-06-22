@@ -7,6 +7,8 @@ defaults = {
             # needed by crystal plugins:
             'libgc-dev': {},
             'libevent-dev': {},
+            # crystal based:
+            'libpcre3': {},
         },
         'sources': {
             'influxdata': {
@@ -56,7 +58,7 @@ defaults = {
                 'procstat': {h({
                     'interval': '60s',
                     'pattern': '.',
-                    'fieldpass': [
+                    'fieldinclude': [
                         'cpu_usage',
                         'memory_rss',
                     ],
