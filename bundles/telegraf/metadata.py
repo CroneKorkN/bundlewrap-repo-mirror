@@ -7,7 +7,7 @@ defaults = {
             # needed by crystal plugins:
             'libgc-dev': {},
             'libevent-dev': {},
-            # crystal based:
+            # crystal based (procio, pressure_stall):
             'libpcre3': {},
         },
         'sources': {
