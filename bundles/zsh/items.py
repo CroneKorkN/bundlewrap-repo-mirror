@@ -9,6 +9,7 @@ directories = {
         ]
     },
     '/etc/zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions': {
+        'mode': '0755',
         'needs': [
             f"git_deploy:/etc/zsh/oh-my-zsh",
         ]
@@ -27,11 +28,27 @@ git_deploy = {
 }
 
 files = {
-    '/etc/zsh/zprofile': {},
+    '/etc/zsh/zprofile': {
+        'mode': '0755',
+    },
     '/etc/zsh/oh-my-zsh/themes/bw.zsh-theme': {
+        'mode': '0755',
         'needs': [
             f"git_deploy:/etc/zsh/oh-my-zsh",
         ]
+    },
+}
+
+actions = {
+    'chown_oh_my_zsh': {
+        'command': 'chmod -R 755 /etc/zsh/oh-my-zsh',
+        'triggered': True,
+        'triggered_by': [
+            "git_deploy:/etc/zsh/oh-my-zsh",
+            "git_deploy:/etc/zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions",
+            "file:/etc/zsh/zprofile",
+            "file:/etc/zsh/oh-my-zsh/themes/bw.zsh-theme",
+        ],
     },
 }
 
