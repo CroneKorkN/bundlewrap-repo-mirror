@@ -142,6 +142,7 @@ def config(metadata):
                 'versions_retention_obligation': 'auto, 90',
                 'simpleSignUpLink.shown': False,
                 'allow_local_remote_servers': True, # FIXME?
+                'maintenance_window_start': 1, # https://docs.nextcloud.com/server/29/admin_manual/configuration_server/background_jobs_configuration.html#maintenance-window-start
             },
         },
     }
