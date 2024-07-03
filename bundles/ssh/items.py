@@ -51,14 +51,14 @@ files = {
         ],
         'skip': dont_touch_sshd,
     },
-    '/etc/ssh/ssh_host_ed25519_key': {
+    '/etc/ssh/ssh_host_managed_key': {
         'content': node.metadata.get('ssh/host_key/private') + '\n',
         'mode': '0600',
         'triggers': [
             'svc_systemd:ssh:restart'
         ],
     },
-    '/etc/ssh/ssh_host_ed25519_key.pub': {
+    '/etc/ssh/ssh_host_managed_key.pub': {
         'content': node.metadata.get('ssh/host_key/public') + '\n',
         'mode': '0644',
         'triggers': [

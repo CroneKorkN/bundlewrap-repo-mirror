@@ -21,3 +21,4 @@ ClientAliveInterval 30
 ClientAliveCountMax 5
 AcceptEnv LANG
 Subsystem	sftp	/usr/lib/openssh/sftp-server
+HostKey /etc/ssh/ssh_host_managed_key
