@@ -3,13 +3,13 @@ from os.path import join
 directories = {
     '/etc/zsh/oh-my-zsh': {},
     '/etc/zsh/oh-my-zsh/custom/plugins': {
-        'mode': '0755',
+        'mode': '0744',
         'needs': [
             f"git_deploy:/etc/zsh/oh-my-zsh",
         ]
     },
     '/etc/zsh/oh-my-zsh/custom/plugins/zsh-autosuggestions': {
-        'mode': '0755',
+        'mode': '0744',
         'needs': [
             f"git_deploy:/etc/zsh/oh-my-zsh",
         ]
@@ -29,10 +29,10 @@ git_deploy = {
 
 files = {
     '/etc/zsh/zprofile': {
-        'mode': '0755',
+        'mode': '0744',
     },
     '/etc/zsh/oh-my-zsh/themes/bw.zsh-theme': {
-        'mode': '0755',
+        'mode': '0744',
         'needs': [
             f"git_deploy:/etc/zsh/oh-my-zsh",
         ]
@@ -41,7 +41,7 @@ files = {
 
 actions = {
     'chown_oh_my_zsh': {
-        'command': 'chmod -R 755 /etc/zsh/oh-my-zsh',
+        'command': 'chmod -R 744 /etc/zsh/oh-my-zsh',
         'triggered': True,
         'triggered_by': [
             "git_deploy:/etc/zsh/oh-my-zsh",
