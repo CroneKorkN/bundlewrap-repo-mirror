@@ -23,6 +23,5 @@ then
   then
     python3 -m pip --require-virtualenv install -r optional-requirements.txt --upgrade
   fi
-  python3 -m pip --require-virtualenv install -r optional-requirements.txt --upgrade
   date +%s > .pip_upgrade_timestamp
 fi
