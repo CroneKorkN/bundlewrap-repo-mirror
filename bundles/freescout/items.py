@@ -21,7 +21,7 @@ actions = {
         ],
     },
     'pull_freescout': {
-        'command': run_as('www-data', 'git -C /opt/freescout pull'),
+        'command': run_as('www-data', 'git -C /opt/freescout fetch origin dist && git -C /opt/freescout reset --hard origin/dist && git -C /opt/freescout clean -f'),
         'unless': run_as('www-data', 'git -C /opt/freescout fetch origin && git -C /opt/freescout status -uno | grep -q "Your branch is up to date"'),
         'needs': [
             'action:clone_freescout',

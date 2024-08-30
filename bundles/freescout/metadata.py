@@ -1,3 +1,6 @@
+from base64 import b64decode
+
+# hash: SCRAM-SHA-256$4096:tQNfqQi7seqNDwJdHqCHbg==$r3ibECluHJaY6VRwpvPqrtCjgrEK7lAkgtUO8/tllTU=:+eeo4M0L2SowfyHFxT2FRqGzezve4ZOEocSIo11DATA=
 database_password = repo.vault.password_for(f'{node.name} postgresql freescout').value
 
 defaults = {
@@ -38,7 +41,10 @@ defaults = {
     'postgresql': {
         'roles': {
             'freescout': {
-                'password': database_password,
+                'password_hash': repo.libs.postgres.generate_scram_sha_256(
+                    database_password,
+                    b64decode(repo.vault.random_bytes_as_base64_for(f'{node.name} postgres freescout', length=16).value.encode()),
+                ),
             },
         },
         'databases': {

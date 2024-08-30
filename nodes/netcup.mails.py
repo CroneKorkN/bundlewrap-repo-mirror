@@ -16,7 +16,7 @@
         'download-server',
         'islamicstate.eu',
         'nginx-rtmps',
-        'steam',
+        #'steam',
         'wireguard',
         'zfs',
     ],
@@ -53,7 +53,7 @@
                 'left4.me',
                 'elimu-kwanza.de',
                 'cronekorkn.de',
-                'freescout.foerderkreis-oranienschule.de',
+                'foerderkreis.oranienschule-wiesbaden-wiki.de',
             },
         },
         'dns': {

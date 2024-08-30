@@ -27,7 +27,7 @@
             },
         },
         'freescout': {
-            'domain': 'freescout.foerderkreis-oranienschule.de',
+            'domain': 'foerderkreis.oranienschule-wiesbaden-wiki.de',
         },
         'vm': {
             'cores': 1,
