@@ -1,10 +1,10 @@
 {
-    'dummy': True,
+    #'dummy': True,
     'hostname': '159.69.117.89',
     'groups': [
-#        'backup',
+        'backup',
         'debian-12',
-#        'monitored',
+        'monitored',
         'webserver',
         'freescout',
     ],

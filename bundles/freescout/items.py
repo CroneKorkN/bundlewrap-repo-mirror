@@ -41,6 +41,10 @@ actions = {
     },
 }
 
+# svc_systemd = {
+#     f'freescout-cron.service': {},
+# }
+
 # files = {
 #     '/opt/freescout/.env': {
 #         # https://github.com/freescout-helpdesk/freescout/blob/dist/.env.example

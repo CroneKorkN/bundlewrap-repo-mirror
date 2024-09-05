@@ -53,10 +53,31 @@ defaults = {
             },
         },
     },
+    # 'systemd': {
+    #     'units': {
+    #         f'freescout-cron.service': {
+    #             'Unit': {
+    #                 'Description': 'Freescout Cron',
+    #                 'After': 'network.target',
+    #             },
+    #             'Service': {
+    #                 'User': 'www-data',
+    #                 'Nice': 10,
+    #                 'ExecStart': f"/usr/bin/php /opt/freescout/artisan schedule:run"
+    #             },
+    #             'Install': {
+    #                 'WantedBy': {
+    #                     'multi-user.target'
+    #                 }
+    #             },
+    #         }
+    #     },
+    # },
     'systemd-timers': {
         'freescout-cron': {
             'command': '/usr/bin/php /opt/freescout/artisan schedule:run',
-            'when': 'Minutely',
+            'when': '*-*-* *:*:00',
+            'RuntimeMaxSec': '600',
             'user': 'www-data',
         },
     },
@@ -68,6 +89,8 @@ defaults = {
         },
     },
 }
+
+
 
 
 @metadata_reactor.provides(

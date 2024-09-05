@@ -42,6 +42,8 @@ def systemd(metadata):
             units[f'{name}.service']['Service']['SuccessExitStatus'] = config['success_exit_status']
         if config.get('kill_mode'):
             units[f'{name}.service']['Service']['KillMode'] = config['kill_mode']
+        if config.get('RuntimeMaxSec'):
+            units[f'{name}.service']['Service']['RuntimeMaxSec'] = config['RuntimeMaxSec']
 
         services[f'{name}.timer'] = {}
 
