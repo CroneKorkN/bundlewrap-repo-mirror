@@ -77,7 +77,7 @@ defaults = {
         'freescout-cron': {
             'command': '/usr/bin/php /opt/freescout/artisan schedule:run',
             'when': '*-*-* *:*:00',
-            'RuntimeMaxSec': '600',
+            'RuntimeMaxSec': '180',
             'user': 'www-data',
         },
     },
