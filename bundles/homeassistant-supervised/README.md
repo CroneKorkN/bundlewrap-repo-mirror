@@ -19,3 +19,5 @@ dann bw drüberbügeln
 
 
 https://www.home-assistant.io/integrations/http/#ssl_certificate
+
+`wget "$(curl -L https://api.github.com/repos/home-assistant/supervised-installer/releases/latest | jq -r '.assets[0].browser_download_url')" -O homeassistant-supervised.deb && dpkg -i homeassistant-supervised.deb`
