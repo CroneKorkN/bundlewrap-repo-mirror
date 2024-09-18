@@ -37,7 +37,7 @@
         'network': {
             'internal': {
                 'interface': 'ens10',
-                'ipv4': '10.0.10.3/32',
+                'ipv4': '10.0.10.2/32',
             },
             'external': {
                 'interface': 'eth0',

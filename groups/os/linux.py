@@ -6,6 +6,7 @@
         'hostname',
         'hosts',
         'htop',
+        'linux',
         'locale',
         'network',
         'ssh',
@@ -22,16 +23,16 @@
     'metadata': {
         'dns': {},
         'hosts': {
-            '10.0.11.3': [
+            '10.0.10.2': [
                 'resolver.name',
                 'secondary.resolver.name',
             ],
         },
         'letsencrypt': {
-            'acme_node': 'netcup.mails',
+            'acme_node': 'htz.mails',
         },
         'nameservers': {
-            '10.0.11.3',
+            '10.0.10.2',
         },
         'systemd-timers': {
             'trim': {

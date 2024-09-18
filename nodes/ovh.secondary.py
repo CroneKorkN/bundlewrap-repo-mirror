@@ -20,22 +20,22 @@
             },
         },
         'bind': {
-            'master_node': 'netcup.mails',
+            'master_node': 'htz.mails',
             'hostname': 'secondary.resolver.name',
         },
         # 'postfix': {
-        #     'master_node': 'netcup.mails',
+        #     'master_node': 'htz.mails',
         #     'hostname': 'mail2.sublimity.de',
         # },
         'wireguard': {
             'my_ip': '172.30.0.3/32',
             's2s': {
-                'netcup.mails': {
+                'htz.mails': {
                     'allowed_ips': [
                         '10.0.0.0/24',
                         '10.0.2.0/24',
                         '10.0.9.0/24',
-                        '10.0.11.0/24',
+                        '10.0.10.0/24',
                     ],
                 },
             },

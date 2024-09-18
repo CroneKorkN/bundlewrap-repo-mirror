@@ -1,7 +1,5 @@
 <?php
 
-// https://github.com/roundcube/roundcubemail/blob/357cc90001f997fd223fb48fcede6040f527c2f4/plugins/password/config.inc.php.dist
-
 $config['password_driver'] = 'sql';
 $config['password_strength_driver'] = null;
 $config['password_confirm_current'] = true;

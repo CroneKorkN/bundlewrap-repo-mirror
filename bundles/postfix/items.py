@@ -86,6 +86,8 @@ if node.has_bundle('telegraf'):
         'needs': [
             'pkg_apt:acl',
             'svc_systemd:postfix',
+            'svc_systemd:postfix:reload',
+            'svc_systemd:postfix:restart',
         ],
     }
     actions['postfix_setfacl_default_telegraf'] = {
@@ -94,5 +96,7 @@ if node.has_bundle('telegraf'):
         'needs': [
             'pkg_apt:acl',
             'svc_systemd:postfix',
+            'svc_systemd:postfix:reload',
+            'svc_systemd:postfix:restart',
         ],
     }

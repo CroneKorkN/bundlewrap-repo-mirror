@@ -1,7 +1,16 @@
 defaults = {
     'apt': {
         'packages': {
-            'mariadb-server': {},
+            'mariadb-server': {
+                'needs': {
+                    'zfs_dataset:tank/mariadb',
+                },
+            },
+            'mariadb-client': {
+                'needs': {
+                    'zfs_dataset:tank/mariadb',
+                },
+            },
         },
     },
     'mariadb': {

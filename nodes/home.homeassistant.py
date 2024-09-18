@@ -68,20 +68,20 @@
             },
         },
         'hosts': {
-            '10.0.11.3': [
+            '10.0.10.2': [
                 'resolver.name',
                 'secondary.resolver.name',
             ],
         },
         'letsencrypt': {
-            'acme_node': 'netcup.mails',
+            'acme_node': 'htz.mails',
         },
         'homeassistant': {
             'domain': 'homeassistant.ckn.li',
             'os_agent_version': '1.6.0',
         },
         'nameservers': {
-            '10.0.11.3',
+            '10.0.10.2',
         },
         'users': {
             'ckn': {

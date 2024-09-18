@@ -1,7 +1,8 @@
 assert node.has_bundle('php')
 assert node.has_bundle('mailserver')
 
-version = node.metadata.get('roundcube/version')
+roundcube_version = node.metadata.get('roundcube/version')
+php_version = node.metadata.get('php/version')
 
 directories = {
     '/opt/roundcube': {
@@ -22,9 +23,9 @@ directories = {
 }
 
 
-files[f'/tmp/roundcube-{version}.tar.gz'] = {
+files[f'/tmp/roundcube-{roundcube_version}.tar.gz'] = {
     'content_type': 'download',
-    'source': f'https://github.com/roundcube/roundcubemail/releases/download/{version}/roundcubemail-{version}-complete.tar.gz',
+    'source': f'https://github.com/roundcube/roundcubemail/releases/download/{roundcube_version}/roundcubemail-{roundcube_version}-complete.tar.gz',
     'triggered': True,
 }
 actions['delete_roundcube'] = {
@@ -32,11 +33,11 @@ actions['delete_roundcube'] = {
     'triggered': True,
 }
 actions['extract_roundcube'] = {
-    'command': f'tar xfvz /tmp/roundcube-{version}.tar.gz --strip 1 -C /opt/roundcube',
-    'unless': f'grep -q "Version {version}" /opt/roundcube/index.php',
+    'command': f'tar xfvz /tmp/roundcube-{roundcube_version}.tar.gz --strip 1 -C /opt/roundcube',
+    'unless': f'grep -q "Version {roundcube_version}" /opt/roundcube/index.php',
     'preceded_by': [
         'action:delete_roundcube',
-        f'file:/tmp/roundcube-{version}.tar.gz',
+        f'file:/tmp/roundcube-{roundcube_version}.tar.gz',
     ],
     'needs': [
         'directory:/opt/roundcube',
@@ -63,6 +64,9 @@ files['/opt/roundcube/config/config.inc.php'] = {
     },
     'needs': [
         'action:chown_roundcube',
+    ],
+    'triggers': [
+        f'svc_systemd:php{php_version}-fpm.service:restart',
     ],
 }
 files['/opt/roundcube/plugins/password/config.inc.php'] = {

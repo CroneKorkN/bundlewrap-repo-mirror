@@ -1,8 +1,9 @@
 {
-    'hostname': '202.61.255.108',
+    'hostname': '49.12.184.229',
     'groups': [
         'backup',
         'debian-12',
+        'hetzner-cloud',
         'mailserver',
         'monitored',
         'webserver',
@@ -15,7 +16,7 @@
         'build-ci',
         'download-server',
         'islamicstate.eu',
-        'nginx-rtmps',
+        #'nginx-rtmps',
         #'steam',
         'wireguard',
         'zfs',
@@ -24,14 +25,14 @@
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
             'internal': {
-                'interface': 'eth1',
-                'ipv4': '10.0.11.3/24',
+                'interface': 'enp7s0',
+                'ipv4': '10.0.10.2/24',
             },
             'external': {
                 'interface': 'eth0',
-                'ipv4': '202.61.255.108/22',
-                'gateway4': '202.61.252.1',
-                'ipv6': '2a03:4000:55:a89::1/64',
+                'ipv4': '49.12.184.229/32',
+                'gateway4': '172.31.1.1',
+                'ipv6': '2a01:4f8:c013:51f2::1',
                 'gateway6': 'fe80::1',
             }
         },
@@ -58,20 +59,20 @@
         },
         'dns': {
             'ckn.li': {
-                'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::1'],
+                'A': ['49.12.184.229'],
+                'AAAA': ['2a01:4f8:c013:51f2::1'],
             },
             'sublimity.de': {
-                'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::1'],
+                'A': ['49.12.184.229'],
+                'AAAA': ['2a01:4f8:c013:51f2::1'],
             },
             'freibrief.net': {
-                'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::1'],
+                'A': ['49.12.184.229'],
+                'AAAA': ['2a01:4f8:c013:51f2::1'],
             },
             'left4.me': {
-                'A': ['202.61.255.108'],
-                'AAAA': ['2a01:4f8:1c1c:4121::1'],
+                'A': ['49.12.184.229'],
+                'AAAA': ['2a01:4f8:c013:51f2::1'],
             },
             'elimu-kwanza.de': {
                 'TXT': ['google-site-verification=JwgcfXQ6nIXKxjMqUGHVBDISgMCQXgzMryPBsP2ZXnE'],
@@ -195,21 +196,22 @@
         },
         'vm': {
             'cores': 4,
-            'ram': 16384,
+            'ram': 8192,
         },
         'wireguard': {
             'my_ip': '172.30.0.1/24',
             's2s': {
-                'home.server': {
+                'home.router': {
                     'allowed_ips': [
                         '10.0.0.0/24',
                         '10.0.2.0/24',
                         '10.0.9.0/24',
+                        '10.0.99.0/24',
                     ],
                 },
                 'ovh.secondary': {
                     'allowed_ips': [
-                        '10.0.11.0/24',
+                        '10.0.10.0/24',
                     ],
                 },
                 'wb.offsite-backups': {
@@ -239,7 +241,7 @@
             'pools': {
                 'tank': {
                     'devices': [
-                        '/dev/sda4',
+                        '/dev/disk/by-id/scsi-0HC_Volume_101332312',
                     ],
                 },
             },

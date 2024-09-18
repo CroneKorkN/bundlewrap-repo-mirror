@@ -13,6 +13,7 @@ directories = {
         ],
         'needed_by': [
             'pkg_apt:mariadb-server',
+            'pkg_apt:mariadb-client',
         ],
     },
 }
@@ -30,6 +31,7 @@ svc_systemd = {
     'mariadb.service': {
         'needs': [
             'pkg_apt:mariadb-server',
+            'pkg_apt:mariadb-client',
         ],
     },
 }

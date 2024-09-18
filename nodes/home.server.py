@@ -33,7 +33,6 @@
         'twitch-clip-download',
         'raspberrymatic-cert',
         'tasmota-charge',
-        'wireguard',
         'wol-waker',
         'zfs',
     ],
@@ -63,10 +62,10 @@
                     'target': 'aarch64-unknown-linux-gnu',
                 },
             },
-            'download_server': 'netcup.mails',
+            'download_server': 'htz.mails',
         },
         'gitea': {
-            'version': '7.0.1',
+            'version': '8.0.3',
             'domain': 'git.sublimity.de',
             'conf': {
                 'mailer': {
@@ -111,7 +110,7 @@
         },
         'nextcloud': {
             'hostname': 'cloud.sublimity.de',
-            'version': '29.0.3',
+            'version': '29.0.7',
             'config': {
                 'instanceid': 'oci6dw1woodz',
                 'secret': '!decrypt:encrypt$gAAAAABj96CFynVtEgsje7173zjQAcY7xQG3uyf5cxE-sJAvhyPh_KUykTKdwnExc8NTDJ8RIGUmVfgC6or5crnYaggARPIEg5-Cb0xVdEPPZ3oZ01ImLmynLu3qXT9O8kVM-H21--OKeztMRn7bySsbXdWEGtETFQ==',
@@ -145,6 +144,13 @@
         'steam-chat-viewer': {
             'hostname': 'steam-chats.ckn.li',
         },
+        'sysctl': {
+            'net': {
+                'ipv4': {
+                    'ip_forward': 1,
+                },
+            },
+        },
         'systemd-swap': 4_000_000_000,
         'tasmota-charge': {
             'phone': {
@@ -165,19 +171,6 @@
             'cores': 16,
             'threads': 32,
             'ram':  49152,
-        },
-        'wireguard': {
-            'my_ip': '172.30.0.2/32',
-            's2s': {
-                'netcup.mails': {
-                    'allowed_ips': [
-                        '10.0.10.0/24',
-                        '10.0.11.0/24',
-                        '192.168.179.0/24',
-                        '10.0.227.0/24', # mseibert.freescout
-                    ],
-                },
-            },
         },
         'zfs': {
             'zfs_arc_max_percent': 80,
