@@ -6,6 +6,7 @@
         'hostname',
         'hosts',
         'htop',
+        'linux',
         'locale',
         'network',
         'ssh',
