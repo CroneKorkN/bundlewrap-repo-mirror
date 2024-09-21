@@ -1,7 +1,5 @@
 <?php
 
-
-
 $config['password_driver'] = 'sql';
 $config['password_strength_driver'] = null;
 $config['password_confirm_current'] = true;
