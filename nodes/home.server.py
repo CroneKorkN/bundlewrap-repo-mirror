@@ -63,7 +63,7 @@
                     'target': 'aarch64-unknown-linux-gnu',
                 },
             },
-            'download_server': 'netcup.mails',
+            'download_server': 'htz.mails',
         },
         'gitea': {
             'version': '7.0.1',
@@ -169,10 +169,10 @@
         'wireguard': {
             'my_ip': '172.30.0.2/32',
             's2s': {
-                'netcup.mails': {
+                'htz.mails': {
                     'allowed_ips': [
                         '10.0.10.0/24',
-                        '10.0.11.0/24',
+                        '10.0.10.0/24',
                         '192.168.179.0/24',
                         '10.0.227.0/24', # mseibert.freescout
                     ],

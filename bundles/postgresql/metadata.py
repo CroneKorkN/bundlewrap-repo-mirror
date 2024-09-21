@@ -6,7 +6,11 @@ root_password = repo.vault.password_for(f'{node.name} postgresql root')
 defaults = {
     'apt': {
         'packages': {
-            'postgresql': {},
+            'postgresql': {
+                'needs': {
+                    'zfs_dataset:tank/postgresql',
+                },
+            },
         },
     },
     'backup': {

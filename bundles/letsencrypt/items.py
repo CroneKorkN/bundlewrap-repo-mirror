@@ -56,6 +56,7 @@ for domain in node.metadata.get('letsencrypt/domains').keys():
         'unless': f'/etc/dehydrated/letsencrypt-ensure-some-certificate {domain} true',
         'needs': {
             'file:/etc/dehydrated/letsencrypt-ensure-some-certificate',
+            'pkg_apt:dehydrated',
         },
         'needed_by': {
             'svc_systemd:nginx',
