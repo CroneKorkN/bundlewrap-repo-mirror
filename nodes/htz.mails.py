@@ -5,10 +5,10 @@
         'debian-12',
         'hetzner-cloud',
         'mailserver',
-        #'monitored',
+        'monitored',
         'webserver',
         'dnsserver',
-        #'wordpress',
+        'wordpress',
         #'left4dead2',
     ],
     'bundles': [
