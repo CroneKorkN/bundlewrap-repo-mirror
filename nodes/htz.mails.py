@@ -1,7 +1,7 @@
 {
     'hostname': '49.12.184.229',
     'groups': [
-        #'backup',
+        'backup',
         'debian-12',
         'hetzner-cloud',
         'mailserver',
@@ -215,6 +215,7 @@
                         '10.0.0.0/24',
                         '10.0.2.0/24',
                         '10.0.9.0/24',
+                        '10.0.99.0/24',
                     ],
                 },
                 'ovh.secondary': {

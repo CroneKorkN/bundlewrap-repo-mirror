@@ -145,6 +145,13 @@
         'steam-chat-viewer': {
             'hostname': 'steam-chats.ckn.li',
         },
+        'sysctl': {
+            'net': {
+                'ipv4': {
+                    'ip_forward': 1,
+                },
+            },
+        },
         'systemd-swap': 4_000_000_000,
         'tasmota-charge': {
             'phone': {

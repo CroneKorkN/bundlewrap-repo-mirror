@@ -36,7 +36,7 @@
                         ],
                         'option-data': [
                             { 'name': 'routers', 'data': '10.0.0.1' },
-                            { 'name': 'domain-name-servers', 'data': '1.1.1.1, 8.8.8.8, 9.9.9.9' },
+                            { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
                         ],
                     },
                 ],

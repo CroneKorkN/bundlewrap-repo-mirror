@@ -22,22 +22,20 @@ files= {
             ),
         ),
         'triggers': [
-            'action:reload_sysctl.conf',
+            'svc_systemd:systemd-sysctl.service:restart',
         ],
     },
 }
 
-actions = {
-    'reload_sysctl.conf': {
-        'command': 'sysctl --system',
-        'triggered': True,
-    },
+svc_systemd = {
+    'systemd-sysctl.service': {},
 }
 
 for path, value in key_value_pairs:
     actions[f'reload_sysctl.conf_{path}'] = {
         'command': f"sysctl --values {'.'.join(path)}  | grep -q {quote('^'+value+'$')}",
         'needs': [
-            f'action:reload_sysctl.conf',
+            f'action:systemd-sysctl.service',
+            f'action:systemd-sysctl.service:restart',
         ],
     }
