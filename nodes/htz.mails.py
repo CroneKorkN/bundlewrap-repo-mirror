@@ -22,15 +22,6 @@
         'zfs',
     ],
     'metadata': {
-
-
-        'users': {
-            'root': {
-                #'password': 'November99!!..',
-            },
-        },
-
-
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
         'network': {
             'internal': {
@@ -210,7 +201,7 @@
         'wireguard': {
             'my_ip': '172.30.0.1/24',
             's2s': {
-                'home.server': {
+                'home.router': {
                     'allowed_ips': [
                         '10.0.0.0/24',
                         '10.0.2.0/24',

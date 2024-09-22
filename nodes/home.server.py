@@ -33,7 +33,6 @@
         'twitch-clip-download',
         'raspberrymatic-cert',
         'tasmota-charge',
-        'wireguard',
         'wol-waker',
         'zfs',
     ],
@@ -172,19 +171,6 @@
             'cores': 16,
             'threads': 32,
             'ram':  49152,
-        },
-        'wireguard': {
-            'my_ip': '172.30.0.2/32',
-            's2s': {
-                'htz.mails': {
-                    'allowed_ips': [
-                        '10.0.10.0/24',
-                        '10.0.10.0/24',
-                        '192.168.179.0/24',
-                        '10.0.227.0/24', # mseibert.freescout
-                    ],
-                },
-            },
         },
         'zfs': {
             'zfs_arc_max_percent': 80,

@@ -9,6 +9,7 @@
     ],
     'bundles': [
         'kea-dhcpd',
+        'wireguard',
     ],
     'metadata': {
         'id': '1d6a43e5-858c-42f9-9c40-ab63d61c787c',
@@ -57,6 +58,19 @@
             'net': {
                 'ipv4': {
                     'ip_forward': 1,
+                },
+            },
+        },
+        'wireguard': {
+            'my_ip': '172.30.0.2/32',
+            's2s': {
+                'htz.mails': {
+                    'allowed_ips': [
+                        '10.0.10.0/24',
+                        '10.0.10.0/24',
+                        '192.168.179.0/24',
+                        '10.0.227.0/24', # mseibert.freescout
+                    ],
                 },
             },
         },
