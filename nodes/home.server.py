@@ -65,7 +65,7 @@
             'download_server': 'htz.mails',
         },
         'gitea': {
-            'version': '7.0.1',
+            'version': '8.0.3',
             'domain': 'git.sublimity.de',
             'conf': {
                 'mailer': {
