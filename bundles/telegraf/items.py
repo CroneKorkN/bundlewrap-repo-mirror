@@ -9,7 +9,7 @@ files = {
                 node.metadata.get('telegraf/config'),
                 cls=MetadataJSONEncoder,
             )),
-            sort_keys=True
+            sort_keys=True,
         ),
         'triggers': [
             'svc_systemd:telegraf:restart',

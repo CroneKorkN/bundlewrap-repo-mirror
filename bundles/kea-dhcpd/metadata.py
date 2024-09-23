@@ -12,15 +12,15 @@ defaults = {
     'kea': {
         'Dhcp4': {
             'interfaces-config': {
-                'interfaces': [],
+                'interfaces': set(),
             },
             'lease-database': {
                 'type': 'memfile',
                 'lfc-interval': 3600
             },
-            'subnet4': [],
-            'loggers': [
-                {
+            'subnet4': set(),
+            'loggers': set([
+                hashable({
                     'name': 'kea-dhcp4',
                     'output_options': [
                         {
@@ -28,8 +28,8 @@ defaults = {
                         }
                     ],
                     'severity': 'INFO',
-                },
-            ],
+                }),
+            ]),
         },
     },
 }

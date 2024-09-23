@@ -43,45 +43,6 @@
                 'dhcp_server': True,
             },
         },
-        'kea': {
-            'Dhcp4': {
-                #'interfaces-config': {
-                #    'interfaces': {'eno1', 'iot', 'guest'},
-                #},
-                # 'subnet4': [
-                #     {
-                #         'subnet': '10.0.0.0/24',
-                #         'pools': [
-                #             { 'pool': '10.0.0.100 - 10.0.0.200' },
-                #         ],
-                #         'option-data': [
-                #             { 'name': 'routers', 'data': '10.0.0.1' },
-                #             { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
-                #         ],
-                #     },
-                #     {
-                #         'subnet': '10.0.2.0/24',
-                #         'pools': [
-                #             { 'pool': '10.0.2.100 - 10.0.2.200' },
-                #         ],
-                #         'option-data': [
-                #             { 'name': 'routers', 'data': '10.0.2.1' },
-                #             { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
-                #         ],
-                #     },
-                #     {
-                #         'subnet': '10.0.9.0/24',
-                #         'pools': [
-                #             { 'pool': '10.0.9.100 - 10.0.9.200' },
-                #         ],
-                #         'option-data': [
-                #             { 'name': 'routers', 'data': '10.0.9.1' },
-                #             { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
-                #         ],
-                #     },
-                # ],
-            },
-        },
         'nftables': {
             'forward': {
                 # Drop DHCP client requests (UDP port 68)
