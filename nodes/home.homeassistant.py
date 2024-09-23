@@ -29,6 +29,7 @@
             'internal': {
                 'interface': 'eth0',
                 'ipv4': '10.0.0.16/24',
+                'mac': 'd8:3a:dd:16:fc:9d',
                 'gateway4': '10.0.0.1',
             },
         },
