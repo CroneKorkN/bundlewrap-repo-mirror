@@ -43,7 +43,7 @@
         'kea': {
             'Dhcp4': {
                 'interfaces-config': {
-                    'interfaces': ['eno1'],
+                    'interfaces': ['eno1', 'iot', 'guest'],
                 },
                 'subnet4': [
                     {
