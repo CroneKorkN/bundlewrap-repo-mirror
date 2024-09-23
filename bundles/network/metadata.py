@@ -6,6 +6,33 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'network',
+)
+def dhcp(metadata):
+    networks = {}
+
+    for network_name, network_conf in metadata.get('network').items():
+        _interface = ip_interface(network_conf['ipv4'])
+        _ip = _interface.ip
+        _network = _interface.network
+        _hosts = list(_network.hosts())
+
+        if network_conf.get('dhcp_server', False):
+            networks[network_name] = {
+                'dhcp_server_config': {
+                    'subnet': str(_network),
+                    'pool_from': str(_hosts[len(_hosts)//2]),
+                    'pool_to': str(_hosts[-3]),
+                    'router': str(_ip),
+                    'domain-name-servers': str(_ip),
+                }
+            }
+    return {
+        'network': networks,
+    }
+
+
+@metadata_reactor.provides(
     'systemd/units',
 )
 def units(metadata):

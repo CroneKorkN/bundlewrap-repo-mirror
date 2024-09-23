@@ -18,6 +18,7 @@
                 'interface': 'eno1',
                 'ipv4': '10.0.0.1/24',
                 'vlans': {'iot', 'internet', 'guest'},
+                'dhcp_server': True,
             },
             'temp': {
                 'interface': 'enx00e04c220682',
@@ -28,6 +29,7 @@
                 'type': 'vlan',
                 'id': 2,
                 'ipv4': '10.0.2.1/24',
+                'dhcp_server': True,
             },
             'internet': {
                 'type': 'vlan',
@@ -38,45 +40,7 @@
                 'type': 'vlan',
                 'id': 9,
                 'ipv4': '10.0.9.1/24',
-            },
-        },
-        'kea': {
-            'Dhcp4': {
-                'interfaces-config': {
-                    'interfaces': ['eno1', 'iot', 'guest'],
-                },
-                'subnet4': [
-                    {
-                        'subnet': '10.0.0.0/24',
-                        'pools': [
-                            { 'pool': '10.0.0.100 - 10.0.0.200' },
-                        ],
-                        'option-data': [
-                            { 'name': 'routers', 'data': '10.0.0.1' },
-                            { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
-                        ],
-                    },
-                    {
-                        'subnet': '10.0.2.0/24',
-                        'pools': [
-                            { 'pool': '10.0.2.100 - 10.0.2.200' },
-                        ],
-                        'option-data': [
-                            { 'name': 'routers', 'data': '10.0.2.1' },
-                            { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
-                        ],
-                    },
-                    {
-                        'subnet': '10.0.9.0/24',
-                        'pools': [
-                            { 'pool': '10.0.9.100 - 10.0.9.200' },
-                        ],
-                        'option-data': [
-                            { 'name': 'routers', 'data': '10.0.9.1' },
-                            { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
-                        ],
-                    },
-                ],
+                'dhcp_server': True,
             },
         },
         'nftables': {
