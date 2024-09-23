@@ -17,11 +17,27 @@
             'internal': {
                 'interface': 'eno1',
                 'ipv4': '10.0.0.1/24',
+                'vlans': {'iot', 'internet', 'guest'},
             },
             'temp': {
                 'interface': 'enx00e04c220682',
                 'ipv4': '10.0.99.126/24',
                 'gateway4': '10.0.99.1',
+            },
+            'iot': {
+                'type': 'vlan',
+                'id': 2,
+                'ipv4': '10.0.2.1/24',
+            },
+            'internet': {
+                'type': 'vlan',
+                'id': 3,
+                'ipv4': '10.0.3.1/24',
+            },
+            'guest': {
+                'type': 'vlan',
+                'id': 9,
+                'ipv4': '10.0.9.1/24',
             },
         },
         'kea': {
@@ -37,6 +53,26 @@
                         ],
                         'option-data': [
                             { 'name': 'routers', 'data': '10.0.0.1' },
+                            { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
+                        ],
+                    },
+                    {
+                        'subnet': '10.0.2.0/24',
+                        'pools': [
+                            { 'pool': '10.0.2.100 - 10.0.2.200' },
+                        ],
+                        'option-data': [
+                            { 'name': 'routers', 'data': '10.0.2.1' },
+                            { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
+                        ],
+                    },
+                    {
+                        'subnet': '10.0.9.0/24',
+                        'pools': [
+                            { 'pool': '10.0.9.100 - 10.0.9.200' },
+                        ],
+                        'option-data': [
+                            { 'name': 'routers', 'data': '10.0.9.1' },
                             { 'name': 'domain-name-servers', 'data': '10.0.10.2' },
                         ],
                     },
