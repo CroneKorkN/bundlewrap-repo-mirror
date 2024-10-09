@@ -3,7 +3,7 @@ from bundlewrap.exceptions import BundleError
 from bundlewrap.utils.text import force_text, mark_for_translation as _
 from bundlewrap.utils.remote import PathInfo
 import types
-from pipes import quote
+from shlex import quote
 
 # Downloaded from https://github.com/bundlewrap/plugins/blob/master/item_download/items/download.py
 # No, we can't use plugins here, because bw4 won't support them anymore.
@@ -101,16 +101,16 @@ class Download(Item):
             elif self.attributes.get('gpg_signature_url'):
                 full_signature_url = self.attributes['gpg_signature_url'].format(url=self.attributes['url'])
                 signature_path = f'{self.name}.signature'
-                
+
                 self.node.run(f"curl -sSL {self.attributes['gpg_pubkey_url']} | gpg --import -")
                 self.node.run(f"curl -L {full_signature_url} -o {quote(signature_path)}")
                 gpg_output = self.node.run(f"gpg --verify {quote(signature_path)} {quote(self.name)}").stderr
-                
+
                 if b'Good signature' in gpg_output:
                     sdict['verified'] = True
                 else:
                     sdict['verified'] = False
-                    
+
         return sdict
 
     @classmethod
