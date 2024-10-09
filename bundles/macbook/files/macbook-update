@@ -18,7 +18,7 @@ git -C ~/.zsh/oh-my-zsh pull
 brew upgrade
 brew upgrade --cask --greedy
 
-pyenv install --keep-existing
+pyenv install --skip-existing
 
 sudo softwareupdate -ia --verbose
 
