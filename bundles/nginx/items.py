@@ -32,6 +32,7 @@ files = {
         'content_type': 'mako',
         'context': {
             'modules': node.metadata.get('nginx/modules'),
+            'worker_processes': node.metadata.get('vm/cores'),
         },
         'triggers': {
             'svc_systemd:nginx:restart',
