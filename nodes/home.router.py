@@ -43,17 +43,17 @@
                 'dhcp_server': True,
             },
         },
-        'nftables': {
-            'forward': {
-                # Drop DHCP client requests (UDP port 68)
-                'udp sport 68 drop',
-                'udp dport 68 drop',
+        # 'nftables': {
+        #     'forward': {
+        #         # Drop DHCP client requests (UDP port 68)
+        #         'udp sport 68 drop',
+        #         'udp dport 68 drop',
 
-                # Drop DHCP server responses (UDP port 67)
-                'udp sport 67 drop',
-                'udp dport 67 drop',
-            },
-        },
+        #         # Drop DHCP server responses (UDP port 67)
+        #         'udp sport 67 drop',
+        #         'udp dport 67 drop',
+        #     },
+        # },
         'sysctl': {
             'net': {
                 'ipv4': {
