@@ -2,7 +2,7 @@
 # https://console.hetzner.cloud/projects/889138/servers/46578341
 
 {
-    'dummy': True,
+    #'dummy': True,
     'hostname': '159.69.117.89',
     'groups': [
         'backup',
