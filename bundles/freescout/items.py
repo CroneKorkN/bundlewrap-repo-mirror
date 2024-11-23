@@ -12,33 +12,33 @@ directories = {
 }
 
 actions = {
-    'clone_freescout': {
-        'command': run_as('www-data', 'git clone https://github.com/freescout-helpdesk/freescout.git /opt/freescout'),
-        'unless': 'test -e /opt/freescout/.git',
-        'needs': [
-            'pkg_apt:git',
-            'directory:/opt/freescout',
-        ],
-    },
-    'pull_freescout': {
-        'command': run_as('www-data', 'git -C /opt/freescout fetch origin dist && git -C /opt/freescout reset --hard origin/dist && git -C /opt/freescout clean -f'),
-        'unless': run_as('www-data', 'git -C /opt/freescout fetch origin && git -C /opt/freescout status -uno | grep -q "Your branch is up to date"'),
-        'needs': [
-            'action:clone_freescout',
-        ],
-        'triggers': [
-            'action:freescout_artisan_update',
-            f'svc_systemd:php{php_version}-fpm.service:restart',
-        ],
-    },
-    'freescout_artisan_update': {
-        'command': run_as('www-data', 'php /opt/freescout/artisan freescout:after-app-update'),
-        'triggered': True,
-        'needs': [
-            f'svc_systemd:php{php_version}-fpm.service:restart',
-            'action:pull_freescout',
-        ],
-    },
+    # 'clone_freescout': {
+    #     'command': run_as('www-data', 'git clone https://github.com/freescout-helpdesk/freescout.git /opt/freescout'),
+    #     'unless': 'test -e /opt/freescout/.git',
+    #     'needs': [
+    #         'pkg_apt:git',
+    #         'directory:/opt/freescout',
+    #     ],
+    # },
+    # 'pull_freescout': {
+    #     'command': run_as('www-data', 'git -C /opt/freescout fetch origin dist && git -C /opt/freescout reset --hard origin/dist && git -C /opt/freescout clean -f'),
+    #     'unless': run_as('www-data', 'git -C /opt/freescout fetch origin && git -C /opt/freescout status -uno | grep -q "Your branch is up to date"'),
+    #     'needs': [
+    #         'action:clone_freescout',
+    #     ],
+    #     'triggers': [
+    #         'action:freescout_artisan_update',
+    #         f'svc_systemd:php{php_version}-fpm.service:restart',
+    #     ],
+    # },
+    # 'freescout_artisan_update': {
+    #     'command': run_as('www-data', 'php /opt/freescout/artisan freescout:after-app-update'),
+    #     'triggered': True,
+    #     'needs': [
+    #         f'svc_systemd:php{php_version}-fpm.service:restart',
+    #         'action:pull_freescout',
+    #     ],
+    # },
 }
 
 # svc_systemd = {

@@ -1,3 +1,6 @@
+# https://teamvault.apps.seibert-media.net/secrets/mkqMRv/
+# https://console.hetzner.cloud/projects/889138/servers/46578341
+
 {
     'dummy': True,
     'hostname': '159.69.117.89',
@@ -31,8 +34,8 @@
             'domain': 'foerderkreis.oranienschule-wiesbaden-wiki.de',
         },
         'vm': {
-            'cores': 1,
-            'ram': 2048,
+            'cores': 2,
+            'ram': 4096,
         },
         'wireguard': {
             'my_ip': '172.30.0.238/32',
