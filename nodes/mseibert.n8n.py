@@ -1,44 +1,42 @@
 # https://teamvault.apps.seibert-media.net/secrets/mkqMRv/
-# https://console.hetzner.cloud/projects/889138/servers/46578341
+# https://console.hetzner.cloud/projects/889138/servers/56564150
 
 {
     #'dummy': True,
-    'hostname': '159.69.117.89',
+    'hostname': '159.69.178.45',
     'groups': [
         'backup',
         'debian-12',
         'monitored',
         'webserver',
-        'freescout',
     ],
     'bundles': [
+        #'n8n',
+        #'nodejs',
         'wireguard',
         'zfs',
     ],
     'metadata': {
-        'id': '5333e3dd-0718-493a-a93c-529612a45079',
+        'id': '4852308e-9d36-4a0e-b533-a291e1495db3',
         'network': {
             'internal': {
-                'interface': 'ens10',
-                'ipv4': '10.0.227.2/24',
+                'interface': 'enp7s0',
+                'ipv4': '10.0.227.3/24',
             },
             'external': {
                 'interface': 'eth0',
-                'ipv4': '159.69.117.89/32',
+                'ipv4': '159.69.178.45/32',
                 'gateway4': '172.31.1.1',
-                'ipv6': '2a01:4f8:c013:3d0b::1/64',
+                'ipv6': '2a01:4f8:c012:491b::1/64',
                 'gateway6': 'fe80::1',
             },
-        },
-        'freescout': {
-            'domain': 'foerderkreis.oranienschule-wiesbaden-wiki.de',
         },
         'vm': {
             'cores': 2,
             'ram': 4096,
         },
         'wireguard': {
-            'my_ip': '172.30.0.238/32',
+            'my_ip': '172.30.0.239/32',
             's2s': {
                 'htz.mails': {
                     'allowed_ips': [
@@ -54,7 +52,7 @@
             'pools': {
                 'tank': {
                     'devices': [
-                        '/dev/disk/by-id/scsi-0HC_Volume_100662393',
+                        '/var/lib/tank.img',
                     ],
                 },
             },

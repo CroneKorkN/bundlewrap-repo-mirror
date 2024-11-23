@@ -221,7 +221,12 @@
                 },
                 'mseibert.freescout': {
                     'allowed_ips': [
-                        '10.0.227.0/24',
+                        '10.0.227.2/32',
+                    ],
+                },
+                'mseibert.n8n': {
+                    'allowed_ips': [
+                        '10.0.227.3/32',
                     ],
                 },
             },
