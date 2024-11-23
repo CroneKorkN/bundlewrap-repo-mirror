@@ -15,6 +15,7 @@ svc_systemd = {
         'needs': [
             'pkg_apt:kea-dhcp4-server',
             'file:/etc/kea/kea-dhcp4.conf',
+            'svc_systemd:systemd-networkd:restart',
         ],
     },
 }
