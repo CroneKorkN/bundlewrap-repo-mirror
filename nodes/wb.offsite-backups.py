@@ -1,5 +1,4 @@
 {
-    'dummy': True,
     'hostname': '192.168.179.20',
     'groups': [
         'debian-11',
@@ -10,7 +9,7 @@
         'backup-freshness-check',
         'dm-crypt',
         'smartctl',
-        'wireguard',
+        #'wireguard',
         'zfs',
     ],
     'metadata': {
