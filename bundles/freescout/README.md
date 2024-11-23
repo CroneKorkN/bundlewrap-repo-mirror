@@ -19,3 +19,4 @@ freescout=#
 # ckeck `psql -h localhost -d freescout -U freescout -W`with pw from .env
 # chown -R www-data:www-data /opt/freescout
 # sudo su - www-data -c 'php /opt/freescout/artisan freescout:clear-cache' -s /bin/bash
+# javascript funny? `sudo su - www-data -c 'php /opt/freescout/artisan storage:link' -s /bin/bash`
