@@ -1,5 +1,5 @@
 {
-    'hostname': '10.0.99.126',
+    'hostname': '10.0.0.1',
     'groups': [
         'autologin',
         'debian-12',
