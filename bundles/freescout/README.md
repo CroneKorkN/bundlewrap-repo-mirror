@@ -20,3 +20,4 @@ freescout=#
 # chown -R www-data:www-data /opt/freescout
 # sudo su - www-data -c 'php /opt/freescout/artisan freescout:clear-cache' -s /bin/bash
 # javascript funny? `sudo su - www-data -c 'php /opt/freescout/artisan storage:link' -s /bin/bash`
+# benutzer bilder weg? aus dem backup holen: `/opt/freescout/.zfs/snapshot/zfs-auto-snap_hourly-2024-11-22-1700/storage/app/public/users` `./customers`
