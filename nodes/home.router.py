@@ -14,16 +14,17 @@
     'metadata': {
         'id': '1d6a43e5-858c-42f9-9c40-ab63d61c787c',
         'network': {
-            'internal': {
-                'interface': 'eno1',
-                'ipv4': '10.0.0.1/24',
-                'vlans': {'iot', 'internet', 'guest'},
-                'dhcp_server': True,
-            },
-            'temp': {
+            'external': {
                 'interface': 'enx00e04c220682',
                 'ipv4': '10.0.99.126/24',
                 'gateway4': '10.0.99.1',
+                'vlans': {'iot', 'internet', 'guest', 'rolf', 'internal'},
+            },
+            'internal': {
+                'type': 'vlan',
+                'id': 1,
+                'ipv4': '10.0.0.1/24',
+                'dhcp_server': True,
             },
             'iot': {
                 'type': 'vlan',
@@ -40,6 +41,12 @@
                 'type': 'vlan',
                 'id': 9,
                 'ipv4': '10.0.9.1/24',
+                'dhcp_server': True,
+            },
+            'rolf': { # rolf local test
+                'type': 'vlan',
+                'id': 51,
+                'ipv4': '192.168.179.1/24',
                 'dhcp_server': True,
             },
         },
@@ -68,7 +75,7 @@
                     'allowed_ips': [
                         '10.0.10.0/24',
                         '10.0.10.0/24',
-                        '192.168.179.0/24',
+                        #'192.168.179.0/24',
                         '10.0.227.0/24', # mseibert.freescout
                     ],
                 },
