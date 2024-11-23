@@ -26,7 +26,10 @@ actions['reset_grafana_admin_password'] = {
 
 directories = {
     '/etc/grafana': {},
-    '/etc/grafana/provisioning': {},
+    '/etc/grafana/provisioning': {
+        'owner': 'grafana',
+        'group': 'grafana',
+    },
     '/etc/grafana/provisioning/datasources': {
         'purge': True,
     },
