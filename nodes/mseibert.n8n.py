@@ -11,10 +11,11 @@
         'webserver',
     ],
     'bundles': [
-        #'n8n',
-        #'nodejs',
+        'n8n',
+        'nodejs',
         'wireguard',
         'zfs',
+        'postgresql',
     ],
     'metadata': {
         'id': '4852308e-9d36-4a0e-b533-a291e1495db3',
@@ -30,6 +31,12 @@
                 'ipv6': '2a01:4f8:c012:491b::1/64',
                 'gateway6': 'fe80::1',
             },
+        },
+        'n8n': {
+            'version': '1.68.0',
+        },
+        'nodejs': {
+            'version': '20',
         },
         'vm': {
             'cores': 2,

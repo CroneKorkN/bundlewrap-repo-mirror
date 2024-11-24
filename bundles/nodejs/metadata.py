@@ -8,9 +8,7 @@ defaults = {
             },
         },
     },
-    'npm': {
-        'yarn': {},
-    },
+    'npm': {},
 }
 
 
@@ -28,7 +26,9 @@ def sources(metadata):
                         'deb',
                         'deb-src',
                     },
-                    'url': 'https://deb.nodesource.com/node_{version}.x',
+                    'urls': {
+                        f'https://deb.nodesource.com/node_{version}.x',
+                    },
                     'suites': {
                         '{codename}',
                     },

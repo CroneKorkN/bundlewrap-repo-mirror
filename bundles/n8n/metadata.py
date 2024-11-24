@@ -1,13 +1,21 @@
+database_password = repo.vault.password_for(f'{node.name} postgresql n8n')
+
 defaults = {
     'backups': {
         'paths': {
             '/opt/n8n',
         },
     },
-    'users': {
-        'n8n': {
-            'home': '/opt/n8n',
-        },
+    'npm': {
+        'n8n': {},
+    },
+    'n8n': {
+        'DB_TYPE': 'postgresdb',
+        'DB_POSTGRESDB_DATABASE': 'n8n',
+        'DB_POSTGRESDB_HOST': 'localhost',
+        'DB_POSTGRESDB_PORT': 5432,
+        'DB_POSTGRESDB_USER': 'n8n',
+        'DB_POSTGRESDB_PASSWORD': database_password,
     },
     'postgresql': {
         'databases': {
@@ -17,18 +25,45 @@ defaults = {
                     'collation': 'C.UTF-8',
                     'ctype': 'C.UTF-8',
                 },
+                'owner': 'n8n',
             },
         },
         'roles': {
             'n8n': {
-                'password': repo.vault.password_for(f'{node.name} n8n psql'),
+                'password': database_password,
             },
+        },
+    },
+    'systemd': {
+        'units': {
+            'n8n.service': {
+                'Unit': {
+                    'Description': 'n8n',
+                    'Requires': 'network.target postgresql.service',
+                    'After': 'postgresql.service',
+                },
+                'Service': {
+                    'Restart': 'always',
+                    'RestartSec': '5',
+                    'WorkingDirectory': '/opt/n8n',
+                    'ExecStart': '/usr/bin/npx n8n start',
+                    'User': 'n8n',
+                    'Group': 'n8n',
+                    'Environment': {
+                        'NODE_ENV=production',
+                    },
+                },
+            },
+        },
+    },
+    'users': {
+        'n8n': {
+            'home': '/opt/n8n',
         },
     },
     'zfs': {
         'datasets': {
             'tank/n8n': {
-                'compression': 'on',
                 'mountpoint': '/opt/n8n',
                 'needed_by': {'directory:/opt/n8n'},
             },
@@ -38,51 +73,15 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'icinga2_api/n8n/services/N8N UPDATE',
-)
-def icinga_check_for_new_release(metadata):
-    return {
-        'icinga2_api': {
-            'n8n': {
-                'services': {
-                    'N8N UPDATE': {
-                        'command_on_monitored_host':
-                            f'/usr/local/share/icinga/plugins/check_github_for_new_release '
-                            f'--repo n8n-io/n8n --current-version n8n@{metadata.get("n8n/version")}',
-                        'check_interval': '60m',
-                    },
-                },
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'systemd/services/n8n',
+    'systemd/services/n8n.service',
 )
 def systemd(metadata):
     return {
         'systemd': {
-            'services': {
-                'n8n': {
-                    'content': {
-                        'Unit': {
-                            'Description': 'n8n',
-                            'Requires': 'network.target postgresql.service',
-                            'After': 'postgresql.service',
-                        },
-                        'Service': {
-                            'Restart': 'always',
-                            'RestartSec': '5',
-                            'WorkingDirectory': '/opt/n8n',
-                            'ExecStart': '/usr/bin/npx n8n start',
-                            'User': 'n8n',
-                            'Group': 'n8n',
-                        },
-                    },
-                    'env_as_file': metadata.get('n8n/env'),
-                    'needs': {
-                        'action:install_n8n',
+            'units': {
+                'n8n.service': {
+                    'Service': {
+                        'Environment': metadata.get('n8n'),
                     },
                 },
             },

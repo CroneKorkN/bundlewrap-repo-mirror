@@ -19,6 +19,15 @@ actions['install_n8n'] = {
         'user:n8n',
     },
     'triggers': {
-        'svc_systemd:n8n:restart',
+        'svc_systemd:n8n.service:restart',
+    },
+}
+
+svc_systemd['n8n.service'] = {
+    'enabled': True,
+    'running': True,
+    'needs': {
+        'pkg_apt:nodejs',
+        'action:install_n8n',
     },
 }
