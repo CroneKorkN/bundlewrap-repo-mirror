@@ -2,5 +2,5 @@
 
 cd "$OLDPWD"
 
-export BW_ITEM_WORKERS=$(expr "$(nproc)" '*' 12 '/' 10)
+export BW_ITEM_WORKERS=$(expr "$(sysctl -n hw.logicalcpu)" '*' 12 '/' 10)
 export BW_NODE_WORKERS=$(expr 320 '/' "$BW_ITEM_WORKERS")
