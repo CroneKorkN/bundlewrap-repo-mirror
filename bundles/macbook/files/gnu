@@ -2,7 +2,4 @@
 
 cd "$OLDPWD"
 
-GNU_PATH="$HOME/.local/gnu_bin"
-mkdir -p "$GNU_PATH"
-test -f "$GNU_PATH/sed" || ln -s "$(which gsed)" "$GNU_PATH/sed"
-PATH_add "$GNU_PATH"
+PATH_add "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
