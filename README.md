@@ -37,3 +37,12 @@ fi
 telegraf: execd for daemons
 
 TEST
+
+# git signing
+
+git config --global gpg.format ssh
+git config --global commit.gpgsign true
+
+git config user.name CroneKorkN
+git config user.email i@ckn.li
+git config user.signingkey "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILMVroYmswD4tLk6iH+2tvQiyaMe42yfONDsPDIdFv6I"
