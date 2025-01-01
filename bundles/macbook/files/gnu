@@ -3,3 +3,4 @@
 cd "$OLDPWD"
 
 PATH_add "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
+PATH_add "/opt/homebrew/opt/grep/libexec/gnubin"
