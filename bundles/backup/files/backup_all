@@ -1,13 +1,31 @@
 #!/bin/bash
 
-set -exu
+set -u
 
 # FIXME: inelegant
 % if wol_command:
 ${wol_command}
 % endif
 
+exit=0
+failed_paths=""
+
 for path in $(jq -r '.paths | .[]' < /etc/backup/config.json)
 do
+  echo backing up $path
   /opt/backup/backup_path "$path"
+  # set exit to 1 if any backup fails
+  if [ $? -ne 0 ]
+  then
+    echo ERROR: backing up $path failed >&2
+    exit=5
+    failed_paths="$failed_paths $path"
+  fi
 done
+
+if [ $exit -ne 0 ]
+then
+  echo "ERROR: failed to backup paths: $failed_paths" >&2
+fi
+
+exit $exit

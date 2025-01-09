@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -exu
+set -eu
 
 path=$1
 uuid=$(jq -r .client_uuid < /etc/backup/config.json)
