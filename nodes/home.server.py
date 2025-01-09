@@ -32,7 +32,7 @@
         'systemd-swap',
         'twitch-clip-download',
         'raspberrymatic-cert',
-        'tasmota-charge',
+        #'tasmota-charge',
         'wol-waker',
         'zfs',
     ],
