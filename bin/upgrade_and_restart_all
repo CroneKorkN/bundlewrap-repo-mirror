@@ -23,7 +23,7 @@ for node in nodes:
     print(node.run('DEBIAN_FRONTEND=noninteractive apt update').stdout.decode())
     print(node.run('DEBIAN_FRONTEND=noninteractive apt list --upgradable').stdout.decode())
     if int(node.run('DEBIAN_FRONTEND=noninteractive apt list --upgradable 2> /dev/null | grep upgradable | wc -l').stdout.decode()):
-        print(node.run('DEBIAN_FRONTEND=noninteractive apt -y dist-upgrade').stdout.decode())
+        print(node.run('DEBIAN_FRONTEND=noninteractive apt -qy full-upgrade').stdout.decode())
 
 # REBOOT IN ORDER
 
