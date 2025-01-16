@@ -1,7 +1,7 @@
 {
     'hostname': '192.168.179.20',
     'groups': [
-        'debian-11',
+        'debian-12',
         'monitored',
         'raspberry-pi',
     ],
