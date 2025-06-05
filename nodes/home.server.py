@@ -33,6 +33,7 @@
         'raspberrymatic-cert',
         'wol-waker',
         'zfs',
+        'proxmox-ve',
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
