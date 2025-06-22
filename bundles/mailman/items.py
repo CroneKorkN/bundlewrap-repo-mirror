@@ -27,7 +27,62 @@ files = {
         'triggers': {
             'svc_systemd:postfix.service:restart',
         },
-    }
+    },
+    '/etc/mailman3/mailman.cfg': {
+        'content_type': 'mako',
+        'owner': 'root',
+        'group': 'list',
+        'mode': '0640',
+        'context': node.metadata.get('mailman'),
+        'needs': {
+            'pkg_apt:mailman3-full',
+        },
+        'triggers': {
+            'svc_systemd:mailman3.service:restart',
+            'svc_systemd:mailman3-web.service:restart',
+        },
+    },
+    '/etc/mailman3/mailman-web.py': {
+        'content_type': 'mako',
+        'owner': 'root',
+        'group': 'www-data',
+        'mode': '0640',
+        'context': node.metadata.get('mailman'),
+        'needs': {
+            'pkg_apt:mailman3-full',
+        },
+        'triggers': {
+            'svc_systemd:mailman3.service:restart',
+            'svc_systemd:mailman3-web.service:restart',
+        },
+    },
+    '/etc/mailman3/mailman-hyperkitty.cfg': {
+        'content_type': 'mako',
+        'owner': 'root',
+        'group': 'list',
+        'mode': '0640',
+        'context': node.metadata.get('mailman'),
+        'needs': {
+            'pkg_apt:mailman3-full',
+        },
+        'triggers': {
+            'svc_systemd:mailman3.service:restart',
+            'svc_systemd:mailman3-web.service:restart',
+        },
+    },
+    '/etc/mailman3/uwsgi.ini': {
+        'content_type': 'text',
+        'owner': 'root',
+        'group': 'root',
+        'mode': '0644',
+        'needs': {
+            'pkg_apt:mailman3-full',
+        },
+        'triggers': {
+            'svc_systemd:mailman3.service:restart',
+            'svc_systemd:mailman3-web.service:restart',
+        },
+    },
 }
 
 svc_systemd = {

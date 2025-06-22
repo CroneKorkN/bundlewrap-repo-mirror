@@ -1,8 +1,29 @@
+import base64
+
+def derive_mailadmin_secret(metadata, salt):
+    node_id = metadata.get('id')
+    raw = base64.b64decode(
+        repo.vault.random_bytes_as_base64_for(f'{node_id}_{salt}', length=32).value
+    )
+    return base64.urlsafe_b64encode(raw).rstrip(b'=').decode('ascii')
+
+
 defaults = {
     'apt': {
         'packages': {
-            'mailman3-full': {},
+            'mailman3-full': {
+                'needs': {
+                    'postgres_db:mailman',
+                    'postgres_role:mailman',
+                    'zfs_dataset:tank/mailman',
+                }
+            },
             'postfix': {},
+            'python3-psycopg2': {
+                'needed_by': {
+                    'pkg_apt:mailman3-full',
+                },
+            },
             'apache2': {
                 'installed': False,
                 'needs': {
@@ -22,6 +43,33 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'postgresql',
+    'mailman',
+)
+def postgresql(metadata):
+    node_id = metadata.get('id')
+    db_password = repo.vault.password_for(f'{node_id} database mailman')
+
+    return {
+        'postgresql': {
+            'databases': {
+                'mailman': {
+                    'owner': 'mailman',
+                },
+            },
+            'roles': {
+                'mailman': {
+                    'password': db_password,
+                },
+            },
+        },
+        'mailman': {
+            'db_password': db_password,
+        },
+    }
+
+
+@metadata_reactor.provides(
     'nginx/vhosts',
 )
 def nginx(metadata):
@@ -32,5 +80,37 @@ def nginx(metadata):
                     'content': 'mailman/vhost.conf',
                 },
             },
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'mailman/secret_key',
+)
+def secret_key(metadata):
+    import base64
+
+    node_id = metadata.get('id')
+    raw = base64.b64decode(
+        repo.vault.random_bytes_as_base64_for(f'{node_id}_mailman_secret_key', length=32).value
+    )
+    secret_key = base64.urlsafe_b64encode(raw).rstrip(b'=').decode('ascii')
+
+    return {
+        'mailman': {
+            'secret_key': secret_key,
+        },
+    }
+
+
+@metadata_reactor.provides(
+    'mailman',
+)
+def secrets(metadata):
+    return {
+        'mailman': {
+            'web_secret': derive_mailadmin_secret(metadata, 'secret_key'),
+            'api_password': derive_mailadmin_secret(metadata, 'api_password'),
+            'archiver_key': derive_mailadmin_secret(metadata, 'archiver_key'),
         },
     }

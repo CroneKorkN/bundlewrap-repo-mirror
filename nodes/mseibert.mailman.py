@@ -15,6 +15,7 @@
         'mailman',
         'wireguard',
         'zfs',
+        'postgresql',
     ],
     'metadata': {
         'id': '854cb39f-d964-4cc7-9051-ba6574708820',
@@ -33,6 +34,7 @@
         },
         'mailman': {
             'hostname': 'mailman.ckn.li',
+            'site_owner_email': 'martin.seibert@seibert.group',
         },
         'overwrite_nameservers': [
             '8.8.8.8',
