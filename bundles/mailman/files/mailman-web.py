@@ -1,3 +1,5 @@
+ACCOUNT_EMAIL_VERIFICATION='none'
+
 # This file is imported by the Mailman Suite. It is used to override
 # the default settings from /usr/share/mailman3-web/settings.py.
 
