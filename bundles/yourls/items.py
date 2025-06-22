@@ -4,6 +4,13 @@ directories = {
         'group': 'www-data',
         'mode': '0755',
     },
+
+    # FIXME:
+    '/var/www/certbot': {
+        'owner': 'www-data',
+        'group': 'www-data',
+        'mode': '0755',
+    }
 }
 
 git_deploy = {
@@ -38,11 +45,4 @@ files = {
             'svc_systemd:nginx:restart',
         ],
     },
-
-    # FIXME:
-    '/var/www/certbot': {
-        'owner': 'www-data',
-        'group': 'www-data',
-        'mode': '0755',
-    }
 }
