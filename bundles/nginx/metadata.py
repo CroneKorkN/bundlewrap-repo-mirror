@@ -18,6 +18,7 @@ defaults = {
     'nginx': {
         'vhosts': {},
         'modules': set(),
+        'has_websockets': False,
     },
     'systemd': {
         'units': {

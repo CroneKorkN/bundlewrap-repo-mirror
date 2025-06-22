@@ -9,7 +9,7 @@ directories = {
             'svc_systemd:nginx:restart',
         },
     },
-    '/etc/nginx/sites': {
+    '/etc/nginx/sites-available': {
         'purge': True,
         'triggers': {
             'svc_systemd:nginx:restart',
@@ -25,6 +25,13 @@ directories = {
         'purge': True,
         'owner': 'www-data',
     },
+
+    # temp
+    '/var/www/certbot': {
+        'owner': 'www-data',
+        'group': 'www-data',
+        'mode': '0755',
+    }
 }
 
 files = {
@@ -33,6 +40,7 @@ files = {
         'context': {
             'modules': node.metadata.get('nginx/modules'),
             'worker_processes': node.metadata.get('vm/cores'),
+            'has_websockets': node.metadata.get('nginx/has_websockets'),
         },
         'triggers': {
             'svc_systemd:nginx:restart',
@@ -75,6 +83,12 @@ files = {
     },
 }
 
+symlinks = {
+    '/etc/nginx/sites-enabled': {
+        'target': '/etc/nginx/sites-available',
+    },
+}
+
 actions = {
     'nginx-generate-dhparam': {
         'command': 'openssl dhparam -dsaparam -out /etc/ssl/certs/dhparam.pem 4096',
@@ -93,7 +107,7 @@ svc_systemd = {
 
 
 for name, config in node.metadata.get('nginx/vhosts').items():
-    files[f'/etc/nginx/sites/{name}'] = {
+    files[f'/etc/nginx/sites-available/{name}'] = {
         'content': Template(filename=join(repo.path, 'data', config['content'])).render(
             server_name=name,
             **config.get('context', {}),
@@ -109,6 +123,6 @@ for name, config in node.metadata.get('nginx/vhosts').items():
     }
 
     if name in node.metadata.get('letsencrypt/domains'):
-        files[f'/etc/nginx/sites/{name}']['needs'].append(
+        files[f'/etc/nginx/sites-available/{name}']['needs'].append(
             f'action:letsencrypt_ensure-some-certificate_{name}',
         )

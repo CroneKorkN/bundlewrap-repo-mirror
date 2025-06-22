@@ -69,6 +69,9 @@ defaults = {
             },
         },
     },
+    'nginx': {
+        'has_websockets': True,
+    },
 }
 
 
@@ -144,6 +147,7 @@ def dns(metadata):
 def nginx(metadata):
     return {
         'nginx': {
+            'has_websockets': True,
             'vhosts': {
                 metadata.get('grafana/hostname'): {
                     'content': 'grafana/vhost.conf',
