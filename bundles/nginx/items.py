@@ -25,13 +25,6 @@ directories = {
         'purge': True,
         'owner': 'www-data',
     },
-
-    # temp
-    '/var/www/certbot': {
-        'owner': 'www-data',
-        'group': 'www-data',
-        'mode': '0755',
-    }
 }
 
 files = {
