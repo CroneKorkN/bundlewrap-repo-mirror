@@ -19,6 +19,7 @@ directories = {
 
 files = {
     f"/etc/postgresql/{version}/main/pg_hba.conf": {
+        'content_type': 'mako',
         'mode': '0640',
         'owner': 'postgres',
         'group': 'postgres',

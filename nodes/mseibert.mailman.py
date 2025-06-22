@@ -6,9 +6,9 @@
 {
     'hostname': '91.99.123.176',
     'groups': [
-        #'backup',
+        'backup',
         'debian-12',
-        #'monitored',
+        'monitored',
         'webserver',
     ],
     'bundles': [

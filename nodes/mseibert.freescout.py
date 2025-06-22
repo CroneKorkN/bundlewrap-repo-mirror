@@ -30,6 +30,9 @@
                 'gateway6': 'fe80::1',
             },
         },
+        'postgresql': {
+            'password_algorithm': 'scram-sha-256',
+        },
         'freescout': {
             'domain': 'foerderkreis.oranienschule-wiesbaden-wiki.de',
         },
