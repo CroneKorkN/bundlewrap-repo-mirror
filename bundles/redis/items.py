@@ -1,6 +1,7 @@
 directories = {
     '/etc/redis': {
         'purge': True,
+        'owner': 'redis',
         'needs': [
             'pkg_apt:redis-server',
         ],
@@ -45,7 +46,7 @@ for name, conf in node.metadata.get('redis').items():
             f'svc_systemd:redis-{name}:restart'
         ],
     }
-    
+
     svc_systemd[f'redis-{name}'] = {
         'needs': [
             'svc_systemd:redis',

@@ -26,9 +26,15 @@ defaults = {
         'config': {
             'server': {
                 'http_port': 8300,
+                'http_addr': '127.0.0.1',
+                'enable_gzip': True,
             },
             'database': {
-                'url': f'postgres://grafana:{postgres_password}@localhost:5432/grafana',
+                'type': 'postgres',
+                'host': '127.0.0.1:5432',
+                'name': 'grafana',
+                'user': 'grafana',
+                'password': postgres_password,
             },
             'remote_cache': {
                 'type': 'redis',
