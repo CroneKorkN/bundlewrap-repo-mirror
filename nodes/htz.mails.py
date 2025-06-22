@@ -200,6 +200,11 @@
                         '10.0.228.0/24',
                     ],
                 },
+                'mseibert.mailman': {
+                    'allowed_ips': [
+                        '10.0.229.0/24',
+                    ],
+                },
             },
             'clients': {
                 'macbook': {

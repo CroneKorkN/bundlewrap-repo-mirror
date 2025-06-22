@@ -1,0 +1,67 @@
+# https://teamvault.apps.seibert-media.net/secrets/mkqMRv/
+# https://console.hetzner.cloud/projects/889138/servers/46578341
+
+# mailman.ckn.li
+
+{
+    'hostname': '91.99.123.176',
+    'groups': [
+        #'backup',
+        'debian-12',
+        #'monitored',
+        'webserver',
+    ],
+    'bundles': [
+        'mailman',
+        #'wireguard',
+        #'zfs',
+    ],
+    'metadata': {
+        'id': '854cb39f-d964-4cc7-9051-ba6574708820',
+        'network': {
+            'internal': {
+                'interface': 'ens10',
+                'ipv4': '10.0.229.2/24',
+            },
+            'external': {
+                'interface': 'eth0',
+                'ipv4': '91.99.123.176/32',
+                'gateway4': '172.31.1.1',
+                'ipv6': '2a01:4f8:c013:2030::2/64',
+                'gateway6': 'fe80::1',
+            },
+        },
+        'mailman': {
+            'hostname': 'mailman.ckn.li',
+        },
+        'overwrite_nameservers': [
+            '8.8.8.8',
+        ],
+        'vm': {
+            'cores': 2,
+            'ram': 4096,
+        },
+        'wireguard': {
+            'my_ip': '172.30.0.240/32',
+            's2s': {
+                'htz.mails': {
+                    'allowed_ips': [
+                        '10.0.0.0/24',
+                        '10.0.2.0/24',
+                        '10.0.9.0/24',
+                        '10.0.10.0/24',
+                    ],
+                },
+            },
+        },
+        'zfs': {
+            'pools': {
+                'tank': {
+                    'devices': [
+                        '/var/lib/zfs_file',
+                    ],
+                },
+            },
+        },
+    },
+}
