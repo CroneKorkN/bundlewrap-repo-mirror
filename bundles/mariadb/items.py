@@ -11,7 +11,7 @@ directories = {
         'needs': [
             'zfs_dataset:tank/mariadb',
         ],
-        'needed_by': [
+        'needs': [
             'pkg_apt:mariadb-server',
             'pkg_apt:mariadb-client',
         ],
