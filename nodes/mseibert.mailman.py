@@ -13,8 +13,8 @@
     ],
     'bundles': [
         'mailman',
-        #'wireguard',
-        #'zfs',
+        'wireguard',
+        'zfs',
     ],
     'metadata': {
         'id': '854cb39f-d964-4cc7-9051-ba6574708820',

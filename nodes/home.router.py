@@ -83,6 +83,8 @@
                         '10.0.10.0/24',
                         #'192.168.179.0/24', # while raspi at home
                         '10.0.227.0/24', # mseibert.freescout
+                        '10.0.228.0/24', # mseibert.yourls
+                        '10.0.229.0/24', # mseibert.mailsman
                     ],
                 },
             },

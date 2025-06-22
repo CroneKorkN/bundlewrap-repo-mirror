@@ -11,6 +11,13 @@ defaults = {
             },
         },
     },
+    'zfs': {
+        'datasets': {
+            'tank/mailman': {
+                'mountpoint': '/var/lib/mailman3',
+            },
+        },
+    },
 }
 
 

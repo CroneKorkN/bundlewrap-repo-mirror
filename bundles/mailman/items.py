@@ -1,3 +1,18 @@
+directories = {
+    '/var/lib/mailman3': {
+        'owner': 'list',
+        'group': 'list',
+        'needs': {
+            'zfs_dataset:tank/mailman',
+            'pkg_apt:mailman3-full',
+        },
+        'needed_by': {
+            'svc_systemd:mailman3.service',
+            'svc_systemd:mailman3-web.service',
+        },
+    },
+}
+
 files = {
     '/etc/postfix/main.cf': {
         'source': 'postfix.cf',

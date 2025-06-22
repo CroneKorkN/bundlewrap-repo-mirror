@@ -1,5 +1,5 @@
 {
-    'bundles': [
+    'bundles': {
         'bind',
-    ],
+    },
 }
