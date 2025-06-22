@@ -34,7 +34,7 @@
         },
         'mailman': {
             'hostname': 'mailman.ckn.li',
-            'site_owner_email': 'martin.seibert@seibert.group',
+            'site_owner_email': '!decrypt:encrypt$gAAAAABoWEeTyypfKw9l9jnNgF4GlS0-6O2NWCB0f3Fj1XnQ_HMjHXymAL8FWTyQjRmz3r8KnGJ-sogfnhW6lub_pnuk-wqB5Zuy9tgGsfi3RvkyNaOUeTE=',
             'smtp_host': 'smtp.ionos.de',
             'smtp_port': 465,
             'smtp_user': '!decrypt:encrypt$gAAAAABoWEcZlLxiTKluyg3gZ-un2fYkuviW9BD9tTW8mfKBL5d41Z1X7LtI5CDnhhLXTGFpPnY1thr17h22oW3Ybz_WPgvbJVepnVwmeQwvMpg2psATKAY=',
