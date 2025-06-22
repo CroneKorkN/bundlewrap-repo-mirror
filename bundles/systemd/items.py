@@ -24,10 +24,10 @@ for name, unit in node.metadata.get('systemd/units').items():
         path = f'/etc/systemd/network/{name}'
         dependencies = {
             'needed_by': [
-                'svc_systemd:systemd-networkd',
+                'svc_systemd:systemd-networkd.service',
             ],
             'triggers': [
-                'svc_systemd:systemd-networkd:restart',
+                'svc_systemd:systemd-networkd.service:restart',
             ],
         }
     elif extension in ['timer', 'service', 'mount', 'swap', 'target']:

@@ -12,7 +12,7 @@ defaults = {
             'wireguard': {
                 'backports': node.os_version < (11,),
                 'triggers': [
-                    'svc_systemd:systemd-networkd:restart',
+                    'svc_systemd:systemd-networkd.service:restart',
                 ],
             },
         },

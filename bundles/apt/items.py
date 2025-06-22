@@ -62,6 +62,7 @@ files = {
     '/usr/lib/nagios/plugins/check_apt_upgradable': {
         'mode': '0755',
     },
+    # /etc/kernel/postinst.d/apt-auto-removal
 }
 
 actions = {

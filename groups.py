@@ -6,4 +6,8 @@ for root, dirs, files in walk(join(repo_path, "groups")):
         if filename.endswith(".py"):
             group = join(root, filename)
             with open(group, 'r', encoding='utf-8') as f:
-                groups[splitext(basename(filename))[0]] = eval(f.read())
+                try:
+                    groups[splitext(basename(filename))[0]] = eval(f.read())
+                except:
+                    print(f"Error parsing {group}:")
+                    raise

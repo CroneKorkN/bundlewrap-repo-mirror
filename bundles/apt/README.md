@@ -13,6 +13,9 @@
                     'deb',
                     'deb-src',
                 },
+                'options': { # optional
+                    'aarch': 'amd64',
+                },
                 'urls': {
                     'https://deb.debian.org/debian',
                 },

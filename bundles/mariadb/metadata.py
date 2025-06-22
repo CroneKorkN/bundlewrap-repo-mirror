@@ -3,12 +3,12 @@ defaults = {
         'packages': {
             'mariadb-server': {
                 'needs': {
-                    'zfs_dataset:tank/mariadb',
+                    #'zfs_dataset:tank/mariadb',
                 },
             },
             'mariadb-client': {
                 'needs': {
-                    'zfs_dataset:tank/mariadb',
+                    #'zfs_dataset:tank/mariadb',
                 },
             },
         },

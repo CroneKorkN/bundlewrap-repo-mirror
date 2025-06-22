@@ -2,12 +2,14 @@ directories = {
     '/etc/redis': {
         'purge': True,
         'owner': 'redis',
+        'mode': '2770',
         'needs': [
             'pkg_apt:redis-server',
         ],
     },
     '/var/lib/redis': {
         'owner': 'redis',
+        'mode': '0750',
         'needs': [
             'pkg_apt:redis-server',
         ],

@@ -19,5 +19,6 @@ directories = {
 }
 
 svc_systemd = {
-    'systemd-networkd': {},
+    'systemd-networkd.service': {},
 }
+

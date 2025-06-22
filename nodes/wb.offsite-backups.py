@@ -1,4 +1,5 @@
 {
+    'dummy': True,
     'hostname': '192.168.179.20',
     'groups': [
         'debian-12',
