@@ -9,7 +9,6 @@
         'webserver',
         'dnsserver',
         'wordpress',
-        #'left4dead2',
     ],
     'bundles': [
         'bind-acme',
@@ -17,7 +16,6 @@
         'download-server',
         'islamicstate.eu',
         #'nginx-rtmps',
-        #'steam',
         'wireguard',
         'zfs',
     ],
@@ -85,34 +83,6 @@
             'elimukwanza': {
                 'domain': 'elimu-kwanza.de',
             },
-        },
-        'left4dead2': {
-            'servers': {
-                'standard': {
-                    'port': 27020,
-                },
-                # 'standard-2': {
-                #     'port': 27021,
-                #     'workshop': {
-                #         #2256379828, # bhop detect
-                #     },
-                # },
-            },
-            'admins': {
-                'STEAM_1:0:12376499', # CroneKorkN ☮️UKRAINE❤
-                'STEAM_1:1:169960486', # *RED*
-                'STEAM_1:1:112940736', # Ðark-AnGeℓ❤
-                'STEAM_1:1:34263261', # Alekc
-                'STEAM_1:0:583132949', # Cat
-                'STEAM_1:0:610180592', # SonovaBeach
-                'STEAM_1:1:157619181', # Null
-            },
-            'workshop': {
-                214630948,
-                1229957234,
-                698857882,
-            },
-            'steamgroups': {'103582791467869287'},
         },
         'letsencrypt': {
             'domains': {
@@ -222,6 +192,11 @@
                 'mseibert.freescout': {
                     'allowed_ips': [
                         '10.0.227.0/24',
+                    ],
+                },
+                'mseibert.yourls': {
+                    'allowed_ips': [
+                        '10.0.228.0/24',
                     ],
                 },
             },
