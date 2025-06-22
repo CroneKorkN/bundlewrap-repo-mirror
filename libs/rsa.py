@@ -1,12 +1,10 @@
 # https://stackoverflow.com/a/18266970
 
 from Crypto.PublicKey import RSA
-from Crypto.Hash import HMAC
 from struct import pack
 from hashlib import sha3_512
 from cryptography.hazmat.primitives.serialization import load_der_private_key
 from functools import cache
-from cache_to_disk import cache_to_disk
 
 
 class PRNG(object):
@@ -22,7 +20,6 @@ class PRNG(object):
         return result
 
 
-@cache_to_disk(30)
 def _generate_deterministic_rsa_private_key(secret_bytes):
     return RSA.generate(2048, randfunc=PRNG(secret_bytes)).export_key('DER')
 
