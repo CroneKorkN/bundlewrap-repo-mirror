@@ -2,6 +2,9 @@
     'supergroups': [
         'debian',
     ],
+    'bundles': [
+        'systemd-networkd',
+    ],
     'metadata': {
         'php': {
             'version': '7.4',
