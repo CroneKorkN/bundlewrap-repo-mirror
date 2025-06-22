@@ -52,6 +52,7 @@
                 'left4.me',
                 'elimu-kwanza.de',
                 'cronekorkn.de',
+                'direkt.oranienschule.de',
                 'foerderkreis.oranienschule-wiesbaden-wiki.de',
             },
         },

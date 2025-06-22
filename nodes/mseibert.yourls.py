@@ -4,13 +4,13 @@
 {
     'hostname': '168.119.250.114',
     'groups': [
-        #'backup',
+        'backup',
         'debian-12',
-        #'monitored',
+        'monitored',
         'webserver',
     ],
     'bundles': [
-        #'wireguard',
+        'wireguard',
         'mariadb',
         'php',
         'yourls',
@@ -21,7 +21,7 @@
         'network': {
             'internal': {
                 'interface': 'ens10',
-                'ipv4': '10.0.227.4/24',
+                'ipv4': '10.0.228.2/24',
             },
             'external': {
                 'interface': 'eth0',
@@ -40,12 +40,25 @@
             },
         },
         # FIXME:
-        'overwrite_nameservers': [
-            '8.8.8.8',
-        ],
+        # 'overwrite_nameservers': [
+        #     '8.8.8.8',
+        # ],
         'vm': {
             'cores': 2,
             'ram': 4096,
+        },
+        'wireguard': {
+            'my_ip': '172.30.0.239/32',
+            's2s': {
+                'htz.mails': {
+                    'allowed_ips': [
+                        '10.0.0.0/24',
+                        '10.0.2.0/24',
+                        '10.0.9.0/24',
+                        '10.0.10.0/24',
+                    ],
+                },
+            },
         },
         'zfs': {
             'pools': {
