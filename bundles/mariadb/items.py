@@ -20,10 +20,8 @@ directories = {
 
 files = {
     '/etc/mysql/conf.d/override.conf': {
-        'context': {
-            'conf': node.metadata.get('mariadb/conf'),
-        },
-        'content_type': 'mako',
+        'content': repo.libs.ini.dumps(node.metadata.get('mariadb/conf')),
+        'content_type': 'text',
     },
 }
 
