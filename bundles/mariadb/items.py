@@ -10,8 +10,6 @@ directories = {
         'group': 'mysql',
         'needs': [
             'zfs_dataset:tank/mariadb',
-        ],
-        'needs': [
             'pkg_apt:mariadb-server',
             'pkg_apt:mariadb-client',
         ],
