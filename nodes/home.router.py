@@ -15,7 +15,7 @@
         'id': '1d6a43e5-858c-42f9-9c40-ab63d61c787c',
         'network': {
             'external': {
-                'interface': 'enx00e04c220682',
+                'interface': 'enp2s0',
                 'ipv4': '10.0.99.126/24',
                 'gateway4': '10.0.99.1',
                 'vlans': {'iot', 'internet', 'guest', 'rolf', 'internal', 'proxmox'},
