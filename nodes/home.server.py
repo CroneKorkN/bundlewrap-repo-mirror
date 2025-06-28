@@ -12,7 +12,6 @@
         'build-server',
     ],
     'bundles': [
-        'apcupsd',
         'build-agent',
         'crystal',
         'gitea',
