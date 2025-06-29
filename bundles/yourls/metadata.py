@@ -36,6 +36,7 @@ def nginx(metadata):
                     'context': {
                         'php_version': metadata.get('php/version'),
                     },
+                    'check_path': '/admin',
                 },
             },
         },

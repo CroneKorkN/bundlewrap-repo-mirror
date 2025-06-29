@@ -96,7 +96,7 @@ def monitoring(metadata):
         'monitoring': {
             'services': {
                 hostname: {
-                    'vars.command': f"/usr/bin/curl -X GET -L --fail --no-progress-meter -o /dev/null {quote(hostname + vhost.get('check_path', ''))}",
+                    'vars.command': f"/usr/bin/curl -X GET -L --fail --no-progress-meter -o /dev/null {vhost.get('check_protocol', 'https')}://{quote(hostname + vhost.get('check_path', '/'))}",
                 }
                     for hostname, vhost in metadata.get('nginx/vhosts').items()
             },
