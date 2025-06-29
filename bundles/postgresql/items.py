@@ -18,6 +18,21 @@ directories = {
 }
 
 files = {
+    f"/etc/postgresql/{version}/main/pg_hba.conf": {
+        'content_type': 'mako',
+        'mode': '0640',
+        'owner': 'postgres',
+        'group': 'postgres',
+        'needs': [
+            'pkg_apt:postgresql',
+        ],
+        'needed_by': [
+            'svc_systemd:postgresql.service',
+        ],
+        'triggers': [
+            'svc_systemd:postgresql.service:restart',
+        ],
+    },
     f"/etc/postgresql/{version}/main/conf.d/managed.conf": {
         'content': '\n'.join(
             f'{key} = {value}'
