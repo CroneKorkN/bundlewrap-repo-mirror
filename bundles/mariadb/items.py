@@ -10,8 +10,6 @@ directories = {
         'group': 'mysql',
         'needs': [
             'zfs_dataset:tank/mariadb',
-        ],
-        'needs': [
             'pkg_apt:mariadb-server',
             'pkg_apt:mariadb-client',
         ],
@@ -20,10 +18,8 @@ directories = {
 
 files = {
     '/etc/mysql/conf.d/override.conf': {
-        'context': {
-            'conf': node.metadata.get('mariadb/conf'),
-        },
-        'content_type': 'mako',
+        'content': repo.libs.ini.dumps(node.metadata.get('mariadb/conf')),
+        'content_type': 'text',
     },
 }
 

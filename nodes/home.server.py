@@ -3,7 +3,7 @@
     'groups': [
         'autologin',
         'backup',
-        'debian-12',
+        'debian-12-pve',
         'home',
         'nextcloud',
         'monitored',
@@ -12,7 +12,6 @@
         'build-server',
     ],
     'bundles': [
-        'apcupsd',
         'build-agent',
         'crystal',
         'gitea',
@@ -32,7 +31,6 @@
         'systemd-swap',
         'twitch-clip-download',
         'raspberrymatic-cert',
-        #'tasmota-charge',
         'wol-waker',
         'zfs',
     ],
@@ -47,7 +45,7 @@
         },
         'apt': {
             'packages': {
-                'firmware-realtek': {},
+                # 'firmware-realtek': {}, proxmox-ve incompatibility
             },
         },
         'build-server': {
@@ -124,6 +122,9 @@
                 'unsortable': 'SofortUpload/Unsortable',
             },
         },
+        'proxmox-ve': {
+            'domain': 'pve.ckn.li',
+        },
         'raspberrymatic-cert': {
             'domain': 'homematic.ckn.li',
             'node': 'home.homematic',
@@ -152,18 +153,6 @@
             },
         },
         'systemd-swap': 4_000_000_000,
-        'tasmota-charge': {
-            'phone': {
-                'ip': '10.0.0.175',
-                'user': 'u0_a233',
-                'password': 'november',
-            },
-            'plug': {
-                'ip': '10.0.2.115',
-                'min': 45,
-                'max': 70,
-            },
-        },
         'twitch-clip-download': {
             'channel_name': 'cronekorkn_',
         },

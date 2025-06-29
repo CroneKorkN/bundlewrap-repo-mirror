@@ -14,7 +14,6 @@
         'system',
         'systemd',
         'systemd-journald',
-        'systemd-networkd',
         'systemd-mount',
         'systemd-timers',
         'users',

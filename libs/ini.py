@@ -14,7 +14,7 @@ class CaseSensitiveConfigParser(ConfigParser):
         return value
 
 def parse(text):
-    config = CaseSensitiveConfigParser()
+    config = CaseSensitiveConfigParser(allow_no_value=True)
     config.read_string(text)
 
     return {
@@ -24,8 +24,7 @@ def parse(text):
 
 def dumps(dict):
     sorted_dict = json.loads(json.dumps(dict, sort_keys=True, cls=MetadataJSONEncoder))
-
-    parser = CaseSensitiveConfigParser()
+    parser = CaseSensitiveConfigParser(allow_no_value=True)
     parser.read_dict(sorted_dict)
 
     writable = Writable()
