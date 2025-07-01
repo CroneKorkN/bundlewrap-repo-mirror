@@ -51,7 +51,11 @@ def units(metadata):
                 'Network': {
                     'DHCP': network_conf.get('dhcp', 'no'),
                     'IPv6AcceptRA': network_conf.get('dhcp', 'no'),
-                    'VLAN': set(network_conf.get('vlans', set()))
+                    'VLAN': set(
+                        other_network_name
+                            for other_network_name, other_network_conf in metadata.get('network', {}).items()
+                            if other_network_conf.get('type') == 'vlan' and other_network_conf['vlan_interface'] == network_name
+                    )
                 }
             }
 
