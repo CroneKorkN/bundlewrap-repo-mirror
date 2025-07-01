@@ -9,7 +9,7 @@ files = {
     },
     '/etc/apt/apt.conf.d/76pveproxy': {
         'content_type': 'any',
-        'mode': '0444',
+        'mode': '0644',
     },
     '/etc/network/interfaces': {
         'content_type': 'any',
