@@ -62,7 +62,7 @@ for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
         },
     }
 
-    routeros[f"/interface/bridge/vlan?vlan-ids={vlan_id}"] = {
+    routeros[f"/interface/bridge/vlan?vlan-ids={vlan_id}&dynamic=false"] = {
         'bridge': 'bridge',
         'untagged': sorted(node.metadata.get(f'routeros/vlan_ports/{vlan_name}/untagged')),
         'tagged': sorted(node.metadata.get(f'routeros/vlan_ports/{vlan_name}/tagged')),
@@ -71,7 +71,6 @@ for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
             'routeros-vlan-ports',
         },
         'needs': {
-            #'routeros:/interface/bridge?name=bridge',
             'tag:routeros-vlan',
         },
     }

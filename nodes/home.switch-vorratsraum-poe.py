@@ -35,7 +35,7 @@
                     'vlan_group': 'infra',
                 },
                 'ether4': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'internet',
                 },
                 'ether5': {
                     'vlan_group': 'infra',

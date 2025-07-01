@@ -32,6 +32,10 @@
                         'rolf',
                     },
                 },
+                'internet': {
+                    'untagged': 'internet',
+                    'tagged': set(),
+                },
             },
             'vlan_ports': {},
         },
