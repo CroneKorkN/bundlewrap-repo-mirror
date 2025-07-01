@@ -10,7 +10,7 @@ options {
 
 % if type == 'master':
   notify yes;
-  also-notify { ${' '.join([f'{ip};' for ip in slave_ips])} };
-  allow-transfer { ${' '.join([f'{ip};' for ip in slave_ips])} };
+  also-notify { ${' '.join(sorted(f'{ip};' for ip in slave_ips))} };
+  allow-transfer { ${' '.join(sorted(f'{ip};' for ip in slave_ips))} };
 % endif
 };
