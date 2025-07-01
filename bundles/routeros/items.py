@@ -67,7 +67,9 @@ for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
         'untagged': sorted(node.metadata.get(f'routeros/vlan_ports/{vlan_name}/untagged')),
         'tagged': sorted(node.metadata.get(f'routeros/vlan_ports/{vlan_name}/tagged')),
         '_comment': vlan_name,
-        'tags': {'routeros-bridge-vlan'},
+        'tags': {
+            'routeros-vlan-ports',
+        },
         'needs': {
             #'routeros:/interface/bridge?name=bridge',
             'tag:routeros-vlan',
@@ -93,6 +95,7 @@ routeros['/interface/bridge?name=bridge'] = {
     'protocol-mode': 'rstp',
     'needs': {
         'tag:routeros-vlan',
+        'tag:routeros-vlan-ports',
         'tag:routeros-ip',
     },
 }
