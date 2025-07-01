@@ -72,7 +72,7 @@ def subnets(metadata):
                     },
                     {
                         'name': 'domain-name-servers',
-                        'data': '10.0.10.2',
+                        'data': '10.0.0.1',
                     },
                 ],
                 'reservations': set(

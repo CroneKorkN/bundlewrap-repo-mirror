@@ -6,7 +6,7 @@
         'hardware',
         'home',
         'monitored',
-        #'dnsserver',
+        'dnsserver',
     ],
     'bundles': [
         'kea-dhcpd',
@@ -52,10 +52,10 @@
                 'dhcp_server': True,
             },
         },
-        # 'bind': {
-        #     'master_node': 'htz.mails',
-        #     'hostname': 'home.resolver.name',
-        # },
+        'bind': {
+            'master_node': 'htz.mails',
+            'hostname': 'home.resolver.name',
+        },
         'sysctl': {
             'net': {
                 'ipv4': {
