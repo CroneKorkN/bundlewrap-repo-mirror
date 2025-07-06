@@ -18,32 +18,26 @@
         'id': '9cf52515-63a1-4659-a8ec-6c3c881727e5',
         'network': {
             'internal': {
-                'interface': 'enp0s31f6',
+                'interface': 'enp1s0f0',
                 'ipv4': '10.0.0.5/24',
                 'gateway4': '10.0.0.1',
+                'mac': '98:b7:85:01:ca:a6',
+            },
+            'wakeonlan': {
+                'interface': 'enp0s31f6',
+                'ipv4': '10.0.0.6/24',
                 'mac': '4c:cc:6a:d5:96:f8',
             },
         },
         'backup-server': {
             'hostname': 'backups.sublimity.de',
         },
-        # 'smartctl': {
-        #     '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K3GV6TPL': {
-        #         'apm': 1,
-        #     },
-        #     '/dev/disk/by-id/ata-HGST_HDN726040ALE614_K4KAJXEB': {
-        #         'apm': 1,
-        #     },
-        #     '/dev/disk/by-id/ata-TOSHIBA_HDWQ140_19VZK0EMFAYG': {
-        #         'apm': 1,
-        #     },
-        # },
         'ssh': {
             # multipling prevents server from sleeping
             'multiplex_incoming': False,
         },
         'wol-sleeper': {
-            'network': 'internal',
+            'network': 'wakeonlan',
             'waker': 'home.server',
         },
         'zfs-mirror': {
