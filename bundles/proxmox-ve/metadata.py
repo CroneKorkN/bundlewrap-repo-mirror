@@ -80,6 +80,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'nginx/has_websockets',
     'nginx/vhosts',
 )
 def nginx(metadata):
