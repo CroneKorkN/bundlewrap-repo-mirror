@@ -94,10 +94,47 @@ def units(metadata):
                     }
                 }
 
+            # cake WIP
+
+            # if 'cake' in network_conf:
+            #     units[f'{network_name}.network']['CAKE'] = network_conf['cake']
+
         return {
             'systemd': {
                 'units': units,
             }
+        }
+    else:
+        return {}
+
+
+@metadata_reactor.provides(
+    'systemd/units',
+)
+def queuing_disciplines(metadata):
+    if node.has_bundle('systemd-networkd'):
+        return {
+            'systemd': {
+                'units': {
+                    f'qdisc-{network_name}.service': {
+                        'Unit': {
+                            'Description': f'setup queuing discipline for interface {network_name}',
+                            'Wants': 'network.target',
+                            'After': 'network.target',
+                            'BindsTo': 'network.target',
+                        },
+                        'Service': {
+                            'Type': 'oneshot',
+                            'ExecStart': f'/sbin/tc qdisc replace root dev {network_name} {network_conf["qdisc"]}',
+                        },
+                        'Install': {
+                            'WantedBy': 'network-online.target',
+                        },
+                    }
+                        for network_name, network_conf in metadata.get('network').items()
+                        if 'qdisc' in network_conf
+                },
+            },
         }
     else:
         return {}

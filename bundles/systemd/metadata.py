@@ -26,7 +26,8 @@ def units(metadata):
         type = name.split('.')[-1]
 
         if type == 'service':
-            units.setdefault(name, {}).setdefault('Install', {}).setdefault('WantedBy', {'multi-user.target'})
+            if not config.get('Install', {}).get('WantedBy', set()):
+                units.setdefault(name, {}).setdefault('Install', {}).setdefault('WantedBy', {'multi-user.target'})
         elif type == 'timer':
             units.setdefault(name, {}).setdefault('Install', {}).setdefault('WantedBy', {'timers.target'})
         elif type == 'mount':

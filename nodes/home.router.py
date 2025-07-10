@@ -33,6 +33,7 @@
                 'id': 3,
                 'ipv4': '10.0.99.126/24',
                 'gateway4': '10.0.99.1',
+                'qdisc': 'cake bandwidth 40Mbit diffserv4',
             },
             'proxmox': {
                 'type': 'vlan',
