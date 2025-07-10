@@ -69,9 +69,6 @@ defaults = {
             },
         },
     },
-    'nginx': {
-        'has_websockets': True,
-    },
 }
 
 
@@ -142,6 +139,7 @@ def dns(metadata):
 
 
 @metadata_reactor.provides(
+    'nginx/has_websockets',
     'nginx/vhosts',
 )
 def nginx(metadata):
