@@ -5,7 +5,7 @@
         'routeros',
     ],
     'metadata': {
-        'id': 'e6a24df7-eed1-404e-af78-15ebcbcc02a2',
+        'id': '6d4b95dd-5d8a-4481-8c5f-8ee714d9f0cc',
         'routeros': {
             'ips': {
                 '10.0.0.62/24': {

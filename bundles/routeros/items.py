@@ -37,18 +37,18 @@ routeros['/system/identity'] = {
 #     'write-access': False,
 # }
 
-# routeros['/system/clock'] = {
-#     'time-zone-autodetect': False,
-#     'time-zone-name': 'UTC',
-# }
+routeros['/system/clock'] = {
+    'time-zone-autodetect': False,
+    'time-zone-name': 'UTC',
+}
 
 # routeros['/ip/neighbor/discovery-settings'] = {
 #     'protocol': 'cdp,lldp,mndp',
 # }
 
-# routeros['/ip/route?dst-address=0.0.0.0/0'] = {
-#     'gateway': node.metadata.get('routeros/gateway'),
-# }
+routeros['/ip/route?dst-address=0.0.0.0/0'] = {
+    'gateway': node.metadata.get('routeros/gateway'),
+}
 
 for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
     routeros[f'/interface/vlan?name={vlan_name}'] = {
@@ -57,12 +57,9 @@ for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
         'tags': {
             'routeros-vlan',
         },
-        'needs': {
-            #'routeros:/interface/bridge?name=bridge',
-        },
     }
 
-    routeros[f"/interface/bridge/vlan?vlan-ids={vlan_id}&dynamic=false"] = {
+    routeros[f"/interface/bridge/vlan?vlan-ids={vlan_id}&dynamic=false"] = { # bw bug: remove &dynamic=false on first apply
         'bridge': 'bridge',
         'untagged': sorted(node.metadata.get(f'routeros/vlan_ports/{vlan_name}/untagged')),
         'tagged': sorted(node.metadata.get(f'routeros/vlan_ports/{vlan_name}/tagged')),
