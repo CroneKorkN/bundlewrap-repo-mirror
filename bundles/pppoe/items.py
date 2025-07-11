@@ -7,6 +7,7 @@ files = {
         'content_type': 'mako',
         'mode': '0644',
         'context': {
+            'interface': node.metadata.get('pppoe/interface'),
             'user': node.metadata.get('pppoe/user'),
         },
         'needs': {
@@ -31,6 +32,11 @@ svc_systemd = {
         'needs': {
             'file:/etc/ppp/peers/isp',
             'file:/etc/ppp/chap-secrets',
+        },
+    },
+    'qdisc-ppp0.service': {
+        'needs': {
+            'svc_systemd:pppoe-isp.service',
         },
     },
 }

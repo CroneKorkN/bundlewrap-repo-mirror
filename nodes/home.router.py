@@ -29,7 +29,9 @@
                 'dhcp_server': True,
             },
             'external': {
-                'interface': 'enp2s0',
+                'type': 'vlan',
+                'vlan_interface': 'internal',
+                'id': 3,
                 'ipv4': '10.0.98.2/24',
                 #'qdisc': 'cake bandwidth 35Mbit diffserv4',
             },
@@ -60,6 +62,7 @@
             'hostname': 'home.resolver.name',
         },
         'pppoe': {
+            'interface': 'external',
             'user': '!decrypt:encrypt$gAAAAABocUfodLqCBKPPN7H9S64yJ7kRddtaWI0nQU2oklPMEjBhMsir4NL2yjkcHXAN-Ozqn6FCokyE1AL8ek3c5CqAvd83jkxZytp-oclrKqUD9uhUCy4=',
             'secret': '!decrypt:encrypt$gAAAAABocUhmDqFZsyHYBIP2qdMFIS1eWT_bPdyv98cHzIgeKFAxDfcCrVJwDxVPFDDMa_7UT76HDJLvtdYQ8mFl2RL0yR8k2A=='
         },

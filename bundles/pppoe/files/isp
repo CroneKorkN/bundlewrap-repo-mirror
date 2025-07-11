@@ -6,5 +6,5 @@ persist
 maxfail 0
 lcp-echo-interval 20
 lcp-echo-failure 3
-plugin rp-pppoe.so enp2s0
+plugin rp-pppoe.so ${interface}
 user "${user}"

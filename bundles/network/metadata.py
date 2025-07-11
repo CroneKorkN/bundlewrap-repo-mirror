@@ -126,6 +126,7 @@ def queuing_disciplines(metadata):
                         'Service': {
                             'Type': 'oneshot',
                             'ExecStart': f'/sbin/tc qdisc replace root dev {network_name} {network_conf["qdisc"]}',
+                            'RemainAfterExit': 'yes',
                         },
                         'Install': {
                             'WantedBy': 'network-online.target',
