@@ -9,6 +9,7 @@ defaults = {
             'tcp dport 22 accept',
         },
         'forward': {},
+        'nat': {},
         'output': {},
     },
 }
