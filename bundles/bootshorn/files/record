@@ -1,0 +1,23 @@
+#!/bin/sh
+
+mkdir -p recordings
+
+while true
+do
+    # get date in ISO 8601 format with nanoseconds
+    PROGRAMM=$(test $(uname) = "Darwin" && echo "gdate" || echo "date")
+    DATE=$($PROGRAMM "+%Y-%m-%d_%H-%M-%S.%6N%z")
+
+    # record audio using ffmpeg
+    ffmpeg \
+        -y \
+        -f pulse \
+        -i "alsa_input.usb-HANMUS_USB_AUDIO_24BIT_2I2O_1612310-00.analog-stereo" \
+        -ac 1 \
+        -ar 96000 \
+        -sample_fmt s32 \
+        -t "3600" \
+        -c:a flac \
+        -compression_level 12 \
+        "recordings/$DATE.flac"
+done
