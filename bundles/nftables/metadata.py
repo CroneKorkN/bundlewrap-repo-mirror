@@ -8,8 +8,8 @@ defaults = {
         'input': {
             'tcp dport 22 accept',
         },
-        'forward': {},
-        'nat': {},
-        'output': {},
+        'forward': set(),
+        'nat': set(),
+        'output': set(),
     },
 }
