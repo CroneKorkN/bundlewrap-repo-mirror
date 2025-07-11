@@ -11,6 +11,7 @@
     'bundles': [
         'kea-dhcpd',
         'wireguard',
+        'pppoe',
     ],
     'metadata': {
         'id': '1d6a43e5-858c-42f9-9c40-ab63d61c787c',
@@ -28,12 +29,9 @@
                 'dhcp_server': True,
             },
             'external': {
-                'type': 'vlan',
-                'vlan_interface': 'internal',
-                'id': 3,
-                'ipv4': '10.0.99.126/24',
-                'gateway4': '10.0.99.1',
-                'qdisc': 'cake bandwidth 40Mbit diffserv4',
+                'interface': 'enp2s0',
+                'ipv4': '10.0.98.2/24',
+                #'qdisc': 'cake bandwidth 35Mbit diffserv4',
             },
             'proxmox': {
                 'type': 'vlan',
@@ -60,6 +58,10 @@
         'bind': {
             'master_node': 'htz.mails',
             'hostname': 'home.resolver.name',
+        },
+        'pppoe': {
+            'user': '!decrypt:encrypt$gAAAAABocUfodLqCBKPPN7H9S64yJ7kRddtaWI0nQU2oklPMEjBhMsir4NL2yjkcHXAN-Ozqn6FCokyE1AL8ek3c5CqAvd83jkxZytp-oclrKqUD9uhUCy4=',
+            'secret': '!decrypt:encrypt$gAAAAABocUhmDqFZsyHYBIP2qdMFIS1eWT_bPdyv98cHzIgeKFAxDfcCrVJwDxVPFDDMa_7UT76HDJLvtdYQ8mFl2RL0yR8k2A=='
         },
         'sysctl': {
             'net': {

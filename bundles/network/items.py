@@ -3,6 +3,9 @@ for network_name, network_conf in node.metadata.get('network').items():
         svc_systemd[f'qdisc-{network_name}.service'] = {
             'enabled': True,
             'running': None,
+            'needs': {
+                f'file:/usr/local/lib/systemd/system/qdisc-{network_name}.service',
+            },
         }
         actions[f'qdisc-{network_name}.service_restart_workaround'] = {
             'command': 'true',
