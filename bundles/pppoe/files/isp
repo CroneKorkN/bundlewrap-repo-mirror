@@ -1,10 +1,30 @@
-linkname ppp0
-noauth
-defaultroute
-replacedefaultroute
-persist
-maxfail 0
+# --- Plugin & Interface ---
+plugin      rp-pppoe.so ${interface}
+unit        0
+
+# --- IPv4 Einstellungen ---
+noipdefault                 # keine selbstgewählte lokale IP
+defaultroute                # Default-Route über ppp0 anlegen
+replacedefaultroute         # ersetzt vorherige Default-Route
+
+# --- IPv6 Einstellungen ---
++ipv6                         # IPv6CP aktivieren
+ipv6cp-accept-local          # lokale IPv6 vom ISP übernehmen
+ipv6cp-accept-remote         # remote IPv6 vom ISP übernehmen
+ipv6cp-use-ipaddr            # statt Link-Local die zugewiesene IPv6 nutzen
+defaultroute6
+
+# --- Verbindungsmanagement ---
+persist                      # bei Abbruch automatisch neu verbinden
+maxfail 0                    # unbegrenzt Neuversuche
+
+# --- LCP‐Keepalive (zuverlässiger Ausfall-Check) ---
 lcp-echo-interval 20
 lcp-echo-failure 3
-plugin rp-pppoe.so ${interface}
+
+# --- Sicherheit / Logging ---
+hide-password                # Passwort nicht im Log anzeigen
+noauth                       # Auth nur über chap-secrets
+
+# --- Zugangsdaten (nur Username, das Passwort kommt aus /etc/ppp/chap-secrets) ---
 user "${user}"
