@@ -6,10 +6,10 @@ curl -s -o /dev/null \
      -u restadmin:$REST_API_PASS \
      -H "Content-Type: application/json" \
      -X POST http://localhost:8001/3.1/queues/in \
-     -d '{
-       "list_id": "testlist-2.mailman.ckn.li",
-       "text": "From: i@ckn.li\nTo: testlist-2@mailman.ckn.li\nSubject: Curl-Driven Test $(date)\n\nHello everyone — this is a test sent via curl! $(date)"
-     }'
+     -d "{
+       \"list_id\": \"testlist-2.mailman.ckn.li\",
+       \"text\": \"From: i@ckn.li\nTo: testlist-2@mailman.ckn.li\nSubject: Curl Test $(date '+%Y-%m-%d %H:%M:%S')\n\nThis message was sent at $(date '+%Y-%m-%d %H:%M:%S').\"
+     }"
 ```
 
 `tail -f /var/log/mailman3/*.log`
