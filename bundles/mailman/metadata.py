@@ -114,3 +114,36 @@ def secrets(metadata):
             'archiver_key': derive_mailadmin_secret(metadata, 'archiver_key'),
         },
     }
+
+
+@metadata_reactor.provides(
+    'dns',
+)
+def dns(metadata):
+    report_email = metadata.get('mailman/dmarc_report_email')
+
+    return {
+        'dns': {
+            metadata.get('mailman/hostname'): {
+                'MX': [f"5 {metadata.get('mailman/hostname')}."],
+                'TXT': [
+                    'v=spf1 a mx -all',
+                    '; '.join(f'{k}={v}' for k, v in {
+                    # dmarc version
+                    'v': 'DMARC1',
+                    # reject on failure
+                    'p': 'reject',
+                    # standard reports
+                    'rua': f'mailto:{report_email}',
+                    # forensic reports
+                    'fo': 1,
+                    'ruf': f'mailto:{report_email}',
+                    # require alignment between the DKIM domain and the parent Header From domain
+                    'adkim': 's',
+                    # require alignment between the SPF domain (the sender) and the Header From domain
+                    'aspf': 's',
+                }.items())
+                ],
+            },
+        },
+    }

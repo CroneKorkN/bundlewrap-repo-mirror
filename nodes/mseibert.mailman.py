@@ -35,14 +35,18 @@
         'mailman': {
             'hostname': 'mailman.ckn.li',
             'site_owner_email': '!decrypt:encrypt$gAAAAABoWEeTyypfKw9l9jnNgF4GlS0-6O2NWCB0f3Fj1XnQ_HMjHXymAL8FWTyQjRmz3r8KnGJ-sogfnhW6lub_pnuk-wqB5Zuy9tgGsfi3RvkyNaOUeTE=',
-            'smtp_host': 'smtp.ionos.de',
-            'smtp_port': 465,
-            'smtp_user': '!decrypt:encrypt$gAAAAABoWEcZlLxiTKluyg3gZ-un2fYkuviW9BD9tTW8mfKBL5d41Z1X7LtI5CDnhhLXTGFpPnY1thr17h22oW3Ybz_WPgvbJVepnVwmeQwvMpg2psATKAY=',
-            'smtp_password': '!decrypt:encrypt$gAAAAABoWDusH3XY4ONh8MnmfBbyHW477ipjSycb3TiDGXxO5eujum80zXjNrOblswCGRTHsW9UasM_dXeeGBsa7KcK4s6AK_eynXCWeLCtXfrUSE_oEd7c='
+            'dmarc_report_email': 'dmarc@sublimity.de',
+
+            # 'smtp_host': 'smtp.ionos.de',
+            # 'smtp_port': 465,
+            # 'smtp_user': '!decrypt:encrypt$gAAAAABoWEcZlLxiTKluyg3gZ-un2fYkuviW9BD9tTW8mfKBL5d41Z1X7LtI5CDnhhLXTGFpPnY1thr17h22oW3Ybz_WPgvbJVepnVwmeQwvMpg2psATKAY=',
+            # 'smtp_password': '!decrypt:encrypt$gAAAAABoWDusH3XY4ONh8MnmfBbyHW477ipjSycb3TiDGXxO5eujum80zXjNrOblswCGRTHsW9UasM_dXeeGBsa7KcK4s6AK_eynXCWeLCtXfrUSE_oEd7c='
         },
-        'overwrite_nameservers': [
-            '8.8.8.8',
-        ],
+        'systemd_timers': {
+            'cron': {
+                'enabled': True,
+            },
+        },
         'vm': {
             'cores': 2,
             'ram': 4096,
