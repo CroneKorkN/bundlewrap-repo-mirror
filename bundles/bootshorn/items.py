@@ -11,6 +11,10 @@ directories = {
         'owner': 'ckn',
         'group': 'ckn',
     },
+    '/opt/bootshorn/temperatures': {
+        'owner': 'ckn',
+        'group': 'ckn',
+    },
     '/opt/bootshorn/recordings/processed': {
         'owner': 'ckn',
         'group': 'ckn',

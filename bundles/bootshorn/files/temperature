@@ -3,13 +3,15 @@
 import requests
 import urllib3
 import datetime
-import json
+import csv
 urllib3.disable_warnings()
+import os
+
 
 HUE_IP = "10.0.0.134"  # replace with your bridge IP
 HUE_APP_KEY = "${hue_app_key}" # local only
 HUE_DEVICE_ID = "31f58786-3242-4e88-b9ce-23f44ba27bbe"
-TEMPERATURE_LOGFILE = "/opt/bootshorn/temperature.log"
+TEMPERATURE_LOG_DIR = "/opt/bootshorn/temperatures"
 
 response = requests.get(
     f"https://{HUE_IP}/clip/v2/resource/temperature",
@@ -28,6 +30,9 @@ for item in data["data"]:
 
 print(f"@{temperature_date}: {temperature}°C")
 
-with open(TEMPERATURE_LOGFILE, "a+") as logfile:
-    json.dump([temperature_date.isoformat(), temperature], logfile)
-    logfile.write("\n")
+filename = temperature_date.strftime("%Y-%m-%d_00-00-00.000000%z") + ".log"
+logpath  = os.path.join(TEMPERATURE_LOG_DIR, filename)
+
+with open(logpath, "a+", newline="") as logfile:
+    writer = csv.writer(logfile)
+    writer.writerow([temperature_date.strftime('%Y-%m-%d_%H-%M-%S.%f%z'), temperature])
