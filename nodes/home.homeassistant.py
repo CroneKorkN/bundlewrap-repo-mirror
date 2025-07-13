@@ -25,7 +25,7 @@
 # - cant use the letsencrypt addon, because it doesnt suppeort supplying a different zone (which would be acme.sublimity.de)
 
 # Advanced SSH & Web Terminal:
-#
+
 # username: root
 # password: ""
 # authorized_keys:
