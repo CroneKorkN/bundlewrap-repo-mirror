@@ -212,7 +212,7 @@ def generate_keys(metadata):
                             'token':repo.libs.hmac.hmac_sha512(
                                 key,
                                 str(repo.vault.random_bytes_as_base64_for(
-                                    f"{metadata.get('id')} bind key {key}",
+                                    f"{metadata.get('id')} bind key {key} 20250713",
                                     length=32,
                                 )),
                             )
