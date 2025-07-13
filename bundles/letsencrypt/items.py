@@ -42,7 +42,7 @@ files = {
 }
 
 actions['letsencrypt_update_certificates'] = {
-    'command': 'dehydrated --cron --accept-terms --challenge dns-01',
+    'command': 'systemctl start letsencrypt.service',
     'triggered': True,
     'skip': delegated,
     'needs': {
