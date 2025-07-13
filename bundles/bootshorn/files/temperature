@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+import requests
+import urllib3
+import datetime
+import json
+urllib3.disable_warnings()
+
+HUE_IP = "10.0.0.134"  # replace with your bridge IP
+HUE_APP_KEY = "${hue_app_key}" # local only
+HUE_DEVICE_ID = "31f58786-3242-4e88-b9ce-23f44ba27bbe"
+TEMPERATURE_LOGFILE = "/opt/bootshorn/temperature.log"
+
+response = requests.get(
+    f"https://{HUE_IP}/clip/v2/resource/temperature",
+    headers={"hue-application-key": HUE_APP_KEY},
+    verify=False,
+)
+response.raise_for_status()
+data = response.json()
+
+for item in data["data"]:
+    if item["id"] == HUE_DEVICE_ID:
+        temperature = item["temperature"]["temperature"]
+        temperature_date_string = item["temperature"]["temperature_report"]["changed"]
+        temperature_date = datetime.datetime.fromisoformat(temperature_date_string).astimezone(datetime.timezone.utc)
+        break
+
+print(f"@{temperature_date}: {temperature}°C")
+
+with open(TEMPERATURE_LOGFILE, "a+") as logfile:
+    json.dump([temperature_date.isoformat(), temperature], logfile)
+    logfile.write("\n")

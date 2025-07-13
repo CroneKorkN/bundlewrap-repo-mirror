@@ -23,15 +23,22 @@ defaults = {
         },
     },
     'systemd-timers': {
-        'bootshorn-process': {
-            'command': '/opt/bootshorn/process',
+        'bootshorn-temperature': {
+            'command': '/opt/bootshorn/temperature',
             'when': 'minutely',
             'working_dir': '/opt/bootshorn',
             'user': 'ckn',
             'group': 'ckn',
-            'after': {
-                'bootshorn-process.service',
-            },
         },
+        # 'bootshorn-process': {
+        #     'command': '/opt/bootshorn/process',
+        #     'when': 'hourly',
+        #     'working_dir': '/opt/bootshorn',
+        #     'user': 'ckn',
+        #     'group': 'ckn',
+        #     'after': {
+        #         'bootshorn-process.service',
+        #     },
+        # },
     },
 }
