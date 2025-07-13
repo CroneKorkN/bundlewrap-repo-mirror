@@ -66,13 +66,7 @@ files = {
         ],
     },
     '/etc/ssh/ssh_known_hosts': {
-        'content': '\n'.join(sorted(
-            line
-                for other_node in repo.nodes
-                if other_node != node
-                and other_node.has_bundle('ssh')
-                for line in other_node.metadata.get('ssh/is_known_as')
-        )) + '\n',
+        'content': '\n'.join(sorted(node.metadata.get('ssh/known_hosts'))) + '\n',
     },
 }
 

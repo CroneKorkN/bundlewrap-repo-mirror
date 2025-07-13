@@ -5,6 +5,7 @@ defaults = {
     'ssh': {
         'multiplex_incoming': True,
         'is_known_as': set(), # known_hosts for other nodes
+        'known_hosts': set(), # known_hosts for this node
     },
 }
 
@@ -85,4 +86,21 @@ def is_known_as(metadata):
                 pubkey=metadata.get('ssh/host_key/public'),
             ),
         },
+    }
+
+
+@metadata_reactor.provides(
+    'ssh/known_hosts',
+)
+def known_hosts(metadata):
+    return {
+        'ssh': {
+            'known_hosts': set(
+                line
+                    for other_node in repo.nodes
+                    if other_node != node
+                    and other_node.has_bundle('ssh')
+                    for line in other_node.metadata.get('ssh/is_known_as')
+            )
+        }
     }

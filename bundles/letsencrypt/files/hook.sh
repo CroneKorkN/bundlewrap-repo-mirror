@@ -31,6 +31,12 @@ deploy_cert() {
   % for domain, conf in sorted(domains.items()):
 <%   if not conf: continue %>\
     ${domain})
+      % if conf.get('scp', None):
+      scp "$KEYFILE" "${conf['scp']}/${conf.get('privkey_name', 'privkey.pem')}"
+      scp "$CERTFILE" "${conf['scp']}/${conf.get('cert_name', 'cert.pem')}"
+      scp "$FULLCHAINFILE" "${conf['scp']}/${conf.get('fullchain_name', 'fullchain.pem')}"
+      scp "$CHAINFILE" "${conf['scp']}/${conf.get('chain_name', 'chain.pem')}"
+      % endif
       % if conf.get('location', None):
       cat "$KEYFILE" > "${conf['location']}/${conf.get('privkey_name', 'privkey.pem')}"
       cat "$CERTFILE" > "${conf['location']}/${conf.get('cert_name', 'cert.pem')}"
