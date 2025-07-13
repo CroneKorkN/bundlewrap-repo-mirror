@@ -41,6 +41,6 @@
 
 # add to /homeassistant/configuration.yaml:
 # http:
-#   http_port: 443
+#   http_port: 443 # or use nginx addon
 #   ssl_certificate: /ssl/fullchain.pem
 #   ssl_key: /ssl/privkey.pem
