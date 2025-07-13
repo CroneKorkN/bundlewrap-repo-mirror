@@ -1,0 +1,9 @@
+interface enp1s0f0 {
+  AdvSendAdvert on;
+  prefix __IP6PREFIX__ {
+    AdvOnLink     on;
+    AdvAutonomous on;
+    AdvValidLifetime     86400;
+    AdvPreferredLifetime 14400;
+  };
+};

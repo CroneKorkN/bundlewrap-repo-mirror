@@ -25,6 +25,22 @@ files = {
             'pkg_apt:pppoe',
         },
     },
+    '/etc/dhcpcd.conf': {
+        'content_type': 'mako',
+    },
+    '/etc/dhcpcd.exit-hook': {
+        'mode': '0755',
+    },
+    '/etc/radvd.conf.template': {
+        'content_type': 'mako',
+    },
+}
+
+actions = {
+    'touch_radvd.conf': {
+        'command': 'touch /etc/radvd.conf',
+        'unless': 'ls /etc/radvd.conf',
+    },
 }
 
 svc_systemd = {
@@ -37,6 +53,19 @@ svc_systemd = {
     'qdisc-ppp0.service': {
         'needs': {
             'svc_systemd:pppoe-isp.service',
+        },
+    },
+    'dhcpcd.service': {
+        'needs': {
+            'pkg_apt:dhcpcd5',
+            'file:/etc/dhcpcd.conf',
+            'file:/etc/dhcpcd.exit-hook',
+            'action:touch_radvd.conf',
+        },
+    },
+    'radvd.service': {
+        'needs': {
+            'pkg_apt:radvd',
         },
     },
 }

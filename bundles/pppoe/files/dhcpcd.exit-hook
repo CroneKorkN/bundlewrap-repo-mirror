@@ -1,0 +1,48 @@
+#!/bin/sh
+
+logger -t dhcpcd "===== dhcpcd.exit-hook gestartet: interface=$interface, reason=$reason ====="
+
+# 1) nur auf ppp0 reagieren
+if [ "$interface" != "ppp0" ]; then
+  logger -t dhcpcd "Skipping hook: interface ist '$interface' (nicht ppp0)"
+  return 0
+fi
+logger -t dhcpcd "Hook für ppp0, reason=$reason"
+
+# 2) nur bei ROUTERADVERT (RA vom Provider)
+if [ "$reason" != "ROUTERADVERT" ]; then
+  logger -t dhcpcd "Skipping hook: reason ist '$reason' (nicht ROUTERADVERT)"
+  return 0
+fi
+logger -t dhcpcd "Verarbeite ROUTERADVERT"
+
+# 3) IPv6-Prefix auf ppp0 ermitteln
+PREFIX=$(ip -6 addr show dev ppp0 scope global dynamic \
+           | awk '/scope global/ { print $2; exit }')
+logger -t dhcpcd "Ermittelter PREFIX: ${PREFIX:-<leer>}"
+
+if [ -z "$PREFIX" ]; then
+  logger -t dhcpcd "Fehler: kein gültiger IPv6-Prefix auf ppp0 gefunden"
+  return 1
+fi
+
+# 4) radvd.conf erzeugen
+logger -t dhcpcd "Erzeuge /etc/radvd.conf aus Template"
+if sed "s|__IP6PREFIX__|$PREFIX|g" /etc/radvd.conf.template > /etc/radvd.conf; then
+  logger -t dhcpcd "Template erfolgreich ersetzt"
+else
+  logger -t dhcpcd "Fehler beim Ersetzen des Templates"
+  return 1
+fi
+
+# 5) radvd neu laden
+logger -t dhcpcd "Lade radvd neu"
+if systemctl reload-or-restart radvd; then
+  logger -t dhcpcd "radvd neu geladen"
+else
+  logger -t dhcpcd "Fehler beim Neuladen von radvd"
+  return 1
+fi
+
+logger -t dhcpcd "===== dhcpcd.exit-hook erfolgreich beendet ====="
+return 0

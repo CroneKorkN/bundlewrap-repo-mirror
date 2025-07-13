@@ -11,7 +11,7 @@ replacedefaultroute         # ersetzt vorherige Default-Route
 +ipv6                         # IPv6CP aktivieren
 ipv6cp-accept-local          # lokale IPv6 vom ISP übernehmen
 ipv6cp-accept-remote         # remote IPv6 vom ISP übernehmen
-ipv6cp-use-ipaddr            # statt Link-Local die zugewiesene IPv6 nutzen
+#ipv6cp-use-ipaddr            # statt Link-Local die zugewiesene IPv6 nutzen
 defaultroute6
 
 # --- Verbindungsmanagement ---

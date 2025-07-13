@@ -2,6 +2,8 @@ defaults = {
     'apt': {
         'packages': {
             'pppoe': {},
+            'dhcpcd5': {},
+            'radvd': {},
         },
     },
     'nftables': {
@@ -11,6 +13,11 @@ defaults = {
     },
     'systemd': {
         'units': {
+            'dhcpcd.service.d/override.conf': {
+                'Service': {
+                    'ReadWritePaths': {'/etc/radvd.conf'},
+                },
+            },
             'pppoe-isp.service': {
                 'Unit': {
                     'Description': 'PPPoE Internet Connection',
@@ -18,7 +25,7 @@ defaults = {
                 },
                 'Service': {
                     'Type': 'forking',
-                    'ExecStart': '/usr/sbin/pppd call isp',
+                    'ExecStart': '/usr/sbin/pppd call isp updetach',
                     'Restart': 'on-failure',
                     'RestartSec': 5,
                 },
@@ -26,7 +33,11 @@ defaults = {
             'qdisc-ppp0.service': {
                 'Unit': {
                     'Description': 'setup queuing discipline for interface ppp0',
-                    'After': 'sys-devices-virtual-net-ppp0.device',
+                    'After': {
+                        'pppoe-isp.service',
+                        'sys-devices-virtual-net-ppp0.device',
+                    },
+                    'PartOf': 'pppoe-isp.service',
                     'BindsTo': 'sys-devices-virtual-net-ppp0.device',
                 },
                 'Service': {
@@ -35,7 +46,7 @@ defaults = {
                     'RemainAfterExit': 'yes',
                 },
                 'Install': {
-                    'WantedBy': 'network-online.target',
+                    'WantedBy': 'multi-user.target',
                 },
             }
         },

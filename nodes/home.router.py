@@ -71,6 +71,9 @@
                 'ipv4': {
                     'ip_forward': 1,
                 },
+                'ipv6': {
+                    'ip_forward': 1,
+                },
             },
         },
         'wireguard': {
