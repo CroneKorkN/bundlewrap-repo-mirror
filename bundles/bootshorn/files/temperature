@@ -32,7 +32,12 @@ print(f"@{temperature_date}: {temperature}°C")
 
 filename = temperature_date.strftime("%Y-%m-%d_00-00-00.000000%z") + ".log"
 logpath  = os.path.join(TEMPERATURE_LOG_DIR, filename)
+now_utc = datetime.datetime.now(datetime.timezone.utc)
 
 with open(logpath, "a+", newline="") as logfile:
     writer = csv.writer(logfile)
-    writer.writerow([temperature_date.strftime('%Y-%m-%d_%H-%M-%S.%f%z'), temperature])
+    writer.writerow([
+        now_utc.strftime('%Y-%m-%d_%H-%M-%S.%f%z'), # current UTC time
+        temperature_date.strftime('%Y-%m-%d_%H-%M-%S.%f%z'), # date of temperature reading
+        temperature,
+    ])

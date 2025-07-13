@@ -25,7 +25,7 @@ defaults = {
     'systemd-timers': {
         'bootshorn-temperature': {
             'command': '/opt/bootshorn/temperature',
-            'when': '*:0/5',
+            'when': '*:0/10',
             'working_dir': '/opt/bootshorn',
             'user': 'ckn',
             'group': 'ckn',
