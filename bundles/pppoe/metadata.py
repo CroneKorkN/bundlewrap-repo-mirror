@@ -42,7 +42,9 @@ defaults = {
                 },
                 'Service': {
                     'Type': 'oneshot',
-                    'ExecStart': '/sbin/tc qdisc replace root dev ppp0 cake bandwidth 30Mbit rtt 50ms diffserv4 nat egress',
+                    'ExecStart': '/sbin/tc qdisc replace root dev ppp0 cake bandwidth 38Mbit internet besteffort nat egress memlimit 256mb',
+                    # no drops save:
+                    #'ExecStart': '/sbin/tc qdisc replace root dev ppp0 cake bandwidth 38Mbit internet besteffort nat egress memlimit 256mb',
                     'RemainAfterExit': 'yes',
                 },
                 'Install': {

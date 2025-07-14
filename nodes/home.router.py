@@ -19,6 +19,7 @@
             'internal': {
                 'interface': 'enp1s0f0',
                 'ipv4': '10.0.0.1/24',
+                #'IPv6AcceptRA': 'yes',
                 'dhcp_server': True,
             },
             'iot': {
