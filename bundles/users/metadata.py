@@ -4,7 +4,7 @@ defaults = {
     'users': {
         'root': {
             'home': '/root',
-            'password': repo.vault.password_for(f'{node.name} user root'),
+            'password': repo.vault.password_for(f'{node.name} user root', length=24),
         },
     },
 }
@@ -49,7 +49,7 @@ def user_defaults(metadata):
 
         if not 'shell' in config:
             users[name]['shell'] = '/bin/bash'
-            
+
         if not 'privkey' in users[name] and not 'pubkey' in users[name]:
             privkey, pubkey = repo.libs.ssh.generate_ed25519_key_pair(
                 b64decode(str(repo.vault.random_bytes_as_base64_for(f"{name}@{metadata.get('id')}", length=32)))
@@ -57,7 +57,7 @@ def user_defaults(metadata):
             users[name]['keytype'] = 'ed25519'
             users[name]['privkey'] = privkey
             users[name]['pubkey'] = pubkey + f' {name}@{node.name}'
-    
+
     return {
         'users': users,
     }
