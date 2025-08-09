@@ -1,5 +1,6 @@
 directories = {
     '/etc/sudoers.d': {
+        'mode': '0750',
         'purge': True,
     },
 }
