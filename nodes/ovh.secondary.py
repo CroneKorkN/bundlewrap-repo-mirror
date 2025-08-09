@@ -40,5 +40,11 @@
                 },
             },
         },
+        'nftables': {
+            'input': {
+                'tcp dport 27015 accept',
+                'udp dport { 27005, 27015, 27020 } accept',
+            },
+        },
     },
 }
