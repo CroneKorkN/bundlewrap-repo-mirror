@@ -63,7 +63,6 @@ view "${view_name}" {
   };
   % endfor
 
-  include "/etc/bind/named.conf.default-zones";
   include "/etc/bind/zones.rfc1918";
 };
 
