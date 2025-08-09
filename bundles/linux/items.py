@@ -25,6 +25,9 @@ files= {
             'svc_systemd:systemd-sysctl.service:restart',
         ],
     },
+    '/etc/modules-load.d/managed.conf': {
+        'content': '\n'.join(sorted(node.metadata.get('modules-load'))),
+    }
 }
 
 svc_systemd = {

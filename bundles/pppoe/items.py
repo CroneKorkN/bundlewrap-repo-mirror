@@ -1,8 +1,4 @@
 files = {
-    '/etc/modules-load.d/pppoe.conf': {
-        'content': 'pppoe\npppox\nppp_generic',
-        'mode': '0644',
-    },
     '/etc/ppp/peers/isp': {
         'content_type': 'mako',
         'mode': '0644',

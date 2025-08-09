@@ -34,10 +34,12 @@ def dhcp(metadata):
 
 @metadata_reactor.provides(
     'systemd/units',
+    'modules-load',
 )
 def units(metadata):
     if node.has_bundle('systemd-networkd'):
         units = {}
+        modules_load = set()
 
         for network_name, network_conf in metadata.get('network').items():
             interface_type = network_conf.get('type', None)
@@ -96,13 +98,15 @@ def units(metadata):
 
             # cake WIP
 
-            # if 'cake' in network_conf:
-            #     units[f'{network_name}.network']['CAKE'] = network_conf['cake']
+            if 'cake' in network_conf:
+                units[f'{network_name}.network']['CAKE'] = network_conf['cake']
+                modules_load.add('sch_cake')
 
         return {
             'systemd': {
                 'units': units,
-            }
+            },
+            'modules-load': modules_load,
         }
     else:
         return {}

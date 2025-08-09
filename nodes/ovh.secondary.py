@@ -17,6 +17,11 @@
                 'gateway4': '51.68.188.1',
                 'ipv6': '2001:41d0:701:1100::751a/128',
                 'gateway6': '2001:41d0:701:1100::1',
+                'cake': {
+                    'Bandwidth': '350M',
+                    'FlowIsolationMode': 'triple',
+                    'RTTSec': '100ms',
+                },
             },
         },
         'bind': {
