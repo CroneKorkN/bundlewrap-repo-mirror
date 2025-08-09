@@ -2,7 +2,7 @@
     'hostname': '10.0.0.1',
     'groups': [
         'autologin',
-        'debian-12',
+        'debian-13',
         'hardware',
         'home',
         'monitored',
@@ -81,7 +81,6 @@
             's2s': {
                 'htz.mails': {
                     'allowed_ips': [
-                        '10.0.10.0/24',
                         '10.0.10.0/24',
                         #'192.168.179.0/24', # while raspi at home
                         '10.0.227.0/24', # mseibert.freescout
