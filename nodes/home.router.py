@@ -70,9 +70,21 @@
             'net': {
                 'ipv4': {
                     'ip_forward': 1,
+                    'conf': {
+                        'default': {
+                            'forwarding': 1,
+                        },
+                    },
                 },
                 'ipv6': {
-                    'ip_forward': 1,
+                    'conf': {
+                        'all': {
+                            'forwarding': 1,
+                        },
+                        'default': {
+                            'forwarding': 1,
+                        },
+                    },
                 },
             },
         },
