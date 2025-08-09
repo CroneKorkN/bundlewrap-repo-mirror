@@ -29,6 +29,7 @@ view "${view_name}" {
 
   % if view_conf['is_internal']:
   recursion yes;
+  include "/etc/bind/zones.rfc1918";
   % else:
   recursion no;
   rate-limit {
@@ -62,8 +63,6 @@ view "${view_name}" {
     file "/var/lib/bind/${view_name}/${zone_name}";
   };
   % endfor
-
-  include "/etc/bind/zones.rfc1918";
 };
 
 % endfor
