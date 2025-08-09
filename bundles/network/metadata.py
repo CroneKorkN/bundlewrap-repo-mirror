@@ -50,7 +50,7 @@ def units(metadata):
                 },
                 'Network': {
                     'DHCP': network_conf.get('dhcp', 'no'),
-                    'IPv6AcceptRA': network_conf.get('dhcp', 'no'),
+                    'IPv6AcceptRA': network_conf.get('IPv6AcceptRA', 'no'),
                     'VLAN': set(
                         other_network_name
                             for other_network_name, other_network_conf in metadata.get('network', {}).items()
