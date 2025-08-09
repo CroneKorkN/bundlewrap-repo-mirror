@@ -20,6 +20,7 @@
                 'cake': {
                     'Bandwidth': '350M',
                     'FlowIsolationMode': 'triple',
+                    'PriorityQueueingPreset': 'besteffort',
                     'RTTSec': '100ms',
                 },
             },
