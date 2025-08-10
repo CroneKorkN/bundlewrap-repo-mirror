@@ -10,7 +10,9 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install -y libc6:i386 lib32z1
 
 function steam() {
+    # für systemd, damit es den prozess beenden kann
     setpriv --reuid=steam --regid=steam --init-groups "$@"
+    export HOME=/opt/l4d2/steam
 }
 
 # -- STEAM -- #
@@ -69,6 +71,8 @@ sv_steamgroup "38347879"
 sv_minrate 60000
 sv_maxrate 0
 net_splitpacket_maxrate 60000
+
+sb_all_bot_game 1
 EOF
 
 # admin system
