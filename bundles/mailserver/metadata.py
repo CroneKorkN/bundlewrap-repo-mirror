@@ -33,6 +33,7 @@ defaults = {
                 'mountpoint': '/var/vmail',
                 'compression': 'on',
                 'atime': 'off',
+                'recordsize': '16K',
             },
             'tank/vmail/index': {
                 'mountpoint': '/var/vmail/index',
