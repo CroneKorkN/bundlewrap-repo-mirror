@@ -1,18 +1,20 @@
 #!/bin/sh
 
+set -xeu pipefail
+
 name=$1
 overlay=$2
 port=$3
 
 steam mkdir -p \
-  /opt/l4d2/servers/$name \
-  /opt/l4d2/servers/$name/work \
-  /opt/l4d2/servers/$name/upper \
-  /opt/l4d2/servers/$name/merged
+  "/opt/l4d2/servers/$name" \
+  "/opt/l4d2/servers/$name/work" \
+  "/opt/l4d2/servers/$name/upper" \
+  "/opt/l4d2/servers/$name/merged"
 
-mountpoint -q /opt/l4d2/servers/$name/merged && umount /opt/l4d2/servers/$name/merged
+mountpoint -q "/opt/l4d2/servers/$name/merged" && umount "/opt/l4d2/servers/$name/merged"
 mount -t overlay overlay \
-  -o lowerdir=/opt/l4d2/overlays/$overlay:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/$name/upper,workdir=/opt/l4d2/servers/$name/work \
-  /opt/l4d2/servers/$name/merged
+  -o "lowerdir=/opt/l4d2/overlays/$overlay:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/$name/upper,workdir=/opt/l4d2/servers/$name/work" \
+  "/opt/l4d2/servers/$name/merged"
 
-steam /opt/l4d2/servers/$name/merged/srcds_run -game left4dead2 -ip 0.0.0.0 -port $port +hostname "Crone $name" +map c1m1_hotel
+steam "/opt/l4d2/servers/$name/merged/srcds_run" -game left4dead2 -ip 0.0.0.0 -port $port +hostname "Crone $name" +map c1m1_hotel
