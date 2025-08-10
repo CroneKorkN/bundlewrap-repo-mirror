@@ -52,6 +52,8 @@ files = {
             'db_name': node.metadata.get('mailserver/database/name'),
             'db_user': node.metadata.get('mailserver/database/user'),
             'db_password': node.metadata.get('mailserver/database/password'),
+            'indexer_cores': node.metadata.get('vm/cores'),
+            'indexer_ram': node.metadata.get('vm/ram')//2,
         },
         'needs': {
             'pkg_apt:'

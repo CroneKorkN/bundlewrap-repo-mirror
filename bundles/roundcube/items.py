@@ -61,6 +61,7 @@ files['/opt/roundcube/config/config.inc.php'] = {
         'des_key': node.metadata.get('roundcube/des_key'),
         'database': node.metadata.get('roundcube/database'),
         'plugins': node.metadata.get('roundcube/plugins'),
+        'imap_host': node.metadata.get('mailserver/hostname'),
     },
     'needs': [
         'action:chown_roundcube',
