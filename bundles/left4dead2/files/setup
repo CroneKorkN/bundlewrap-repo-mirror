@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-set -xeu pipefail
+set -xeuo pipefail
 
 getent passwd steam >/dev/null || useradd -M -d /opt/l4d2 -s /bin/bash steam
 mkdir -p /opt/l4d2 /tmp/dumps
