@@ -9,6 +9,7 @@ directories = {
     },
     '/var/lib/redis': {
         'owner': 'redis',
+        'group': 'redis',
         'mode': '0750',
         'needs': [
             'pkg_apt:redis-server',

@@ -44,17 +44,17 @@ files = {
         'context': {
             'admin_email': node.metadata.get('mailserver/admin_email'),
             'indexer_ram': node.metadata.get('dovecot/indexer_ram'),
+            'config_version': node.metadata.get('dovecot/config_version'),
+            'storage_version': node.metadata.get('dovecot/storage_version'),
+            'maildir': node.metadata.get('mailserver/maildir'),
+            'hostname': node.metadata.get('mailserver/hostname'),
+            'db_host': node.metadata.get('mailserver/database/host'),
+            'db_name': node.metadata.get('mailserver/database/name'),
+            'db_user': node.metadata.get('mailserver/database/user'),
+            'db_password': node.metadata.get('mailserver/database/password'),
+            'indexer_cores': node.metadata.get('vm/cores'),
+            'indexer_ram': node.metadata.get('vm/ram')//2,
         },
-        'needs': {
-            'pkg_apt:'
-        },
-        'triggers': {
-            'svc_systemd:dovecot:restart',
-        },
-    },
-    '/etc/dovecot/dovecot-sql.conf': {
-        'content_type': 'mako',
-        'context': node.metadata.get('mailserver/database'),
         'needs': {
             'pkg_apt:'
         },
@@ -64,16 +64,6 @@ files = {
     },
     '/etc/dovecot/dhparam.pem': {
         'content_type': 'any',
-    },
-    '/etc/dovecot/dovecot-sql.conf': {
-        'content_type': 'mako',
-        'context': node.metadata.get('mailserver/database'),
-        'needs': {
-            'pkg_apt:'
-        },
-        'triggers': {
-            'svc_systemd:dovecot:restart',
-        },
     },
     '/var/vmail/sieve/global/spam-to-folder.sieve': {
         'owner': 'vmail',
@@ -131,7 +121,6 @@ svc_systemd = {
             'action:letsencrypt_update_certificates',
             'action:dovecot_generate_dhparam',
             'file:/etc/dovecot/dovecot.conf',
-            'file:/etc/dovecot/dovecot-sql.conf',
         },
     },
 }
