@@ -166,8 +166,8 @@
             'installer': False,
         },
         'vm': {
-            'cores': 4,
-            'ram': 8192,
+            'cores': 2,
+            'ram': 4096,
         },
         'wireguard': {
             'my_ip': '172.30.0.1/24',
