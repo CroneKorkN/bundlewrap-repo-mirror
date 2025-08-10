@@ -1,0 +1,1 @@
+https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Install%20Guide/README.md
