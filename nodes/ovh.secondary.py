@@ -7,7 +7,7 @@
     ],
     'bundles': [
         'wireguard',
-        'left4dead2',
+        #'left4dead2',
     ],
     'metadata': {
         'id': 'd5080b1a-b310-48be-bd5a-02cfcecf0c90',
@@ -47,12 +47,19 @@
                 },
             },
         },
-        'left4dead2': {
-            'servers': {
-                'One': {
-                    'port': 27015,
-                },
+        'nftables': {
+            'input': {
+                'tcp dport 27015 accept',
+                'udp dport { 27005, 27015, 27020 } accept',
             },
         },
+
+        # 'left4dead2': {
+        #     'servers': {
+        #         'One': {
+        #             'port': 27015,
+        #         },
+        #     },
+        # },
     },
 }
