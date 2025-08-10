@@ -2,7 +2,7 @@
     'hostname': '49.12.184.229',
     'groups': [
         'backup',
-        'debian-12',
+        'debian-13',
         'hetzner-cloud',
         'mailserver',
         'monitored',
@@ -107,6 +107,10 @@
                 'left4.me',
                 'elimu-kwanza.de',
             },
+        },
+        'dovecot': {
+            'config_version': '2.4.1',
+            'storage_version': '2.4.1',
         },
         'rspamd': {
             'hostname': 'rspamd.sublimity.de',
