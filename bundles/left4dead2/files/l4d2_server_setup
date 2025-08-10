@@ -5,9 +5,9 @@ mkdir -p /opt/l4d2 /tmp/dumps
 chown steam:steam /opt/l4d2 /tmp/dumps
 dpkg --add-architecture i386
 apt update
-apt install libc6:i386 lib32z1
+apt install -y libc6:i386 lib32z1
 
-function steam() { sudo -Hiu steam $* }
+function steam() { sudo -Hiu steam $@ }
 
 # -- STEAM -- #
 
@@ -67,6 +67,8 @@ test -f /opt/l4d2/overlays/pve/left4dead2/addons/698857882.vpk || \
 true
 
 # -- SERVERS -- #
+
+exit 0
 
 steam mkdir -p /opt/l4d2/servers
 
