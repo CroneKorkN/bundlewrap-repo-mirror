@@ -1,122 +1,183 @@
-assert node.has_bundle('steam') and node.has_bundle('steam-workshop-download')
+from shlex import quote
+
+
+def steam_run(cmd):
+    return f'su - steam -c {quote(cmd)}'
+
+
+users = {
+    'steam': {
+        'home': '/opt/steam',
+    },
+}
 
 directories = {
-    '/opt/steam/left4dead2-servers': {
+    '/opt/steam': {
         'owner': 'steam',
         'group': 'steam',
-        'mode': '0755',
-        'purge': True,
     },
-    # Current zfs doesnt support zfs upperdir. The support was added in October 2022. Move upperdir - unused anyway -
-    # to another dir. Also move workdir alongside it, as it has to be on same fs.
-    '/opt/steam-zfs-overlay-workarounds': {
+    '/opt/steam/.steam': {
         'owner': 'steam',
         'group': 'steam',
-        'mode': '0755',
-        'purge': True,
+    },
+    '/opt/left4dead2': {
+        'owner': 'steam',
+        'group': 'steam',
+    },
+    '/opt/left4dead2/left4dead2/ems/admin system': {
+        'owner': 'steam',
+        'group': 'steam',
+    },
+    '/opt/left4dead2/left4dead2/addons': {
+        'owner': 'steam',
+        'group': 'steam',
+    },
+    '/tmp/dumps': {
+        'owner': 'steam',
+        'group': 'steam',
+        'mode': '1770',
     },
 }
 
-# /opt/steam/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
 symlinks = {
-    '/opt/steam/steam/.steam/sdk32': {
-        'target': '/opt/steam/steam/linux32',
+    '/opt/steam/.steam/sdk32': {
+        'target': '/opt/steam/linux32',
         'owner': 'steam',
         'group': 'steam',
-    }
+    },
 }
 
-#
-# SERVERS
-#
+files = {
+    '/opt/steam-workshop-download': {
+        'content_type': 'download',
+        'source': 'https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download',
+        'mode': '755',
+    },
+    '/opt/left4dead2/left4dead2/ems/admin system/admins.txt': {
+        'unless': 'test -f /opt/left4dead2/left4dead2/ems/admin system/admins.txt',
+        'content': 'STEAM_1:0:12376499',
+        'owner': 'steam',
+        'group': 'steam',
+    },
+}
 
-for name, config in node.metadata.get('left4dead2/servers').items():
-
-    #overlay
-    directories[f'/opt/steam/left4dead2-servers/{name}'] = {
-        'owner': 'steam',
-        'group': 'steam',
-    }
-    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/upper'] = {
-        'owner': 'steam',
-        'group': 'steam',
-    }
-    directories[f'/opt/steam-zfs-overlay-workarounds/{name}/workdir'] = {
-        'owner': 'steam',
-        'group': 'steam',
-    }
-
-    # conf
-    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg'] = {
-        'content_type': 'mako',
-        'source': 'server.cfg',
-        'context': {
-            'name': name,
-            'steamgroups': node.metadata.get('left4dead2/steamgroups'),
-            'rcon_password': config['rcon_password'],
-        },
-        'owner': 'steam',
-        'group': 'steam',
+actions = {
+    'dpkg_add_architecture': {
+        'command': 'dpkg --add-architecture i386',
+        'unless': 'dpkg --print-foreign-architectures | grep -q i386',
         'triggers': [
-            f'svc_systemd:left4dead2-{name}.service:restart',
+            'action:apt_update',
         ],
-    }
-
-    # service
-    svc_systemd[f'left4dead2-{name}.service'] = {
-        'needs': [
-            f'file:/opt/steam/left4dead2-servers/{name}/left4dead2/cfg/server.cfg',
-            f'file:/usr/local/lib/systemd/system/left4dead2-{name}.service',
+        'needed_by': [
+            'pkg_apt:libc6_i386',
         ],
-    }
-
-    #
-    # ADDONS
-    #
-
-    # base
-    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/readme.txt'] = {
-        'content_type': 'any',
-        'owner': 'steam',
-        'group': 'steam',
-    }
-    directories[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons'] = {
-        'owner': 'steam',
-        'group': 'steam',
-        'purge': True,
-        'triggers': [
-            f'svc_systemd:left4dead2-{name}.service:restart',
-        ],
-    }
-    for id in [
-        *config.get('workshop', []),
-        *node.metadata.get('left4dead2/workshop'),
-    ]:
-        files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/addons/{id}.vpk'] = {
-            'content_type': 'any',
-            'owner': 'steam',
-            'group': 'steam',
-            'triggers': [
-                f'svc_systemd:left4dead2-{name}.service:restart',
-            ],
+    },
+    'download_steam': {
+        'command': steam_run('wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz -P /opt/steam'),
+        'unless':  steam_run('test -f /opt/steam/steamcmd_linux.tar.gz'),
+        'needs': {
+            'pkg_apt:libc6_i386',
+            'directory:/opt/steam',
         }
+    },
+    'extract_steamcmd': {
+        'command': steam_run('tar -xvzf /opt/steam/steamcmd_linux.tar.gz -C /opt/steam'),
+        'unless': steam_run('test -f /opt/steam/steamcmd.sh'),
+        'needs': {
+            'action:download_steam',
+        }
+    },
+}
 
-    # admin system
+for addon_id in [2524204971]:
+    actions[f'download-left4dead2-addon-{addon_id}'] = {
+        'command': steam_run(f'/opt/steam-workshop-download {addon_id} --out /opt/left4dead2/left4dead2/addons'),
+        'unless': steam_run(f'test -f /opt/left4dead2/left4dead2/addons/{addon_id}.vpk'),
+        'needs': {
+            'directory:/opt/left4dead2/left4dead2/addons',
+        },
+        'needed_by': {
+            'tag:left4dead2-servers',
+        },
+    }
 
-    directories[f'/opt/steam/left4dead2-servers/{name}/left4dead2/ems/admin system'] = {
-        'owner': 'steam',
-        'group': 'steam',
-        'mode': '0755',
-        'triggers': [
-            f'svc_systemd:left4dead2-{name}.service:restart',
-        ],
+svc_systemd = {
+    'left4dead2-install.service': {
+        'enabled': True,
+        'running': False,
+        'needs': {
+            'file:/usr/local/lib/systemd/system/left4dead2-install.service',
+        },
+    },
+}
+
+for server_name, server_config in node.metadata.get('left4dead2/servers', {}).items():
+    svc_systemd[f'left4dead2-{server_name}.service'] = {
+        'enabled': True,
+        'running': True,
+        'tags': {
+            'left4dead2-servers',
+        },
+        'needs': {
+            'svc_systemd:left4dead2-install.service',
+            f'file:/usr/local/lib/systemd/system/left4dead2-{server_name}.service',
+        }
     }
-    files[f'/opt/steam/left4dead2-servers/{name}/left4dead2/ems/admin system/admins.txt'] = {
-        'owner': 'steam',
-        'group': 'steam',
-        'mode': '0755',
-        'content': '\n'.join(sorted(node.metadata.get('left4dead2/admins'))),
-        'triggers': [
-            f'svc_systemd:left4dead2-{name}.service:restart',
-        ],
-    }
+
+
+
+# # https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Install%20Guide/README.md
+
+# mkdir /opt/steam /tmp/dumps
+# useradd -M -d /opt/steam -s /bin/bash steam
+# chown steam:steam /opt/steam /tmp/dumps
+# dpkg --add-architecture i386
+# apt update
+# apt install libc6:i386 lib32z1
+# sudo su - steam -s /bin/bash
+
+# #--------
+
+# wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
+# tar -xvzf steamcmd_linux.tar.gz
+
+# # fix: /opt/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
+# mkdir /opt/steam/.steam && ln -s /opt/steam/linux32 /opt/steam/.steam/sdk32
+
+# # erst die windows deps zu installieren scheint ein workaround für x64 zu sein?
+# ./steamcmd.sh \
+#     +force_install_dir /opt/steam/left4dead2 \
+#     +login anonymous \
+#     +@sSteamCmdForcePlatformType windows \
+#     +app_update 222860 validate \
+#     +quit
+# ./steamcmd.sh \
+#     +force_install_dir /opt/steam/left4dead2 \
+#     +login anonymous \
+#     +@sSteamCmdForcePlatformType linux \
+#     +app_update 222860 validate \
+#     +quit
+
+# # download admin system
+# wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download
+# chmod +x steam-workshop-download
+# ./steam-workshop-download 2524204971 --out /opt/steam/left4dead2/left4dead2/addons
+# mkdir -p "/opt/steam/left4dead2/left4dead2/ems/admin system"
+# echo "STEAM_1:0:12376499" > "/opt/steam/left4dead2/left4dead2/ems/admin system/admins.txt"
+
+# /opt/steam/left4dead2/srcds_run -game left4dead2 -ip 0.0.0.0 -port 27015 +map c1m1_hotel
+
+
+# cat <<'EOF' > /opt/steam/left4dead2/left4dead2/cfg/server.cfg
+# hostname "CKNs Server"
+# motd_enabled 0
+
+# sv_steamgroup "38347879"
+# #sv_steamgroup_exclusive 0
+
+# sv_minrate 60000
+# sv_maxrate 0
+# net_splitpacket_maxrate 60000
+
+# sv_hibernate_when_empty 0
+# EOF

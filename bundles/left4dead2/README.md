@@ -1,58 +1,55 @@
-https://developer.valvesoftware.com/wiki/List_of_L4D2_Cvars
+# https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Install%20Guide/README.md
 
-Dead Center 	c1m1_hotel
-Dead Center 	c1m2_streets
-Dead Center 	c1m3_mall
-Dead Center 	c1m4_atrium
-Dark Carnival 	c2m1_highway
-Dark Carnival 	c2m2_fairgrounds
-Dark Carnival 	c2m3_coaster
-Dark Carnival 	c2m4_barns
-Dark Carnival 	c2m5_concert
-Swamp Fever 	c3m1_plankcountry
-Swamp Fever 	c3m2_swamp
-Swamp Fever 	c3m3_shantytown
-Swamp Fever 	c3m4_plantation
-Hard Rain 	c4m1_milltown_a
-Hard Rain 	c4m2_sugarmill_a
-Hard Rain 	c4m3_sugarmill_b
-Hard Rain 	c4m4_milltown_b
-Hard Rain 	c4m5_milltown_escape
-The Parish 	c5m1_waterfront_sndscape
-The Parish 	c5m1_waterfront
-The Parish 	c5m2_park
-The Parish 	c5m3_cemetery
-The Parish 	c5m4_quarter
-The Parish 	c5m5_bridge
-The Passing 	c6m1_riverbank
-The Passing 	c6m2_bedlam
-The Passing 	c6m3_port
-The Sacrifice 	c7m1_docks
-The Sacrifice 	c7m2_barge
-The Sacrifice 	c7m3_port
-No Mercy 	c8m1_apartment
-No Mercy 	c8m2_subway
-No Mercy 	c8m3_sewers
-No Mercy 	c8m4_interior
-No Mercy 	c8m5_rooftop
-Crash Course 	c9m1_alleys
-Crash Course 	c9m2_lots
-Death Toll 	c10m1_caves
-Death Toll 	c10m2_drainage
-Death Toll 	c10m3_ranchhouse
-Death Toll 	c10m4_mainstreet
-Death Toll 	c10m5_houseboat
-Dead Air 	c11m1_greenhouse
-Dead Air 	c11m2_offices
-Dead Air 	c11m3_garage
-Dead Air 	c11m4_terminal
-Dead Air 	c11m5_runway
-Blood Harvest 	c12m1_hilltop
-Blood Harvest 	c12m2_traintunnel
-Blood Harvest 	c12m3_bridge
-Blood Harvest 	c12m4_barn
-Blood Harvest 	c12m5_cornfield
-Cold Stream 	c13m1_alpinecreek
-Cold Stream 	c13m2_southpinestream
-Cold Stream 	c13m3_memorialbridge
-Cold Stream 	c13m4_cutthroatcreek
+mkdir /opt/steam /tmp/dumps
+useradd -M -d /opt/steam -s /bin/bash steam
+chown steam:steam /opt/steam /tmp/dumps
+dpkg --add-architecture i386
+apt update
+apt install libc6:i386 lib32z1
+sudo su - steam -s /bin/bash
+
+#--------
+
+wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
+tar -xvzf steamcmd_linux.tar.gz
+
+# fix: /opt/steam/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
+mkdir /opt/steam/.steam && ln -s /opt/steam/linux32 /opt/steam/.steam/sdk32
+
+# erst die windows deps zu installieren scheint ein workaround für x64 zu sein?
+./steamcmd.sh \
+    +force_install_dir /opt/steam/left4dead2 \
+    +login anonymous \
+    +@sSteamCmdForcePlatformType windows \
+    +app_update 222860 validate \
+    +quit
+./steamcmd.sh \
+    +force_install_dir /opt/steam/left4dead2 \
+    +login anonymous \
+    +@sSteamCmdForcePlatformType linux \
+    +app_update 222860 validate \
+    +quit
+
+# download admin system
+wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download
+chmod +x steam-workshop-download
+./steam-workshop-download 2524204971 --out /opt/steam/left4dead2/left4dead2/addons
+mkdir -p "/opt/steam/left4dead2/left4dead2/ems/admin system"
+echo "STEAM_1:0:12376499" > "/opt/steam/left4dead2/left4dead2/ems/admin system/admins.txt"
+
+/opt/steam/left4dead2/srcds_run -game left4dead2 -ip 0.0.0.0 -port 27015 +map c1m1_hotel
+
+
+cat <<'EOF' > /opt/steam/left4dead2/left4dead2/cfg/server.cfg
+hostname "CKNs Server"
+motd_enabled 0
+
+sv_steamgroup "38347879"
+#sv_steamgroup_exclusive 0
+
+sv_minrate 60000
+sv_maxrate 0
+net_splitpacket_maxrate 60000
+
+sv_hibernate_when_empty 0
+EOF
