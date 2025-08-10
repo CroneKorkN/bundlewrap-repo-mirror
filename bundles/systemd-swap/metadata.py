@@ -1,5 +1,5 @@
 defaults = {
-    'systemd-swap': 2*10**9,
+    'systemd-swap': 2*(2**30), # 2GiB
     'systemd': {
         'units': {
             'swapfile.swap': {

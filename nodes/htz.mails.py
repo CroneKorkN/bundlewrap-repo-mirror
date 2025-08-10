@@ -35,6 +35,7 @@
                 'gateway6': 'fe80::1',
             }
         },
+        'systemd-swap': 4*2**30, # clamav alleine braucht 1,3G
         'bind': {
             'hostname': 'resolver.name',
             'acme_zone': 'acme.sublimity.de',
