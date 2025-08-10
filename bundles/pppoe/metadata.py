@@ -4,6 +4,11 @@ defaults = {
             'pppoe': {},
         },
     },
+    'modules-load': {
+        'pppoe',
+        'pppox',
+        'ppp_generic',
+    },
     'nftables': {
         'nat': {
             'oifname ppp0 masquerade',

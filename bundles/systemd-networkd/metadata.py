@@ -10,6 +10,9 @@ defaults = {
             'resolvconf': {
                 'installed': False,
             },
+            'netplan.io': {
+                'installed': False,
+            },
         },
     },
 }

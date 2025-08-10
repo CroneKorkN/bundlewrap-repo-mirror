@@ -52,13 +52,14 @@ def subnets(metadata):
             if 'mac' in network_conf
     )
 
-    for network_name, network_conf in metadata.get('network').items():
+    for id, (network_name, network_conf) in enumerate(sorted(metadata.get('network').items())):
         dhcp_server_config = network_conf.get('dhcp_server_config', None)
 
         if dhcp_server_config:
             _network = ip_network(dhcp_server_config['subnet'])
 
             subnet4.add(hashable({
+                'id': id + 1,
                 'subnet': dhcp_server_config['subnet'],
                 'pools': [
                     {

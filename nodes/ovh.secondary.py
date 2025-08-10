@@ -1,7 +1,7 @@
 {
-    'hostname': '135.125.239.125',
+    'hostname': '51.68.189.180',
     'groups': [
-        'debian-12',
+        'debian-13',
         'dnsserver',
         'monitored',
     ],
@@ -13,10 +13,16 @@
         'network': {
             'external': {
                 'interface': 'ens3',
-                'ipv4': '135.125.239.125/32',
-                'gateway4': '135.125.238.1',
-                'ipv6': '2001:41d0:701:1100::3dea/56',
+                'ipv4': '51.68.189.180/32',
+                'gateway4': '51.68.188.1',
+                'ipv6': '2001:41d0:701:1100::751a/128',
                 'gateway6': '2001:41d0:701:1100::1',
+                'cake': {
+                    'Bandwidth': '350M',
+                    'FlowIsolationMode': 'triple',
+                    'PriorityQueueingPreset': 'besteffort',
+                    'RTTSec': '100ms',
+                },
             },
         },
         'bind': {
@@ -38,6 +44,12 @@
                         '10.0.10.0/24',
                     ],
                 },
+            },
+        },
+        'nftables': {
+            'input': {
+                'tcp dport 27015 accept',
+                'udp dport { 27005, 27015, 27020 } accept',
             },
         },
     },

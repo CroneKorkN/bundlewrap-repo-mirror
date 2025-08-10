@@ -1,6 +1,7 @@
 directories = {
     '/etc/sudoers.d': {
-        'purge': True,
+        'mode': '0750',
+        #'purge': True, # FIXME: purge after managed sudoers are ready
     },
 }
 

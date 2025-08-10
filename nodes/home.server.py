@@ -55,10 +55,10 @@
                     'node': 'home.server',
                     'target': 'x86_64-unknown-linux-gnu',
                 },
-                'arm64': {
-                    'node': 'home.openhab',
-                    'target': 'aarch64-unknown-linux-gnu',
-                },
+                # 'arm64': {
+                #     'node': 'home.openhab',
+                #     'target': 'aarch64-unknown-linux-gnu',
+                # },
             },
             'download_server': 'htz.mails',
         },

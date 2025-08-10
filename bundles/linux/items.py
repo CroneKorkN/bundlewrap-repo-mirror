@@ -12,9 +12,8 @@ def generate_sysctl_key_value_pairs_from_json(json_data, parents=[]):
 
 key_value_pairs = generate_sysctl_key_value_pairs_from_json(node.metadata.get('sysctl'))
 
-
 files= {
-    '/etc/sysctl.conf': {
+    '/etc/sysctl.d/managed.conf': {
         'content': '\n'.join(
             sorted(
                 f"{'.'.join(path)}={value}"
@@ -25,6 +24,9 @@ files= {
             'svc_systemd:systemd-sysctl.service:restart',
         ],
     },
+    '/etc/modules-load.d/managed.conf': {
+        'content': '\n'.join(sorted(node.metadata.get('modules-load'))),
+    }
 }
 
 svc_systemd = {

@@ -142,3 +142,21 @@ actions['named-checkconf'] = {
         'svc_systemd:bind9:reload',
     ]
 }
+
+# beantwortet Anfragen nach privaten IP-Adressen mit NXDOMAIN, statt sie ins Internet weiterzuleiten
+files['/etc/bind/zones.rfc1918'] = {
+    'needed_by': [
+        'svc_systemd:bind9',
+    ],
+    'triggers': [
+        'svc_systemd:bind9:reload',
+    ],
+}
+files['/etc/bind/db.empty'] = {
+    'needed_by': [
+        'svc_systemd:bind9',
+    ],
+    'triggers': [
+        'svc_systemd:bind9:reload',
+    ],
+}
