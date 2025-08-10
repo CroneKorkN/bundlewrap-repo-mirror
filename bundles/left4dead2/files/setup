@@ -54,6 +54,22 @@ steam chmod +x /opt/l4d2/steam-workshop-download
 
 steam mkdir -p /opt/l4d2/overlays/pve
 
+# server config
+steam mkdir -p /opt/l4d2/overlays/pve/left4dead2/cfg
+steam cat <<'EOF' > /opt/l4d2/overlays/pve/left4dead2/cfg/server.cfg
+hostname "CKNs Server"
+motd_enabled 0
+
+sv_steamgroup "38347879"
+#sv_steamgroup_exclusive 0
+
+sv_minrate 60000
+sv_maxrate 0
+net_splitpacket_maxrate 60000
+
+sv_hibernate_when_empty 0
+EOF
+
 # admin system
 steam mkdir -p /opt/l4d2/overlays/pve/left4dead2/addons
 test -f /opt/l4d2/overlays/pve/left4dead2/addons/2524204971.vpk || \
@@ -65,15 +81,11 @@ steam echo "STEAM_1:0:12376499" > "/opt/l4d2/overlays/pve/left4dead2/ems/admin s
 test -f /opt/l4d2/overlays/pve/left4dead2/addons/698857882.vpk || \
     steam /opt/l4d2/steam-workshop-download 698857882 --out /opt/l4d2/overlays/pve/left4dead2/addons
 
-# -- OVERLAY ZONEMOD -- #
-
-true
-
 # -- SERVERS -- #
 
-exit 0
-
 steam mkdir -p /opt/l4d2/servers
+
+exit 0
 
 # -- SERVER PVE1 -- #
 
@@ -88,18 +100,4 @@ mount -t overlay overlay \
   -o lowerdir=/opt/l4d2/overlays/pve:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/pve1/upper,workdir=/opt/l4d2/servers/pve1/work \
   /opt/l4d2/servers/pve1/merged
 
-# run server
-steam cat <<'EOF' > /opt/l4d2/servers/pve1/merged/left4dead2/cfg/server.cfg
-hostname "CKNs Server"
-motd_enabled 0
-
-sv_steamgroup "38347879"
-#sv_steamgroup_exclusive 0
-
-sv_minrate 60000
-sv_maxrate 0
-net_splitpacket_maxrate 60000
-
-sv_hibernate_when_empty 0
-EOF
-steam /opt/l4d2/servers/pve1/merged/srcds_run -game left4dead2 -ip 0.0.0.0 -port 27015 +map c1m1_hotel
+steam /opt/l4d2/servers/pve1/merged/srcds_run -game left4dead2 -ip 0.0.0.0 -port 27015 +hostname "CKNs Server PVE1" +map c1m1_hotel
