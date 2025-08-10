@@ -54,12 +54,15 @@
             },
         },
 
-        # 'left4dead2': {
-        #     'servers': {
-        #         'One': {
-        #             'port': 27015,
-        #         },
-        #     },
-        # },
+        'left4dead2': {
+            'pve': {
+                'server_one': {
+                    'port': 27015,
+                },
+                'server_one': {
+                    'port': 27015,
+                },
+            },
+        },
     },
 }

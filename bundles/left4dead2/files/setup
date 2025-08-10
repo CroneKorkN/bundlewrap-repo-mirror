@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -xeu pipefail
 
@@ -84,20 +84,3 @@ test -f /opt/l4d2/overlays/pve/left4dead2/addons/698857882.vpk || \
 # -- SERVERS -- #
 
 steam mkdir -p /opt/l4d2/servers
-
-exit 0
-
-# -- SERVER PVE1 -- #
-
-steam mkdir -p \
-  /opt/l4d2/servers/pve1 \
-  /opt/l4d2/servers/pve1/work \
-  /opt/l4d2/servers/pve1/upper \
-  /opt/l4d2/servers/pve1/merged
-
-mountpoint -q /opt/l4d2/servers/pve1/merged && umount /opt/l4d2/servers/pve1/merged
-mount -t overlay overlay \
-  -o lowerdir=/opt/l4d2/overlays/pve:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/pve1/upper,workdir=/opt/l4d2/servers/pve1/work \
-  /opt/l4d2/servers/pve1/merged
-
-steam /opt/l4d2/servers/pve1/merged/srcds_run -game left4dead2 -ip 0.0.0.0 -port 27015 +hostname "CKNs Server PVE1" +map c1m1_hotel
