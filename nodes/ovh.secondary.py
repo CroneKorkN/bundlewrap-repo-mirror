@@ -7,7 +7,7 @@
     ],
     'bundles': [
         'wireguard',
-        #'left4dead2',
+        'left4dead2',
     ],
     'metadata': {
         'id': 'd5080b1a-b310-48be-bd5a-02cfcecf0c90',
@@ -24,6 +24,12 @@
                     'PriorityQueueingPreset': 'besteffort',
                     'RTTSec': '100ms',
                 },
+            },
+        },
+        'left4dead2': {
+            'server1': {
+                'overlay': 'pve',
+                'port': 27015,
             },
         },
         'bind': {
@@ -44,23 +50,6 @@
                         '10.0.9.0/24',
                         '10.0.10.0/24',
                     ],
-                },
-            },
-        },
-        'nftables': {
-            'input': {
-                'tcp dport 27015 accept',
-                'udp dport { 27005, 27015, 27020 } accept',
-            },
-        },
-
-        'left4dead2': {
-            'pve': {
-                'server_one': {
-                    'port': 27015,
-                },
-                'server_one': {
-                    'port': 27015,
                 },
             },
         },
