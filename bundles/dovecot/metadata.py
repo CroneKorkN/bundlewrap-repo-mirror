@@ -8,7 +8,7 @@ defaults = {
             'dovecot-sieve':        {},
             'dovecot-managesieved': {},
             # fulltext search
-            'dovecot-fts-xapian':   {}, # buster-backports
+            'dovecot-flatcurve':    {}, # buster-backports
             'poppler-utils':        {}, # pdftotext
             'catdoc':               {}, # catdoc, catppt, xls2csv
         },

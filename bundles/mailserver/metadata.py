@@ -32,10 +32,14 @@ defaults = {
             'tank/vmail': {
                 'mountpoint': '/var/vmail',
                 'compression': 'on',
+                'atime': 'off',
+                'recordsize': '16384',
             },
             'tank/vmail/index': {
                 'mountpoint': '/var/vmail/index',
                 'compression': 'on',
+                'atime': 'off',
+                'recordsize': '4096',
                 'com.sun:auto-snapshot': 'false',
                 'backup': False,
             },

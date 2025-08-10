@@ -2,7 +2,7 @@
     'hostname': '49.12.184.229',
     'groups': [
         'backup',
-        'debian-12',
+        'debian-13',
         'hetzner-cloud',
         'mailserver',
         'monitored',
@@ -18,6 +18,7 @@
         #'nginx-rtmps',
         'wireguard',
         'zfs',
+        'systemd-swap',
     ],
     'metadata': {
         'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
@@ -34,6 +35,7 @@
                 'gateway6': 'fe80::1',
             }
         },
+        'systemd-swap': 4*2**30, # clamav alleine braucht 1,3G
         'bind': {
             'hostname': 'resolver.name',
             'acme_zone': 'acme.sublimity.de',
@@ -108,6 +110,10 @@
                 'elimu-kwanza.de',
             },
         },
+        'dovecot': {
+            'config_version': '2.4.1',
+            'storage_version': '2.4.1',
+        },
         'rspamd': {
             'hostname': 'rspamd.sublimity.de',
         },
@@ -162,7 +168,7 @@
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
-            'version': '1.6.7',
+            'version': '1.6.11',
             'installer': False,
         },
         'vm': {
