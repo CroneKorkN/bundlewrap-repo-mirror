@@ -5,7 +5,7 @@ mkdir -p /opt/l4d2 /tmp/dumps
 chown steam:steam /opt/l4d2 /tmp/dumps
 dpkg --add-architecture i386
 apt update
-apt install libc6:i386 lib32z1
+DEBIAN_FRONTEND=noninteractive apt install -y libc6:i386 lib32z1
 
 function steam() { sudo -Hiu steam $* }
 
@@ -55,7 +55,7 @@ steam mkdir -p /opt/l4d2/overlays/pve
 steam mkdir -p /opt/l4d2/overlays/pve/left4dead2/addons
 steam /opt/l4d2/steam-workshop-download 2524204971 --out /opt/l4d2/overlays/pve/left4dead2/addons
 steam mkdir -p "/opt/l4d2/overlays/pve/left4dead2/ems/admin system"
-steam echo "STEAM_1:0:12376499" > "/opt/l4d2/overlays/pve/left4dead2/ems/admin system/admins.txt"
+echo "STEAM_1:0:12376499" | steam tee "/opt/l4d2/overlays/pve/left4dead2/ems/admin system/admins.txt"
 
 # ions vocalizer
 steam /opt/l4d2/steam-workshop-download 698857882 --out /opt/l4d2/overlays/pve/left4dead2/addons

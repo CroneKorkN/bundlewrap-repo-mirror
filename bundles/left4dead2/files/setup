@@ -1,13 +1,15 @@
 #!/bin/bash
 
+set -xeu pipefail
+
 getent passwd steam >/dev/null || useradd -M -d /opt/l4d2 -s /bin/bash steam
 mkdir -p /opt/l4d2 /tmp/dumps
 chown steam:steam /opt/l4d2 /tmp/dumps
 dpkg --add-architecture i386
 apt update
-apt install -y libc6:i386 lib32z1
+DEBIAN_FRONTEND=noninteractive apt install -y libc6:i386 lib32z1
 
-function steam() { sudo -Hiu steam $@ }
+function steam() { sudo -Hiu steam "$@"; }
 
 # -- STEAM -- #
 
@@ -44,7 +46,8 @@ steam /opt/l4d2/steam/steamcmd.sh \
 steam mkdir -p /opt/l4d2/overlays
 
 # workshop downloader
-steam wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download -P /opt/l4d2
+test -f /opt/l4d2/steam-workshop-download || \
+    steam wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download -P /opt/l4d2
 steam chmod +x /opt/l4d2/steam-workshop-download
 
 # -- OVERLAY PVE -- #
@@ -80,10 +83,10 @@ steam mkdir -p \
   /opt/l4d2/servers/pve1/upper \
   /opt/l4d2/servers/pve1/merged
 
-mountpoint -q /opt/l4d2/servers/pve1/merged || \
-  mount -t overlay overlay \
-    -o lowerdir=/opt/l4d2/overlays/pve:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/pve1/upper,workdir=/opt/l4d2/servers/pve1/work \
-    /opt/l4d2/servers/pve1/merged
+mountpoint -q /opt/l4d2/servers/pve1/merged && umount /opt/l4d2/servers/pve1/merged
+mount -t overlay overlay \
+  -o lowerdir=/opt/l4d2/overlays/pve:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/pve1/upper,workdir=/opt/l4d2/servers/pve1/work \
+  /opt/l4d2/servers/pve1/merged
 
 # run server
 steam cat <<'EOF' > /opt/l4d2/servers/pve1/merged/left4dead2/cfg/server.cfg
