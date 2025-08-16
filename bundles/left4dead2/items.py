@@ -20,7 +20,7 @@ svc_systemd = {
 for server_name in node.metadata.get('left4dead2').keys():
     svc_systemd[f'left4dead2-{server_name}.service'] = {
         'enabled': True,
-        'running': None,
+        'running': True,
         'tags': {
             'left4dead2-servers',
         },

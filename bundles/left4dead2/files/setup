@@ -72,7 +72,8 @@ sv_minrate 60000
 sv_maxrate 0
 net_splitpacket_maxrate 60000
 
-sb_all_bot_game 1
+#sv_cheats 1
+#sb_all_bot_game 1
 EOF
 
 # admin system
@@ -85,6 +86,9 @@ steam echo "STEAM_1:0:12376499" > "/opt/l4d2/overlays/pve/left4dead2/ems/admin s
 # ions vocalizer
 test -f /opt/l4d2/overlays/pve/left4dead2/addons/698857882.vpk || \
     steam /opt/l4d2/steam-workshop-download 698857882 --out /opt/l4d2/overlays/pve/left4dead2/addons
+
+test -f /opt/l4d2/overlays/pve/left4dead2/addons/1575673903.vpk || \
+    steam /opt/l4d2/steam-workshop-download 1575673903 --out /opt/l4d2/overlays/pve/left4dead2/addons
 
 # -- SERVERS -- #
 

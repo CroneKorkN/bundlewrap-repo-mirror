@@ -31,6 +31,14 @@
                 'overlay': 'pve',
                 'port': 27015,
             },
+            'server2': {
+                'overlay': 'pve',
+                'port': 27016,
+            },
+            'server3': {
+                'overlay': 'pve',
+                'port': 27017,
+            },
         },
         'bind': {
             'master_node': 'htz.mails',
