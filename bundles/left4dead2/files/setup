@@ -1,0 +1,96 @@
+#!/bin/bash
+
+set -xeuo pipefail
+
+getent passwd steam >/dev/null || useradd -M -d /opt/l4d2 -s /bin/bash steam
+mkdir -p /opt/l4d2 /tmp/dumps
+chown steam:steam /opt/l4d2 /tmp/dumps
+dpkg --add-architecture i386
+apt update
+DEBIAN_FRONTEND=noninteractive apt install -y libc6:i386 lib32z1
+
+function steam() {
+    # für systemd, damit es den prozess beenden kann
+    setpriv --reuid=steam --regid=steam --init-groups "$@"
+    export HOME=/opt/l4d2/steam
+}
+
+# -- STEAM -- #
+
+steam mkdir -p /opt/l4d2/steam
+test -f /opt/l4d2/steam/steamcmd_linux.tar.gz || \
+  steam wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz -P /opt/l4d2/steam
+test -f /opt/l4d2/steam/steamcmd.sh || \
+  steam tar -xvzf /opt/l4d2/steam/steamcmd_linux.tar.gz -C /opt/l4d2/steam
+
+# fix for: /opt/l4d2/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
+steam mkdir -p /opt/l4d2/steam/.steam # needs to be in steam users home dir
+readlink /opt/l4d2/steam/.steam/sdk32 | grep -q ^/opt/l4d2/steam/linux32$ || \
+  steam ln -sf /opt/l4d2/steam/linux32 /opt/l4d2/steam/.steam/sdk32
+readlink /opt/l4d2/steam/.steam/sdk64 | grep -q ^/opt/l4d2/steam/linux64$ || \
+  steam ln -sf /opt/l4d2/steam/linux64 /opt/l4d2/steam/.steam/sdk64
+
+# -- INSTALL -- #
+
+# erst die windows deps zu installieren scheint ein workaround für x64 zu sein?
+steam mkdir -p /opt/l4d2/installation
+steam /opt/l4d2/steam/steamcmd.sh \
+    +force_install_dir /opt/l4d2/installation \
+    +login anonymous \
+    +@sSteamCmdForcePlatformType windows \
+    +app_update 222860 validate \
+    +quit
+steam /opt/l4d2/steam/steamcmd.sh \
+    +force_install_dir /opt/l4d2/installation \
+    +login anonymous \
+    +@sSteamCmdForcePlatformType linux \
+    +app_update 222860 validate \
+    +quit
+
+# -- OVERLAYS -- #
+
+steam mkdir -p /opt/l4d2/overlays
+
+# workshop downloader
+test -f /opt/l4d2/steam-workshop-download || \
+    steam wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download -P /opt/l4d2
+steam chmod +x /opt/l4d2/steam-workshop-download
+
+# -- OVERLAY PVE -- #
+
+steam mkdir -p /opt/l4d2/overlays/pve
+
+# server config
+steam mkdir -p /opt/l4d2/overlays/pve/left4dead2/cfg
+steam cat <<'EOF' > /opt/l4d2/overlays/pve/left4dead2/cfg/server.cfg
+motd_enabled 0
+
+sv_steamgroup "38347879"
+#sv_steamgroup_exclusive 0
+
+sv_minrate 60000
+sv_maxrate 0
+net_splitpacket_maxrate 60000
+
+#sv_cheats 1
+#sb_all_bot_game 1
+EOF
+
+# admin system
+steam mkdir -p /opt/l4d2/overlays/pve/left4dead2/addons
+test -f /opt/l4d2/overlays/pve/left4dead2/addons/2524204971.vpk || \
+    steam /opt/l4d2/steam-workshop-download 2524204971 --out /opt/l4d2/overlays/pve/left4dead2/addons
+steam mkdir -p "/opt/l4d2/overlays/pve/left4dead2/ems/admin system"
+steam echo "STEAM_1:0:12376499" > "/opt/l4d2/overlays/pve/left4dead2/ems/admin system/admins.txt"
+
+# ions vocalizer
+test -f /opt/l4d2/overlays/pve/left4dead2/addons/698857882.vpk || \
+    steam /opt/l4d2/steam-workshop-download 698857882 --out /opt/l4d2/overlays/pve/left4dead2/addons
+
+test -f /opt/l4d2/overlays/pve/left4dead2/addons/1575673903.vpk || \
+    steam /opt/l4d2/steam-workshop-download 1575673903 --out /opt/l4d2/overlays/pve/left4dead2/addons
+
+# -- SERVERS -- #
+
+#steam rm -rf /opt/l4d2/servers
+steam mkdir -p /opt/l4d2/servers
