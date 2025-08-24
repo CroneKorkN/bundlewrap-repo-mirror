@@ -8,7 +8,7 @@ urllib3.disable_warnings()
 import os
 
 
-HUE_IP = "10.0.0.134"  # replace with your bridge IP
+HUE_IP = "${hue_ip}"  # replace with your bridge IP
 HUE_APP_KEY = "${hue_app_key}" # local only
 HUE_DEVICE_ID = "31f58786-3242-4e88-b9ce-23f44ba27bbe"
 TEMPERATURE_LOG_DIR = "/opt/bootshorn/temperatures"

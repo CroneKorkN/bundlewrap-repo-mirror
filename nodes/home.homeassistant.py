@@ -33,6 +33,9 @@
 #     ssh-ed25519
 #     AAAAC3NzaC1lZDI1NTE5AAAAIJT9Spe+BYue7iiutl3rSf6PlU6dthHizyK+ZWnLodrA
 #     root@home.server
+#   - >-
+#     ssh-ed25519
+#     AAAAC3NzaC1lZDI1NTE5AAAAILMVroYmswD4tLk6iH+2tvQiyaMe42yfONDsPDIdFv6I ckn
 # sftp: true
 # compatibility_mode: false
 # allow_agent_forwarding: false

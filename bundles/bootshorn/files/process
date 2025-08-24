@@ -112,6 +112,11 @@ def process_recording(filename):
 
         sample_num += samples_per_block - overlapping_samples
 
+    # move to PROCESSED_RECORDINGS_DIR
+
+    os.makedirs(PROCESSED_RECORDINGS_DIR, exist_ok=True)
+    shutil.move(os.path.join(RECORDINGS_DIR, filename), os.path.join(PROCESSED_RECORDINGS_DIR, filename))
+
 
 # write a spectrogram using the sound from start to end of the event
 def write_event(current_event, soundfile, samplerate):

@@ -7,11 +7,15 @@ directories = {
         'owner': 'ckn',
         'group': 'ckn',
     },
+    '/opt/bootshorn/temperatures': {
+        'owner': 'ckn',
+        'group': 'ckn',
+    },
     '/opt/bootshorn/recordings': {
         'owner': 'ckn',
         'group': 'ckn',
     },
-    '/opt/bootshorn/temperatures': {
+    '/opt/bootshorn/recordings/current': {
         'owner': 'ckn',
         'group': 'ckn',
     },
@@ -34,6 +38,7 @@ files = {
     '/opt/bootshorn/temperature': {
         'content_type': 'mako',
         'context': {
+            'hue_ip': repo.get_node('home.hue').hostname,
             'hue_app_key': repo.vault.decrypt('encrypt$gAAAAABoc2WxZCLbxl-Z4IrSC97CdOeFgBplr9Fp5ujpd0WCCCPNBUY_WquHN86z8hKLq5Y04dwq8TdJW0PMSOSgTFbGgdp_P1q0jOBLEKaW9IIT1YM88h-JYwLf9QGDV_5oEfvnBCtO'),
         },
         'owner': 'ckn',
