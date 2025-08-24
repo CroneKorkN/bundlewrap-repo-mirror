@@ -7,6 +7,7 @@ do
     # get date in ISO 8601 format with nanoseconds
     PROGRAMM=$(test $(uname) = "Darwin" && echo "gdate" || echo "date")
     DATE=$($PROGRAMM "+%Y-%m-%d_%H-%M-%S.%6N%z")
+    FILE="recordings/$DATE.flac"
 
     # record audio using ffmpeg
     ffmpeg \
@@ -19,5 +20,7 @@ do
         -t "3600" \
         -c:a flac \
         -compression_level 12 \
-        "recordings/$DATE.flac"
+        "$FILE.part"
+
+    mv "$FILE.part" "$FILE"
 done
