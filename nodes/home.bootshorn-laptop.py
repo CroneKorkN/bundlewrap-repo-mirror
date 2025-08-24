@@ -16,4 +16,4 @@
     },
 }
 
-# rsync -avh --progress -e 'ssh -o "StrictHostKeyChecking no"' 10.0.0.150:/opt/bootshorn/recordings /tank/bootshorn
+# rsync -avh --progress -e 'ssh -o "StrictHostKeyChecking no"' 10.0.0.150:/opt/bootshorn/recordings /hdd/bootshorn
