@@ -171,6 +171,28 @@
             'version': '1.6.11',
             'installer': False,
         },
+        'sysctl': {
+            'net': {
+                'ipv4': {
+                    'ip_forward': 1,
+                    'conf': {
+                        'default': {
+                            'forwarding': 1,
+                        },
+                    },
+                },
+                'ipv6': {
+                    'conf': {
+                        'all': {
+                            'forwarding': 1,
+                        },
+                        'default': {
+                            'forwarding': 1,
+                        },
+                    },
+                },
+            },
+        },
         'vm': {
             'cores': 2,
             'ram': 4096,
