@@ -30,10 +30,16 @@
             'server1': {
                 'overlay': 'pve',
                 'port': 27015,
+                'tickrate': '100',
             },
             'server2': {
                 'overlay': 'pve',
                 'port': 27016,
+                'tickrate': '100',
+            },
+            'server3_comp1': {
+                'overlay': 'competitive_rework',
+                'port': 27017,
                 'tickrate': '100',
             },
         },

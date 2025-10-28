@@ -46,7 +46,7 @@ def server_units(metadata):
 
     for name, config in metadata.get('left4dead2').items():
         assert match(r'^[A-z0-9-_-]+$', name)
-        assert config["overlay"] in {'pve', '100tick'}
+        assert config["overlay"] in {'pve', 'competitive_rework'}
         assert 27000 <= config["port"] <= 27100
 
         params = config.get("params", "")
