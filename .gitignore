@@ -2,3 +2,4 @@
 .venv
 .cache
 *.pyc
+.bw_debug_history
