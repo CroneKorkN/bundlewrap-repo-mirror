@@ -135,7 +135,7 @@ test -d /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/cfgogl || \
 if ! test -f /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server_original.cfg
 then
     steam mv /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server_original.cfg
-    steam echo -e "exec server_original.cfg\nsm_forcematch zonemod\nsm_cvar survivor_limit 1\nsm_cvar z_max_player_zombies 1" > /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg
+    steam echo -e "exec server_original.cfg\nsm_forcematch zonemod" > /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg
 fi
 
 # -- SERVERS -- #
