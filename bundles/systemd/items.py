@@ -1,5 +1,8 @@
 from bundlewrap.utils.dicts import merge_dict
 
+files = {}
+svc_systemd = {}
+
 directories = {
     '/usr/local/lib/systemd/system': {
         'purge': True,
@@ -42,6 +45,9 @@ for name, unit in node.metadata.get('systemd/units').items():
     else:
         raise Exception(f'unknown type {extension}')
 
+    for attribute in ['needs', 'needed_by', 'triggers', 'triggered_by']:
+        if attribute in unit:
+            dependencies[attribute] = unit.pop(attribute)
 
     files[path] = {
         'content': repo.libs.systemd.generate_unitfile(unit),

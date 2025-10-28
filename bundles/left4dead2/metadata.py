@@ -46,8 +46,12 @@ def server_units(metadata):
 
     for name, config in metadata.get('left4dead2').items():
         assert match(r'^[A-z0-9-_-]+$', name)
-        assert config["overlay"] in {'pve'}
+        assert config["overlay"] in {'pve', '100tick'}
         assert 27000 <= config["port"] <= 27100
+
+        params = config.get("params", "")
+        if config.get("tickrate"):
+            params += f" -tickrate {config['tickrate']}"
 
         units[f'left4dead2-{name}.service'] = {
             'Unit': {
@@ -57,7 +61,7 @@ def server_units(metadata):
             },
             'Service': {
                 'Type': 'simple',
-                'ExecStart': f'/opt/l4d2/start {name} {config["overlay"]} {config["port"]}',
+                'ExecStart': f'/opt/l4d2/start "{name}" "{config["overlay"]}" "{config["port"]}" "{params}"',
                 'Restart': 'on-failure',
                 'Nice': -10,
                 'CPUWeight': 200,
@@ -66,6 +70,9 @@ def server_units(metadata):
             },
             'Install': {
                 'WantedBy': {'multi-user.target'},
+            },
+            'triggers': {
+                f'svc_systemd:left4dead2-{name}.service:restart',
             },
         }
 
