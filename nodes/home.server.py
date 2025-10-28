@@ -207,6 +207,10 @@
                 'hdd/nextcloud/ckn-privat': {
                     'mountpoint': '/var/lib/nextcloud/ckn-privat/files',
                 },
+                'hdd/bootshorn': {
+                    'mountpoint': '/hdd/bootshorn',
+                    'dedup': 'on',
+                },
             },
         },
     },
