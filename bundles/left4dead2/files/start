@@ -32,4 +32,4 @@ steam touch "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
 echo "exec server_original.cfg" > "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
 cat "/opt/l4d2/servers/$name/server.cfg" >> "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
 
-steam "/opt/l4d2/servers/$name/merged/srcds_run" -norestart -pidfile "/opt/l4d2/servers/$name/pid" -game left4dead2 -ip 0.0.0.0 -port "$port" +hostname "Crone_$name" $params +map c1m1_hotel +exec server_wrapper
+steam "/opt/l4d2/servers/$name/merged/srcds_run" -norestart -pidfile "/opt/l4d2/servers/$name/pid" -game left4dead2 -ip 0.0.0.0 -port "$port" +hostname "Crone_$name" $params +map c1m1_hotel
