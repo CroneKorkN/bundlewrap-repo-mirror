@@ -19,6 +19,11 @@ dpkg --add-architecture i386
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y libc6:i386 lib32z1
 
+# workshop downloader
+test -f /opt/l4d2/steam-workshop-download || \
+    steam wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download -P /opt/l4d2
+steam chmod +x /opt/l4d2/steam-workshop-download
+
 # -- STEAM -- #
 
 steam mkdir -p /opt/l4d2/steam
