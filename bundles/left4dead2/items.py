@@ -44,12 +44,15 @@ svc_systemd = {
 
 for server_name, config in node.metadata.get('left4dead2').items():
     files[f'/opt/l4d2/configs/{server_name}.cfg'] = {
-        'content': '\n'.join(config.get('config', [])) + '\n',
+        'source': 'server.cfg',
+        'content_type': 'mako',
+        'context': {
+            'server_name': server_name,
+            'rcon_password': repo.vault.decrypt('encrypt$gAAAAABpAdZhxwJ47I1AXotuZmBvyZP1ecVTt9IXFkLI28JiVS74LKs9QdgIBz-FC-iXtIHHh_GVGxxKQZprn4UrXZcvZ57kCKxfHBs3cE2JiGnbWE8_mfs=').value,
+            'config': config.get('config', []),
+        },
         'owner': 'steam',
         'mode': '644',
-        'needed_by': {
-            f'svc_systemd:left4dead2-{server_name}.service',
-        },
         'triggers': {
             f'svc_systemd:left4dead2-{server_name}.service:restart',
         },

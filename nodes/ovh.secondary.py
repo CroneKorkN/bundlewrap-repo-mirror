@@ -43,9 +43,6 @@
                 'config': [
                     'exec server_original.cfg',
                     'sm_forcematch zonemod',
-                    'hostname server3_comp1_test',
-                    'motd_enabled 0',
-                    'rcon_password ' + vault.decrypt('encrypt$gAAAAABpAdZhxwJ47I1AXotuZmBvyZP1ecVTt9IXFkLI28JiVS74LKs9QdgIBz-FC-iXtIHHh_GVGxxKQZprn4UrXZcvZ57kCKxfHBs3cE2JiGnbWE8_mfs=').value,
                 ],
             },
         },
