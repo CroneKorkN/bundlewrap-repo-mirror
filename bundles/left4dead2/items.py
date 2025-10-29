@@ -14,12 +14,14 @@ directories = {
     },
     '/opt/l4d2/configs': {
         'owner': 'steam', 'group': 'steam',
+        'purge': True,
     },
     '/opt/l4d2/scripts': {
         'owner': 'steam', 'group': 'steam',
     },
     '/opt/l4d2/scripts/overlays': {
         'owner': 'steam', 'group': 'steam',
+        'purge': True,
     },
 }
 

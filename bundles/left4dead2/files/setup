@@ -58,9 +58,10 @@ steam /opt/l4d2/steam/steamcmd.sh \
 
 # -- OVERLAYS -- #
 
-for overlay in /opt/l4d2/scripts/overlays/*; do
+for overlay_path in /opt/l4d2/scripts/overlays/*; do
+    overlay=$(basename "$overlay_path")
     steam mkdir -p /opt/l4d2/overlays/$overlay
-    bash -xeuo pipefail "$overlay"
+    bash -xeuo pipefail "$overlay_path"
     test -f /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg && \
         steam cp /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg /opt/l4d2/overlays/$overlay/left4dead2/cfg/server_$overlay.cfg
 done
