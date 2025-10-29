@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -xeuo pipefail
+
+name=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -n|--name)
+      name="$2"; shift 2
+      ;;
+    *)
+      echo "ERROR: unknown argument $1"; exit 1
+      ;;
+  esac
+done
+
+mountpoint -q "/opt/l4d2/servers/$name/merged" && umount "/opt/l4d2/servers/$name/merged"
+steam rm -rf "/opt/l4d2/servers/$name"

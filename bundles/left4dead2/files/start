@@ -2,10 +2,41 @@
 
 set -xeuo pipefail
 
-name=$1
-overlay=$2
-port=$3
-params=$4
+name=""
+port=""
+configfile=""
+overlays=""
+arguments=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -n|--name)
+      name="$2"; shift 2
+      ;;
+    -p|--port)
+      port="$2"; shift 2
+      ;;
+    -c|--config)
+      configfile="$2"; shift 2
+      ;;
+    -o|--overlay)
+      overlays="/opt/l4d2/overlays/$2:$overlays"; shift 2
+      ;;
+    --)
+      shift
+      arguments+="$@"
+      break
+      ;;
+    *)
+      echo "ERROR: unknown argument $1"; exit 1
+      ;;
+  esac
+done
+
+[[ -n "${name}" ]] || { echo "ERROR: -n/--name missing"; exit 1; }
+[[ -n "${port}" ]] || { echo "ERROR: -p/--port missing"; exit 1; }
+
+# -- HELPER FUNCTIONS -- #
 
 function steam() {
     # für systemd, damit es den prozess beenden kann
@@ -13,8 +44,12 @@ function steam() {
     export HOME=/opt/l4d2/steam
 }
 
+# -- TIDY UP -- #
+
 mountpoint -q "/opt/l4d2/servers/$name/merged" && umount "/opt/l4d2/servers/$name/merged"
 steam rm -rf "/opt/l4d2/servers/$name"
+
+# -- CREATE DIRECTORIES -- #
 
 steam mkdir -p \
   "/opt/l4d2/servers/$name" \
@@ -22,14 +57,20 @@ steam mkdir -p \
   "/opt/l4d2/servers/$name/upper" \
   "/opt/l4d2/servers/$name/merged"
 
+# -- MOUNT OVERLAYFS -- #
+
 mount -t overlay overlay \
-  -o "lowerdir=/opt/l4d2/overlays/$overlay:/opt/l4d2/installation,upperdir=/opt/l4d2/servers/$name/upper,workdir=/opt/l4d2/servers/$name/work" \
+  -o "lowerdir=$overlays/opt/l4d2/installation,upperdir=/opt/l4d2/servers/$name/upper,workdir=/opt/l4d2/servers/$name/work" \
   "/opt/l4d2/servers/$name/merged"
 
-# TODO: pass config file paht instead of expecting it here
-steam mv "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg" "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server_original.cfg"
-steam touch "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
-echo "exec server_original.cfg" > "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
-cat "/opt/l4d2/configs/$name.cfg" >> "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
+# -- REPLACE SERVER.CFG -- #
 
-steam "/opt/l4d2/servers/$name/merged/srcds_run" -norestart -pidfile "/opt/l4d2/servers/$name/pid" -game left4dead2 -ip 0.0.0.0 -port "$port" +hostname "Crone_$name" $params +map c1m1_hotel
+if [[ -n "$configfile" ]]; then
+  cp "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg" "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server_original.cfg"
+  cp "$configfile" "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
+  chown steam:steam "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
+fi
+
+# -- RUN L4D2 -- #
+
+steam "/opt/l4d2/servers/$name/merged/srcds_run" -norestart -pidfile "/opt/l4d2/servers/$name/pid" -game left4dead2 -ip 0.0.0.0 -port "$port" +hostname "Crone_$name" +map c1m1_hotel $arguments

@@ -90,17 +90,31 @@ test -f /opt/l4d2/steam-workshop-download || \
     steam wget -4 https://git.sublimity.de/cronekorkn/steam-workshop-downloader/raw/branch/master/steam-workshop-download -P /opt/l4d2
 steam chmod +x /opt/l4d2/steam-workshop-download
 
-# -- OVERLAY PVE -- #
+# -- OVERLAY VANILLA -- #
 
-steam mkdir -p /opt/l4d2/overlays/pve
+steam mkdir -p /opt/l4d2/overlays/vanilla
 
 # server config
-steam mkdir -p /opt/l4d2/overlays/pve/left4dead2/cfg
-steam cat <<'EOF' > /opt/l4d2/overlays/pve/left4dead2/cfg/server.cfg
+steam mkdir -p /opt/l4d2/overlays/vanilla/left4dead2/cfg
+steam cat <<'EOF' > /opt/l4d2/overlays/vanilla/left4dead2/cfg/server.cfg
+motd_enabled 0
+
+EOF
+
+# admin system
+install_addon vanilla Ions_Vocalizer
+install_admin_system vanilla
+
+# -- OVERLAY TICKRATE -- #
+
+steam mkdir -p /opt/l4d2/overlays/tickrate
+
+# server config
+steam mkdir -p /opt/l4d2/overlays/tickrate/left4dead2/cfg
+steam cat <<'EOF' > /opt/l4d2/overlays/tickrate/left4dead2/cfg/server.cfg
 motd_enabled 0
 
 sv_steamgroup "38347879"
-#sv_steamgroup_exclusive 0
 
 # https://github.com/SirPlease/L4D2-Competitive-Rework/blob/7ecc3a32a5e2180d6607a40119ff2f3c072502a9/cfg/server.cfg#L58-L69
 sv_minrate 100000
@@ -113,15 +127,10 @@ nb_update_frequency 0.014
 net_splitpacket_maxrate 50000
 net_maxcleartime 0.0001
 fps_max 0
-
-#sv_cheats 1
-#sb_all_bot_game 1
 EOF
 
 # admin system
-install_addon pve Ions_Vocalizer
-install_admin_system pve
-install_tickrate_enabler pve
+install_tickrate_enabler tickrate
 
 # -- OVERLAY COMPETITIVE REWORK WIP -- #
 

@@ -27,21 +27,21 @@
             },
         },
         'left4dead2': {
-            'server1': {
-                'overlay': 'pve',
+            'vanilla': {
                 'port': 27015,
-                'tickrate': '100',
+                'overlays': ['vanilla'],
             },
-            'server2': {
-                'overlay': 'pve',
+            'tick100': {
                 'port': 27016,
-                'tickrate': '100',
+                'overlays': ['vanilla', 'tickrate'],
+                'arguments': ['-tickrate 100'],
             },
             'server3_comp1': {
-                'overlay': 'competitive_rework',
                 'port': 27017,
-                'tickrate': '100',
+                'overlays': ['competitive_rework'],
+                'arguments': ['-tickrate 60'],
                 'config': [
+                    'exec server_original.cfg',
                     'sm_forcematch zonemod',
                     'hostname server3_comp1_test',
                     'motd_enabled 0',
