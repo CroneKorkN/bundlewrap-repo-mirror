@@ -35,6 +35,13 @@
                 'port': 27016,
                 'overlays': ['vanilla', 'tickrate'],
                 'arguments': ['-tickrate 100'],
+                'config': [
+                    'exec server_original.cfg',
+                    'sv_minupdaterate 100',
+                    'sv_maxupdaterate 100',
+                    'sv_mincmdrate 100',
+                    'sv_maxcmdrate 100',
+                ],
             },
             'server3_comp1': {
                 'port': 27017,
