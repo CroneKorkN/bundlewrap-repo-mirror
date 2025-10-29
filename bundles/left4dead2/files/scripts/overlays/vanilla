@@ -5,12 +5,6 @@ overlay=$(basename "$0")
 
 steam mkdir -p /opt/l4d2/overlays/$overlay
 
-# server config
-steam mkdir -p /opt/l4d2/overlays/$overlay/left4dead2/cfg
-steam cat <<'EOF' > /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg
-motd_enabled 0
-EOF
-
 # admin system
 install_addon $overlay Ions_Vocalizer
 install_admin_system $overlay
