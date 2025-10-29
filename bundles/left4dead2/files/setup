@@ -28,16 +28,16 @@ steam chmod +x /opt/l4d2/steam-workshop-download
 
 steam mkdir -p /opt/l4d2/steam
 test -f /opt/l4d2/steam/steamcmd_linux.tar.gz || \
-  steam wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz -P /opt/l4d2/steam
+    steam wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz -P /opt/l4d2/steam
 test -f /opt/l4d2/steam/steamcmd.sh || \
-  steam tar -xvzf /opt/l4d2/steam/steamcmd_linux.tar.gz -C /opt/l4d2/steam
+    steam tar -xvzf /opt/l4d2/steam/steamcmd_linux.tar.gz -C /opt/l4d2/steam
 
 # fix for: /opt/l4d2/.steam/sdk32/steamclient.so: cannot open shared object file: No such file or directory
 steam mkdir -p /opt/l4d2/steam/.steam # needs to be in steam users home dir
 readlink /opt/l4d2/steam/.steam/sdk32 | grep -q ^/opt/l4d2/steam/linux32$ || \
-  steam ln -sf /opt/l4d2/steam/linux32 /opt/l4d2/steam/.steam/sdk32
+    steam ln -sf /opt/l4d2/steam/linux32 /opt/l4d2/steam/.steam/sdk32
 readlink /opt/l4d2/steam/.steam/sdk64 | grep -q ^/opt/l4d2/steam/linux64$ || \
-  steam ln -sf /opt/l4d2/steam/linux64 /opt/l4d2/steam/.steam/sdk64
+    steam ln -sf /opt/l4d2/steam/linux64 /opt/l4d2/steam/.steam/sdk64
 
 # -- INSTALL -- #
 
@@ -59,10 +59,10 @@ steam /opt/l4d2/steam/steamcmd.sh \
 # -- OVERLAYS -- #
 
 for overlay in /opt/l4d2/scripts/overlays/*; do
-  bash -xeuo pipefail "$overlay"
-
-  test -f /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg && \
-      steam cp /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg /opt/l4d2/overlays/$overlay/left4dead2/cfg/server_$overlay.cfg
+    steam mkdir -p /opt/l4d2/overlays/$overlay
+    bash -xeuo pipefail "$overlay"
+    test -f /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg && \
+        steam cp /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg /opt/l4d2/overlays/$overlay/left4dead2/cfg/server_$overlay.cfg
 done
 
 # -- SERVERS -- #

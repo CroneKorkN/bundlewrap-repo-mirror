@@ -3,8 +3,6 @@ set -xeuo pipefail
 source /opt/l4d2/scripts/helpers
 overlay=$(basename "$0")
 
-steam mkdir -p /opt/l4d2/overlays/$overlay
-
 # server config
 steam mkdir -p /opt/l4d2/overlays/$overlay/left4dead2/cfg
 steam cat <<'EOF' > /opt/l4d2/overlays/$overlay/left4dead2/cfg/server.cfg

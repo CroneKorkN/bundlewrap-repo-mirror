@@ -3,8 +3,6 @@ set -xeuo pipefail
 source /opt/l4d2/scripts/helpers
 overlay=$(basename "$0")
 
-steam mkdir -p /opt/l4d2/overlays/$overlay
-
 # admin system
 install_addon $overlay Ions_Vocalizer
 install_admin_system $overlay
