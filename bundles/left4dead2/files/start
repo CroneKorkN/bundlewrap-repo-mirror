@@ -14,7 +14,7 @@ function steam() {
 }
 
 mountpoint -q "/opt/l4d2/servers/$name/merged" && umount "/opt/l4d2/servers/$name/merged"
-steam rm -rf "/opt/l4d2/servers/$name/work" "/opt/l4d2/servers/$name/upper" "/opt/l4d2/servers/$name/merged"
+steam rm -rf "/opt/l4d2/servers/$name"
 
 steam mkdir -p \
   "/opt/l4d2/servers/$name" \
@@ -30,6 +30,6 @@ mount -t overlay overlay \
 steam mv "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg" "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server_original.cfg"
 steam touch "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
 echo "exec server_original.cfg" > "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
-cat "/opt/l4d2/servers/$name/server.cfg" >> "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
+cat "/opt/l4d2/configs/$name.cfg" >> "/opt/l4d2/servers/$name/merged/left4dead2/cfg/server.cfg"
 
 steam "/opt/l4d2/servers/$name/merged/srcds_run" -norestart -pidfile "/opt/l4d2/servers/$name/pid" -game left4dead2 -ip 0.0.0.0 -port "$port" +hostname "Crone_$name" $params +map c1m1_hotel
