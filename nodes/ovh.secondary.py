@@ -37,13 +37,13 @@
                     'arguments': ['-tickrate 100'],
                     'overlays': ['tickrate', 'vanilla'],
                     'config': [
-                        # https://github.com/SirPlease/L4D2-Competitive-Rework/blob/7ecc3a32a5e2180d6607a40119ff2f3c072502a9/cfg/server.cfg#L58-L69
                         'exec server_tickrate.cfg',
-                        'sv_minupdaterate 100',
-                        'sv_maxupdaterate 100',
-                        'sv_mincmdrate 100',
-                        'sv_maxcmdrate 100',
-                        'tick_door_speed 1.3',
+                        # https://github.com/SirPlease/L4D2-Competitive-Rework/blob/7ecc3a32a5e2180d6607a40119ff2f3c072502a9/cfg/server.cfg#L58-L69
+                        # https://www.programmersought.com/article/513810199514/
+                        'sv_minupdaterate 101',
+                        'sv_maxupdaterate 101',
+                        'sv_mincmdrate 101',
+                        'sv_maxcmdrate 101',
                     ],
                 },
                 'zonemod': {
