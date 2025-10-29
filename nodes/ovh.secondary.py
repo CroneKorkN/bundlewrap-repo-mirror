@@ -34,22 +34,23 @@
                 },
                 'tick100': {
                     'port': 27016,
-                    'overlays': ['vanilla', 'tickrate'],
                     'arguments': ['-tickrate 100'],
+                    'overlays': ['tickrate', 'vanilla'],
                     'config': [
-                        'exec server_original.cfg',
+                        # https://github.com/SirPlease/L4D2-Competitive-Rework/blob/7ecc3a32a5e2180d6607a40119ff2f3c072502a9/cfg/server.cfg#L58-L69
+                        'exec server_tickrate.cfg',
                         'sv_minupdaterate 100',
                         'sv_maxupdaterate 100',
                         'sv_mincmdrate 100',
                         'sv_maxcmdrate 100',
                     ],
                 },
-                'server3_comp1': {
+                'server3_zonemod': {
                     'port': 27017,
-                    'overlays': ['competitive_rework'],
                     'arguments': ['-tickrate 60'],
+                    'overlays': ['competitive_rework'],
                     'config': [
-                        'exec server_original.cfg',
+                        'exec server_competitive_rework.cfg',
                         'sm_forcematch zonemod',
                     ],
                 },
