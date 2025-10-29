@@ -45,7 +45,7 @@
                         'sv_maxcmdrate 100',
                     ],
                 },
-                'server3_zonemod': {
+                'zonemod': {
                     'port': 27017,
                     'arguments': ['-tickrate 60'],
                     'overlays': ['competitive_rework'],
