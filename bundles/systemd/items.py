@@ -47,7 +47,7 @@ for name, unit in node.metadata.get('systemd/units').items():
 
     for attribute in ['needs', 'needed_by', 'triggers', 'triggered_by']:
         if attribute in unit:
-            dependencies[attribute] = unit.pop(attribute)
+            dependencies.setdefault(attribute, []).extend(unit.pop(attribute))
 
     files[path] = {
         'content': repo.libs.systemd.generate_unitfile(unit),
