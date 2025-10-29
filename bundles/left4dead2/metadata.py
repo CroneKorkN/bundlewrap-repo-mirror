@@ -1,4 +1,5 @@
 from re import match
+from os import path, listdir
 
 
 defaults = {
@@ -10,7 +11,18 @@ defaults = {
             'p7zip-full': {}, # l4d2center_maps_sync.sh
         },
     },
-    'left4dead2': {},
+    'left4dead2': {
+        'overlays': set(listdir(path.join(repo.path, 'bundles/left4dead2/files/scripts/overlays'))),
+        'servers': {
+            # 'port': 27017,
+            # 'overlays': ['competitive_rework'],
+            # 'arguments': ['-tickrate 60'],
+            # 'config': [
+            #     'exec server_original.cfg',
+            #     'sm_forcematch zonemod',
+            # ],
+        },
+    },
     'nftables': {
         'input': {
             'udp dport { 27005, 27020 } accept',
@@ -45,9 +57,11 @@ defaults = {
 def server_units(metadata):
     units = {}
 
-    for name, config in metadata.get('left4dead2').items():
+    for name, config in metadata.get('left4dead2/servers').items():
         assert match(r'^[A-z0-9-_-]+$', name)
         assert 27000 <= config["port"] <= 27100
+        for overlay in config.get('overlays', []):
+            assert overlay in metadata.get('left4dead2/overlays'), f"unknown overlay {overlay}, known: {metadata.get('left4dead2/overlays')}"
 
         cmd = f'/opt/l4d2/start -n {name} -p {config["port"]}'
 
@@ -95,7 +109,7 @@ def server_units(metadata):
     'nftables/input',
 )
 def nftables(metadata):
-    ports = sorted(str(config["port"]) for config in metadata.get('left4dead2', {}).values())
+    ports = sorted(str(config["port"]) for config in metadata.get('left4dead2/servers').values())
 
     return {
         'nftables': {

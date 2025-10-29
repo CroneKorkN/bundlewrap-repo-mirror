@@ -27,30 +27,32 @@
             },
         },
         'left4dead2': {
-            'vanilla': {
-                'port': 27015,
-                'overlays': ['vanilla'],
-            },
-            'tick100': {
-                'port': 27016,
-                'overlays': ['vanilla', 'tickrate'],
-                'arguments': ['-tickrate 100'],
-                'config': [
-                    'exec server_original.cfg',
-                    'sv_minupdaterate 100',
-                    'sv_maxupdaterate 100',
-                    'sv_mincmdrate 100',
-                    'sv_maxcmdrate 100',
-                ],
-            },
-            'server3_comp1': {
-                'port': 27017,
-                'overlays': ['competitive_rework'],
-                'arguments': ['-tickrate 60'],
-                'config': [
-                    'exec server_original.cfg',
-                    'sm_forcematch zonemod',
-                ],
+            'servers': {
+                'vanilla': {
+                    'port': 27015,
+                    'overlays': ['vanilla'],
+                },
+                'tick100': {
+                    'port': 27016,
+                    'overlays': ['vanilla', 'tickrate'],
+                    'arguments': ['-tickrate 100'],
+                    'config': [
+                        'exec server_original.cfg',
+                        'sv_minupdaterate 100',
+                        'sv_maxupdaterate 100',
+                        'sv_mincmdrate 100',
+                        'sv_maxcmdrate 100',
+                    ],
+                },
+                'server3_comp1': {
+                    'port': 27017,
+                    'overlays': ['competitive_rework'],
+                    'arguments': ['-tickrate 60'],
+                    'config': [
+                        'exec server_original.cfg',
+                        'sm_forcematch zonemod',
+                    ],
+                },
             },
         },
         'bind': {

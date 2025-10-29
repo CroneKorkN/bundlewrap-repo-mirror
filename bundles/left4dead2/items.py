@@ -9,6 +9,9 @@ directories = {
     '/opt/l4d2': {
         'owner': 'steam', 'group': 'steam',
     },
+    '/opt/l4d2/steam': {
+        'owner': 'steam', 'group': 'steam',
+    },
     '/opt/l4d2/configs': {
         'owner': 'steam', 'group': 'steam',
     },
@@ -31,7 +34,7 @@ files = {
         'mode': '755',
         'triggers': {
             f'svc_systemd:left4dead2-{server_name}.service:restart'
-                for server_name in node.metadata.get('left4dead2').keys()
+                for server_name in node.metadata.get('left4dead2/servers').keys()
         },
     },
     '/opt/l4d2/scripts/helpers': {
@@ -43,7 +46,7 @@ files = {
     },
 }
 
-for overlay in ['vanilla', 'tickrate', 'competitive_rework', 'l4d2center_maps']:
+for overlay in node.metadata.get('left4dead2/overlays'):
     files[f'/opt/l4d2/scripts/overlays/{overlay}'] = {
         'source': f'scripts/overlays/{overlay}',
         'mode': '755',
@@ -63,7 +66,7 @@ svc_systemd = {
     },
 }
 
-for server_name, config in node.metadata.get('left4dead2').items():
+for server_name, config in node.metadata.get('left4dead2/servers').items():
     files[f'/opt/l4d2/configs/{server_name}.cfg'] = {
         'source': 'server.cfg',
         'content_type': 'mako',
