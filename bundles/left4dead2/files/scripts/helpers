@@ -9,7 +9,7 @@ function steam() {
 
 declare -A addons=(
     [Ions_Vocalizer]=698857882
-    [EMS_Admin_System]=1376314661
+    [EMS_Admin_System]=2524204971
 )
 
 function install_addon() {
