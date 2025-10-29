@@ -132,11 +132,11 @@ steam mkdir -p /opt/l4d2/overlays/competitive_rework/left4dead2
 test -d /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/cfgogl || \
     curl -L https://github.com/SirPlease/L4D2-Competitive-Rework/archive/refs/heads/master.tar.gz | steam tar -xz --strip-components=1 -C /opt/l4d2/overlays/competitive_rework/left4dead2
 
-if ! test -f /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server_original.cfg
-then
-    steam mv /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server_original.cfg
-    steam echo -e "exec server_original.cfg\nsm_forcematch zonemod" > /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg
-fi
+# if ! test -f /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server_original.cfg
+# then
+#     steam mv /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server_original.cfg
+#     steam echo -e "exec server_original.cfg\nsm_forcematch zonemod" > /opt/l4d2/overlays/competitive_rework/left4dead2/cfg/server.cfg
+# fi
 
 # -- SERVERS -- #
 

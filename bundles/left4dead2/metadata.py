@@ -51,7 +51,7 @@ def server_units(metadata):
 
         params = config.get("params", "")
         if config.get("tickrate"):
-            params += f" -tickrate {config['tickrate']}"
+            params = f"-tickrate {config['tickrate']} " + params
 
         units[f'left4dead2-{name}.service'] = {
             'Unit': {
