@@ -43,6 +43,7 @@
                         'sv_maxupdaterate 100',
                         'sv_mincmdrate 100',
                         'sv_maxcmdrate 100',
+                        'tick_door_speed 1.3',
                     ],
                 },
                 'zonemod': {
