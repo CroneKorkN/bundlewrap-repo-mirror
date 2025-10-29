@@ -7,11 +7,16 @@ users = {
 
 directories = {
     '/opt/l4d2': {
-        'owner': 'steam',
-        'group': 'steam',
+        'owner': 'steam', 'group': 'steam',
     },
     '/opt/l4d2/configs': {
-        'owner': 'steam',
+        'owner': 'steam', 'group': 'steam',
+    },
+    '/opt/l4d2/scripts': {
+        'owner': 'steam', 'group': 'steam',
+    },
+    '/opt/l4d2/scripts/overlays': {
+        'owner': 'steam', 'group': 'steam',
     },
 }
 
@@ -29,7 +34,23 @@ files = {
                 for server_name in node.metadata.get('left4dead2').keys()
         },
     },
+    '/opt/l4d2/scripts/helpers': {
+        'source': 'scripts/helpers',
+        'mode': '755',
+        'triggers': {
+            'svc_systemd:left4dead2-initialize.service:restart',
+        },
+    },
 }
+
+for overlay in ['vanilla', 'tickrate', 'competitive_rework', 'l4d2center_maps']:
+    files[f'/opt/l4d2/scripts/overlays/{overlay}'] = {
+        'source': f'scripts/overlays/{overlay}',
+        'mode': '755',
+        'triggers': {
+            'svc_systemd:left4dead2-initialize.service:restart',
+        },
+    }
 
 svc_systemd = {
     'left4dead2-initialize.service': {

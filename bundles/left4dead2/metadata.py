@@ -7,6 +7,7 @@ defaults = {
             'libc6_i386': {}, # installs libc6:i386
             'lib32z1': {},
             'unzip': {},
+            'p7zip-full': {}, # l4d2center_maps_sync.sh
         },
     },
     'left4dead2': {},
