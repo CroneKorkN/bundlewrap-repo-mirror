@@ -30,10 +30,22 @@
             'servers': {
                 'vanilla': {
                     'port': 27015,
-                    'overlays': ['vanilla', 'l4d2center_maps'],
+                    'overlays': ['vanilla'],
                 },
                 'tick100': {
                     'port': 27016,
+                    'arguments': ['-tickrate 100'],
+                    'overlays': ['tickrate', 'vanilla'],
+                    'config': [
+                        'exec server_tickrate.cfg',
+                        'sv_minupdaterate 101',
+                        'sv_maxupdaterate 101',
+                        'sv_mincmdrate 101',
+                        'sv_maxcmdrate 101',
+                    ],
+                },
+                'tick100_maps': {
+                    'port': 27017,
                     'arguments': ['-tickrate 100'],
                     'overlays': ['tickrate', 'vanilla', 'l4d2center_maps'],
                     'config': [
@@ -47,7 +59,7 @@
                 'zonemod': {
                     'port': 27020,
                     'arguments': ['-tickrate 60'],
-                    'overlays': ['competitive_rework', 'l4d2center_maps'],
+                    'overlays': ['competitive_rework'],
                     'config': [
                         'exec server_competitive_rework.cfg',
                         'sm_forcematch zonemod',
