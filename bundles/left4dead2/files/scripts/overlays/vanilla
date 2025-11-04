@@ -3,6 +3,10 @@ set -xeuo pipefail
 source /opt/l4d2/scripts/helpers
 overlay=$(basename "$0")
 
+# Ions Vocalizer
+workshop -i 698857882
+
 # admin system
-install_addon $overlay Ions_Vocalizer
-install_admin_system $overlay
+workshop --item 2524204971
+steam mkdir -p "/opt/l4d2/overlays/${overlay}/left4dead2/ems/admin system"
+steam echo "STEAM_1:0:12376499" > "/opt/l4d2/overlays/${overlay}/left4dead2/ems/admin system/admins.txt"

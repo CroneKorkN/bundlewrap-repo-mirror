@@ -3,11 +3,4 @@ set -xeuo pipefail
 source /opt/l4d2/scripts/helpers
 overlay=$(basename "$0")
 
-# back to school
-install_addon_by_id "${overlay}" 122444796
-install_addon_by_id "${overlay}" 122447941
-install_addon_by_id "${overlay}" 122449170
-install_addon_by_id "${overlay}" 122450201
-install_addon_by_id "${overlay}" 122451125
-install_addon_by_id "${overlay}" 122452134
-install_addon_by_id "${overlay}" 122453134
+workshop --collection 121115793 # Back To School

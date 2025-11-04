@@ -17,5 +17,9 @@ net_maxcleartime 0.0001
 fps_max 0
 EOF
 
-# admin system
-install_tickrate_enabler $overlay
+# install tickrate enabler
+steam mkdir -p "/opt/l4d2/overlays/${overlay}/left4dead2/addons"
+for file in tickrate_enabler.dll tickrate_enabler.so tickrate_enabler.vdf
+do
+    curl -L "https://github.com/SirPlease/L4D2-Competitive-Rework/raw/refs/heads/master/addons/${file}" -o "/opt/l4d2/overlays/${overlay}/left4dead2/addons/${file}"
+done
