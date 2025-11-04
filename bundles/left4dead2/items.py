@@ -39,6 +39,13 @@ files = {
                 for server_name in node.metadata.get('left4dead2/servers').keys()
         },
     },
+    '/opt/l4d2/stop': {
+        'mode': '755',
+        'triggers': {
+            f'svc_systemd:left4dead2-{server_name}.service:restart'
+                for server_name in node.metadata.get('left4dead2/servers').keys()
+        },
+    },
     '/opt/l4d2/scripts/helpers': {
         'source': 'scripts/helpers',
         'mode': '755',
