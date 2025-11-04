@@ -83,7 +83,7 @@ def server_units(metadata):
             'Service': {
                 'Type': 'simple',
                 'ExecStart': cmd,
-                'ExecStop': f'/opt/l4d2/stop -n {name}',
+                'ExecStopPost': f'/opt/l4d2/stop -n {name}',
                 'Restart': 'on-failure',
                 'Nice': -10,
                 'CPUWeight': 200,

@@ -31,6 +31,9 @@
                 'vanilla': {
                     'port': 27015,
                     'overlays': ['vanilla'],
+                    'config': [
+                        'sv_consistency 0',
+                    ],
                 },
                 'tick100': {
                     'port': 27016,
@@ -42,18 +45,20 @@
                         'sv_maxupdaterate 101',
                         'sv_mincmdrate 101',
                         'sv_maxcmdrate 101',
+                        'sv_consistency 0',
                     ],
                 },
                 'tick100_maps': {
                     'port': 27017,
                     'arguments': ['-tickrate 100'],
-                    'overlays': ['tickrate', 'vanilla', 'l4d2center_maps'],
+                    'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
                     'config': [
                         'exec server_tickrate.cfg',
                         'sv_minupdaterate 101',
                         'sv_maxupdaterate 101',
                         'sv_mincmdrate 101',
                         'sv_maxcmdrate 101',
+                        'sv_consistency 0',
                     ],
                 },
                 'zonemod': {
