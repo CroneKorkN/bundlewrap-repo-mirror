@@ -21,6 +21,14 @@ function install_addon() {
         steam /opt/l4d2/scripts/steam-workshop-download "${addon_id}" --out "/opt/l4d2/overlays/${overlay}/left4dead2/addons"
 }
 
+function install_addon_by_id() {
+    local overlay="$1"
+    local addon_id="$2"
+    steam mkdir -p "/opt/l4d2/overlays/${overlay}/left4dead2/addons"
+    test -f "/opt/l4d2/overlays/${overlay}/left4dead2/addons/${addon_id}.vpk" || \
+        steam /opt/l4d2/scripts/steam-workshop-download "${addon_id}" --out "/opt/l4d2/overlays/${overlay}/left4dead2/addons"
+}
+
 function install_admin_system() {
     local overlay="$1"
     install_addon "${overlay}" EMS_Admin_System
