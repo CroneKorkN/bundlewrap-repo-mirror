@@ -1,5 +1,6 @@
 {
     'hostname': '10.0.0.64',
+    'username': 'admin',
     'password': '!decrypt:encrypt$gAAAAABob2elR_Sm13u-oG1ff_zOeEsay8PZ0Wgbl810hAZNhvuTYWJuNAJ1oyelC6sy7WsD2CC33oVLeb6m0EtNARtMs-2gKu9KlT7Xat1MvV-iatDKvro=',
     'groups': [
         'routeros',
