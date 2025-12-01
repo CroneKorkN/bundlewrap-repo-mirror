@@ -38,7 +38,7 @@
                 'tick100': {
                     'port': 27016,
                     'arguments': ['-tickrate 100'],
-                    'overlays': ['tickrate', 'vanilla'],
+                    'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
                     'config': [
                         'exec server_tickrate.cfg',
                         'sv_minupdaterate 101',
@@ -50,6 +50,26 @@
                 },
                 'tick100_maps': {
                     'port': 27017,
+                    'arguments': ['-tickrate 100'],
+                    'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
+                    'config': [
+                        'exec server_tickrate.cfg',
+                        'sv_minupdaterate 101',
+                        'sv_maxupdaterate 101',
+                        'sv_mincmdrate 101',
+                        'sv_maxcmdrate 101',
+                        'sv_consistency 0',
+                    ],
+                },
+                'vanilla_maps': {
+                    'port': 27018,
+                    'overlays': ['vanilla', 'workshop_maps'],
+                    'config': [
+                        'sv_consistency 0',
+                    ],
+                },
+                'tick60_maps': {
+                    'port': 27019,
                     'arguments': ['-tickrate 100'],
                     'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
                     'config': [
