@@ -8,6 +8,7 @@ defaults = {
         'sources': {
             'crystal': {
                 # https://software.opensuse.org/download.html?project=devel%3Alanguages%3Acrystal&package=crystal
+                # curl -fsSL https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_Testing/Release.key
                 'urls': {
                     'http://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_Testing/',
                 },
