@@ -4,3 +4,10 @@ source /opt/l4d2/scripts/helpers
 overlay=$(basename "$0")
 
 workshop --collection 121115793 # Back To School
+
+workshop --item 2957035482 # hehe30-part1
+workshop --item 2973628334 # hehe30-part2
+workshop --item 3013844371 # hehe30-part3
+
+workshop --item 3478461158 # 虚伪黎明(Dawn's Deception)
+workshop --item 3478934394 # 虚伪黎明(Dawn's Deception)PART2
