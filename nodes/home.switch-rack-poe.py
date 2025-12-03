@@ -27,7 +27,8 @@
                     'vlan_group': 'infra',
                 },
                 'ether5': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'wokeonlan',
+                    'comment': 'home.backups wakeonlan',
                 },
                 'ether6': {
                     'vlan_group': 'infra',

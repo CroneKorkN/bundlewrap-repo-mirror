@@ -18,6 +18,7 @@
                 'iot': '2',
                 'internet': '3',
                 'proxmox': '4',
+                'wokeonlan': '5',
                 'gast': '9',
                 'rolf': '51',
             },
@@ -30,10 +31,15 @@
                         'proxmox',
                         'gast',
                         'rolf',
+                        'wokeonlan',
                     },
                 },
                 'internet': {
                     'untagged': 'internet',
+                    'tagged': set(),
+                },
+                'wokeonlan': {
+                    'untagged': 'wokeonlan',
                     'tagged': set(),
                 },
             },

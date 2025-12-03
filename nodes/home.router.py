@@ -42,6 +42,13 @@
                 'ipv4': '10.0.4.1/24',
                 'dhcp_server': True,
             },
+            'wakeonlan': {
+                'type': 'vlan',
+                'vlan_interface': 'internal',
+                'id': 5,
+                'ipv4': '10.0.5.1/24',
+                'dhcp_server': True,
+            },
             'guest': {
                 'type': 'vlan',
                 'vlan_interface': 'internal',
