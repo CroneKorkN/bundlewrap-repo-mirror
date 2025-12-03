@@ -87,8 +87,13 @@ for port_name, port_conf in node.metadata.get('routeros/ports').items():
         },
     }
 
+    routeros[f'/interface?name={port_name}'] = {
+        '_comment': port_conf.get('description', ''),
+    }
+
     if comment := port_conf.get('comment', None):
         routeros[f'/interface/bridge/port?interface={port_name}']['_comment'] = comment
+        routeros[f'/interface?name={port_name}']['_comment'] = comment
 
 # create IPs
 for ip, ip_conf in node.metadata.get('routeros/ips').items():
