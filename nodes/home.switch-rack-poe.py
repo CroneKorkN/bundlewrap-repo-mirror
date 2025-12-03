@@ -16,40 +16,43 @@
             'ports': {
                 'ether1': {
                     'vlan_group': 'infra',
+                    'comment': 'home.switch-rack-10g',
                 },
                 'ether2': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
+                    'comment': 'unifi-cloudkey',
                 },
                 'ether3': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'ether4': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'ether5': {
                     'vlan_group': 'wokeonlan',
-                    'comment': 'home.backups wakeonlan',
+                    'comment': 'home.backups',
                 },
                 'ether6': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'ether7': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
+                    'comment': 'usv',
                 },
                 'ether8': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp9': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp10': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp11': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp12': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
             },
         },

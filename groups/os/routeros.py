@@ -23,6 +23,10 @@
                 'rolf': '51',
             },
             'vlan_groups': {
+                'home': {
+                    'untagged': 'home',
+                    'tagged': set(),
+                },
                 'infra': {
                     'untagged': 'home',
                     'tagged': {

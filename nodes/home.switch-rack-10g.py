@@ -16,30 +16,35 @@
             'ports': {
                 'sfp-sfpplus1': {
                     'vlan_group': 'infra',
+                    'comment': 'home.router',
                 },
                 'sfp-sfpplus2': {
                     'vlan_group': 'infra',
+                    'comment': 'home.server',
                 },
                 'sfp-sfpplus3': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
+                    'comment': 'home.backups',
                 },
                 'sfp-sfpplus4': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp-sfpplus5': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp-sfpplus6': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp-sfpplus7': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
                 },
                 'sfp-sfpplus8': {
                     'vlan_group': 'infra',
+                    'comment': 'home.switch-vorratsraum-poe',
                 },
                 'ether1': {
                     'vlan_group': 'infra',
+                    'comment': 'home.switch-rack-poe',
                 },
             },
         },

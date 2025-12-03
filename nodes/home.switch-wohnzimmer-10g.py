@@ -16,18 +16,23 @@
             'ports': {
                 'ether1': {
                     'vlan_group': 'infra',
+                    'comment': 'home.switch-vorratsraum-poe',
                 },
                 'ether2': {
                     'vlan_group': 'infra',
+                    'comment': 'wohnzimmer-ap',
                 },
                 'ether3': {
-                    'vlan_group': 'infra',
+                    'vlan_group': 'home',
+                    'comment': 'gaming-pc',
                 },
                 'ether4': {
                     'vlan_group': 'infra',
+                    'comment': 'schreibtisch-dock',
                 },
                 'ether5': {
                     'vlan_group': 'infra',
+                    'comment': 'switch-wohnzimmer-unifi',
                 },
             },
         },
