@@ -55,7 +55,7 @@ for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
         'vlan-id': vlan_id,
         'interface': 'bridge',
         'tags': {
-            'routeros-vlan',
+            'routeros-vlans',
         },
     }
 
@@ -68,9 +68,27 @@ for vlan_name, vlan_id in node.metadata.get('routeros/vlans').items():
             'routeros-vlan-ports',
         },
         'needs': {
-            'tag:routeros-vlan',
+            'tag:routeros-vlans',
         },
     }
+
+for port_name, port_conf in node.metadata.get('routeros/ports').items():
+    untagged_vlan = node.metadata.get('routeros/vlan_groups')[port_conf.get('vlan_group')]['untagged']
+
+    routeros[f'/interface/bridge/port?interface={port_name}'] = {
+        'disabled': False,
+        'bridge': 'bridge',
+        'pvid': node.metadata.get('routeros/vlans')[untagged_vlan],
+        'tags': {
+            'routeros-ports'
+        },
+        'needs': {
+            'tag:routeros-vlan-ports',
+        },
+    }
+
+    if comment := port_conf.get('comment', None):
+        routeros[f'/interface/bridge/port?interface={port_name}']['_comment'] = comment
 
 # create IPs
 for ip, ip_conf in node.metadata.get('routeros/ips').items():
@@ -80,7 +98,8 @@ for ip, ip_conf in node.metadata.get('routeros/ips').items():
             'routeros-ip',
         },
         'needs': {
-            'tag:routeros-vlan',
+            'tag:routeros-vlans',
+            'tag:routeros-ports'
         },
     }
 
@@ -90,7 +109,8 @@ routeros['/interface/bridge?name=bridge'] = {
     'priority': node.metadata.get('routeros/bridge_priority'),
     'protocol-mode': 'rstp',
     'needs': {
-        'tag:routeros-vlan',
+        'tag:routeros-vlans',
+        'tag:routeros-ports',
         'tag:routeros-vlan-ports',
         'tag:routeros-ip',
     },
@@ -102,7 +122,7 @@ routeros['/interface/vlan'] = {
         'id-by': 'name',
     },
     'needed_by': {
-        'tag:routeros-vlan',
+        'tag:routeros-vlans',
     }
 }
 
@@ -114,6 +134,6 @@ routeros['/interface/bridge/vlan'] = {
         },
     },
     'needed_by': {
-        'tag:routeros-vlan',
+        'tag:routeros-vlans',
     }
 }
