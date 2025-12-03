@@ -3,4 +3,4 @@
 from bundlewrap.repo import Repository
 from os.path import realpath, dirname
 
-repo = Repository(dirname(dirname(realpath(__file__))))
+bw = Repository(dirname(dirname(realpath(__file__))))
