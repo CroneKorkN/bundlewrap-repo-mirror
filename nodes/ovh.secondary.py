@@ -70,7 +70,7 @@
                 },
                 'tick60_maps': {
                     'port': 27019,
-                    'arguments': ['-tickrate 100'],
+                    'arguments': ['-tickrate 60'],
                     'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
                     'config': [
                         'exec server_tickrate.cfg',
