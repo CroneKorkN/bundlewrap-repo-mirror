@@ -5,10 +5,16 @@
             'in': {
                 'filters': {
                     '_measurement': 'interface',
-                    '_field': ['in_discards'],
+                    '_field': [
+                        'in_ucast_pkts',
+                        'in_mcast_pkts',
+                        'in_bcast_pkts',
+                    ],
+                    'ifType': [6],
                     'operating_system': 'routeros',
                 },
                 'function': 'derivative',
+                'over': 0,
             },
         },
         'min': 0,
@@ -25,10 +31,16 @@
             'out': {
                 'filters': {
                     '_measurement': 'interface',
-                    '_field': ['out_discards'],
+                    '_field': [
+                        'in_ucast_pkts',
+                        'in_mcast_pkts',
+                        'in_bcast_pkts',
+                    ],
+                    'ifType': [6],
                     'operating_system': 'routeros',
                 },
                 'function': 'derivative',
+                'over': 0,
             },
         },
         'min': 0,

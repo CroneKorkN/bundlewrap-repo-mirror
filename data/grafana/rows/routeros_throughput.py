@@ -5,14 +5,16 @@
             'in': {
                 'filters': {
                     '_measurement': 'interface',
-                    '_field': ['in_discards'],
+                    '_field': ['in_octets'],
+                    'ifType': [6],
                     'operating_system': 'routeros',
                 },
                 'function': 'derivative',
+                'over': 0,
             },
         },
         'min': 0,
-        'unit': 'pps',
+        'unit': 'bps',
         'tooltip': 'multi',
         'display_name': '${__field.labels.ifName} - ${__field.labels.ifAlias}',
         'legend': {
@@ -25,14 +27,16 @@
             'out': {
                 'filters': {
                     '_measurement': 'interface',
-                    '_field': ['out_discards'],
+                    '_field': ['out_octets'],
+                    'ifType': [6],
                     'operating_system': 'routeros',
                 },
                 'function': 'derivative',
+                'over': 0,
             },
         },
         'min': 0,
-        'unit': 'pps',
+        'unit': 'bps',
         'tooltip': 'multi',
         'display_name': '${__field.labels.ifName} - ${__field.labels.ifAlias}',
         'legend': {

@@ -158,13 +158,14 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
                         host=monitored_node.name,
                         negative=query_config.get('negative', False),
                         boolean_to_int=query_config.get('boolean_to_int', False),
-                        minimum=query_config.get('minimum', None),
+                        over=query_config.get('over', None),
                         filters={
                             'host': monitored_node.name,
                             **query_config['filters'],
                         },
                         exists=query_config.get('exists', []),
                         function=query_config.get('function', None),
+                        multiply=query_config.get('multiply', None),
                     ).strip()
                 })
 

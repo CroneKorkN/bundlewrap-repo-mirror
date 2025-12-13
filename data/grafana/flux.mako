@@ -8,8 +8,8 @@ from(bucket: "${bucket}")
   |> filter(fn: (r) => exists r["${exist}"]) // WTF
 % endfor
   |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) // aggregate early for best performance
-% if minimum:
-  |> filter(fn: (r) => r._value > ${minimum})
+% if over is not None:
+  |> filter(fn: (r) => r._value > ${over})
 % endif
 % if function == 'derivative':
   |> derivative(nonNegative: true)
@@ -19,5 +19,8 @@ from(bucket: "${bucket}")
 % endif
 % if negative:
   |> map(fn: (r) => ({r with _value: r._value * - 1.0}))
+% endif
+% if multiply is not None:
+  |> map(fn: (r) => ({r with _value: r._value * ${multiply}}))
 % endif
   |> yield(name: "mean")

@@ -1,15 +1,14 @@
 {
-    'errors_in': {
-        'stacked': False,
+    'in': {
+        'stacked': True,
         'queries': {
-            'errors_in': {
+            'in': {
                 'filters': {
                     '_measurement': 'interface',
                     '_field': ['in_errors'],
                     'operating_system': 'routeros',
                 },
-                'function': 'max',
-                'derivative': True,
+                'function': 'derivative',
             },
         },
         'min': 0,
@@ -20,17 +19,16 @@
             'displayMode': 'hidden',
         },
     },
-    'errors_out': {
-        'stacked': False,
+    'out': {
+        'stacked': True,
         'queries': {
-            'errors_out': {
+            'out': {
                 'filters': {
                     '_measurement': 'interface',
                     '_field': ['out_errors'],
                     'operating_system': 'routeros',
                 },
-                'function': 'max',
-                'derivative': True,
+                'function': 'derivative',
             },
         },
         'min': 0,

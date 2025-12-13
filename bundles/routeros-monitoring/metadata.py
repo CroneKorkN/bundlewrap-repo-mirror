@@ -44,6 +44,19 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                     "name": "interface",
                                     "oid": "IF-MIB::ifTable",
                                     "field": [
+                                        # 6: ethernetCsmacd (physischer Ethernet-Port)
+                                        # 24: softwareLoopback
+                                        # 53: propVirtual (oft VLANs bei MikroTik)
+                                        # 131: tunnel
+                                        # 135: l2vlan
+                                        # 161: ieee8023adLag (Bonding/LACP)
+                                        # 209: bridge
+                                        {
+                                            "name": "ifType",
+                                            "oid": "IF-MIB::ifType",
+                                            "is_tag": True,
+                                        },
+
                                         # Labels (optional but recommended)
                                         {
                                             "name": "ifName",
@@ -74,6 +87,22 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                         {
                                             "name": "out_ucast_pkts",
                                             "oid": "IF-MIB::ifHCOutUcastPkts",
+                                        },
+                                        {
+                                            "name": "in_mcast_pkts",
+                                            "oid": "IF-MIB::ifHCInMulticastPkts",
+                                        },
+                                        {
+                                            "name": "in_bcast_pkts",
+                                            "oid": "IF-MIB::ifHCInBroadcastPkts",
+                                        },
+                                        {
+                                            "name": "out_mcast_pkts",
+                                            "oid": "IF-MIB::ifHCOutMulticastPkts",
+                                        },
+                                        {
+                                            "name": "out_bcast_pkts",
+                                            "oid": "IF-MIB::ifHCOutBroadcastPkts",
                                         },
 
                                         # Drops / Errors
@@ -111,24 +140,24 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                             "is_tag": True,
                                         },
                                         {
-                                            "name": "poe_ifindex",
+                                            "name": "ifindex",
                                             "oid": "MIKROTIK-MIB::mtxrPOEInterfaceIndex",
                                             "is_tag": True,
                                         },
                                         {
-                                            "name": "poe_status",
+                                            "name": "status",
                                             "oid": "MIKROTIK-MIB::mtxrPOEStatus",
                                         },
                                         {
-                                            "name": "poe_voltage",
+                                            "name": "voltage",
                                             "oid": "MIKROTIK-MIB::mtxrPOEVoltage",
                                         },
                                         {
-                                            "name": "poe_current",
+                                            "name": "current",
                                             "oid": "MIKROTIK-MIB::mtxrPOECurrent",
                                         },
                                         {
-                                            "name": "poe_power",
+                                            "name": "power",
                                             "oid": "MIKROTIK-MIB::mtxrPOEPower",
                                         },
                                     ],
