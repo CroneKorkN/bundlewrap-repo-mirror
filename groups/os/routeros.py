@@ -15,6 +15,7 @@
             'routeros_throughput',
             'routeros_poe',
             'routeros_packets',
+            'routeros_health',
         },
         'routeros': {
             'gateway': '10.0.0.1',

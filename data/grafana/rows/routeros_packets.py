@@ -32,9 +32,9 @@
                 'filters': {
                     '_measurement': 'interface',
                     '_field': [
-                        'in_ucast_pkts',
-                        'in_mcast_pkts',
-                        'in_bcast_pkts',
+                        'out_ucast_pkts',
+                        'out_mcast_pkts',
+                        'out_bcast_pkts',
                     ],
                     'ifType': [6],
                     'operating_system': 'routeros',

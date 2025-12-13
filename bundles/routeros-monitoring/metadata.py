@@ -18,8 +18,8 @@ def routeros_monitoring_telegraf_inputs(metadata):
         "telegraf": {
             "config": {
                 "inputs": {
-                    "snmp": [
-                        {
+                    "snmp": {
+                        h({
                             "agents": [f"udp://{routeros_node.hostname}:161"],
                             "version": 2,
                             "community": "public",
@@ -36,9 +36,54 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                     "oid": "SNMPv2-MIB::sysName.0",
                                     "is_tag": True,
                                 },
+                                # MikroTik Health (scalars)
+                                {
+                                    "name": "hw_voltage",
+                                    "oid": "MIKROTIK-MIB::mtxrHlVoltage",
+                                },
+                                {
+                                    "name": "hw_temp",
+                                    "oid": "MIKROTIK-MIB::mtxrHlTemperature",
+                                },
+                                {
+                                    "name": "hw_cpu_temp",
+                                    "oid": "MIKROTIK-MIB::mtxrHlCpuTemperature",
+                                },
+                                {
+                                    "name": "hw_board_temp",
+                                    "oid": "MIKROTIK-MIB::mtxrHlBoardTemperature",
+                                },
+                                {
+                                    "name": "hw_fan1_rpm",
+                                    "oid": "MIKROTIK-MIB::mtxrHlFanSpeed1",
+                                },
+                                {
+                                    "name": "hw_fan2_rpm",
+                                    "oid": "MIKROTIK-MIB::mtxrHlFanSpeed2",
+                                },
                             ],
-
                             "table": [
+                                # MikroTik Health (table)
+                                {
+                                    "name": "hw",
+                                    "oid": "MIKROTIK-MIB::mtxrGaugeTable",
+                                    "field": [
+                                        {
+                                            "name": "sensor",
+                                            "oid": "MIKROTIK-MIB::mtxrGaugeName",
+                                            "is_tag": True,
+                                        },
+                                        {
+                                            "name": "value",
+                                            "oid": "MIKROTIK-MIB::mtxrGaugeValue",
+                                        },
+                                        {
+                                            "name": "unit",
+                                            "oid": "MIKROTIK-MIB::mtxrGaugeUnit",
+                                            "is_tag": True,
+                                        },
+                                    ],
+                                },
                                 # Interface statistics
                                 {
                                     "name": "interface",
@@ -163,10 +208,10 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                     ],
                                 },
                             ],
-                        }
-                        for routeros_node in repo.nodes_in_group("routeros")
-                    ]
-                }
-            }
-        }
+                        })
+                            for routeros_node in repo.nodes_in_group("routeros")
+                    },
+                },
+            },
+        },
     }
