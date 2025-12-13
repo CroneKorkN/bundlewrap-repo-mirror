@@ -51,7 +51,7 @@
         },
         'min': 0,
         'soft_max': 3,
-        'display_name': '__field.labels.resource',
+        'display_name': '${__field.labels.resource}',
         'unit': 'percent',
         'tooltip': 'multi',
         'legend': {

@@ -17,7 +17,7 @@
         },
         'tooltip': 'multi',
         'unit': 'MHz',
-        'display_name': '__field.labels.cpu',
+        'display_name': '${__field.labels.cpu}',
         'min': 0,
     },
     # 'temperature': {
@@ -57,6 +57,6 @@
         },
         'tooltip': 'multi',
         'unit': 'degrees',
-        'display_name': '__field.labels.chip',
+        'display_name': '${__field.labels.chip}',
     },
 }

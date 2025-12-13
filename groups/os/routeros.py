@@ -9,6 +9,10 @@
         'routeros',
     ],
     'metadata': {
+        'grafana_rows': {
+            'routeros_discards',
+            'routeros_errors',
+        },
         'routeros': {
             'gateway': '10.0.0.1',
             'bridge_priority': '0x8000',
@@ -48,6 +52,9 @@
                 },
             },
             'vlan_ports': {},
+        },
+        'telegraf': {
+            'influxdb_node': 'home.server',
         },
     },
     'os': 'routeros',

@@ -14,7 +14,7 @@
             },
         },
         'unit': 'bytes',
-        'display_name': '__field.labels.comm',
+        'display_name': '${__field.labels.comm}',
         'legend': {
             'displayMode': 'table',
             'placement': 'right',
@@ -38,7 +38,7 @@
             },
         },
         'unit': 'bytes',
-        'display_name': '__field.labels.comm',
+        'display_name': '${__field.labels.comm}',
         'legend': {
             'displayMode': 'table',
             'placement': 'right',

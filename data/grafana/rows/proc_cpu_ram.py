@@ -13,7 +13,7 @@
             },
         },
         'unit': 'percent',
-        'display_name': '__field.labels.process_name',
+        'display_name': '${__field.labels.process_name}',
         'legend': {
             'displayMode': 'table',
             'placement': 'right',
@@ -36,7 +36,7 @@
             },
         },
         'unit': 'bytes',
-        'display_name': '__field.labels.process_name',
+        'display_name': '${__field.labels.process_name}',
         'legend': {
             'displayMode': 'table',
             'placement': 'right',

@@ -127,7 +127,7 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
             panel['gridPos']['y'] = (row_id - 1) * panel['gridPos']['h']
 
             if 'display_name' in panel_config:
-                panel['fieldConfig']['defaults']['displayName'] = '${'+panel_config['display_name']+'}'
+                panel['fieldConfig']['defaults']['displayName'] = panel_config['display_name']
 
             if panel_config.get('stacked'):
                 panel['fieldConfig']['defaults']['custom']['stacking']['mode'] = 'normal'
@@ -178,4 +178,3 @@ for dashboard_id, monitored_node in enumerate(monitored_nodes, start=1):
             'svc_systemd:grafana-server:restart',
         ]
     }
-

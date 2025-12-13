@@ -12,7 +12,7 @@
                 'function': 'max',
             },
         },
-        'display_name': '__field.labels.queue'
+        'display_name': '${__field.labels.queue}'
     },
     'size': {
         'stacked': True,
@@ -27,7 +27,7 @@
                 'function': 'max',
             },
         },
-        'display_name': '__field.labels.queue'
+        'display_name': '${__field.labels.queue}'
     },
     'age': {
         'stacked': True,
@@ -42,6 +42,6 @@
                 'function': 'max',
             },
         },
-        'display_name': '__field.labels.queue'
+        'display_name': '${__field.labels.queue}'
     },
 }

@@ -13,7 +13,7 @@
             },
         },
         'unit': 'Bps',
-        'display_name': '__field.labels.interface',
+        'display_name': '${__field.labels.interface}',
         'tooltip': 'multi',
     },
     'out': {
@@ -30,7 +30,7 @@
             },
         },
         'unit': 'Bps',
-        'display_name': '__field.labels.interface',
+        'display_name': '${__field.labels.interface}',
         'tooltip': 'multi',
     },
 }

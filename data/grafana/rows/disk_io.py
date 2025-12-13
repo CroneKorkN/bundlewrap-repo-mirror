@@ -16,7 +16,7 @@
             },
         },
         'unit': 'Bps',
-        'display_name': '__field.labels.name',
+        'display_name': '${__field.labels.name}',
         'tooltip': 'multi',
     },
     'write': {
@@ -36,7 +36,7 @@
             },
         },
         'unit': 'Bps',
-        'display_name': '__field.labels.name',
+        'display_name': '${__field.labels.name}',
         'tooltip': 'multi',
     },
 }
