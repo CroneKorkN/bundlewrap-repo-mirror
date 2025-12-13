@@ -11,7 +11,7 @@ def record_matches_view(value, type, name, zone, view, metadata):
     if type not in ['A', 'AAAA']:
         return True
 
-    if metadata.get(f'bind/views/{view}/is_internal'):        
+    if metadata.get(f'bind/views/{view}/is_internal'):
         if ip_address(value).is_private:
             return True
         elif not list(filter(
