@@ -27,15 +27,15 @@ routeros['/system/identity'] = {
 # for topic in LOGGING_TOPICS:
 #     routeros[f'/system/logging?action=memory&topics={topic}'] = {}
 
-# routeros['/snmp'] = {
-#     'enabled': True,
-# }
-# routeros['/snmp/community?name=public'] = {
-#     'addresses': '0.0.0.0/0',
-#     'disabled': False,
-#     'read-access': True,
-#     'write-access': False,
-# }
+routeros['/snmp'] = {
+    'enabled': True,
+}
+routeros['/snmp/community?name=public'] = {
+    'addresses': '0.0.0.0/0',
+    'disabled': False,
+    'read-access': True,
+    'write-access': False,
+}
 
 routeros['/system/clock'] = {
     'time-zone-autodetect': False,

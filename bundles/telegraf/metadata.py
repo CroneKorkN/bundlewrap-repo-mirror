@@ -29,11 +29,12 @@ defaults = {
                 'collection_jitter': '0s',
                 'flush_interval': '15s',
                 'flush_jitter': '0s',
-                'interval': '15s',
+                'interval': '1m',
                 'metric_batch_size': 1000,
                 'metric_buffer_limit': 10000,
                 'omit_hostname': False,
                 'round_interval': True,
+                'skip_processors_after_aggregators': True,
             },
             'inputs': {
                 'cpu': {h({
@@ -71,13 +72,13 @@ defaults = {
                 'system': {h({})},
                 'net': {h({})},
                 'exec': {
-                    h({
-                        'commands': [
-                            f'sudo /usr/local/share/telegraf/procio',
-                        ],
-                        'data_format': 'influx',
-                        'interval': '20s',
-                    }),
+                    # h({
+                    #     'commands': [
+                    #         f'sudo /usr/local/share/telegraf/procio',
+                    #     ],
+                    #     'data_format': 'influx',
+                    #     'interval': '20s',
+                    # }),
                     h({
                         'commands': [
                             f'/usr/local/share/telegraf/pressure_stall',
