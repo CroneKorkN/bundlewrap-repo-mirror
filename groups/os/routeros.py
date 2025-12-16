@@ -10,7 +10,6 @@
     ],
     'metadata': {
         'grafana_rows': {
-            'routeros_discards',
             'routeros_errors',
             'routeros_throughput',
             'routeros_poe',

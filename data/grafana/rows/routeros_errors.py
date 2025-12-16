@@ -1,11 +1,33 @@
 {
-    'in': {
+    'critical': {
         'stacked': True,
         'queries': {
-            'in': {
+            'generic': {
                 'filters': {
                     '_measurement': 'interface',
-                    '_field': ['in_errors'],
+                    '_field': [
+                        'in_errors',
+                        'out_errors',
+                    ],
+                    'operating_system': 'routeros',
+                },
+                'function': 'derivative',
+            },
+            'mikrotik': {
+                'filters': {
+                    '_measurement': 'interface_mikrotik',
+                    '_field': [
+                        'rx_fcs_errors',
+                        'rx_align_errors',
+                        'rx_code_errors',
+                        'rx_carrier_errors',
+                        'rx_jabber',
+                        'rx_fragment',
+                        'rx_length_errors',
+                        'tx_late_collisions',
+                        'tx_excessive_collisions',
+                        'link_downs',
+                    ],
                     'operating_system': 'routeros',
                 },
                 'function': 'derivative',
@@ -14,18 +36,43 @@
         'min': 0,
         'unit': 'pps',
         'tooltip': 'multi',
-        'display_name': '${__field.labels.ifName} - ${__field.labels.ifAlias}',
+        'display_name': '${__field.name} ${__field.labels.ifName}',
         'legend': {
-            'displayMode': 'hidden',
+            'displayMode': 'table',
+            'placement': 'right',
+            'calcs': [
+                'max',
+            ],
         },
     },
-    'out': {
+    'warning': {
         'stacked': True,
         'queries': {
-            'out': {
+            'generic': {
                 'filters': {
                     '_measurement': 'interface',
-                    '_field': ['out_errors'],
+                    '_field': [
+                        'in_discards',
+                        'out_discards',
+                    ],
+                    'operating_system': 'routeros',
+                },
+                'function': 'derivative',
+            },
+            'mikrotik': {
+                'filters': {
+                    '_measurement': 'interface_mikrotik',
+                    '_field': [
+                        'rx_too_short',
+                        'rx_too_long',
+                        'rx_drop',
+                        'tx_drop',
+                        'rx_pause',
+                        'tx_pause',
+                        'tx_pause_honored',
+                        'tx_collisions',
+                        'tx_total_collisions',
+                    ],
                     'operating_system': 'routeros',
                 },
                 'function': 'derivative',
@@ -34,9 +81,13 @@
         'min': 0,
         'unit': 'pps',
         'tooltip': 'multi',
-        'display_name': '${__field.labels.ifName} - ${__field.labels.ifAlias}',
+        'display_name': '${__field.name} ${__field.labels.ifName}',
         'legend': {
-            'displayMode': 'hidden',
+            'displayMode': 'table',
+            'placement': 'right',
+            'calcs': [
+                'max',
+            ],
         },
     },
 }

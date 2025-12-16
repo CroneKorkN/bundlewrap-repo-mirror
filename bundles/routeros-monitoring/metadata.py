@@ -171,61 +171,131 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                 },
                                 # Interface statistics (MikroTik-specific mib)
                                 {
-                                    "name": "interface_mikrotik",
+                                    "name": "interface_errors",
                                     "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTable",
                                     "field": [
-                                        # Join / label
+                                        # Join key / label (usually identical to IF-MIB ifName)
                                         {
                                             "name": "ifName",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsName",
                                             "is_tag": True,
                                         },
 
-                                        # RX errors (physisch + framing)
+                                        # =========================
+                                        # Physical layer (L1/L2)
+                                        # =========================
+                                        # CRC/FCS errors → very often cabling, connectors, SFPs, signal quality (EMI)
                                         {
                                             "name": "rx_fcs_errors",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxFCSError",
                                         },
+                                        # Alignment errors → typically duplex mismatch or PHY problems
                                         {
                                             "name": "rx_align_errors",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxAlignError",
                                         },
+                                        # Code errors → PHY encoding errors (signal/SFP/PHY)
                                         {
                                             "name": "rx_code_errors",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxCodeError",
                                         },
+                                        # Carrier errors → carrier lost (copper issues, autoneg, PHY instability)
                                         {
                                             "name": "rx_carrier_errors",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxCarrierError",
                                         },
+                                        # Jabber → extremely long invalid frames (faulty NIC/PHY, very severe)
                                         {
                                             "name": "rx_jabber",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxJabber",
                                         },
 
-                                        # RX drops
+                                        # ==================================
+                                        # Length / framing anomalies (diagnostic)
+                                        # ==================================
+                                        # Frames shorter than minimum (noise, collisions, broken sender)
+                                        {
+                                            "name": "rx_too_short",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxTooShort",
+                                        },
+                                        # Frames longer than allowed (MTU mismatch, framing errors)
+                                        {
+                                            "name": "rx_too_long",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxTooLong",
+                                        },
+                                        # Fragments (often collision-related or duplex mismatch)
+                                        {
+                                            "name": "rx_fragment",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxFragment",
+                                        },
+                                        # Generic length errors
+                                        {
+                                            "name": "rx_length_errors",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxLengthError",
+                                        },
+
+                                        # ==================
+                                        # Drops (real packet loss)
+                                        # ==================
+                                        # RX drops (queue/ASIC/policy/overload) → highly alert-worthy
                                         {
                                             "name": "rx_drop",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxDrop",
                                         },
-
-                                        # TX drops
+                                        # TX drops (buffer/queue exhaustion, scheduling, ASIC limits)
                                         {
                                             "name": "tx_drop",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxDrop",
                                         },
 
-                                        # Duplex / collision (sollten 0 sein)
+                                        # =========================================
+                                        # Duplex / collision indicators
+                                        # (should be zero on full-duplex links)
+                                        # =========================================
+                                        # Total collisions (relevant only for half-duplex or misconfigurations)
+                                        {
+                                            "name": "tx_collisions",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxCollision",
+                                        },
+                                        # Late collisions → almost always duplex mismatch / bad autoneg
                                         {
                                             "name": "tx_late_collisions",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxLateCollision",
                                         },
+                                        # Aggregate collision counter (context)
+                                        {
+                                            "name": "tx_total_collisions",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxTotalCollision",
+                                        },
+                                        # Excessive collisions → persistent duplex problems
                                         {
                                             "name": "tx_excessive_collisions",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxExcessiveCollision",
                                         },
 
-                                        # Stabilität
+                                        # ==================
+                                        # Flow control (diagnostic)
+                                        # ==================
+                                        # Pause frames received (peer throttling you)
+                                        {
+                                            "name": "rx_pause",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxPause",
+                                        },
+                                        # Pause frames sent (you throttling the peer)
+                                        {
+                                            "name": "tx_pause",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxPause",
+                                        },
+                                        # Pause frames actually honored
+                                        {
+                                            "name": "tx_pause_honored",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxPauseHonored",
+                                        },
+
+                                        # ==========
+                                        # Stability
+                                        # ==========
+                                        # Link-down events (loose cables, bad SFPs, PoE power drops, reboots)
                                         {
                                             "name": "link_downs",
                                             "oid": "MIKROTIK-MIB::mtxrInterfaceStatsLinkDowns",
