@@ -4,20 +4,21 @@ from bundlewrap.repo import Repository
 from os.path import realpath, dirname
 from sys import argv
 from ipaddress import ip_network, ip_interface
+import argparse
 
-if len(argv) != 3:
-    print(f'usage: {argv[0]} <node> <client>')
-    exit(1)
 
+# get info from repo
 repo = Repository(dirname(dirname(realpath(__file__))))
-server_node = repo.get_node(argv[1])
+server_node = repo.get_node('htz.mails')
+available_clients = server_node.metadata.get('wireguard/clients').keys()
 
-if argv[2] not in server_node.metadata.get('wireguard/clients'):
-    print(f'client {argv[2]} not found in: {server_node.metadata.get("wireguard/clients").keys()}')
-    exit(1)
+# parse args
+parser = argparse.ArgumentParser(description='Generate WireGuard client configuration.')
+parser.add_argument('client', choices=available_clients, help='The client name to generate the configuration for.')
+args = parser.parse_args()
 
-data = server_node.metadata.get(f'wireguard/clients/{argv[2]}')
-
+# get cert
+data = server_node.metadata.get(f'wireguard/clients/{args.client}')
 vpn_network = ip_interface(server_node.metadata.get('wireguard/my_ip')).network
 allowed_ips = [
     vpn_network,
@@ -43,10 +44,15 @@ Endpoint = {ip_interface(server_node.metadata.get('network/external/ipv4')).ip}:
 PersistentKeepalive = 10
 '''
 
-print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-print(conf)
-print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-
-if input("print qrcode? [Yn]: ").upper() in ['', 'Y']:
-    import pyqrcode
-    print(pyqrcode.create(conf).terminal(quiet_zone=1))
+answer = input("print config or qrcode? [Cq]: ").strip().upper()
+match answer:
+    case '' | 'C':
+        print('>>>>>>>>>>>>>>>')
+        print(conf)
+        print('<<<<<<<<<<<<<<<')
+    case 'Q':
+        import pyqrcode
+        print(pyqrcode.create(conf).terminal(quiet_zone=1))
+    case _:
+        print(f'Invalid option "{answer}".')
+        exit(1)
