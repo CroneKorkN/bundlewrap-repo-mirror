@@ -3,6 +3,7 @@
     'username': 'admin',
     'password': '!decrypt:encrypt$gAAAAABoYFUx2faf18aV3rzNNuBA-4xZ22LQJ2HinpgsjkoTQS_l2TbmDtiAZI1jt-kWfTZ48d5_UPX-VDmY9qb4Sgn2Iz7Yee3CrB4hl85TyutilukTIP8=',
     'groups': [
+        'home',
         'routeros',
     ],
     'metadata': {
