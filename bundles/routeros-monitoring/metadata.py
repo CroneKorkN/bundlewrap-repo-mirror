@@ -84,7 +84,7 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                         },
                                     ],
                                 },
-                                # Interface statistics
+                                # Interface statistics (standard IF-MIB)
                                 {
                                     "name": "interface",
                                     "oid": "IF-MIB::ifTable",
@@ -166,6 +166,69 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                         {
                                             "name": "out_errors",
                                             "oid": "IF-MIB::ifOutErrors",
+                                        },
+                                    ],
+                                },
+                                # Interface statistics (MikroTik-specific mib)
+                                {
+                                    "name": "interface_mikrotik",
+                                    "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTable",
+                                    "field": [
+                                        # Join / label
+                                        {
+                                            "name": "ifName",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsName",
+                                            "is_tag": True,
+                                        },
+
+                                        # RX errors (physisch + framing)
+                                        {
+                                            "name": "rx_fcs_errors",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxFCSError",
+                                        },
+                                        {
+                                            "name": "rx_align_errors",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxAlignError",
+                                        },
+                                        {
+                                            "name": "rx_code_errors",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxCodeError",
+                                        },
+                                        {
+                                            "name": "rx_carrier_errors",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxCarrierError",
+                                        },
+                                        {
+                                            "name": "rx_jabber",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxJabber",
+                                        },
+
+                                        # RX drops
+                                        {
+                                            "name": "rx_drop",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsRxDrop",
+                                        },
+
+                                        # TX drops
+                                        {
+                                            "name": "tx_drop",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxDrop",
+                                        },
+
+                                        # Duplex / collision (sollten 0 sein)
+                                        {
+                                            "name": "tx_late_collisions",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxLateCollision",
+                                        },
+                                        {
+                                            "name": "tx_excessive_collisions",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsTxExcessiveCollision",
+                                        },
+
+                                        # Stabilität
+                                        {
+                                            "name": "link_downs",
+                                            "oid": "MIKROTIK-MIB::mtxrInterfaceStatsLinkDowns",
                                         },
                                     ],
                                 },
