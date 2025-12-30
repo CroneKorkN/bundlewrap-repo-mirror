@@ -17,15 +17,37 @@ def routeros_monitoring_telegraf_inputs(metadata):
     return {
         "telegraf": {
             "config": {
+                "processors": {
+                    "enum": [
+                        h({
+                            "tagpass": {
+                                "operating_system": ["routeros"],
+                            },
+                            "mapping": [
+                                h({
+                                    "tag": "agent_host",
+                                    "dest": "host",
+                                    "default": "unknown",
+                                    "value_mappings": {
+                                        routeros_node.hostname: routeros_node.name
+                                            for routeros_node in repo.nodes_in_group("routeros")
+                                    },
+                                })
+                            ]
+                        })
+                    ]
+                },
                 "inputs": {
                     "snmp": {
                         h({
-                            "agents": [f"udp://{routeros_node.hostname}:161"],
+                            "agents": [
+                                f"udp://{routeros_node.hostname}:161"
+                                    for routeros_node in repo.nodes_in_group("routeros")
+                            ],
                             "version": 2,
                             "community": "public",
                             "interval": "30s",
                             "tags": {
-                                "host": routeros_node.name,
                                 "operating_system": "routeros",
                             },
 
@@ -349,7 +371,6 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                 },
                             ],
                         })
-                            for routeros_node in repo.nodes_in_group("routeros")
                     },
                 },
             },
