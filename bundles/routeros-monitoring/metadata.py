@@ -181,6 +181,13 @@ def routeros_monitoring_telegraf_inputs(metadata):
                                             "is_tag": True,
                                         },
 
+                                        # join IF-MIB for better labels
+                                        {
+                                            "name": "ifAlias",
+                                            "oid": "IF-MIB::ifAlias",
+                                            "is_tag": True,
+                                        },
+
                                         # =========================
                                         # Physical layer (L1/L2)
                                         # =========================
