@@ -50,40 +50,6 @@ def routeros_monitoring_telegraf_inputs(metadata):
                             "tags": {
                                 "operating_system": "routeros",
                             },
-
-                            # scalar -> input-level
-                            "field": [
-                                {
-                                    "name": "switch_name",
-                                    "oid": "SNMPv2-MIB::sysName.0",
-                                    "is_tag": True,
-                                },
-                                # MikroTik Health (scalars)
-                                {
-                                    "name": "hw_voltage",
-                                    "oid": "MIKROTIK-MIB::mtxrHlVoltage",
-                                },
-                                {
-                                    "name": "hw_temp",
-                                    "oid": "MIKROTIK-MIB::mtxrHlTemperature",
-                                },
-                                {
-                                    "name": "hw_cpu_temp",
-                                    "oid": "MIKROTIK-MIB::mtxrHlCpuTemperature",
-                                },
-                                {
-                                    "name": "hw_board_temp",
-                                    "oid": "MIKROTIK-MIB::mtxrHlBoardTemperature",
-                                },
-                                {
-                                    "name": "hw_fan1_rpm",
-                                    "oid": "MIKROTIK-MIB::mtxrHlFanSpeed1",
-                                },
-                                {
-                                    "name": "hw_fan2_rpm",
-                                    "oid": "MIKROTIK-MIB::mtxrHlFanSpeed2",
-                                },
-                            ],
                             "table": [
                                 # MikroTik Health (table)
                                 {
