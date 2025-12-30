@@ -13,6 +13,8 @@ from(bucket: "${bucket}")
 % endif
 % if function == 'derivative':
   |> derivative(nonNegative: true)
+% elif function == 'difference':
+  |> difference(nonNegative: true)
 % endif
 % if boolean_to_int:
   |> map(fn: (r) => ({r with _value: if r._value == true then 1 else 0 }))
