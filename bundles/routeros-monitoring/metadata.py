@@ -23,7 +23,7 @@ defaults = {
         "processors": {
             "enum": {
                 "mikrotik_host_mapping":{
-                    # - measurements get switch ip has agent_host tag
+                    # - measurements get switch ip as agent_host tag
                     # - wie define a value mapping ip -> node name
                     # - agent_host gets translated and written into host tag
                     "tagpass": {
