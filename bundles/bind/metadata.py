@@ -49,13 +49,13 @@ defaults = {
         },
     },
     'telegraf': {
-        'config': {
-            'inputs': {
-                'bind': [{
+        'inputs': {
+            'bind': {
+                'default': {
                     'urls': ['http://localhost:8053/xml/v3'],
                     'gather_memory_contexts': False,
                     'gather_views': True,
-                }],
+                },
             },
         },
     },

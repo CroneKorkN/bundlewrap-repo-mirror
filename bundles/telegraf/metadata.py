@@ -23,27 +23,29 @@ defaults = {
         },
     },
     'telegraf': {
-        'config': {
-            'agent': {
-                'hostname': node.name,
-                'collection_jitter': '0s',
-                'flush_interval': '15s',
-                'flush_jitter': '0s',
-                'interval': '1m',
-                'metric_batch_size': 1000,
-                'metric_buffer_limit': 10000,
-                'omit_hostname': False,
-                'round_interval': True,
-                'skip_processors_after_aggregators': True,
-            },
-            'inputs': {
-                'cpu': {h({
+        'agent': {
+            'hostname': node.name,
+            'collection_jitter': '15s',
+            'flush_interval': '15s',
+            'flush_jitter': '0s',
+            'interval': '1m',
+            'metric_batch_size': 1000,
+            'metric_buffer_limit': 10000,
+            'omit_hostname': False,
+            'round_interval': True,
+            'skip_processors_after_aggregators': True,
+        },
+        'inputs': {
+            'cpu': {
+                'default': {
                     'collect_cpu_time': False,
                     'percpu': True,
                     'report_active': False,
                     'totalcpu': True,
-                })},
-                'disk': {h({
+                },
+            },
+            'disk': {
+                'default': {
                     'ignore_fs': [
                         'tmpfs',
                         'devtmpfs',
@@ -53,42 +55,60 @@ defaults = {
                         'aufs',
                         'squashfs',
                     ],
-                })},
-                'procstat': {h({
+                }
+            },
+            'procstat': {
+                'default': {
                     'interval': '60s',
                     'pattern': '.',
                     'fieldinclude': [
                         'cpu_usage',
                         'memory_rss',
                     ],
-                })},
-                'diskio': {h({
+                },
+            },
+            'diskio': {
+                'default': {
                     'device_tags': ["ID_PART_ENTRY_NUMBER"],
-                })},
-                'kernel': {h({})},
-                'mem': {h({})},
-                'processes': {h({})},
-                'swap': {h({})},
-                'system': {h({})},
-                'net': {h({})},
-                'exec': {
-                    # h({
-                    #     'commands': [
-                    #         f'sudo /usr/local/share/telegraf/procio',
-                    #     ],
-                    #     'data_format': 'influx',
-                    #     'interval': '20s',
-                    # }),
-                    h({
-                        'commands': [
-                            f'/usr/local/share/telegraf/pressure_stall',
-                        ],
-                        'data_format': 'influx',
-                        'interval': '10s',
-                    }),
+                }
+            },
+            'kernel': {
+                'default': {},
+            },
+            'mem': {
+                'default': {},
+            },
+            'processes': {
+                'default': {},
+            },
+            'swap': {
+                'default': {},
+            },
+            'system': {
+                'default': {},
+            },
+            'net': {
+                'default': {},
+            },
+            'exec': {
+                # h({
+                #     'commands': [
+                #         f'sudo /usr/local/share/telegraf/procio',
+                #     ],
+                #     'data_format': 'influx',
+                #     'interval': '20s',
+                # }),
+                'pressure_stall': {
+                    'commands': [
+                        f'/usr/local/share/telegraf/pressure_stall',
+                    ],
+                    'data_format': 'influx',
+                    'interval': '10s',
                 },
             },
         },
+        'processors': {},
+        'outputs': {},
     },
     'grafana_rows': {
         'cpu',
@@ -106,21 +126,21 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'telegraf/config/outputs/influxdb_v2',
+    'telegraf/outputs/influxdb_v2/default',
 )
 def influxdb(metadata):
     influxdb_metadata = repo.get_node(metadata.get('telegraf/influxdb_node')).metadata.get('influxdb')
 
     return {
         'telegraf': {
-            'config': {
-                'outputs': {
-                    'influxdb_v2': [{
+            'outputs': {
+                'influxdb_v2': {
+                    'default': {
                         'urls': [f"http://{influxdb_metadata['hostname']}:{influxdb_metadata['port']}"],
                         'token': str(influxdb_metadata['writeonly_token']),
                         'organization': influxdb_metadata['org'],
                         'bucket': influxdb_metadata['bucket'],
-                    }]
+                    },
                 },
             },
         },

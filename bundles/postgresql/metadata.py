@@ -98,17 +98,17 @@ def zfs(metadata):
 
 
 @metadata_reactor.provides(
-    'telegraf/config/inputs/postgresql',
+    'telegraf/inputs/postgresql/default',
 )
 def telegraf(metadata):
     return {
         'telegraf': {
-            'config': {
-                'inputs': {
-                    'postgresql': [{
+            'inputs': {
+                'postgresql': {
+                    'default': {
                         'address': f'postgres://root:{root_password}@localhost:5432/postgres',
                         'databases': sorted(list(node.metadata.get('postgresql/databases').keys())),
-                    }],
+                    },
                 },
             },
         },

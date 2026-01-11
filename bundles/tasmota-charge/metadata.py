@@ -15,7 +15,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'telegraf/config/inputs/exec',
+    'telegraf/inputs/exec',
 )
 def telegraf(metadata):
     return {
@@ -23,11 +23,11 @@ def telegraf(metadata):
             'config': {
                 'inputs': {
                     'exec': {
-                        repo.libs.hashable.hashable({
+                        'tasmota_charge': {
                             'commands': ["/usr/local/share/telegraf/tasmota_charge"],
                             'name_override': "tasmota_charge",
                             'data_format': "influx",
-                        }),
+                        },
                     },
                 },
             },

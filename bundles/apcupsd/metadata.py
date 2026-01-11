@@ -13,16 +13,14 @@ defaults = {
         },
     },
     'telegraf': {
-        'config': {
-            'inputs': {
-                'exec': {
-                    repo.libs.hashable.hashable({
-                        'commands': ["sudo /usr/local/share/telegraf/apcupsd"],
-                        'name_override': "apcupsd",
-                        'data_format': "influx",
-                        'interval': '30s',
-                        'flush_interval': '30s',
-                    }),
+        'inputs': {
+            'exec': {
+                'apcupsd': {
+                    'commands': ["sudo /usr/local/share/telegraf/apcupsd"],
+                    'name_override': "apcupsd",
+                    'data_format': "influx",
+                    'interval': '30s',
+                    'flush_interval': '30s',
                 },
             },
         },

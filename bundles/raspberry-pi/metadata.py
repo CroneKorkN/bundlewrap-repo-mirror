@@ -8,16 +8,14 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'telegraf/config/agent',
+    'telegraf/agent',
 )
 def telegraf(metadata):
     return {
         'telegraf': {
-            'config': {
-                'agent': {
-                    'flush_interval': '30s',
-                    'interval': '30s',
-                },
+            'agent': {
+                'flush_interval': '30s',
+                'interval': '1m',
             },
         },
     }

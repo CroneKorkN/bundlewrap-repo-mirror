@@ -59,9 +59,9 @@ defaults = {
         },
     },
     'telegraf': {
-        'config': {
-            'inputs': {
-                'zfs': [{}],
+        'inputs': {
+            'zfs': {
+                'default': {},
             },
         },
     },

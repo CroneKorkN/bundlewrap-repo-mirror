@@ -25,9 +25,9 @@ defaults = {
         },
     },
     'telegraf': {
-        'config': {
-            'inputs': {
-                'postfix': [{}],
+        'inputs': {
+            'postfix': {
+                'default': {},
             },
         },
     },
