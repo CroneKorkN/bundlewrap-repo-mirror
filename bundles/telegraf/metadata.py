@@ -25,10 +25,10 @@ defaults = {
     'telegraf': {
         'agent': {
             'hostname': node.name,
-            'collection_jitter': '15s',
-            'flush_interval': '15s',
-            'flush_jitter': '0s',
-            'interval': '1m',
+            'collection_jitter': '20s',
+            'flush_interval': '20s',
+            'flush_jitter': '5s',
+            'interval': '2m',
             'metric_batch_size': 1000,
             'metric_buffer_limit': 10000,
             'omit_hostname': False,
