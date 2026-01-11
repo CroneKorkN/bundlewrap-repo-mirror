@@ -27,7 +27,7 @@ def ssh_keys(metadata):
         'users': {
             'build-agent': {
                 'authorized_users': {
-                    f'build-server@{other_node.name}'
+                    f'build-server@{other_node.name}': {}
                         for other_node in repo.nodes
                         if other_node.has_bundle('build-server')
                         for architecture in other_node.metadata.get('build-server/architectures').values()

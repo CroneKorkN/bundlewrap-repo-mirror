@@ -42,7 +42,7 @@ def user(metadata):
         'users': {
             'sshmon': {
                 'authorized_users': {
-                    'nagios@' + metadata.get('monitoring/icinga2_node'),
+                    'nagios@' + metadata.get('monitoring/icinga2_node'): {},
                 }
             },
         },

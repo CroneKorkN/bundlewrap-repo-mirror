@@ -25,7 +25,7 @@
         'users': {
             'root': {
                 'authorized_users': {
-                    'root@home.server',
+                    'root@home.server': {},
                 },
             },
         },

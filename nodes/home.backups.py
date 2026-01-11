@@ -38,7 +38,7 @@
         },
         'wol-sleeper': {
             'network': 'wakeonlan',
-            'waker': 'home.server',
+            'waker': 'home.router',
         },
         'zfs-mirror': {
             'server': 'wb.offsite-backups',

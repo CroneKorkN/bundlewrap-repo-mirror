@@ -44,6 +44,7 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'wol-sleeper/mac',
     'wol-sleeper/wake_command',
 )
 def wake_command(metadata):
@@ -53,7 +54,8 @@ def wake_command(metadata):
 
     return {
         'wol-sleeper': {
-            'wake_command': f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} 'wakeonlan {mac} && while ! ping {ip} -c1 -W3; do true; done'",
+            'mac': mac,
+            'wake_command': f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} '/usr/bin/wakeonlan {mac}' && while ! ping {ip} -c1 -W3; do true; done",
         },
     }
 

@@ -12,6 +12,7 @@
         'kea-dhcpd',
         'wireguard',
         'pppoe',
+        'wol-waker',
     ],
     'metadata': {
         'id': '1d6a43e5-858c-42f9-9c40-ab63d61c787c',

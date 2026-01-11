@@ -20,11 +20,15 @@ def authorized_users(metadata):
         users[name] = {
             'authorized_keys': set(),
         }
-        for authorized_user in config.get('authorized_users', set()):
+        for authorized_user, options in config.get('authorized_users', {}).items():
             authorized_user_name, authorized_user_node = authorized_user.split('@')
-            users[name]['authorized_keys'].add(
-                repo.get_node(authorized_user_node).metadata.get(f'users/{authorized_user_name}/pubkey')
-            )
+            authorized_user_public_key = repo.get_node(authorized_user_node).metadata.get(f'users/{authorized_user_name}/pubkey')
+
+            for command in options.get('commands', []):
+                users[name]['authorized_keys'].add(f'command="{command}" ' + authorized_user_public_key)
+            else:
+                users[name]['authorized_keys'].add(authorized_user_public_key)
+
     return {
         'users': users,
     }

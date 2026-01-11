@@ -31,7 +31,6 @@
         'systemd-swap',
         'twitch-clip-download',
         'raspberrymatic-cert',
-        'wol-waker',
         'zfs',
         'routeros-monitoring',
     ],

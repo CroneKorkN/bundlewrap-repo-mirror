@@ -29,7 +29,7 @@
         'users': {
             'root': {
                 'authorized_users': {
-                    'root@home.backups',
+                    'root@home.backups': {},
                 },
             },
         },
