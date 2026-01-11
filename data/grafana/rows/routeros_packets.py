@@ -4,7 +4,7 @@
         'queries': {
             'in': {
                 'filters': {
-                    '_measurement': 'interface',
+                    '_measurement': 'mikrotik_interface_generic',
                     '_field': [
                         'in_ucast_pkts',
                         'in_mcast_pkts',
@@ -30,7 +30,7 @@
         'queries': {
             'out': {
                 'filters': {
-                    '_measurement': 'interface',
+                    '_measurement': 'mikrotik_interface_generic',
                     '_field': [
                         'out_ucast_pkts',
                         'out_mcast_pkts',

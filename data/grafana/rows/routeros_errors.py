@@ -4,7 +4,7 @@
         'queries': {
             'generic': {
                 'filters': {
-                    '_measurement': 'interface',
+                    '_measurement': 'mikrotik_interface_generic',
                     '_field': [
                         'in_errors',
                         'out_errors',
@@ -16,7 +16,7 @@
             },
             'mikrotik': {
                 'filters': {
-                    '_measurement': 'interface_errors',
+                    '_measurement': 'mikrotik_interface_detailed',
                     '_field': [
                         'rx_fcs_errors',
                         'rx_align_errors',
@@ -52,7 +52,7 @@
         'queries': {
             'generic': {
                 'filters': {
-                    '_measurement': 'interface',
+                    '_measurement': 'mikrotik_interface_generic',
                     '_field': [
                         'in_discards',
                         'out_discards',
@@ -64,7 +64,7 @@
             },
             'mikrotik': {
                 'filters': {
-                    '_measurement': 'interface_errors',
+                    '_measurement': 'mikrotik_interface_detailed',
                     '_field': [
                         'rx_too_short',
                         'rx_too_long',

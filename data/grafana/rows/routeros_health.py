@@ -4,7 +4,7 @@
         'queries': {
             'temp': {
                 'filters': {
-                    '_measurement': 'hw',
+                    '_measurement': 'mikrotik_health',
                     'sensor': [
                         'temperature',
                         'cpu-temperature',
@@ -32,7 +32,7 @@
         'queries': {
             'temp': {
                 'filters': {
-                    '_measurement': 'hw',
+                    '_measurement': 'mikrotik_health',
                     'sensor': [
                         'fan1-speed',
                         'fan2-speed',
@@ -57,7 +57,7 @@
         'queries': {
             'temp': {
                 'filters': {
-                    '_measurement': 'hw',
+                    '_measurement': 'mikrotik_health',
                     'sensor': [
                         'psu1-current',
                         'psu2-current',

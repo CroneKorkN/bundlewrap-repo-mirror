@@ -4,7 +4,7 @@
         'queries': {
             'in': {
                 'filters': {
-                    '_measurement': 'interface',
+                    '_measurement': 'mikrotik_interface_generic',
                     '_field': ['in_octets'],
                     'ifType': [6],
                     'operating_system': 'routeros',
@@ -26,7 +26,7 @@
         'queries': {
             'out': {
                 'filters': {
-                    '_measurement': 'interface',
+                    '_measurement': 'mikrotik_interface_generic',
                     '_field': ['out_octets'],
                     'ifType': [6],
                     'operating_system': 'routeros',

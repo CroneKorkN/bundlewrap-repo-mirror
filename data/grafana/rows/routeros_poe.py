@@ -4,7 +4,7 @@
         'queries': {
             'power': {
                 'filters': {
-                    '_measurement': 'poe',
+                    '_measurement': 'mikrotik_poe',
                     '_field': ['power'],
                     'operating_system': 'routeros',
                 },
@@ -26,7 +26,7 @@
         'queries': {
             'voltage': {
                 'filters': {
-                    '_measurement': 'poe',
+                    '_measurement': 'mikrotik_poe',
                     '_field': ['current'],
                     'operating_system': 'routeros',
                 },
@@ -48,7 +48,7 @@
         'queries': {
             'voltage': {
                 'filters': {
-                    '_measurement': 'poe',
+                    '_measurement': 'mikrotik_poe',
                     '_field': ['voltage'],
                     'operating_system': 'routeros',
                 },
