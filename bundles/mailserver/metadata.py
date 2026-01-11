@@ -82,6 +82,7 @@ def dns(metadata):
         'dns': dns,
     }
 
+
 @metadata_reactor.provides(
     'letsencrypt/domains',
 )
