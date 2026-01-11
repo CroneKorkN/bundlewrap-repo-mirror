@@ -69,6 +69,7 @@ svc_systemd = {
         'enabled': True,
         'running': None,
         'needs': {
+            'tag:left4dead2-packages',
             'file:/opt/l4d2/setup',
             'file:/usr/local/lib/systemd/system/left4dead2-initialize.service',
         },

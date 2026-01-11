@@ -5,10 +5,18 @@ from os import path, listdir
 defaults = {
     'apt': {
         'packages': {
-            'libc6_i386': {}, # installs libc6:i386
-            'lib32z1': {},
-            'unzip': {},
-            'p7zip-full': {}, # l4d2center_maps_sync.sh
+            'libc6_i386': { # installs libc6:i386
+                'tags': {'left4dead2-packages'},
+            },
+            'lib32z1': {
+                'tags': {'left4dead2-packages'},
+            },
+            'unzip': {
+                'tags': {'left4dead2-packages'},
+            },
+            'p7zip-full': { # l4d2center_maps_sync.sh
+                'tags': {'left4dead2-packages'},
+            },
         },
     },
     'left4dead2': {
