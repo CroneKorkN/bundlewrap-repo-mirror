@@ -4,6 +4,7 @@ defaults = {
             'apt-listchanges': {
                 'installed': False,
             },
+            'ca-certificates': {},
         },
         'config': {
             'DPkg': {
