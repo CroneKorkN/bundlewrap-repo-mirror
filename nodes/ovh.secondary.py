@@ -28,61 +28,31 @@
         },
         'left4dead2': {
             'servers': {
-                'vanilla': {
-                    'port': 27015,
-                    'overlays': ['vanilla'],
-                    'config': [
-                        'sv_consistency 0',
-                    ],
-                },
-                'tick100': {
-                    'port': 27016,
-                    'arguments': ['-tickrate 100'],
-                    'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
-                    'config': [
-                        'exec server_tickrate.cfg',
-                        'sv_minupdaterate 101',
-                        'sv_maxupdaterate 101',
-                        'sv_mincmdrate 101',
-                        'sv_maxcmdrate 101',
-                        'sv_consistency 0',
-                    ],
-                },
-                'tick100_maps': {
-                    'port': 27017,
-                    'arguments': ['-tickrate 100'],
-                    'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
-                    'config': [
-                        'exec server_tickrate.cfg',
-                        'sv_minupdaterate 101',
-                        'sv_maxupdaterate 101',
-                        'sv_mincmdrate 101',
-                        'sv_maxcmdrate 101',
-                        'sv_consistency 0',
-                    ],
-                },
-                'vanilla_maps': {
-                    'port': 27018,
-                    'overlays': ['vanilla', 'workshop_maps'],
-                    'config': [
-                        'sv_consistency 0',
-                    ],
-                },
-                'tick60_maps': {
-                    'port': 27019,
-                    'arguments': ['-tickrate 60'],
-                    'overlays': ['tickrate', 'vanilla', 'workshop_maps'],
-                    'config': [
-                        'exec server_tickrate.cfg',
-                        'sv_minupdaterate 101',
-                        'sv_maxupdaterate 101',
-                        'sv_mincmdrate 101',
-                        'sv_maxcmdrate 101',
-                        'sv_consistency 0',
-                    ],
-                },
-                'zonemod': {
+                'vanilla_A': {
                     'port': 27020,
+                    'overlays': ['standard'],
+                    'config': [
+                        'sv_consistency 0',
+                    ],
+                },
+                'vanilla_B': {
+                    'port': 27021,
+                    'overlays': ['standard'],
+                    'config': [
+                        'sv_consistency 0',
+                    ],
+                },
+                'zonemod_A': {
+                    'port': 27050,
+                    'arguments': ['-tickrate 60'],
+                    'overlays': ['competitive_rework'],
+                    'config': [
+                        'exec server_competitive_rework.cfg',
+                        'sm_forcematch zonemod',
+                    ],
+                },
+                'zonemod_B': {
+                    'port': 27051,
                     'arguments': ['-tickrate 60'],
                     'overlays': ['competitive_rework'],
                     'config': [
