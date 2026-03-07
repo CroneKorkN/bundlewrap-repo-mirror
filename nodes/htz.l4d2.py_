@@ -1,0 +1,22 @@
+{
+    'hostname': '10.0.0.176',
+    'groups': [
+        'debian-13',
+        'autologin',
+    ],
+    'bundles': [
+    ],
+    'metadata': {
+        'id': 'ea29bdf0-0b47-4bf4-8346-67d60c9dc4ae',
+        'network': {
+            'internal': {
+                'interface': 'ens18',
+                'ipv4': '10.0.0.176/24',
+                'gateway4': '10.0.0.1',
+            },
+        },
+        'overwrite_nameservers': [
+            '10.0.0.1',
+        ],
+    },
+}
