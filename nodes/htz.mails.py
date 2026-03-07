@@ -2,7 +2,7 @@
     'hostname': '49.12.184.229',
     'groups': [
         'backup',
-        'debian-12',
+        'debian-13',
         'hetzner-cloud',
         'mailserver',
         'monitored',

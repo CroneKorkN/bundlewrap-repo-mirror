@@ -2,7 +2,7 @@
     'hostname': '10.0.0.1',
     'groups': [
         'autologin',
-        'debian-12',
+        'debian-13',
         'hardware',
         'home',
         'monitored',
