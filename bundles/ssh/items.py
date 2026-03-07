@@ -10,7 +10,11 @@ directories = {
         'purge': True,
         'mode': '0755',
         'skip': dont_touch_sshd,
-    }
+    },
+    '/etc/ssh/ssh_config.d': {
+        'mode': '0755',
+        'skip': dont_touch_sshd,
+    },
 }
 
 files = {

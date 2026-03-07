@@ -3,7 +3,7 @@
     'groups': [
         'autologin',
         'backup',
-        'debian-12-pve',
+        'debian-13-pve',
         'home',
         'nextcloud',
         'monitored',
@@ -13,7 +13,7 @@
     ],
     'bundles': [
         'build-agent',
-        'crystal',
+        #'crystal',
         'gitea',
 #        'gollum',
         'grub',
@@ -26,10 +26,10 @@
         'redis',
         'samba',
         'smartctl',
-        'steam-chat-logger',
-        'steam-chat-viewer',
+        #'steam-chat-logger', # fix system pip error
+        #'steam-chat-viewer', # fix system pip error
         'systemd-swap',
-        'twitch-clip-download',
+        #'twitch-clip-download', # fix system pip error
         'raspberrymatic-cert',
         'zfs',
         'routeros-monitoring',
@@ -46,6 +46,7 @@
         'apt': {
             'packages': {
                 # 'firmware-realtek': {}, proxmox-ve incompatibility
+                'amd64-microcode': {},
             },
         },
         'build-server': {

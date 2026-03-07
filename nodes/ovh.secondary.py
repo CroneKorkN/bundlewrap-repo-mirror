@@ -1,7 +1,7 @@
 {
     'hostname': '51.68.189.180',
     'groups': [
-        'debian-13',
+        'debian-12',
         'dnsserver',
         'monitored',
     ],

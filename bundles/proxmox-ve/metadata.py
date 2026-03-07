@@ -18,7 +18,7 @@ defaults = {
         'sources': {
             'proxmox-ve': {
                 'options': {
-                    'aarch': 'amd64',
+                    'Architectures': 'amd64',
                 },
                 'urls': {
                     'http://download.proxmox.com/debian/pve',

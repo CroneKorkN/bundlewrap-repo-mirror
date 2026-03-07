@@ -15,12 +15,12 @@
             },
         },
         'php': {
-            'version': '8.2',
+            'version': '8.4',
         },
         'postgresql': {
-            'version': '15',
+            'version': '17',
         },
-        'os_codename': 'bookworm',
+        'os_codename': 'trixie',
     },
-    'os_version': (12,),
+    'os_version': (13,),
 }
