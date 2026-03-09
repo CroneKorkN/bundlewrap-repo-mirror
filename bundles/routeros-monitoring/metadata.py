@@ -3,7 +3,7 @@ input_defaults = {
         f"udp://{routeros_node.hostname}:161"
             for routeros_node in repo.nodes_in_group("routeros")
     ],
-    "agent_host_tag": "agent_host",
+    "agent_host_tag": "source",
     "version": 2,
     "community": "public",
     "max_repetitions": 5, # supposedly less spiky loads
@@ -31,7 +31,7 @@ defaults = {
                     },
                     "mapping": [
                         {
-                            "tag": "agent_host",
+                            "tags": ["source"],
                             "dest": "host",
                             "default": "unknown",
                             "value_mappings": {

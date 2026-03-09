@@ -42,6 +42,13 @@ files = {
             'svc_systemd:telegraf.service:restart',
         },
     },
+    '/etc/default/telegraf': {
+        'content': 'TELEGRAF_OPTS="--strict-env-handling"\n',
+        'mode': '0644',
+        'triggers': {
+            'svc_systemd:telegraf.service:restart',
+        },
+    },
     '/usr/local/share/telegraf/procio': {
         'content_type': 'download',
         'source': f"https://dl.sublimity.de/telegraf-procio/telegraf-procio-{node.metadata.get('system/architecture')}-latest",
