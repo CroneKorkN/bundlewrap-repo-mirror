@@ -1,5 +1,5 @@
-import string
-from uuid import UUID
+from shlex import quote
+
 
 defaults = {
     'apt': {
@@ -85,10 +85,34 @@ defaults = {
             'user': 'www-data',
             'kill_mode': 'process',
         },
-        'nextcloud-rescan': {
-            'command': '/opt/nextcloud_rescan',
-            'when': 'Sun 00:00:00',
+        'nextcloud-scan-app-data': {
+            'command': '/usr/bin/php /opt/nextcloud/occ files:scan-app-data',
+            'when': 'yearly',
             'user': 'www-data',
+        },
+        'nextcloud-scan-files': {
+            'command': '/usr/bin/php /opt/nextcloud/occ files:scan --all',
+            'when': 'weekly',
+            'user': 'www-data',
+            'after': {
+                'nextcloud-scan-app-data.service',
+            },
+        },
+        'nextcloud-generate-all-previews': {
+            'command': '/bin/bash -c ' + quote('php /opt/nextcloud/occ preview:generate-all --workers="$(nproc)" --no-interaction -vvv'),
+            'when': 'monthly',
+            'user': 'www-data',
+            'after': {
+                'nextcloud-scan-files.service',
+            },
+        },
+        'nextcloud-generate-new-previews': {
+            'command': '/usr/bin/php /opt/nextcloud/occ preview:pre-generate',
+            'when': '*:0/5', # every 5 minutes
+            'user': 'www-data',
+            'after': {
+                'nextcloud-generate-all-previews.service',
+            },
         },
     },
 }
@@ -134,10 +158,18 @@ def config(metadata):
                     '127.0.0.1',
                     metadata.get('nextcloud/hostname'),
                 ],
+                'enabledPreviewProviders': [
+                    'OC\\Preview\\Image',
+                    'OC\\Preview\\Movie',
+                    'OC\\Preview\\HEIC',
+                ],
+                'preview_max_x': 1920,
+                'preview_max_y': 1920,
+                'preview_max_scale_factor': 4,
                 'log_type': 'syslog',
                 'syslog_tag': 'nextcloud',
                 'logfile': '',
-                'loglevel': 3,
+                'loglevel': 2,
                 'default_phone_region': 'DE',
                 'versions_retention_obligation': 'auto, 90',
                 'simpleSignUpLink.shown': False,

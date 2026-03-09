@@ -146,15 +146,3 @@ actions['nextcloud_add_missing_inidces'] = {
         f'action:extract_nextcloud',
     ],
 }
-
-# RESCAN
-
-files['/opt/nextcloud_rescan'] = {
-    'source': 'rescan',
-    'owner': 'www-data',
-    'group': 'www-data',
-    'mode': '550',
-    'needs': [
-        'action:extract_nextcloud',
-    ],
-}
