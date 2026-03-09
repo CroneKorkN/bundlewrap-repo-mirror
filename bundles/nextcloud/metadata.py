@@ -107,7 +107,7 @@ defaults = {
             },
         },
         'nextcloud-generate-new-previews': {
-            'command': '/usr/bin/php /opt/nextcloud/occ preview:pre-generate',
+            'command': '/usr/bin/php /opt/nextcloud/occ preview:pre-generate --no-interaction -vvv',
             'when': '*:0/5', # every 5 minutes
             'user': 'www-data',
             'after': {
