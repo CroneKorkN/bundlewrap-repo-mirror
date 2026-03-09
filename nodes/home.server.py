@@ -167,7 +167,7 @@
                 },
             },
         },
-        'systemd-swap': 4_000_000_000,
+        'systemd-swap': 24_000_000_000,
         'twitch-clip-download': {
             'channel_name': 'cronekorkn_',
         },
