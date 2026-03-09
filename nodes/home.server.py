@@ -130,6 +130,9 @@
                 'unsortable': 'SofortUpload/Unsortable',
             },
         },
+        'modules-load': {
+            'nct6683',
+        },
         'proxmox-ve': {
             'domain': 'pve.ckn.li',
         },
