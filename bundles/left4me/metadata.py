@@ -155,3 +155,30 @@ def systemd_units(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'systemd/services',
+)
+def systemd_services(metadata):
+    return {
+        'systemd': {
+            'services': {
+                'left4me-web.service': {
+                    'enabled': True,
+                    'running': True,
+                    'needs': [
+                        'action:left4me_alembic_upgrade',
+                        'file:/etc/left4me/host.env',
+                        'file:/etc/left4me/web.env',
+                    ],
+                },
+                # Note: left4me-server@.service is a TEMPLATE — instances are
+                # started on-demand by the web app via the left4me-systemctl
+                # helper. Don't enable/start it from here.
+                # The slices are installed (file present) but don't need
+                # enable/start — they're activated implicitly when a unit
+                # uses Slice=.
+            },
+        },
+    }
