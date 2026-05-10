@@ -65,10 +65,93 @@ def systemd_units(metadata):
         },
     }
 
+    server_template = {
+        'Unit': {
+            'Description': 'left4me server instance %i',
+            'After': 'network-online.target',
+            'Wants': 'network-online.target',
+            'StartLimitBurst': '5',
+            'StartLimitIntervalSec': '60s',
+        },
+        'Service': {
+            'Type': 'simple',
+            'User': 'left4me',
+            'Group': 'left4me',
+            'EnvironmentFile': {
+                '/etc/left4me/host.env',
+                '/var/lib/left4me/instances/%i/instance.env',
+            },
+            'WorkingDirectory': '-/var/lib/left4me/runtime/%i/merged/left4dead2',
+            'ExecStartPre': (
+                '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
+                '/usr/local/libexec/left4me/left4me-overlay mount %i'
+            ),
+            'ExecStart': (
+                '/var/lib/left4me/runtime/%i/merged/srcds_run '
+                '-game left4dead2 +hostport ${L4D2_PORT} $L4D2_ARGS'
+            ),
+            'ExecStopPost': (
+                '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
+                '/usr/local/libexec/left4me/left4me-overlay umount %i'
+            ),
+            'Restart': 'on-failure',
+            'RestartSec': '5',
+            'Slice': 'l4d2-game.slice',
+            'Nice': '-5',
+            'IOSchedulingClass': 'best-effort',
+            'IOSchedulingPriority': '4',
+            'OOMScoreAdjust': '-200',
+            'MemoryHigh': '1.5G',
+            'MemoryMax': '2G',
+            'TasksMax': '256',
+            'LimitNOFILE': '65536',
+            'KillSignal': 'SIGINT',
+            'TimeoutStopSec': '15s',
+            'LogRateLimitIntervalSec': '0',
+            'NoNewPrivileges': 'true',
+            'PrivateTmp': 'true',
+            'PrivateDevices': 'true',
+            'ProtectHome': 'true',
+            'ProtectSystem': 'strict',
+            'ReadOnlyPaths': '/var/lib/left4me/installation /var/lib/left4me/overlays',
+            'ReadWritePaths': '/var/lib/left4me/runtime/%i',
+            'RestrictSUIDSGID': 'true',
+            'LockPersonality': 'true',
+        },
+        'Install': {
+            'WantedBy': {'multi-user.target'},
+        },
+    }
+
+    game_slice = {
+        'Unit': {
+            'Description': 'left4me game-server slice',
+            'Before': 'slices.target',
+        },
+        'Slice': {
+            'CPUWeight': '1000',
+            'IOWeight': '1000',
+        },
+    }
+
+    build_slice = {
+        'Unit': {
+            'Description': 'left4me script-sandbox build slice',
+            'Before': 'slices.target',
+        },
+        'Slice': {
+            'CPUWeight': '10',
+            'IOWeight': '10',
+        },
+    }
+
     return {
         'systemd': {
             'units': {
-                'left4me-web.service': web_service,
+                'left4me-web.service':       web_service,
+                'left4me-server@.service':   server_template,
+                'l4d2-game.slice':           game_slice,
+                'l4d2-build.slice':          build_slice,
             },
         },
     }
