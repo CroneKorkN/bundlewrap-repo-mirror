@@ -7,6 +7,10 @@ directories = {
         'owner': 'left4me',
         'group': 'left4me',
     },
+    '/opt/left4me/src': {
+        'owner': 'left4me',
+        'group': 'left4me',
+    },
     '/etc/left4me': {
         'owner': 'root',
         'group': 'root',
