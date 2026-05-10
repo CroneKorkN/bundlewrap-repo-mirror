@@ -36,6 +36,19 @@ reading the spec sees the current shape rather than the original intent.
   `conventions.md`) are recorded in the implementation plan rather than
   back-fitted into this spec — they're additions to file content, not
   scope changes.
+- **Per-bundle docs are `README.md`, not `AGENTS.md`** (revised
+  2026-05-10, after Phase 1 scaffolding landed). The spec originally
+  specified one balanced `AGENTS.md` per bundle (§3 template) plus a
+  Phase 2 seed migration that folded existing READMEs into new
+  AGENTS.md files (§7). After Phase 1 landed, the maintainer flagged
+  that the rigid template wouldn't survive contact with the existing
+  READMEs (which range from one-paragraph balanced docs to operational
+  scratchpads — see `bundles/{flask,dm-crypt,apt,nextcloud}/README.md`).
+  Resolution: one `README.md` per bundle, no fixed shape, no template;
+  Phase 2 dropped; existing READMEs stay in place under leave-as-you-go.
+  Current convention lives in `bundles/AGENTS.md` "Per-bundle README".
+  **Sections §3 and §7 are no longer authoritative — read them as
+  pre-pivot intent only.**
 
 ## 1. Goals & non-goals
 
