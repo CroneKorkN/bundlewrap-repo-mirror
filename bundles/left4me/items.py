@@ -135,12 +135,23 @@ git_deploy = {
     '/opt/left4me/src': {
         'repo': node.metadata.get('left4me/git_url'),
         'rev': node.metadata.get('left4me/git_branch'),
-        # No triggers list — both downstream actions (chown_src and
-        # pip_install) run every apply gated by their own `unless`
-        # guards, which makes the chain self-healing after a partial
-        # failure. Chaining via triggers would have made them only
-        # fire when git_deploy itself fired, leaving stuck states
-        # unrecoverable.
+        'triggers': [
+            # On a code-update apply, refresh the DB schema. pip_install
+            # would have triggered alembic in the create_venv path, but on
+            # a normal apply pip_install's `unless` skips (packages still
+            # importable from the previous editable install), and that
+            # would leave alembic_upgrade dormant. Wiring git_deploy →
+            # alembic directly ensures new migrations land whenever new
+            # code lands. alembic upgrade head is idempotent (no-op when
+            # already at head), so this is safe to fire on every code
+            # update; the seed_overlays + service:restart cascade off
+            # alembic also covers picking up the new code in gunicorn.
+            'action:left4me_alembic_upgrade',
+        ],
+        # chown_src and pip_install are NOT in triggers — they run every
+        # apply gated by their own `unless` guards, which makes the chain
+        # self-healing after a partial failure. (Items in a triggers list
+        # must be triggered:True, which would lose that property.)
     },
 }
 
