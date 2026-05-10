@@ -19,6 +19,34 @@ defaults = {
             'python3-dev': {},
         },
     },
+    'nftables': {
+        # Match deploy/files/usr/local/lib/left4me/nft/left4me-mark.nft.
+        # Mark srcds UDP egress (uid left4me) with DSCP EF + skb priority 6
+        # so CAKE classifies it into the priority tin.
+        'output': {
+            'meta skuid "left4me" meta l4proto udp ip dscp set ef meta priority set 0006:0000',
+            'meta skuid "left4me" meta l4proto udp ip6 dscp set ef meta priority set 0006:0000',
+        },
+    },
+    'systemd': {
+        'services': {
+            'left4me-web.service': {
+                'enabled': True,
+                'running': True,
+                'needs': [
+                    'action:left4me_alembic_upgrade',
+                    'file:/etc/left4me/host.env',
+                    'file:/etc/left4me/web.env',
+                ],
+            },
+            # Note: left4me-server@.service is a TEMPLATE — instances are
+            # started on-demand by the web app via the left4me-systemctl
+            # helper. Don't enable/start it from here.
+            # The slices are installed (file present) but don't need
+            # enable/start — they're activated implicitly when a unit
+            # uses Slice=.
+        },
+    },
 }
 
 
@@ -152,50 +180,6 @@ def systemd_units(metadata):
                 'left4me-server@.service':   server_template,
                 'l4d2-game.slice':           game_slice,
                 'l4d2-build.slice':          build_slice,
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'systemd/services',
-)
-def systemd_services(metadata):
-    return {
-        'systemd': {
-            'services': {
-                'left4me-web.service': {
-                    'enabled': True,
-                    'running': True,
-                    'needs': [
-                        'action:left4me_alembic_upgrade',
-                        'file:/etc/left4me/host.env',
-                        'file:/etc/left4me/web.env',
-                    ],
-                },
-                # Note: left4me-server@.service is a TEMPLATE — instances are
-                # started on-demand by the web app via the left4me-systemctl
-                # helper. Don't enable/start it from here.
-                # The slices are installed (file present) but don't need
-                # enable/start — they're activated implicitly when a unit
-                # uses Slice=.
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'nftables/output',
-)
-def nftables_output(metadata):
-    # Match deploy/files/usr/local/lib/left4me/nft/left4me-mark.nft.
-    # Mark srcds UDP egress (uid left4me) with DSCP EF + skb priority 6
-    # so CAKE classifies it into the priority tin.
-    return {
-        'nftables': {
-            'output': {
-                'meta skuid "left4me" meta l4proto udp ip dscp set ef meta priority set 0006:0000',
-                'meta skuid "left4me" meta l4proto udp ip6 dscp set ef meta priority set 0006:0000',
             },
         },
     }

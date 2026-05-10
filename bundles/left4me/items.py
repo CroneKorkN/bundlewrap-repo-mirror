@@ -126,7 +126,10 @@ git_deploy = {
         'repo': node.metadata.get('left4me/git_url'),
         'rev': node.metadata.get('left4me/git_branch'),
         'triggers': [
-            'action:left4me_create_venv',
+            # create_venv is gated by `unless` for idempotency and doesn't
+            # need to refire on git updates — once the venv exists, it
+            # persists. pip_install IS retriggered so editable installs
+            # pick up the new code.
             'action:left4me_pip_install',
         ],
     },
