@@ -1,0 +1,5 @@
+{
+    'bundles': {
+        'left4me',
+    },
+}
