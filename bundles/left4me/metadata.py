@@ -71,18 +71,12 @@ defaults = {
 
 @metadata_reactor.provides(
     'nginx/vhosts',
-    'nftables/input',
 )
-def derived_from_domain(metadata):
-    # letsencrypt/domains is auto-populated from nginx/vhosts.keys() by
-    # bundles/nginx/metadata.py. monitoring/services for the vhost is also
-    # auto-populated there using the vhost's check_path/check_protocol —
-    # we just declare check_path: '/health' below to point the auto-check
-    # at the Flask health endpoint instead of '/'.
+def nginx_vhosts(metadata):
+    # letsencrypt/domains and monitoring/services for the vhost are auto-
+    # populated by bundles/nginx/metadata.py. We just declare check_path:
+    # '/health' so the auto-check hits the Flask health endpoint, not '/'.
     domain = metadata.get('left4me/domain')
-    port_start = metadata.get('left4me/port_range_start')
-    port_end = metadata.get('left4me/port_range_end')
-
     return {
         'nginx': {
             'vhosts': {
@@ -95,6 +89,16 @@ def derived_from_domain(metadata):
                 },
             },
         },
+    }
+
+
+@metadata_reactor.provides(
+    'nftables/input',
+)
+def nftables_input(metadata):
+    port_start = metadata.get('left4me/port_range_start')
+    port_end = metadata.get('left4me/port_range_end')
+    return {
         'nftables': {
             'input': {
                 f'udp dport {port_start}-{port_end} accept',
