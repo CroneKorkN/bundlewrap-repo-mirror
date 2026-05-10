@@ -11,18 +11,28 @@ external interface prioritizes srcds UDP over bulk traffic.
 ```python
 'metadata': {
     'left4me': {
-        'git_url': 'git@git.sublimity.de:cronekorkn/left4me',  # required
-        'git_branch': 'master',                                # required
-        'secret_key': '!32_random_bytes_as_base64_for:<node>_left4me_secret_key',
-        # optional, defaults shown:
+        'domain': 'whatever.tld',  # required — the only per-node knob
+        # Everything below is optional and has a sensible default in the
+        # bundle. Override per-node only if the default is wrong:
+        # 'git_url': 'git@git.sublimity.de:cronekorkn/left4me',
+        # 'git_branch': 'master',
         # 'gunicorn_workers': 1,
         # 'gunicorn_threads': 32,
         # 'job_worker_threads': 4,
         # 'port_range_start': 27015,
         # 'port_range_end': 27115,
+        # secret_key is auto-derived per node
+        # (repo.vault.random_bytes_as_base64_for f'{node.name} left4me secret_key').
     },
 },
 ```
+
+The bundle's `derived_from_domain` reactor reads `left4me/domain` and
+emits the corresponding `nginx/vhosts`, `letsencrypt/domains`,
+`monitoring/services/left4me-web` (HTTPS health check), and the game-
+port `nftables/input` accept rules. Backup paths
+(`/var/lib/left4me`, `/etc/left4me`) are set-merged into `backup/paths`
+from defaults. None of these need to be declared per-node.
 
 ## What this bundle does
 

@@ -1,14 +1,21 @@
 {
     'hostname': '141.95.32.8',
     'groups': [
+        'backup',
         'debian-13',
+        'left4me',
         'monitored',
+        'webserver',
     ],
     'bundles': [
         'wireguard',
     ],
     'metadata': {
         'id': '14d2abc-3855-4bb7-99e2-d4e3eb0344dd',
+        'vm': {
+            'cores': 4,    # 4 physical, 8 with HT
+            'threads': 8,
+        },
         'network': {
             'external': {
                 'interface': 'enp3s0f0',
@@ -33,6 +40,9 @@
                     ],
                 },
             },
+        },
+        'left4me': {
+            'domain': 'left4.me',
         },
     },
 }
