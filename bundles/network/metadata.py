@@ -37,11 +37,12 @@ def dhcp(metadata):
     'modules-load',
 )
 def units(metadata):
+    networks = metadata.get('network', {})
     if node.has_bundle('systemd-networkd'):
         units = {}
         modules_load = set()
 
-        for network_name, network_conf in metadata.get('network').items():
+        for network_name, network_conf in networks.items():
             interface_type = network_conf.get('type', None)
 
             # network
@@ -116,6 +117,7 @@ def units(metadata):
     'systemd/units',
 )
 def queuing_disciplines(metadata):
+    networks = metadata.get('network', {})
     if node.has_bundle('systemd-networkd'):
         return {
             'systemd': {
@@ -136,7 +138,7 @@ def queuing_disciplines(metadata):
                             'WantedBy': 'network-online.target',
                         },
                     }
-                        for network_name, network_conf in metadata.get('network').items()
+                        for network_name, network_conf in networks.items()
                         if 'qdisc' in network_conf
                 },
             },

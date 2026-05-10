@@ -112,20 +112,18 @@ def systemd_networkd_netdevs(metadata):
         },
     }
 
-    for peer, config in {
-        **metadata.get('wireguard/s2s'),
-        **metadata.get('wireguard/clients'),
-    }.items():
-        netdev.update({
-            f'WireGuardPeer#{peer}': {
-                'PublicKey': repo.libs.wireguard.pubkey(config['peer_id']),
-                'PresharedKey': repo.libs.wireguard.psk(config['peer_id'], metadata.get('id')),
-                'AllowedIPs': ', '.join(config.get('allowed_ips', [])),
+    for kind in ('s2s', 'clients'):
+        for peer in metadata.get(f'wireguard/{kind}'):
+            peer_id = metadata.get(f'wireguard/{kind}/{peer}/peer_id')
+            netdev[f'WireGuardPeer#{peer}'] = {
+                'PublicKey': repo.libs.wireguard.pubkey(peer_id),
+                'PresharedKey': repo.libs.wireguard.psk(peer_id, metadata.get('id')),
+                'AllowedIPs': ', '.join(metadata.get(f'wireguard/{kind}/{peer}/allowed_ips', [])),
                 'PersistentKeepalive': 30,
             }
-        })
-        if config.get('endpoint'):
-            netdev[f'WireGuardPeer#{peer}']['Endpoint'] = config['endpoint']
+            endpoint = metadata.get(f'wireguard/{kind}/{peer}/endpoint', None)
+            if endpoint:
+                netdev[f'WireGuardPeer#{peer}']['Endpoint'] = endpoint
 
     return {
         'systemd': {

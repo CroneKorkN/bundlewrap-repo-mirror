@@ -50,7 +50,7 @@ def user(metadata):
             'sshmon': {
                 conf['vars.command']
                     for conf in metadata.get('monitoring/services').values()
-                    if conf['check_command'] == 'sshmon'
+                    if conf.get('check_command') == 'sshmon'
                     and conf.get('vars.sudo', None)
             },
         },

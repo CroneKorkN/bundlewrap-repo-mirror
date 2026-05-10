@@ -5,6 +5,7 @@ defaults = {
                 'installed': False,
             },
             'ca-certificates': {},
+            'unattended-upgrades': {},
         },
         'config': {
             'DPkg': {
@@ -22,6 +23,10 @@ defaults = {
                 },
             },
             'APT': {
+                'Periodic': {
+                    'Update-Package-Lists': '1',
+                    'Unattended-Upgrade': '1',
+                },
                 'NeverAutoRemove': {
                     '^firmware-linux.*',
                     '^linux-firmware$',
@@ -47,6 +52,11 @@ defaults = {
                 'Update': {
                     # https://unix.stackexchange.com/a/653377/357916
                     'Error-Mode': 'any',
+                },
+            },
+            'Unattended-Upgrade': {
+                'Origins-Pattern': {
+                    "origin=*",
                 },
             },
         },
@@ -102,33 +112,6 @@ def signed_by(metadata):
                     },
                 }
                     for source_name in metadata.get('apt/sources')
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'apt/config',
-    'apt/packages',
-)
-def unattended_upgrades(metadata):
-    return {
-        'apt': {
-            'config': {
-                'APT': {
-                    'Periodic': {
-                        'Update-Package-Lists': '1',
-                        'Unattended-Upgrade': '1',
-                    },
-                },
-                'Unattended-Upgrade': {
-                    'Origins-Pattern': {
-                        "origin=*",
-                    },
-                },
-            },
-            'packages': {
-                'unattended-upgrades': {},
             },
         },
     }

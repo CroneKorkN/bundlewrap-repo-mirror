@@ -43,11 +43,11 @@ def units(metadata):
                     'Service': {
                         'Environment': {
                             f'{k}={v}'
-                                for k, v in conf.get('env', {}).items()
+                                for k, v in metadata.get(f'flask/{name}/env', {}).items()
                         },
-                        'User': conf['user'],
-                        'Group': conf['group'],
-                        'ExecStart': f"/opt/{name}/venv/bin/gunicorn -w {conf['workers']} -b 127.0.0.1:{conf['port']} --timeout {conf['timeout']} {conf['app_module']}:app"
+                        'User': metadata.get(f'flask/{name}/user'),
+                        'Group': metadata.get(f'flask/{name}/group'),
+                        'ExecStart': f"/opt/{name}/venv/bin/gunicorn -w {metadata.get(f'flask/{name}/workers')} -b 127.0.0.1:{metadata.get(f'flask/{name}/port')} --timeout {metadata.get(f'flask/{name}/timeout')} {metadata.get(f'flask/{name}/app_module')}:app"
                     },
                     'Install': {
                         'WantedBy': {
@@ -55,7 +55,7 @@ def units(metadata):
                         }
                     },
                 }
-                    for name, conf in metadata.get('flask').items()
+                    for name in metadata.get('flask')
             }
         }
     }

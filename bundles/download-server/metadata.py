@@ -5,6 +5,11 @@ defaults = {
             'needs': {
                 'zfs_dataset:tank/downloads'
             },
+            'authorized_users': {
+                f'build-server@{other_node.name}': {}
+                    for other_node in repo.nodes
+                    if other_node.has_bundle('build-server')
+            },
         },
     },
     'zfs': {
@@ -14,21 +19,13 @@ defaults = {
             },
         },
     },
-}
-
-
-@metadata_reactor.provides(
-    'systemd-mount'
-)
-def mount_certs(metadata):
-    return  {
-        'systemd-mount': {
-            '/var/lib/downloads_nginx': {
-                'source': '/var/lib/downloads',
-                'user': 'www-data',
-            },
+    'systemd-mount': {
+        '/var/lib/downloads_nginx': {
+            'source': '/var/lib/downloads',
+            'user': 'www-data',
         },
-    }
+    },
+}
 
 
 @metadata_reactor.provides(
@@ -43,23 +40,6 @@ def nginx(metadata):
                     'context': {
                         'directory': '/var/lib/downloads_nginx',
                     },
-                },
-            },
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'users/downloads/authorized_users',
-)
-def ssh_keys(metadata):
-    return {
-        'users': {
-            'downloads': {
-                'authorized_users': {
-                    f'build-server@{other_node.name}': {}
-                        for other_node in repo.nodes
-                        if other_node.has_bundle('build-server')
                 },
             },
         },

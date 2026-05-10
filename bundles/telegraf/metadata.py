@@ -7,6 +7,11 @@ defaults = {
             # needed by crystal plugins:
             'libgc-dev': {},
             'libevent-dev': {},
+            (
+                'libpcre2-8-0'
+                if node.os == 'debian' and node.os_version >= (13,)
+                else 'libpcre3'
+            ): {},
         },
         'sources': {
             'influxdata': {
@@ -148,20 +153,3 @@ def influxdb(metadata):
 
 
 # crystal based (procio, pressure_stall):
-@metadata_reactor.provides(
-    'apt/packages/libpcre2-8-0',
-    'apt/packages/libpcre3',
-)
-def libpcre(metadata):
-    if node.os == 'debian' and node.os_version >= (13,):
-        libpcre_package = 'libpcre2-8-0'
-    else:
-        libpcre_package = 'libpcre3'
-
-    return {
-        'apt': {
-            'packages': {
-                libpcre_package: {},
-            },
-        },
-    }

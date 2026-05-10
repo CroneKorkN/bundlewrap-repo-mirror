@@ -65,7 +65,8 @@ class Download(Item):
                 url=quote(self.attributes['url'])
             ))
 
-    def cdict(self):
+    @property
+    def expected_state(self):
         """This is how the world should be"""
         cdict = {
             'type': 'download',
@@ -85,7 +86,8 @@ class Download(Item):
 
         return cdict
 
-    def sdict(self):
+    @property
+    def actual_state(self):
         """This is how the world is right now"""
         path_info = PathInfo(self.node, self.name)
         if not path_info.exists:
@@ -135,10 +137,10 @@ class Download(Item):
                 item=item_id,
             ))
 
-    def get_auto_deps(self, items):
+    def get_auto_attrs(self, items):
         deps = []
         for item in items:
             # debian TODO: add other package manager
             if item.ITEM_TYPE_NAME == 'pkg_apt' and item.name == 'curl':
                 deps.append(item.id)
-        return deps
+        return {'needs': deps}

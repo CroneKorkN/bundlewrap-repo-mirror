@@ -39,6 +39,17 @@ defaults = {
     },
 }
 
+if node.has_bundle('zfs'):
+    defaults['zfs'] = {
+        'datasets': {
+            'tank/influxdb': {
+                'mountpoint': '/var/lib/influxdb',
+                'recordsize': '8192',
+                'atime': 'off',
+            },
+        },
+    }
+
 @metadata_reactor.provides(
     'influxdb/password',
     'influxdb/admin_token',
@@ -48,26 +59,6 @@ def admin_password(metadata):
         'influxdb': {
             'password': repo.vault.password_for(f"{metadata.get('id')} influxdb admin"),
             'admin_token': repo.vault.random_bytes_as_base64_for(f"{metadata.get('id')} influxdb default token", length=64),
-        },
-    }
-
-
-@metadata_reactor.provides(
-    'zfs/datasets',
-)
-def zfs(metadata):
-    if not node.has_bundle('zfs'):
-        return {}
-
-    return {
-        'zfs': {
-            'datasets': {
-                'tank/influxdb': {
-                    'mountpoint': '/var/lib/influxdb',
-                    'recordsize': '8192',
-                    'atime': 'off',
-                },
-            },
         },
     }
 

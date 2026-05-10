@@ -6,33 +6,24 @@ defaults = {
     },
 }
 
-
-@metadata_reactor.provides(
-    'telegraf/agent',
-)
-def telegraf(metadata):
-    return {
-        'telegraf': {
-            'agent': {
-                'flush_interval': '30s',
-                'interval': '1m',
-            },
+if node.has_bundle('zfs'):
+    defaults['zfs'] = {
+        'kernel_params': {
+            'zfs_txg_timeout': 300,
         },
     }
 
 
 @metadata_reactor.provides(
-    'zfs/kernel_params',
-    'zfs/datasets',
+    'telegraf/agent',
 )
-def zfs(metadata):
-    if not node.has_bundle('zfs'):
-        return {}
-
+def telegraf(metadata):
+    metadata.get('telegraf/agent')  # only override if telegraf bundle is present
     return {
-        'zfs': {
-            'kernel_params': {
-                'zfs_txg_timeout': 300,
+        'telegraf': {
+            'agent': {
+                'flush_interval': '30s',
+                'interval': '1m',
             },
         },
     }
