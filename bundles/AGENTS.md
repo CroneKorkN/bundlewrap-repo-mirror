@@ -102,6 +102,12 @@ bundles/<name>/
   unless the matching `file:` item declares `content_type='mako'`
   (or a templating extension triggers it). To check, read the matching
   `file:` entry in `items.py`.
+- **`file:` `source` defaults to the destination basename.** For a
+  destination of `/etc/foo/bar.conf` with no `source` key, bw looks
+  for `bundles/<bundle>/files/bar.conf`. Only declare `source`
+  explicitly when the basename you want differs (e.g. shipping a Mako
+  template named `bar.conf.mako` to a destination of
+  `/etc/foo/bar.conf`).
 - **Reactors writing across namespaces.** Some bundles' reactors write
   into other bundles' metadata namespaces (e.g. `nextcloud` writes
   into `apt.packages`, `archive.paths`). When you change such a bundle,
