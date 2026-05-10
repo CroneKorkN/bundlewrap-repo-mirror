@@ -1,3 +1,5 @@
+"""tools: identifier→IPs resolver (node|group|cidr), subnet-set deduplication, and bundle-requirement assertion."""
+
 from ipaddress import ip_address, ip_network, IPv4Address, IPv4Network
 
 from bundlewrap.exceptions import NoSuchGroup, NoSuchNode, BundleError

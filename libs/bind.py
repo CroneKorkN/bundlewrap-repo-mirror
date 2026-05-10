@@ -1,3 +1,5 @@
+"""bind: DNS view-routing helpers — match A/AAAA records against internal vs external views via repo-wide collation."""
+
 from ipaddress import ip_address
 
 def _values_from_all_nodes(type, name, zone):

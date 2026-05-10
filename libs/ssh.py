@@ -1,3 +1,5 @@
+"""ssh: deterministic ed25519 keypair generation and salted known_hosts hashing."""
+
 from base64 import b64decode, b64encode
 from hashlib import sha3_224, sha1
 from functools import cache

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# purpose: upgrade RouterOS and routerboard firmware on `bundle:routeros` (or any selector) — usage: mikrotik-firmware-updater [<selector>...] [--yes].
 
 from argparse import ArgumentParser
 from time import sleep

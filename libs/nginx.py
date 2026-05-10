@@ -1,3 +1,6 @@
+"""nginx: recursive nginx config-block rendering from a nested dict."""
+
+
 def render_config(config):
     return '\n'.join(render_lines(config))
 

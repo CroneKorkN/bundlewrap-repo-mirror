@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# purpose: send an RCON command to a left4dead2 server defined in node metadata — usage: rcon (list) | rcon <server> <command>.
 
 from sys import argv
 from os.path import realpath, dirname

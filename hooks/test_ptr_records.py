@@ -1,3 +1,5 @@
+"""test_ptr_records: bw-test gate verifying live A/PTR DNS records for the `mailserver` group via `dig @9.9.9.9`."""
+
 from subprocess import check_output
 
 

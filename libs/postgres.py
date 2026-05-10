@@ -1,3 +1,5 @@
+"""postgres: SCRAM-SHA-256 password-hash generation for postgres role provisioning."""
+
 from base64 import standard_b64encode
 from hashlib import pbkdf2_hmac, sha256
 import hmac

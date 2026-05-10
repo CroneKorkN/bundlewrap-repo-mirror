@@ -1,3 +1,6 @@
+"""wake_on_lan: pre-apply / pre-run hook that wakes a node via libs.wol before bw connects to it."""
+
+
 def wake_on_lan(node):
     node.repo.libs.wol.wake(node)
 

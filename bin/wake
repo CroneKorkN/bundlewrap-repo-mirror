@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# purpose: wake one node via WoL by name — usage: wake <node>.
 
 from bundlewrap.repo import Repository
 from os.path import realpath, dirname

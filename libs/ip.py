@@ -1,3 +1,5 @@
+"""ip: A/AAAA-record derivation from a node's `network` metadata + cross-node IP collection."""
+
 from ipaddress import ip_address, ip_interface
 
 

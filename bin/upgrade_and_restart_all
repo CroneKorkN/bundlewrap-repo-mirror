@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# purpose: apt-update and full-upgrade every non-dummy debian node, then reboot in WireGuard-aware order.
 
 from bundlewrap.repo import Repository
 from os.path import realpath, dirname

@@ -1,3 +1,5 @@
+"""rsa: deterministic RSA private-key generation backed by a seeded PRNG."""
+
 # https://stackoverflow.com/a/18266970
 
 from Crypto.PublicKey import RSA

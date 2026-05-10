@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""derive_string: deterministic byte-string derivation from a seed via ChaCha20 keystream."""
 
 from hashlib import sha3_256
 from itertools import count, islice

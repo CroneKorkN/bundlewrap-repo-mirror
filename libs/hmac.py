@@ -1,3 +1,5 @@
+"""hmac: base64-encoded HMAC-SHA512 helper."""
+
 import hmac, hashlib, base64
 
 def hmac_sha512(secret, iv):

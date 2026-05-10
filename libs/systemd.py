@@ -1,3 +1,5 @@
+"""systemd: unit-file rendering (Mako) and a reusable hardening-options dict for sandboxed services."""
+
 from mako.template import Template
 
 template = '''

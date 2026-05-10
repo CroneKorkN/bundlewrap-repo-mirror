@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# purpose: add missing EXIF/QuickTime timestamps to photos in a directory using mdls + exiftool — usage: timestamp_icloud_photos_for_nextcloud -d <dir>.
 
 from subprocess import check_output, CalledProcessError
 from datetime import datetime, timedelta

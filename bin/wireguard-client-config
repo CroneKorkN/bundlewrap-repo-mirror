@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# purpose: print or QR-render a WireGuard client config from htz.mails metadata — usage: wireguard-client-config <client>.
 
 from bundlewrap.repo import Repository
 from os.path import realpath, dirname

@@ -1,3 +1,5 @@
+"""apt: render sources.list.d entries and resolve apt-key file extensions, with codename/version templating."""
+
 from re import match
 from glob import glob
 from os.path import join, basename, exists

@@ -1,3 +1,5 @@
+"""wireguard: deterministic WireGuard private/public key + PSK derivation, backed by repo.vault.random_bytes_as_base64_for."""
+
 import base64
 from nacl.public import PrivateKey
 from nacl.encoding import Base64Encoder

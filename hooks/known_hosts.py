@@ -1,3 +1,5 @@
+"""known_hosts: pre-apply hook that writes all nodes' ssh/is_known_as entries to ~/.ssh/known_hosts_ckn."""
+
 from os.path import expanduser
 
 

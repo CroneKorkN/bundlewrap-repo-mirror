@@ -1,3 +1,5 @@
+"""wol: trigger a `wol-sleeper` waker node to run its configured wake command."""
+
 from bundlewrap.utils.ui import io
 from bundlewrap.utils.text import yellow, bold
 

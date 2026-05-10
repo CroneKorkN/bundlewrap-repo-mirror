@@ -1,3 +1,5 @@
+"""grafana: panel and Flux-query generators for Mako-templated dashboards under data/grafana/rows/."""
+
 from mako.template import Template
 from copy import deepcopy
 

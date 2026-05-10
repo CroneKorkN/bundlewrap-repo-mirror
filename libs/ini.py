@@ -1,3 +1,5 @@
+"""ini: case-preserving ConfigParser parse/dumps for INI-style files where exact key casing must round-trip."""
+
 from configparser import ConfigParser
 import json
 from bundlewrap.metadata import MetadataJSONEncoder

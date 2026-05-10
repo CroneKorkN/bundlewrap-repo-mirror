@@ -1,3 +1,5 @@
+"""version: comparable Version class for dotted-int version strings."""
+
 from functools import total_ordering
 
 

@@ -1,3 +1,6 @@
+"""unique_node_ids: bw-test + pre-apply gate ensuring metadata `id` is unique across all nodes."""
+
+
 def test_unique_node_ids(repo):
     ids = {}
     for node in repo.nodes:

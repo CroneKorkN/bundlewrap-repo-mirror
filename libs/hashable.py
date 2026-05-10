@@ -1,3 +1,5 @@
+"""hashable: dict/set subclasses with stable __hash__ via canonical JSON — lets you nest dicts/sets inside sets in metadata."""
+
 import json
 from functools import total_ordering
 
