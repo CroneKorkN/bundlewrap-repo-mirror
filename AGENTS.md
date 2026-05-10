@@ -16,8 +16,8 @@ Five rules; follow these and you won't break things:
 
 1. **Read-only by default.** Never run `bw apply`, `bw run`, or
    `bw lock` without explicit user request — even with `-i`. Stick
-   to `bw test`, `bw nodes`, `bw groups`, `bw bundles`,
-   `bw items`, `bw metadata`, `bw hash`, `bw debug`. See
+   to `bw test`, `bw nodes`, `bw groups`, `bw items`,
+   `bw metadata`, `bw hash`, `bw verify`, `bw debug`. See
    [`docs/agents/commands.md`](docs/agents/commands.md) and the
    fork's [safety envelope](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md).
 2. **Never echo decrypted secrets.** Don't print, paste, or log the
