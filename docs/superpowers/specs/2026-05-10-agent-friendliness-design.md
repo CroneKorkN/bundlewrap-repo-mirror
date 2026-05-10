@@ -127,6 +127,12 @@ bundle.
 
 ## 3. Per-bundle `AGENTS.md` template
 
+> **Status: replaced — pre-pivot intent only.** Per-bundle docs are plain
+> `README.md` with no fixed structure. See §0 Revisions and the
+> "Per-bundle README" section in [`bundles/AGENTS.md`](../../../bundles/AGENTS.md)
+> for the current convention. The template below is kept as a record of
+> the original design.
+
 One balanced doc serving both audiences. Prose where prose helps, structure
 where structure helps. Sections in order:
 
@@ -338,6 +344,12 @@ bundlewrap-language docs live in the fork. Area docs + conventions land
 in 30–120 lines each; root `AGENTS.md` is ~150 lines.
 
 ### Phase 2 — seed bundles (10)
+
+> **Status: dropped — pre-pivot intent only.** Phase 2 didn't ship. After
+> Phase 1 landed, the maintainer pulled the per-bundle `AGENTS.md`
+> migration: the rigid template proved a poor fit for the heterogeneous
+> existing READMEs. See §0 Revisions. The seed list and migration plan
+> below are kept as a record of how the work was scoped.
 
 Bundles selected empirically (node+group references and recent commit
 activity, validated 2026-05-10):
