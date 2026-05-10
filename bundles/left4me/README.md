@@ -70,12 +70,15 @@ from defaults. None of these need to be declared per-node.
 - **CAKE shaping is configured separately**, via
   `network/<iface>/cake` on the node (consumed by `bundles/network/`),
   not by this bundle.
-- **First-run admin user is manual.** After `bw apply`, run on the host:
-  `sudo -u left4me sh -c '. /etc/left4me/host.env && . /etc/left4me/web.env &&
-  LEFT4ME_ADMIN_PASSWORD=<picked> /opt/left4me/.venv/bin/flask
-  --app l4d2web.app:create_app create-user <username> --admin'`.
-  The bundle deliberately doesn't seed an admin to keep credentials out
-  of the metadata pipeline.
+- **First-run admin user is manual.** After `bw apply`, ssh to the host and
+  bootstrap the admin via the `left4me` wrapper (it sources the env files,
+  drops to the `left4me` user, and runs the flask CLI):
+  `sudo left4me create-user <username> --admin` (prompts for password via
+  the flask CLI, or set `LEFT4ME_ADMIN_PASSWORD` first). The bundle
+  deliberately doesn't seed an admin to keep credentials out of the
+  metadata pipeline. The same `left4me` wrapper accepts any other flask
+  subcommand: `sudo left4me seed-script-overlays <dir>`,
+  `sudo left4me routes`, `sudo left4me shell`, etc.
 - **CPU isolation drop-ins are not managed by this bundle.** The
   upstream shell deploy generated `/etc/systemd/system/system.slice.d/
   99-left4me-cpuset.conf` (and siblings for user/build/game slices)

@@ -1,0 +1,17 @@
+#!/bin/sh
+# Run l4d2web flask CLI commands as the left4me user with the deploy env loaded.
+# Usage: left4me <flask-subcommand> [args...]
+# Examples:
+#   left4me create-user alice --admin
+#   left4me seed-script-overlays /opt/left4me/src/examples/script-overlays
+#   left4me routes
+set -eu
+exec sudo -u left4me sh -c '
+    set -a
+    . /etc/left4me/host.env
+    . /etc/left4me/web.env
+    set +a
+    export JOB_WORKER_ENABLED=false
+    export PYTHONPATH=/opt/left4me/src
+    exec /opt/left4me/.venv/bin/flask --app l4d2web.app:create_app "$@"
+' sh "$@"

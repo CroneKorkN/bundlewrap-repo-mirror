@@ -68,6 +68,11 @@ HELPERS = (
 )
 
 files = {
+    '/usr/local/sbin/left4me': {
+        'mode': '0755',
+        'owner': 'root',
+        'group': 'root',
+    },
     **{
         f'/usr/local/libexec/left4me/{h}': {
             'source': f'usr/local/libexec/left4me/{h}',
