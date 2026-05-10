@@ -1,0 +1,53 @@
+#!/bin/sh
+set -eu
+
+usage() {
+    printf '%s\n' "usage: left4me-journalctl <server-name> --lines <n> --follow|--no-follow" >&2
+    exit 2
+}
+
+validate_name() {
+    name=$1
+    [ -n "$name" ] || usage
+    case "$name" in
+        .*|*..*|*/*|*\\*) usage ;;
+    esac
+    case "$name" in
+        *[!A-Za-z0-9_.-]*) usage ;;
+    esac
+}
+
+[ "$#" -eq 4 ] || usage
+name=$1
+lines_flag=$2
+lines=$3
+follow_flag=$4
+
+validate_name "$name"
+[ "$lines_flag" = "--lines" ] || usage
+case "$lines" in
+    ''|*[!0-9]*) usage ;;
+esac
+
+follow_arg=
+case "$follow_flag" in
+    --follow) follow_arg=-f ;;
+    --no-follow) ;;
+    *) usage ;;
+esac
+
+unit="left4me-server@${name}.service"
+if [ -x /bin/journalctl ]; then
+    journalctl=/bin/journalctl
+elif [ -x /usr/bin/journalctl ]; then
+    journalctl=/usr/bin/journalctl
+else
+    printf '%s\n' 'journalctl not found at /bin/journalctl or /usr/bin/journalctl' >&2
+    exit 69
+fi
+
+if [ -n "$follow_arg" ]; then
+    exec "$journalctl" -u "$unit" -n "$lines" -o cat "$follow_arg"
+fi
+
+exec "$journalctl" -u "$unit" -n "$lines" -o cat

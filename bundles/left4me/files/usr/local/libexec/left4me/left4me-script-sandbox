@@ -1,0 +1,82 @@
+#!/bin/bash
+# Privileged sandbox launcher for left4me script overlays.
+#
+# Invoked via sudo by the web user with two arguments:
+#   <overlay_id>   numeric overlay id; bind-mounts /var/lib/left4me/overlays/<id>
+#                  read-write at /overlay inside the sandbox.
+#   <script_path>  absolute path to a bash file already written by the web app;
+#                  bind-mounted read-only at /script.sh inside the sandbox.
+#
+# The script runs as a transient systemd .service with the full hardening
+# surface: cgroup limits + walltime kill, NoNewPrivileges, ProtectSystem,
+# ProtectHome, kernel-tunable / -module / -log protection, namespace
+# restriction, address-family restriction, capability bounding (empty),
+# seccomp filter (@system-service @network-io), MemoryDenyWriteExecute,
+# LockPersonality, RestrictSUIDSGID. Network namespace is *not* restricted —
+# scripts must reach the public internet to download workshop / l4d2center
+# / cedapug content. PID namespace is shared with the host (no
+# PrivatePID= directive in systemd); host PIDs are visible via /proc but
+# not signal-able due to UID mismatch.
+set -euo pipefail
+
+[[ $# -eq 2 ]] || { echo "usage: $0 <overlay_id> <script>" >&2; exit 64; }
+
+OVERLAY_ID=$1
+SCRIPT=$2
+
+[[ "$OVERLAY_ID" =~ ^[0-9]+$ ]] || { echo "bad overlay id" >&2; exit 64; }
+OVERLAY_DIR=/var/lib/left4me/overlays/$OVERLAY_ID
+[[ -d $OVERLAY_DIR ]] || { echo "no overlay dir at $OVERLAY_DIR" >&2; exit 65; }
+[[ -f $SCRIPT ]] || { echo "no script at $SCRIPT" >&2; exit 65; }
+
+if [[ "${LEFT4ME_SCRIPT_SANDBOX_DRY_RUN:-}" == "1" ]]; then
+    echo "DRY RUN: overlay_id=$OVERLAY_ID script=$SCRIPT overlay_dir=$OVERLAY_DIR"
+    exit 0
+fi
+
+# Make sure the sandbox UID owns the overlay dir so the script can write there.
+# Idempotent: a no-op when the dir is already l4d2-sandbox-owned (re-run case),
+# and corrects the ownership the first time the dir was created by the web app
+# under the left4me UID. World-readable so the gameserver process (left4me)
+# can read the overlay contents via the kernel-overlayfs lowerdir at runtime.
+chown -R l4d2-sandbox:l4d2-sandbox "$OVERLAY_DIR"
+chmod 0755 "$OVERLAY_DIR"
+
+SCRIPT_RC=0
+systemd-run --quiet --collect --wait --pipe \
+    --unit="left4me-script-${OVERLAY_ID}-$$" \
+    --slice=l4d2-build.slice \
+    -p OOMScoreAdjust=500 \
+    -p User=l4d2-sandbox -p Group=l4d2-sandbox \
+    -p UMask=0022 \
+    -p NoNewPrivileges=yes \
+    -p ProtectSystem=strict -p ProtectHome=yes \
+    -p PrivateTmp=yes -p PrivateDevices=yes -p PrivateIPC=yes \
+    -p ProtectKernelTunables=yes -p ProtectKernelModules=yes \
+    -p ProtectKernelLogs=yes -p ProtectControlGroups=yes \
+    -p RestrictNamespaces=yes \
+    -p RestrictAddressFamilies="AF_INET AF_INET6 AF_UNIX" \
+    -p RestrictSUIDSGID=yes -p LockPersonality=yes \
+    -p MemoryDenyWriteExecute=yes \
+    -p SystemCallFilter="@system-service @network-io" \
+    -p SystemCallArchitectures=native \
+    -p CapabilityBoundingSet= -p AmbientCapabilities= \
+    -p IPAddressDeny="127.0.0.0/8 ::1/128 169.254.0.0/16 fe80::/10 224.0.0.0/4 ff00::/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 100.64.0.0/10 fc00::/7" \
+    -p TemporaryFileSystem="/etc /var/lib" \
+    -p BindReadOnlyPaths="/etc/left4me/sandbox-resolv.conf:/etc/resolv.conf /etc/ssl /etc/ca-certificates /etc/nsswitch.conf /etc/alternatives ${SCRIPT}:/script.sh" \
+    -p BindPaths="${OVERLAY_DIR}:/overlay" \
+    -p WorkingDirectory=/overlay \
+    -p Environment="HOME=/tmp PATH=/usr/bin:/usr/sbin OVERLAY=/overlay" \
+    -p MemoryMax=4G -p MemorySwapMax=0 -p TasksMax=512 \
+    -p CPUQuota=200% -p RuntimeMaxSec=3600 \
+    -- /bin/bash /script.sh || SCRIPT_RC=$?
+
+# Normalize perms so the web service (left4me uid) can read overlay files
+# directly via Python open() — needed by the file tree's download endpoint.
+# UMask=0022 above takes care of *new* writes; this catches anything the
+# script created with a tighter mode (e.g. cedapug_maps writes its
+# .cedapug/manifest.tsv as 0600 by default).
+find "$OVERLAY_DIR" -type f ! -perm -o+r -exec chmod o+r {} + 2>/dev/null || true
+find "$OVERLAY_DIR" -type d ! -perm -o+rx -exec chmod o+rx {} + 2>/dev/null || true
+
+exit $SCRIPT_RC
