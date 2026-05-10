@@ -64,7 +64,7 @@ files = {
             'svc_systemd:nginx:restart',
         },
     },
-    '/etc/nginx/sites/80.conf': {
+    '/etc/nginx/sites-available/80.conf': {
         'triggers': {
             'svc_systemd:nginx:restart',
         },
