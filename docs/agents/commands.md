@@ -48,3 +48,28 @@ instead.
 
 See [`conventions.md#secrets`](conventions.md#secrets) for the
 demagify magic-string list and the rule's full rationale.
+
+## Read-only commands — useful flag combinations
+
+The fork's [`AGENTS.md`][fork] documents the canonical safety envelope.
+These are the flag combinations agents reach for most often in this repo:
+
+| Want to … | Run |
+|---|---|
+| Sanity-check the whole repo (parse + cross-cutting hooks)        | `bw test` (defaults to `-HIJKMSp`) |
+| Exercise reactors and item-graph for one node                    | `bw test <node>` (defaults to `-IJKMp`) |
+| Same, but every node that has a given bundle                     | `bw test bundle:<name>` |
+| Print one metadata key for one node                              | `bw metadata <node> -k <a/b>` (repeat `-k` for more) |
+| Show where each metadata value comes from                        | `bw metadata <node> -b` |
+| Resolve Faults (vault values) into the dump                      | `bw metadata <node> -f` — **may print secrets, avoid** |
+| List a node's items, with the bundle that defines each           | `bw items <node> --blame` |
+| Preview a rendered file's content                                | `bw items <node> file:<path> -f` |
+| Verify against the live host, scoped to one bundle               | `bw verify <node> -o bundle:<name>` |
+| Hash metadata only (faster than full config hash)                | `bw hash <node> -m` |
+| Inspect the data backing a hash                                  | `bw hash <node> -d` |
+
+`bw test`, `bw verify`, `bw nodes`, `bw metadata` all share a target-
+selector grammar: bare node name, group name, `bundle:<name>`,
+`!bundle:<name>`, or `"lambda:node.metadata_get('foo/bar', 0) < 3"`.
+
+[fork]: https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md
