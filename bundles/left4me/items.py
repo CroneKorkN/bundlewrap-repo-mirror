@@ -175,9 +175,9 @@ actions['left4me_pip_upgrade'] = {
     'needs': [
         'pkg_apt:python3-pip',
     ],
-    'triggers': [
-        'action:left4me_pip_install',
-    ],
+    # No triggers — pip_install runs on every apply (gated by `unless`)
+    # rather than being chained from here. Keeps pip_upgrade scoped to
+    # exactly its purpose.
 }
 
 actions['left4me_pip_install'] = {
