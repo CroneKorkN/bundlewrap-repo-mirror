@@ -73,3 +73,26 @@ selector grammar: bare node name, group name, `bundle:<name>`,
 `!bundle:<name>`, or `"lambda:node.metadata_get('foo/bar', 0) < 3"`.
 
 [fork]: https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md
+
+## Bundle-validation workflow
+
+`bw test` (no args) is a *parsing* gate, not a *behaviour* gate. It
+loads every bundle, but a bundle's reactors only resolve when a node's
+metadata is actually built — and that happens only for nodes that
+opt in. Until then, reactor bugs stay dormant. bw rejects reactors
+that don't read any metadata, but the rejection only fires once *some*
+node consumes the bundle.
+
+When developing a new bundle:
+
+1. Scaffold + `bw test` — confirms parsing.
+2. **Attach the bundle to one node** (or a stub node) by adding it to
+   `nodes/<n>.py`'s `bundles` list, or to a group the node is in.
+3. `bw test <node>` — now reactors fire. This is where bundle bugs
+   surface.
+4. `bw items <node> --blame` and `bw metadata <node> -k <key>` —
+   confirm items materialise and derived metadata looks right.
+5. `bw hash <node>` — preview against the live host.
+
+Step 2 is non-optional. A bundle that "passes `bw test`" with no
+consumer is proven only to parse.

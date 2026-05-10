@@ -56,12 +56,22 @@ bundles/<name>/
    [`groups/<axis>/<x>.py`](../groups/AGENTS.md) (preferred for shared
    bundles) or to the node's `bundles` list directly
    ([`nodes/AGENTS.md`](../nodes/AGENTS.md)).
-5. Verify, in this order:
-   - `bw test` — sanity (loaders + reactors).
-   - `bw items <node>` — confirm new items appear on a node that opts in.
-   - `bw hash <node>` — confirm the change is what you expected. See
-     [`docs/agents/commands.md`](../docs/agents/commands.md) and the
-     fork's hash-diff workflow.
+5. **Verify, in this order:**
+   - `bw test` — repo-wide parse + cross-cutting hooks. Loads every
+     bundle, but reactors don't fire for nodes that haven't opted into
+     the bundle yet — bugs in new reactors stay hidden here.
+   - **Attach the bundle to a node** (via the node's `bundles` list, or
+     a group it belongs to). Until you do, the next steps don't actually
+     exercise the bundle.
+   - `bw test <node>` — exercises every reactor and item-graph edge for
+     that node. This is where most new-bundle bugs surface.
+   - `bw items <node> --blame` — confirm items materialise with the
+     right paths, authored by the expected bundle.
+   - `bw metadata <node> -k <a/b>` — spot-check derived metadata.
+   - `bw hash <node>` — preview vs current host state.
+
+   See [`docs/agents/commands.md#bundle-validation-workflow`](../docs/agents/commands.md#bundle-validation-workflow)
+   for the rationale.
 6. Add a `bundles/<name>/README.md`. See "Per-bundle README" below
    for what to cover.
 
