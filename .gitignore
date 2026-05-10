@@ -3,3 +3,5 @@
 .cache
 *.pyc
 .bw_debug_history
+# CocoIndex Code (ccc)
+/.cocoindex_code/

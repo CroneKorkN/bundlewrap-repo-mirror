@@ -72,8 +72,8 @@
                 'AAAA': ['2a01:4f8:c013:51f2::1'],
             },
             'left4.me': {
-                'A': ['49.12.184.229'],
-                'AAAA': ['2a01:4f8:c013:51f2::1'],
+                'A': ['141.95.32.8'],
+                'AAAA': ['2001:41d0:700:5508::1'],
             },
             'elimu-kwanza.de': {
                 'TXT': ['google-site-verification=JwgcfXQ6nIXKxjMqUGHVBDISgMCQXgzMryPBsP2ZXnE'],
