@@ -6,8 +6,16 @@ assert node.has_bundle('systemd'), (
 )
 
 
+# Per-node random secret. Convention follows postgresql, mosquitto, etc.
+_secret_key = repo.vault.random_bytes_as_base64_for(f'{node.name} left4me secret_key', length=32).value
+
+
 defaults = {
     'left4me': {
+        # Application-wide defaults; node only overrides if it really needs to.
+        'git_url': 'git@git.sublimity.de:cronekorkn/left4me',
+        'git_branch': 'master',
+        'secret_key': _secret_key,
         'gunicorn_workers': 1,
         'gunicorn_threads': 32,
         'job_worker_threads': 4,
@@ -55,7 +63,57 @@ defaults = {
             # uses Slice=.
         },
     },
+    'backup': {
+        # Application-owned paths. Set-merged with backup group / node-level paths.
+        'paths': {
+            '/var/lib/left4me',
+            '/etc/left4me',
+        },
+    },
 }
+
+
+@metadata_reactor.provides(
+    'nginx/vhosts',
+    'letsencrypt/domains',
+    'monitoring/services',
+    'nftables/input',
+)
+def derived_from_domain(metadata):
+    domain = metadata.get('left4me/domain')
+    port_start = metadata.get('left4me/port_range_start')
+    port_end = metadata.get('left4me/port_range_end')
+
+    return {
+        'nginx': {
+            'vhosts': {
+                domain: {
+                    'content': 'nginx/proxy_pass.conf',
+                    'context': {
+                        'target': 'http://127.0.0.1:8000',
+                    },
+                },
+            },
+        },
+        'letsencrypt': {
+            'domains': {
+                domain: {},
+            },
+        },
+        'monitoring': {
+            'services': {
+                'left4me-web': {
+                    'vars.command': f'/usr/bin/curl -X GET -L --fail --no-progress-meter -o /dev/null https://{domain}/health',
+                },
+            },
+        },
+        'nftables': {
+            'input': {
+                f'udp dport {port_start}-{port_end} accept',
+                f'tcp dport {port_start}-{port_end} accept',
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(
