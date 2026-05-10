@@ -38,12 +38,15 @@ Six rules; follow these and you won't break things:
 5. **Prefer adding helpers to `libs/`** over duplicating logic across
    bundles. Repo-wide helpers go in
    [`libs/`](libs/AGENTS.md), reachable as `repo.libs.<x>`.
-6. **Search semantically.** This repo is indexed with
-   [`ccc`](https://github.com/cocoindex-io/cocoindex-code) — try
-   `ccc search '<concept>' --path '**'` before `grep` for
-   "where is X / which bundle does Y" questions. Without
-   `--path '**'`, results are filtered to the current working
-   directory's subtree.
+6. **`ccc` is available for semantic search.** This repo is indexed
+   with [`ccc`](https://github.com/cocoindex-io/cocoindex-code).
+   Reach for it on conceptual questions ("where is X used / which
+   bundles do Y / what are the contexts of Z"), where a keyword
+   grep would miss indirect usage:
+   `ccc search '<concept>' --path '**'`. Pass `--path '**'` —
+   without it, results are filtered to the current working
+   directory's subtree. `grep`/`rg`/`find` remain fine for
+   exact-string lookups; pick whichever fits the question.
 
 ## Layout
 
