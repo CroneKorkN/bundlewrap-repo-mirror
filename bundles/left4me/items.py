@@ -129,17 +129,12 @@ git_deploy = {
     '/opt/left4me/src': {
         'repo': node.metadata.get('left4me/git_url'),
         'rev': node.metadata.get('left4me/git_branch'),
-        'triggers': [
-            # bw extracts the git archive as the connecting user (root after
-            # sudo) — files end up root-owned. Chown so subsequent
-            # `pip install -e` running as left4me can write .egg-info/.
-            'action:left4me_chown_src',
-        ],
-        # pip_install is NOT in triggers (it's not triggered:True so bw
-        # would reject the edge). It runs on every apply with an `unless`
-        # guard for idempotency; editable installs pick up code changes
-        # without re-running pip. For dep changes (rare), nudge by hand:
-        # `bw run ovh.left4me '<the pip command>'`.
+        # No triggers list — both downstream actions (chown_src and
+        # pip_install) run every apply gated by their own `unless`
+        # guards, which makes the chain self-healing after a partial
+        # failure. Chaining via triggers would have made them only
+        # fire when git_deploy itself fired, leaving stuck states
+        # unrecoverable.
     },
 }
 
