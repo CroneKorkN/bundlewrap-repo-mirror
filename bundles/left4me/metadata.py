@@ -182,3 +182,20 @@ def systemd_services(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'nftables/output',
+)
+def nftables_output(metadata):
+    # Match deploy/files/usr/local/lib/left4me/nft/left4me-mark.nft.
+    # Mark srcds UDP egress (uid left4me) with DSCP EF + skb priority 6
+    # so CAKE classifies it into the priority tin.
+    return {
+        'nftables': {
+            'output': {
+                'meta skuid "left4me" meta l4proto udp ip dscp set ef meta priority set 0006:0000',
+                'meta skuid "left4me" meta l4proto udp ip6 dscp set ef meta priority set 0006:0000',
+            },
+        },
+    }
