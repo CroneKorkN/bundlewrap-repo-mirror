@@ -29,6 +29,7 @@ directories = {
     '/var/lib/left4me/runtime':        {'owner': 'left4me', 'group': 'left4me'},
     '/var/lib/left4me/workshop_cache': {'owner': 'left4me', 'group': 'left4me'},
     '/var/lib/left4me/tmp':            {'owner': 'left4me', 'group': 'left4me'},
+    '/opt/left4me/steam':              {'owner': 'left4me', 'group': 'left4me'},
     '/usr/local/libexec/left4me': {
         'owner': 'root',
         'group': 'root',
@@ -129,7 +130,41 @@ actions = {
         'command': 'sysctl --system >/dev/null',
         'triggered': True,
     },
+    'left4me_dpkg_add_i386_arch': {
+        # steamcmd is 32-bit and pulls libc6:i386 + lib32z1 from the i386 arch.
+        # apt-get update is part of this action because newly-added foreign
+        # archs need a fresh package list before any :i386 package resolves.
+        'command': 'dpkg --add-architecture i386 && apt-get update',
+        'unless': 'dpkg --print-foreign-architectures | grep -qx i386',
+        'cascade_skip': False,
+    },
+    'left4me_install_steamcmd': {
+        # Steam's tarball is rolling with no published checksum, so we can't
+        # use download: (which requires a hash). Guard with a presence check
+        # on steamcmd.sh — steamcmd self-updates at runtime, so chasing the
+        # tarball version from bw isn't useful.
+        'command': (
+            'sudo -u left4me sh -c "'
+            'cd /opt/left4me/steam && '
+            'curl -fsSL https://media.steampowered.com/installer/steamcmd_linux.tar.gz | '
+            'tar -xz'
+            '"'
+        ),
+        'unless': 'test -x /opt/left4me/steam/steamcmd.sh',
+        'cascade_skip': False,
+        'needs': [
+            'directory:/opt/left4me/steam',
+            'pkg_apt:curl',
+            'pkg_apt:libc6_i386',  # bw pkg_apt convention: _ → :
+            'pkg_apt:lib32z1',
+            'user:left4me',
+        ],
+    },
 }
+
+# steamcmd is invoked by absolute path (LEFT4ME_STEAMCMD in host.env),
+# not via PATH lookup — see l4d2host/cli.py:install. We don't need to put
+# anything in /usr/local/bin for it.
 
 git_deploy = {
     '/opt/left4me/src': {
@@ -197,10 +232,11 @@ actions['left4me_pip_upgrade'] = {
 
 actions['left4me_pip_install'] = {
     # Single pip invocation installs both editable packages from the same
-    # checkout. Runs on every apply and self-heals after partial failures;
-    # `unless` short-circuits when both packages are already importable.
+    # checkout. Runs on every apply: pip install -e is fast on no-op, and
+    # any gate weaker than "egg-info matches pyproject.toml" can mask
+    # script regeneration — e.g. adding [project.scripts] later wouldn't
+    # be picked up if `unless` only checks importability.
     'command': 'sudo -u left4me /opt/left4me/.venv/bin/pip install -e /opt/left4me/src/l4d2host -e /opt/left4me/src/l4d2web',
-    'unless': 'sudo -u left4me /opt/left4me/.venv/bin/python -c "import l4d2host, l4d2web"',
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',

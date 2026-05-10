@@ -25,6 +25,15 @@ defaults = {
             'python3-venv': {},
             'python3-pip': {},
             'python3-dev': {},
+            # steamcmd is a 32-bit ELF; needs i386 multiarch + these libs.
+            # `_` → `:` is bundlewrap's pkg_apt convention for multiarch
+            # names (see pkg_apt.py:48).
+            'libc6_i386': {  # installs libc6:i386
+                'needs': ['action:left4me_dpkg_add_i386_arch'],
+            },
+            'lib32z1': {
+                'needs': ['action:left4me_dpkg_add_i386_arch'],
+            },
         },
     },
     'nftables': {
