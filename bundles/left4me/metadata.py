@@ -75,11 +75,12 @@ defaults = {
 
 @metadata_reactor.provides(
     'nginx/vhosts',
-    'letsencrypt/domains',
     'monitoring/services',
     'nftables/input',
 )
 def derived_from_domain(metadata):
+    # letsencrypt/domains is auto-populated from nginx/vhosts.keys() by
+    # bundles/nginx/metadata.py — don't duplicate it here.
     domain = metadata.get('left4me/domain')
     port_start = metadata.get('left4me/port_range_start')
     port_end = metadata.get('left4me/port_range_end')
@@ -93,11 +94,6 @@ def derived_from_domain(metadata):
                         'target': 'http://127.0.0.1:8000',
                     },
                 },
-            },
-        },
-        'letsencrypt': {
-            'domains': {
-                domain: {},
             },
         },
         'monitoring': {
