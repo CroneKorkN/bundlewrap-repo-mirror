@@ -1,12 +1,11 @@
 {
     'hostname': '141.95.32.8',
-    'username': 'debian',
     'groups': [
         'debian-13',
         'monitored',
     ],
     'bundles': [
-        #'wireguard',
+        'wireguard',
     ],
     'metadata': {
         'id': '14d2abc-3855-4bb7-99e2-d4e3eb0344dd',
