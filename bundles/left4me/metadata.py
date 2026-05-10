@@ -6,16 +6,12 @@ assert node.has_bundle('systemd'), (
 )
 
 
-# Per-node random secret. Convention follows postgresql, mosquitto, etc.
-_secret_key = repo.vault.random_bytes_as_base64_for(f'{node.name} left4me secret_key', length=32).value
-
-
 defaults = {
     'left4me': {
         # Application-wide defaults; node only overrides if it really needs to.
         'git_url': 'git@git.sublimity.de:cronekorkn/left4me',
         'git_branch': 'master',
-        'secret_key': _secret_key,
+        'secret_key': repo.vault.random_bytes_as_base64_for(f'{node.name} left4me secret_key', length=32).value,
         'gunicorn_workers': 1,
         'gunicorn_threads': 32,
         'job_worker_threads': 4,
@@ -75,12 +71,14 @@ defaults = {
 
 @metadata_reactor.provides(
     'nginx/vhosts',
-    'monitoring/services',
     'nftables/input',
 )
 def derived_from_domain(metadata):
     # letsencrypt/domains is auto-populated from nginx/vhosts.keys() by
-    # bundles/nginx/metadata.py — don't duplicate it here.
+    # bundles/nginx/metadata.py. monitoring/services for the vhost is also
+    # auto-populated there using the vhost's check_path/check_protocol —
+    # we just declare check_path: '/health' below to point the auto-check
+    # at the Flask health endpoint instead of '/'.
     domain = metadata.get('left4me/domain')
     port_start = metadata.get('left4me/port_range_start')
     port_end = metadata.get('left4me/port_range_end')
@@ -93,13 +91,7 @@ def derived_from_domain(metadata):
                     'context': {
                         'target': 'http://127.0.0.1:8000',
                     },
-                },
-            },
-        },
-        'monitoring': {
-            'services': {
-                'left4me-web': {
-                    'vars.command': f'/usr/bin/curl -X GET -L --fail --no-progress-meter -o /dev/null https://{domain}/health',
+                    'check_path': '/health',
                 },
             },
         },
