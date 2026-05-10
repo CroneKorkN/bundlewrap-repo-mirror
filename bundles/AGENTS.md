@@ -41,6 +41,16 @@ bundles/<name>/
   more than one bundle. Don't duplicate logic across bundles.
 - **Custom item types** (e.g. `download:`) live in
   [`items/`](../items/AGENTS.md), not per-bundle.
+- **Bundles own application-wide knowledge; nodes carry only the few
+  per-host knobs the bundle actually needs.** When designing a bundle,
+  identify the per-node knobs (e.g. domain, uplink interface, a
+  vault-id suffix) and put everything else in `defaults`, or in a
+  reactor that derives from those knobs. Per-node random secrets
+  belong in `defaults` via `repo.vault.random_bytes_as_base64_for(...)`
+  keyed on the node — not in the node file. See
+  `bundles/left4me/metadata.py:10` (`secret_key` derived in defaults)
+  and `bundles/postgresql/metadata.py:4` (vault-derived `password_for`
+  at module scope).
 
 ## How to add a new bundle
 

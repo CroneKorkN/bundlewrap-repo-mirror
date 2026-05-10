@@ -81,6 +81,12 @@ This loader shape has consequences:
   These are intentional parks/buffers, not bugs.
 - **`id` must be unique.** A pre-apply hook (`hooks/unique_node_ids.py`)
   enforces this; duplicate IDs fail `bw test` and `bw apply`.
+- **Bloated per-node metadata is usually a bundle smell.** If a
+  bundle's metadata block in the node file has more than 3-5 keys,
+  the bundle is probably under-using `defaults` / reactors. Push the
+  contribution into the bundle (see
+  [`bundles/AGENTS.md`](../bundles/AGENTS.md#conventions)) rather than
+  growing the node file.
 
 ## See also
 
