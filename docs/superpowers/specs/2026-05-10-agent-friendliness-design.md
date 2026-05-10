@@ -2,6 +2,41 @@
 
 Date: 2026-05-10
 
+## 0. Revisions
+
+Material revisions since this spec was first written, kept here so anyone
+reading the spec sees the current shape rather than the original intent.
+
+- **Fork pivot.** Originally the spec planned a `docs/agents/bundlewrap/`
+  folder (`README.md` + `items.md` + `metadata.md`) explaining
+  bundlewrap-the-language inside ckn-bw. That folder is gone; the
+  maintainer maintains a personal bundlewrap fork at
+  `github.com/CroneKorkN/bundlewrap` whose root `AGENTS.md` carries the
+  canonical agent-oriented bundlewrap-language reference. ckn-bw's docs
+  link out to the fork instead. The venv installs editable from the fork
+  (`-e git+https://github.com/CroneKorkN/bundlewrap.git@main`).
+- **`commands.md` slimmed** from ~80–120 lines to ~30–50 lines: the fork's
+  `AGENTS.md` carries the canonical bw runbook (read-only allowlist,
+  after-change table, hash-diff workflow, `bw debug` sketch); ckn-bw's
+  `commands.md` shrinks to repo-specific deltas (apt-key verification,
+  `*.py_` suspended-node behavior, vault-echo guidance).
+- **Phase 2 seed-list rebalance.** `php` swapped out for
+  `routeros-monitoring` based on user-story analysis: php is a low-churn
+  usage hub (8 refs but ~zero recent commits); routeros-monitoring is
+  high-churn (15 commits in 18 months), exactly where seeded docs pay off
+  most. See plan for empirical justification.
+- **bw-syntax corrections** found by per-task code-review during the fork's
+  AGENTS.md implementation, synced in: `bw items <node> <id> -p` does not
+  exist (use bare or `--preview`); `bw hash` accepts only literal node /
+  group names (selectors like `bundle:<x>` work for `bw nodes` etc., but
+  not for `bw hash`); `bw groups -n <node>` does not exist (use
+  `bw nodes <node> -a groups`).
+- **Workflow + user-story validation findings** (16 small content adds
+  across area docs, the per-bundle template, `commands.md`, and
+  `conventions.md`) are recorded in the implementation plan rather than
+  back-fitted into this spec — they're additions to file content, not
+  scope changes.
+
 ## 1. Goals & non-goals
 
 **Goal.** Make this BundleWrap config repo legible to agents (and humans) so an
@@ -17,11 +52,10 @@ spelunking and without unsafe side effects.
 - Per-bundle `AGENTS.md`: one balanced doc per bundle, replacing existing
   bundle `README.md` files. Template provided.
 - `docs/agents/conventions.md`: repo-specific idioms (vault magic strings,
-  custom bundlewrap fork, files-not-to-touch).
-- `docs/agents/commands.md`: read-only `bw` command allowlist and an
-  after-change runbook keyed by what was edited.
-- `docs/agents/bundlewrap/`: a focused folder explaining bundlewrap-as-used-here.
-  Three files at first: `README.md`, `items.md`, `metadata.md`.
+  bundlewrap-fork install pointer, files-not-to-touch).
+- `docs/agents/commands.md`: ckn-bw-specific deltas to the fork's bw
+  runbook (apt-key verification, suspended-node behavior, vault-echo
+  guidance). Canonical bw command reference lives in the fork's `AGENTS.md`.
 - A docstring/header pass on `libs/*.py`, `hooks/*.py`, `bin/*` so each
   individual file self-describes.
 - Phase 2 seed: per-bundle `AGENTS.md` for 10 bundles selected empirically.
@@ -45,11 +79,8 @@ ckn-bw/
 ├── docs/
 │   └── agents/
 │       ├── conventions.md
-│       ├── commands.md
-│       └── bundlewrap/
-│           ├── README.md
-│           ├── items.md
-│           └── metadata.md
+│       └── commands.md         # ckn-bw deltas; canonical bw runbook is in
+│                               # the fork's AGENTS.md (linked from here)
 ├── bundles/
 │   ├── AGENTS.md                   # what bundles are, how they compose
 │   ├── AGENTS.template.md          # template for per-bundle docs
@@ -68,7 +99,10 @@ ckn-bw/
 
 **Reading order an agent should follow.** Root `AGENTS.md` → relevant area
 `AGENTS.md` → specific `bundles/<x>/AGENTS.md` → `docs/agents/conventions.md`
-or `docs/agents/bundlewrap/<file>` only when something non-obvious comes up.
+when a repo-specific idiom is in play → fork's `AGENTS.md` (at
+`https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md`) for any
+bundlewrap-language question (item types, dep keywords, metadata reactor
+semantics).
 
 **Per-area files (not just root).** An agent editing `bundles/nextcloud/items.py`
 already has `bundles/AGENTS.md` and `bundles/nextcloud/AGENTS.md` adjacent in
@@ -149,8 +183,11 @@ Target ~150 lines. Sections in order:
      `.envrc`. Everything else is editable, but treat `hooks/` and `items/`
      (custom item types) with extra care — they affect bw's behavior or item
      resolution across the whole repo.
-   - Uses a custom **bundlewrap fork**, not upstream — check
-     `docs/agents/conventions.md` before assuming upstream behavior.
+   - Repo runs editable from the maintainer's bundlewrap fork
+     (`github.com/CroneKorkN/bundlewrap`, branch `main`); behavior tracks
+     upstream main but the fork's `AGENTS.md` is the canonical
+     bundlewrap-language reference. See `docs/agents/conventions.md` for
+     install detail.
    - Prefer adding helpers to `libs/` over duplicating logic across bundles.
 3. **Layout map.** Terse, link-rich. One line per top-level dir, each linking
    to that area's `AGENTS.md`.
@@ -159,12 +196,17 @@ Target ~150 lines. Sections in order:
    `nodes.py` and `groups.py` (root) are the loaders that walk the dirs and
    run `demagify`.
 5. **Conventions you must know.** One-line summary + link for each:
-   - `docs/agents/bundlewrap/README.md` — read first if new to bundlewrap.
-     `items.md` and `metadata.md` are deep dives for the hard parts.
+   - Fork's `AGENTS.md`
+     (`https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md`) —
+     read first if new to bundlewrap. Carries the safety envelope, the
+     after-change runbook, and cheat-sheets for item dep keywords +
+     `metadata.py` pitfalls.
    - `docs/agents/conventions.md#secrets` — secrets / demagify magic strings.
-   - `docs/agents/conventions.md#fork` — custom bundlewrap fork.
+   - `docs/agents/conventions.md#bundlewrap-version` — install pointer
+     (editable from the fork's `main`).
    - `docs/agents/conventions.md#groups` — group inheritance order.
-   - `docs/agents/commands.md` — safe `bw` commands and after-change checks.
+   - `docs/agents/commands.md` — ckn-bw-specific deltas to the bw runbook
+     (apt keys, suspended nodes, vault-echo guidance).
    - Lib helpers — see top-of-file docstrings in `libs/*.py`.
 6. **Where to look for examples.** Pointers to a small bundle, a complex
    bundle, and a node file.
@@ -194,7 +236,8 @@ Per-area specifics:
 
 - **`bundles/AGENTS.md`** — bundle anatomy (`items.py`, `metadata.py`, `files/`,
   `templates/`), where helpers go, when to extract to `libs/`. Links out to
-  `docs/agents/bundlewrap/items.md` and `metadata.md` for language-level detail.
+  the fork's `AGENTS.md` (item types, dep keywords, metadata reactor
+  semantics) for language-level detail.
 - **`nodes/AGENTS.md`** — `eval()` loading mechanism via `nodes.py`, demagify
   magic-string syntax, naming convention pattern (`<location>.<role>.py`).
   **Pitfall:** because node files are `eval()`'d, no top-level imports — only
@@ -222,9 +265,10 @@ Per-area specifics:
   `!32_random_bytes_as_base64_for:`. What each does, where they're allowed
   (node files, evaluated through `nodes.py`), why agents must never echo
   decrypted values.
-- **Custom bundlewrap fork.** How it's installed
-  (`pip install --editable git+file:///…/bundlewrap-fork@main`), implications
-  (don't assume upstream-only behavior), pointer to the fork source.
+- **Bundlewrap version / install.** Repo runs editable from the maintainer's
+  personal fork: `pip install -e git+https://github.com/CroneKorkN/bundlewrap.git@main#egg=bundlewrap`.
+  Captured in `requirements.txt`. The fork's `main` tracks upstream main; the
+  fork's `AGENTS.md` is the canonical bundlewrap-language reference.
 - **Group inheritance order** & how metadata merges
   (`all.py` → location → os → machine → applications → node).
 - **Naming conventions** for nodes (`<location>.<role>.py`) and groups
@@ -232,99 +276,53 @@ Per-area specifics:
 - **Files agents must not modify.** `.secrets.cfg*`, `.venv`, `.cache`,
   `.bw_debug_history`, `.envrc`.
 
-### `commands.md` (~80–120 lines)
+### `commands.md` (~30–50 lines)
 
-**Side-effect model** (paragraph up front):
+The fork's `AGENTS.md` is the canonical bw runbook — read-only command
+allowlist, after-change table, hash-diff workflow, `bw debug` sketch,
+verified against 5.0.3 source. ckn-bw's `commands.md` carries only
+repo-specific deltas:
 
-- `bundles/<x>/metadata.py` `defaults` and `@metadata_reactor` can write into
-  *any* namespace (e.g. nextcloud's metadata writes into `apt.packages` and
-  `archive.paths`). Changing it can ripple into other bundles' inputs.
-- `libs/<x>.py` is imported by both `items.py` and `metadata.py` across many
-  bundles — biggest blast radius.
-- `groups/*.py` changes membership (which bundles a node gets) and merged
-  metadata.
-- `bw hash` is the primary integrated check because it captures bundle
-  membership + metadata + items + file content.
-
-**Read-only command reference** (one line each):
-`bw hash`, `bw metadata`, `bw items`, `bw items <node> <id> -p`, `bw nodes`,
-`bw groups`, `bw verify`, `bw debug`, `bw test`, `bw plot`. Each tagged
-read-only.
-
-**After-change checks, keyed by what you changed:**
-
-| You changed | First check | Drill-in |
-|---|---|---|
-| `bundles/<x>/items.py` | `bw hash <node>` for a node with bundle `<x>` | `bw items <node> <id> -p`; `bw verify <node>` |
-| `bundles/<x>/metadata.py` | `bw hash` for *all nodes including bundle `<x>`* (reactors can ripple beyond `<x>`'s namespace) | `bw metadata <node>`; `bw metadata <node> -k <key>` |
-| `bundles/<x>/files/*` (template) | `bw hash <node>` | `bw items <node> <path> -p` |
-| `groups/*.py` | `bw hash` every node in/near the group | `bw groups -n <node>`; `bw metadata <node>` |
-| `libs/<x>.py` | `bw hash` **all** nodes (cheap, no network) — biggest blast radius | `bw debug` to inspect helper outputs |
-| `nodes/<x>.py` | `bw hash <node>` | `bw metadata <node>` |
-| `hooks/*.py` | re-run the `bw` command whose lifecycle the hook hooks | — |
-| Anything | `bw test` — cheapest repo-level sanity | — |
-
-**Mutating commands (forbidden without explicit user request).** `bw apply`,
-`bw run`, `bw lock` — what each does and why agents must not invoke them
-autonomously.
-
-**Hash diff workflow.** Capture `bw hash > before.txt`, make change,
-`bw hash > after.txt`, diff. Canonical pre/post comparison.
-
-**Targeting.** How to scope to one node / one group (`-t`, group selectors).
-
-### `bundlewrap/README.md` (~80 lines)
-
-Mental model paragraph: nodes ← groups → bundles → items; metadata flow
-(groups → node → metadata processors → bundle items); hooks vs items vs libs.
-Glossary, one paragraph each: node, group, bundle, item, items.py, metadata.py,
-metadata reactor, hook, lib, `repo.libs`. Folder index. Fork callout
-(explicit "we use a fork — here's what differs (or 'nothing day-to-day')";
-link to fork source). Links out to <https://docs.bundlewrap.org> for depth.
-
-### `bundlewrap/items.md` (~200–300 lines)
-
-The item types this repo actually uses — file, pkg_apt, svc_systemd, action,
-symlink, group, user, … — with common attributes and examples drawn from
-this repo. The dependency keyword glossary: `needs`, `needed_by`, `triggers`,
-`triggered`, `triggered_skip_for`, `tags`, `cascade_skip`, `unless` — each
-with one sentence and a real example. Custom item types from `items/`
-(currently `download`). "When in doubt, see upstream items reference" with
-a link.
-
-### `bundlewrap/metadata.md` (~200–300 lines)
-
-`defaults` dict semantics (deep-merge into resolved metadata, can write into
-any namespace). `@metadata_reactor.provides(...)` contract: signature, return
-shape, fixpoint resolution, when to declare `provides` narrowly vs broadly.
-Vault integration: `repo.vault.password_for`, `repo.vault.random_bytes_as_base64_for`,
-`repo.vault.decrypt`, `repo.vault.decrypt_file` — and how they tie back to
-demagify magic strings in node files. `repo.libs.hashable.hashable(...)` for
-putting dicts in sets — a pattern used heavily in this repo, worth explicit
-example. Common pitfalls: reactor declared narrower than it writes; reactor
-that doesn't reach fixpoint; reactor that reads a key it didn't declare reading.
+- **One-line lead** pointing at
+  `https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md` for the
+  full runbook.
+- **Apt-key after-change row.** Editing `data/apt/keys/*.{asc,gpg}` →
+  first verify with `gpg --show-keys <newkey>` locally + fingerprint diff
+  against the expected source. Trial via `bw apply` is the *failure* path
+  (a wrong key blocks unattended upgrades cluster-wide). Not in the
+  fork's runbook because it's repo-specific.
+- **`*.py_` suspended-node interaction.** A node file ending in `.py_` is
+  silently excluded from the loader; `bw nodes` won't list it. Document
+  this so an agent doesn't think a node is missing when it's actually
+  parked.
+- **Vault magic-string handling.** Never echo decrypted output, even in
+  `bw debug` exploration. Cross-link to `conventions.md#secrets`.
 
 ## 7. Seed work & rollout
 
-### Phase 1 — scaffolding (one PR-sized chunk)
+### Phase 1 — scaffolding
 
-1. Root `AGENTS.md` (Section 4) + `CLAUDE.md` symlink → `AGENTS.md`.
-2. `docs/agents/bundlewrap/README.md`, `items.md`, `metadata.md` (Section 6).
-3. `docs/agents/conventions.md` and `commands.md` (Section 6).
-4. Per-area `AGENTS.md` for `bundles/`, `nodes/`, `groups/`, `libs/`, `hooks/`,
+Gated on: the fork's `AGENTS.md` exists and is reachable at the URL above
+(verified 2026-05-10).
+
+1. `docs/agents/conventions.md` (Section 6).
+2. `docs/agents/commands.md` (Section 6).
+3. Per-area `AGENTS.md` for `bundles/`, `nodes/`, `groups/`, `libs/`, `hooks/`,
    `data/`, `items/`, `bin/` (Section 5).
-5. `bundles/AGENTS.template.md` so future bundle docs have something to copy.
+4. `bundles/AGENTS.template.md` so future bundle docs have something to copy.
+5. Root `AGENTS.md` (Section 4) + `CLAUDE.md` symlink → `AGENTS.md` (written
+   last so all internal link targets exist).
 6. Docstring/header pass: add a one-line module docstring to any `libs/*.py`
    and `hooks/*.py` lacking one; `# purpose:` header to any `bin/*` script
    lacking one.
 
-Order within Phase 1: root → bundlewrap folder → conventions → commands →
-area docs → docstring pass → template. Each piece can be reviewed in
-isolation; the work bisects cleanly.
+Order rationale: build link targets bottom-up (conventions → commands →
+area docs → template), then root last, then the docstring pass last. Each
+piece can be reviewed in isolation; the work bisects cleanly.
 
-Honest scope: the bundlewrap folder is ~600 lines of focused writing total
-(80 + 250 + 250). The rest is shorter — area docs and conventions land in
-30–120 lines each.
+Honest scope: ~800–1000 lines of focused writing total now that
+bundlewrap-language docs live in the fork. Area docs + conventions land
+in 30–120 lines each; root `AGENTS.md` is ~150 lines.
 
 ### Phase 2 — seed bundles (10)
 
@@ -336,7 +334,7 @@ activity, validated 2026-05-10):
 1. `monitored` (12 node refs) — meta-bundle, often misunderstood.
 2. `postgresql` (9 refs, 3 cross-bundle).
 3. `wireguard` (8 refs, has own lib + bin script).
-4. `php` (8 refs).
+4. `routeros-monitoring` (15 commits in 18 months — most-churned bundle).
 5. `apt` (6 refs, has own lib).
 6. `nginx` (4 refs, web foundational).
 
@@ -347,6 +345,10 @@ activity, validated 2026-05-10):
 8. `backup` (7 refs, cross-node coordination).
 9. `letsencrypt` (6 refs, cross-cutting).
 10. `nextcloud` (5 recent commits, complex, actively edited).
+
+(Original §0 noted: `php` was originally seeded but swapped for
+`routeros-monitoring` after user-story analysis showed it's a low-churn
+hub, while routeros-monitoring is the highest-churn target in the repo.)
 
 For each: write one `AGENTS.md` from the template — purpose, usage, metadata
 dict, produces, depends-on, gotchas. Migrate any existing
@@ -362,14 +364,12 @@ dict, produces, depends-on, gotchas. Migrate any existing
 
 ## 8. Future work (not this spec)
 
-- Contributing an `AGENTS.md` to bundlewrap upstream (or to your fork)
-  describing items/metadata semantics for agents — would shrink the
-  bundlewrap folder over time and shift authority back upstream.
 - Tooling: a read-only `bw` wrapper or lint that nudges new bundles toward
-  having an `AGENTS.md`. Worth considering only after Phase 1+2 reveal which
-  conventions actually drift.
-- More bundlewrap docs files (`groups-nodes.md`, `hooks.md`) if real gaps
-  surface during Phase 2 or Phase 3 work.
+  having an `AGENTS.md`. Worth considering only after Phase 1+2 reveal
+  which conventions actually drift.
+- Pushing the fork's `AGENTS.md` upstream to `bundlewrap/bundlewrap` —
+  it's written in a style that allows it; a follow-up the maintainer
+  may pursue.
 
 ## 9. Open questions / risks
 
@@ -377,10 +377,13 @@ dict, produces, depends-on, gotchas. Migrate any existing
   code. Mitigations: per-bundle docs are short (low maintenance); Phase 3
   rule attaches doc updates to material code edits; the area docs are
   mechanism-focused, which changes less often than enumerations.
-- **Risk: bundlewrap-folder duplicates upstream.** Acknowledged trade-off.
-  Mitigation: the folder is scoped to *as we use it here*, with explicit
-  upstream links; not trying to be a full bundlewrap manual.
-- **Open: which seed bundles to swap.** Phase 2 list is empirically grounded
-  but not rigid — `zfs` (8 refs), `bind` (4 refs, own lib), and
-  `routeros-monitoring` (15 recent commits, specialized) are honourable
-  mentions if a swap is wanted later.
+- **Risk: fork drifts from upstream.** ckn-bw's docs link to the fork's
+  `AGENTS.md`; if the fork falls far behind upstream main, the linked
+  semantics might not match what real bundlewrap users see. Mitigation:
+  the fork tracks upstream main via periodic merges; ckn-bw's
+  `requirements.txt` pins `@main` so the venv stays aligned with the
+  fork's documented behavior.
+- **Open: seed bundles.** Phase 2 list is empirically grounded but not
+  rigid — `zfs` (8 refs), `bind` (4 refs, own lib), and `bootshorn`
+  (recent burst target) are honourable mentions if a swap is wanted
+  later.
