@@ -130,6 +130,10 @@ git_deploy = {
         'repo': node.metadata.get('left4me/git_url'),
         'rev': node.metadata.get('left4me/git_branch'),
         'triggers': [
+            # bw extracts the git archive as the connecting user (root after
+            # sudo) — files end up root-owned. Chown so subsequent
+            # `pip install -e` running as left4me can write .egg-info/.
+            'action:left4me_chown_src',
             # create_venv is gated by `unless` for idempotency and doesn't
             # need to refire on git updates — once the venv exists, it
             # persists. pip_install IS retriggered so editable installs
@@ -137,6 +141,17 @@ git_deploy = {
             'action:left4me_pip_install',
         ],
     },
+}
+
+actions['left4me_chown_src'] = {
+    'command': 'chown -R left4me:left4me /opt/left4me/src',
+    'triggered': True,
+    'cascade_skip': False,
+    'needs': [
+        'git_deploy:/opt/left4me/src',
+        'user:left4me',
+        'group:left4me',
+    ],
 }
 
 actions['left4me_create_venv'] = {
@@ -173,6 +188,7 @@ actions['left4me_pip_install'] = {
     'needs': [
         'git_deploy:/opt/left4me/src',
         'action:left4me_create_venv',
+        'action:left4me_chown_src',
     ],
     'triggers': [
         'action:left4me_alembic_upgrade',
