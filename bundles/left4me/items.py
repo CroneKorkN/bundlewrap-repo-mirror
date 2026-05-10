@@ -120,3 +120,96 @@ actions = {
         'triggered': True,
     },
 }
+
+git_deploy = {
+    '/opt/left4me/src': {
+        'repo': node.metadata.get('left4me/git_url'),
+        'rev': node.metadata.get('left4me/git_branch'),
+        'triggers': [
+            'action:left4me_create_venv',
+            'action:left4me_pip_install',
+        ],
+    },
+}
+
+actions['left4me_create_venv'] = {
+    'command': 'sudo -u left4me /usr/bin/python3 -m venv /opt/left4me/.venv',
+    'unless':  'test -x /opt/left4me/.venv/bin/python',
+    'cascade_skip': False,
+    'needs': [
+        'directory:/opt/left4me',
+        'pkg_apt:python3-venv',
+        'user:left4me',
+    ],
+    'triggers': [
+        'action:left4me_pip_upgrade',
+    ],
+}
+
+actions['left4me_pip_upgrade'] = {
+    'command': 'sudo -u left4me /opt/left4me/.venv/bin/python -m pip install --upgrade pip',
+    'triggered': True,
+    'cascade_skip': False,
+    'needs': [
+        'pkg_apt:python3-pip',
+    ],
+    'triggers': [
+        'action:left4me_pip_install',
+    ],
+}
+
+actions['left4me_pip_install'] = {
+    # Single pip invocation installs both editable packages from the same checkout.
+    'command': 'sudo -u left4me /opt/left4me/.venv/bin/pip install -e /opt/left4me/src/l4d2host -e /opt/left4me/src/l4d2web',
+    'triggered': True,
+    'cascade_skip': False,
+    'needs': [
+        'git_deploy:/opt/left4me/src',
+        'action:left4me_create_venv',
+    ],
+    'triggers': [
+        'action:left4me_alembic_upgrade',
+    ],
+}
+
+actions['left4me_alembic_upgrade'] = {
+    # Mirrors deploy-test-server.sh:239-242. Runs as left4me with both env
+    # files sourced; JOB_WORKER_ENABLED=false so a stray worker doesn't race
+    # with the migration.
+    'command': (
+        'sudo -u left4me sh -c "'
+        'cd /opt/left4me/src/l4d2web && '
+        'set -a && . /etc/left4me/host.env && . /etc/left4me/web.env && set +a && '
+        'env JOB_WORKER_ENABLED=false PYTHONPATH=/opt/left4me/src '
+        '/opt/left4me/.venv/bin/alembic -c /opt/left4me/src/l4d2web/alembic.ini upgrade head'
+        '"'
+    ),
+    'triggered': True,
+    'cascade_skip': False,
+    'needs': [
+        'action:left4me_pip_install',
+        'file:/etc/left4me/host.env',
+        'file:/etc/left4me/web.env',
+    ],
+    'triggers': [
+        'action:left4me_seed_overlays',
+        'svc_systemd:left4me-web.service:restart',
+    ],
+}
+
+actions['left4me_seed_overlays'] = {
+    # Idempotent: refreshes script bodies in place; existing overlay rows keep their ids.
+    'command': (
+        'sudo -u left4me sh -c "'
+        'set -a && . /etc/left4me/host.env && . /etc/left4me/web.env && set +a && '
+        'env JOB_WORKER_ENABLED=false PYTHONPATH=/opt/left4me/src '
+        '/opt/left4me/.venv/bin/flask --app l4d2web.app:create_app '
+        'seed-script-overlays /opt/left4me/src/examples/script-overlays'
+        '"'
+    ),
+    'triggered': True,
+    'cascade_skip': False,
+    'needs': [
+        'action:left4me_alembic_upgrade',
+    ],
+}

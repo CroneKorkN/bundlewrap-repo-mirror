@@ -13,6 +13,10 @@ defaults = {
             'iproute2': {},
             'curl': {},
             'ca-certificates': {},
+            'python3': {},
+            'python3-venv': {},
+            'python3-pip': {},
+            'python3-dev': {},
         },
     },
 }
