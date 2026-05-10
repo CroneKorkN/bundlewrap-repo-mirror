@@ -12,7 +12,7 @@ not project documentation. Onboarding lives **here**, in `AGENTS.md`.
 
 ## Quickstart for agents
 
-Five rules; follow these and you won't break things:
+Six rules; follow these and you won't break things:
 
 1. **Read-only by default.** Never run `bw apply`, `bw run`, or
    `bw lock` without explicit user request — even with `-i`. Stick
@@ -38,6 +38,12 @@ Five rules; follow these and you won't break things:
 5. **Prefer adding helpers to `libs/`** over duplicating logic across
    bundles. Repo-wide helpers go in
    [`libs/`](libs/AGENTS.md), reachable as `repo.libs.<x>`.
+6. **Search semantically.** This repo is indexed with
+   [`ccc`](https://github.com/cocoindex-io/cocoindex-code) — try
+   `ccc search '<concept>' --path '**'` before `grep` for
+   "where is X / which bundle does Y" questions. Without
+   `--path '**'`, results are filtered to the current working
+   directory's subtree.
 
 ## Layout
 
