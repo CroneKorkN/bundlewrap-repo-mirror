@@ -33,6 +33,7 @@ def acme_zone(metadata):
             str(ip_interface(other_node.metadata.get('network/internal/ipv4')).ip)
                 for other_node in repo.nodes
                 if other_node.metadata.get('letsencrypt/domains', {})
+                and other_node.metadata.get('network/internal/ipv4', None)
         },
         *{
             str(ip_interface(other_node.metadata.get('wireguard/my_ip')).ip)
