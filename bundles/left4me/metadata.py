@@ -44,10 +44,10 @@ def systemd_units(metadata):
                 'HOME=/var/lib/left4me',
                 'PATH=/opt/left4me/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
             },
-            'EnvironmentFile': {
+            'EnvironmentFile': (
                 '/etc/left4me/host.env',
                 '/etc/left4me/web.env',
-            },
+            ),
             'ExecStart': (
                 '/opt/left4me/.venv/bin/gunicorn '
                 f'--workers {workers} --threads {threads} '
@@ -77,10 +77,10 @@ def systemd_units(metadata):
             'Type': 'simple',
             'User': 'left4me',
             'Group': 'left4me',
-            'EnvironmentFile': {
+            'EnvironmentFile': (
                 '/etc/left4me/host.env',
                 '/var/lib/left4me/instances/%i/instance.env',
-            },
+            ),
             'WorkingDirectory': '-/var/lib/left4me/runtime/%i/merged/left4dead2',
             'ExecStartPre': (
                 '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
