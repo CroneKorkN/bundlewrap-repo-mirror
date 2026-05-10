@@ -2,7 +2,7 @@ defaults = {
     'apt': {
         'packages': {
             'dehydrated': {},
-            'dnsutils': {},
+            'bind9-dnsutils': {},
         },
     },
     'letsencrypt': {
