@@ -134,12 +134,12 @@ git_deploy = {
             # sudo) — files end up root-owned. Chown so subsequent
             # `pip install -e` running as left4me can write .egg-info/.
             'action:left4me_chown_src',
-            # create_venv is gated by `unless` for idempotency and doesn't
-            # need to refire on git updates — once the venv exists, it
-            # persists. pip_install IS retriggered so editable installs
-            # pick up the new code.
-            'action:left4me_pip_install',
         ],
+        # pip_install is NOT in triggers (it's not triggered:True so bw
+        # would reject the edge). It runs on every apply with an `unless`
+        # guard for idempotency; editable installs pick up code changes
+        # without re-running pip. For dep changes (rare), nudge by hand:
+        # `bw run ovh.left4me '<the pip command>'`.
     },
 }
 
@@ -181,9 +181,11 @@ actions['left4me_pip_upgrade'] = {
 }
 
 actions['left4me_pip_install'] = {
-    # Single pip invocation installs both editable packages from the same checkout.
+    # Single pip invocation installs both editable packages from the same
+    # checkout. Runs on every apply and self-heals after partial failures;
+    # `unless` short-circuits when both packages are already importable.
     'command': 'sudo -u left4me /opt/left4me/.venv/bin/pip install -e /opt/left4me/src/l4d2host -e /opt/left4me/src/l4d2web',
-    'triggered': True,
+    'unless': 'sudo -u left4me /opt/left4me/.venv/bin/python -c "import l4d2host, l4d2web"',
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',
