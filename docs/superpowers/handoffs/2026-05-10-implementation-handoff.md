@@ -40,8 +40,8 @@ resolve. Commits sit on local `master`, none pushed.
   — read its `§0. Revisions` first; §3 and §7 are now pre-pivot
   intent only.
 - User-stories validation: [`../specs/2026-05-10-user-stories-from-history.md`](../specs/2026-05-10-user-stories-from-history.md).
-- Implementation plan: `~/.claude/plans/btw-are-you-sure-crystalline-balloon.md`
-  (frozen pre-pivot artifact, outside the repo).
+- Implementation plan: [`../plans/2026-05-10-agent-friendliness-plan.md`](../plans/2026-05-10-agent-friendliness-plan.md)
+  (frozen pre-pivot artifact; see its top-of-file note).
 
 ## What's open
 
