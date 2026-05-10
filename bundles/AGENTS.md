@@ -118,6 +118,20 @@ bundles/<name>/
   when the reactor writes into another bundle's namespace — a static
   contribution to e.g. `nftables/output` belongs in `defaults`, where
   bw merges it with other bundles' contributions.
+- **`triggers` ↔ `triggered: True` invariant.** Any item listed in
+  another's `triggers` list must declare `triggered: True`. bw
+  enforces this at `bw test` time: *"…triggered by …, but missing
+  'triggered' attribute"*. Corollary: an action can't be both in an
+  upstream `triggers` list AND self-healing every apply — pick one.
+- **Triggered actions don't recover from partial failure.** When an
+  upstream item's apply succeeds but its triggered downstream action
+  fails, subsequent applies can't recover via the trigger chain —
+  upstream is "already in desired state" and never re-triggers. For
+  actions that must self-heal (pip installs, chowns, migrations),
+  drop `triggered: True` and gate the command with `unless: <fast-check>`.
+  `unless` is a shell command on the target host whose exit status
+  decides whether the main command runs (exit 0 = skip); it's checked
+  at fire time, after `triggered:` filtering.
 
 ## Per-bundle README
 
