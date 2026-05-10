@@ -84,6 +84,7 @@ files = {
         'mode': '0440',
         'owner': 'root',
         'group': 'root',
+        'test_with': 'visudo -cf {}',
     },
     '/etc/sysctl.d/99-left4me.conf': {
         'source': 'etc/sysctl.d/99-left4me.conf',
