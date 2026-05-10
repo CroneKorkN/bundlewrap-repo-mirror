@@ -110,6 +110,14 @@ bundles/<name>/
   itself; grep `'<other-bundle>':` in the reactors when in doubt.
 - **`bw hash` doesn't accept selectors.** Use `bw hash <node>` per
   literal name; see the fork's runbook.
+- **Reactors must read metadata.** If a reactor body returns a static
+  dict without calling `metadata.get(...)`, bw raises
+  `ValueError: <reactor> on <node> did not request any metadata, you
+  might want to use defaults instead` once a node consumes the bundle.
+  Fix: fold the contribution into `defaults`. The rule applies even
+  when the reactor writes into another bundle's namespace — a static
+  contribution to e.g. `nftables/output` belongs in `defaults`, where
+  bw merges it with other bundles' contributions.
 
 ## Per-bundle README
 
