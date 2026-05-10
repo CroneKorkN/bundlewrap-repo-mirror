@@ -5,3 +5,5 @@
 .bw_debug_history
 # CocoIndex Code (ccc)
 /.cocoindex_code/
+# bundlewrap git_deploy local-mirror map (operator-specific paths)
+git_deploy_repos
