@@ -144,8 +144,11 @@ git_deploy = {
 }
 
 actions['left4me_chown_src'] = {
+    # Runs every apply (cheap — chown -R on a small tree). Self-heals
+    # whenever git_deploy extracts a new tarball as root-owned files.
+    # Not in any triggers list so doesn't need triggered:True.
     'command': 'chown -R left4me:left4me /opt/left4me/src',
-    'triggered': True,
+    'unless': 'test -z "$(find /opt/left4me/src \\! -user left4me -print -quit 2>/dev/null)"',
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',
