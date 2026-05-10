@@ -1,4 +1,5 @@
 {
+    'dummy': True,
     'hostname': 'localhost',
     'groups': [
         'all'
