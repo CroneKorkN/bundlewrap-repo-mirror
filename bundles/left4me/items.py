@@ -69,6 +69,7 @@ HELPERS = (
 
 files = {
     '/usr/local/sbin/left4me': {
+        'source': 'usr/local/sbin/left4me',  # explicit — basename collides with sudoers
         'mode': '0755',
         'owner': 'root',
         'group': 'root',
