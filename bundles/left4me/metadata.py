@@ -5,7 +5,7 @@ assert node.has_bundle('systemd')
 defaults = {
     'left4me': {
         # Application-wide defaults; node only overrides if it really needs to.
-        'git_url': 'git@git.sublimity.de:cronekorkn/left4me',
+        'git_url': 'https://git.sublimity.de/cronekorkn/left4me.git',
         'git_branch': 'master',
         'secret_key': repo.vault.random_bytes_as_base64_for(f'{node.name} left4me secret_key', length=32).value,
         'gunicorn_workers': 1,
