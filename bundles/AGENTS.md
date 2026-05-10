@@ -22,8 +22,7 @@ bundles/<name>/
 ├── items.py        # the items this bundle creates (files, services, packages, …)
 ├── metadata.py     # `defaults` + `@metadata_reactor` functions
 ├── files/          # static or templated file payloads referenced from items.py
-├── AGENTS.md       # this bundle's doc (template at AGENTS.template.md)
-└── README.md       # legacy; being phased out (see "Documentation transition" below)
+└── README.md       # one doc per bundle, for humans and agents (see "Per-bundle README" below)
 ```
 
 ## Conventions
@@ -63,10 +62,8 @@ bundles/<name>/
    - `bw hash <node>` — confirm the change is what you expected. See
      [`docs/agents/commands.md`](../docs/agents/commands.md) and the
      fork's hash-diff workflow.
-6. Create `bundles/<name>/AGENTS.md` from
-   [`AGENTS.template.md`](AGENTS.template.md). For a brand-new bundle
-   without consumers yet, leave `Depends on` and `Produces` empty or
-   marked TBD; fill them in after the first verify run.
+6. Add a `bundles/<name>/README.md`. See "Per-bundle README" below
+   for what to cover.
 
 ## How to remove a bundle
 
@@ -88,31 +85,66 @@ bundles/<name>/
 - **Reactors writing across namespaces.** Some bundles' reactors write
   into other bundles' metadata namespaces (e.g. `nextcloud` writes
   into `apt.packages`, `archive.paths`). When you change such a bundle,
-  every consumer's metadata changes too. Per-bundle docs declare these
-  in an optional `## Writes into` section — read it before assuming the
-  blast radius is local.
+  every consumer's metadata changes too. The bundle's `README.md`
+  often calls these out — but the authoritative source is `metadata.py`
+  itself; grep `'<other-bundle>':` in the reactors when in doubt.
 - **`bw hash` doesn't accept selectors.** Use `bw hash <node>` per
   literal name; see the fork's runbook.
 
-## Documentation transition
+## Per-bundle README
 
-This repo is migrating from bundle `README.md` files to per-bundle
-`AGENTS.md` files (one balanced doc per bundle, agents + humans).
+Each bundle has (or should have) a `README.md`. One doc per bundle,
+written for humans and agents both. There's no fixed structure —
+match the bundle's actual surface, write what helps a future reader
+(or future you) avoid trial-and-error.
 
-- Where both exist, **`AGENTS.md` is canonical**; the `README.md` is
-  being phased out.
-- ~28 bundle READMEs survive after the seed migration (the seed PR
-  folds in 5–10 of them; the rest are addressed lazily on the next
-  material edit — Phase 3 leave-as-you-go).
-- Phase-3 rule: any time you (or any agent) materially edits a bundle,
-  top-up its `AGENTS.md` or create one from
-  [`AGENTS.template.md`](AGENTS.template.md). If a stale `README.md`
-  is still around in the bundle, fold it in and remove it in the same
-  commit.
+The existing READMEs vary in quality and shape. For orientation,
+look at the bigger ones, not the two-line ones:
+
+- [`bundles/flask/README.md`](flask/README.md) — title + one-sentence
+  purpose, a metadata example as a Python dict, then the contract
+  the consuming git repo has to satisfy + a logging pitfall. The
+  closest thing to a "balanced doc" in tree.
+- [`bundles/dm-crypt/README.md`](dm-crypt/README.md) — same shape,
+  shorter: purpose + metadata example + one sentence on effect.
+- [`bundles/apt/README.md`](apt/README.md) — relevant upstream URLs
+  at the top, then a Python metadata example with rich inline
+  comments (type / optionality / where keys come from).
+- [`bundles/nextcloud/README.md`](nextcloud/README.md) — operational
+  scratchpad: iPhone-import recipe, preview-generator commands,
+  reset queries. Captures muscle-memory the maintainer would
+  otherwise re-learn each time.
+
+Useful things to include, when relevant:
+
+- A sentence or two on what the bundle does and when you'd attach it.
+- A metadata example as a Python dict literal, with `#` comments
+  on each key (type, required vs default, units, where it comes
+  from). This is the cleanest way to communicate the schema and
+  matches how `metadata.py` actually looks.
+- Anything non-obvious about wiring it up — required keys without
+  defaults, group-membership expectations, manual one-time steps.
+- Cross-namespace metadata writes, when this bundle's reactors
+  populate another bundle's namespace. Easy to miss, cheap to flag.
+- Gotchas, debug recipes, failure modes you've actually hit.
+
+What to skip:
+
+- An exhaustive item list — `items.py` is shorter and more accurate.
+- Anything that would just rot — version numbers, "TODO" lists,
+  change notes. Use git history.
+
+If a single paragraph is enough to say what's worth saying, write a
+single paragraph. Verbosity isn't a goal.
+
+Convention going forward is leave-as-you-go: any time you materially
+edit a bundle, top up its README (or write one if it's missing).
+Don't burn a session bulk-reformatting the existing ones — uneven
+quality is part of what we accept in exchange for not blocking other
+work.
 
 ## See also
 
-- [`AGENTS.template.md`](AGENTS.template.md) — per-bundle doc template.
 - [`docs/agents/conventions.md`](../docs/agents/conventions.md) — repo
   idioms (vault, demagify, naming, do-not-touch list).
 - [`docs/agents/commands.md`](../docs/agents/commands.md) — repo-specific
