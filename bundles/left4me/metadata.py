@@ -1,9 +1,5 @@
-assert node.has_bundle('nftables'), (
-    f'{node.name}: bundle left4me requires bundle nftables (uses nftables/output for srcds DSCP marking)'
-)
-assert node.has_bundle('systemd'), (
-    f'{node.name}: bundle left4me requires bundle systemd (declares units via systemd/units metadata)'
-)
+assert node.has_bundle('nftables')
+assert node.has_bundle('systemd')
 
 
 defaults = {
