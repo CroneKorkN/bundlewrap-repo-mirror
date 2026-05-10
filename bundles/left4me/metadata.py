@@ -18,11 +18,6 @@ defaults = {
         # nftables_input reactor below.
         'port_range_start': 27000,
         'port_range_end': 27999,
-        # Cgroup-v2 cpuset isolation. The first `system_core_count` cores
-        # (starting at 0) go to system / user / l4d2-build; the rest (up to
-        # vm/threads - 1) go to l4d2-game. Bundle refuses to apply on hosts
-        # with < 2 cores or when system_core_count leaves none for games.
-        'system_core_count': 1,
     },
     'apt': {
         'packages': {
@@ -130,159 +125,151 @@ def systemd_units(metadata):
     workers = metadata.get('left4me/gunicorn_workers')
     threads = metadata.get('left4me/gunicorn_threads')
 
-    # cgroup-v2 cpuset. First `system_core_count` cores → system/user/build;
-    # the rest → game. Refuse to apply if there's no useful split.
-    vm_threads = metadata.get('vm/threads', metadata.get('vm/cores', 1))
-    if vm_threads < 2:
+    # cgroup-v2 cpuset. `system_cpus` (set of int CPU ids, declared per
+    # node) pins system/user/build; the complement pins l4d2-game. On HT
+    # hosts, list both siblings of a physical core so games don't share
+    # L1/L2 with system work — pairings via
+    # /sys/devices/system/cpu/cpu<n>/topology/thread_siblings_list.
+    vm_threads = metadata.get('vm/threads', metadata.get('vm/cores'))
+    all_cpus = set(range(vm_threads))
+    system_cpus = metadata.get('left4me/system_cpus')
+    if not system_cpus <= all_cpus:
         raise Exception(
-            f'left4me cpu isolation needs at least 2 cores/threads, host has {vm_threads}'
+            f'left4me/system_cpus={sorted(system_cpus)} on {vm_threads}-thread host '
+            f'includes CPUs outside [0, {vm_threads})'
         )
-    system_core_count = metadata.get('left4me/system_core_count')
-    game_core_count = vm_threads - system_core_count
-    if system_core_count < 1 or game_core_count < 1:
+    game_cpus = all_cpus - system_cpus
+    if not game_cpus:
         raise Exception(
-            f'left4me/system_core_count={system_core_count} on {vm_threads}-thread host '
-            f'leaves {game_core_count} cores for games; both must be >= 1'
+            f'left4me/system_cpus={sorted(system_cpus)} on {vm_threads}-thread host '
+            f'leaves no cores for games'
         )
-    system_cpus = '0' if system_core_count == 1 else f'0-{system_core_count - 1}'
-    game_cpus = (
-        str(system_core_count) if game_core_count == 1
-        else f'{system_core_count}-{vm_threads - 1}'
-    )
+    system_cpus_string = ','.join(str(t) for t in sorted(system_cpus))
+    game_cpus_string = ','.join(str(t) for t in sorted(game_cpus))
 
-    web_service = {
-        'Unit': {
-            'Description': 'left4me web application',
-            'After': 'network-online.target',
-            'Wants': 'network-online.target',
-        },
-        'Service': {
-            'Type': 'simple',
-            'User': 'left4me',
-            'Group': 'left4me',
-            'WorkingDirectory': '/opt/left4me/src',
-            'Environment': {
-                'HOME=/var/lib/left4me',
-                'PATH=/opt/left4me/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-            },
-            'EnvironmentFile': (
-                '/etc/left4me/host.env',
-                '/etc/left4me/web.env',
-            ),
-            'ExecStart': (
-                '/opt/left4me/.venv/bin/gunicorn '
-                f'--workers {workers} --threads {threads} '
-                "--bind 127.0.0.1:8000 'l4d2web.app:create_app()'"
-            ),
-            'Restart': 'on-failure',
-            'RestartSec': '3',
-            # NoNewPrivileges intentionally NOT set: workers sudo to the helpers.
-            'ProtectSystem': 'full',
-            'ReadWritePaths': '/var/lib/left4me',
-            'PrivateTmp': 'true',
-        },
-        'Install': {
-            'WantedBy': {'multi-user.target'},
-        },
-    }
-
-    server_template = {
-        'Unit': {
-            'Description': 'left4me server instance %i',
-            'After': 'network-online.target',
-            'Wants': 'network-online.target',
-            'StartLimitBurst': '5',
-            'StartLimitIntervalSec': '60s',
-        },
-        'Service': {
-            'Type': 'simple',
-            'User': 'left4me',
-            'Group': 'left4me',
-            'EnvironmentFile': (
-                '/etc/left4me/host.env',
-                '/var/lib/left4me/instances/%i/instance.env',
-            ),
-            'WorkingDirectory': '-/var/lib/left4me/runtime/%i/merged/left4dead2',
-            'ExecStartPre': (
-                '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
-                '/usr/local/libexec/left4me/left4me-overlay mount %i'
-            ),
-            'ExecStart': (
-                '/var/lib/left4me/runtime/%i/merged/srcds_run '
-                '-game left4dead2 +hostport ${L4D2_PORT} $L4D2_ARGS'
-            ),
-            'ExecStopPost': (
-                '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
-                '/usr/local/libexec/left4me/left4me-overlay umount %i'
-            ),
-            'Restart': 'on-failure',
-            'RestartSec': '5',
-            'Slice': 'l4d2-game.slice',
-            'Nice': '-5',
-            'IOSchedulingClass': 'best-effort',
-            'IOSchedulingPriority': '4',
-            'OOMScoreAdjust': '-200',
-            'MemoryHigh': '1.5G',
-            'MemoryMax': '2G',
-            'TasksMax': '256',
-            'LimitNOFILE': '65536',
-            'KillSignal': 'SIGINT',
-            'TimeoutStopSec': '15s',
-            'LogRateLimitIntervalSec': '0',
-            'NoNewPrivileges': 'true',
-            'PrivateTmp': 'true',
-            'PrivateDevices': 'true',
-            'ProtectHome': 'true',
-            'ProtectSystem': 'strict',
-            'ReadOnlyPaths': '/var/lib/left4me/installation /var/lib/left4me/overlays',
-            'ReadWritePaths': '/var/lib/left4me/runtime/%i',
-            'RestrictSUIDSGID': 'true',
-            'LockPersonality': 'true',
-        },
-        'Install': {
-            'WantedBy': {'multi-user.target'},
-        },
-    }
-
-    game_slice = {
-        'Unit': {
-            'Description': 'left4me game-server slice',
-            'Before': 'slices.target',
-        },
-        'Slice': {
-            'CPUWeight': '1000',
-            'IOWeight': '1000',
-            'AllowedCPUs': game_cpus,
-        },
-    }
-
-    build_slice = {
-        'Unit': {
-            'Description': 'left4me script-sandbox build slice',
-            'Before': 'slices.target',
-        },
-        'Slice': {
-            'CPUWeight': '10',
-            'IOWeight': '10',
-            'AllowedCPUs': system_cpus,
-        },
-    }
-
-    units = {
-        'left4me-web.service':       web_service,
-        'left4me-server@.service':   server_template,
-        'l4d2-game.slice':           game_slice,
-        'l4d2-build.slice':          build_slice,
-    }
-    # Drop-ins on the upstream system.slice / user.slice (units we don't
-    # own). Same '<parent>.d/<basename>.conf' convention as nginx and
-    # autologin use elsewhere in this repo.
-    cpuset_dropin = {'Slice': {'AllowedCPUs': system_cpus}}
-    units['system.slice.d/99-left4me-cpuset.conf'] = cpuset_dropin
-    units['user.slice.d/99-left4me-cpuset.conf'] = cpuset_dropin
+    # Drop-in for upstream system.slice / user.slice (units we don't own).
+    # Same '<parent>.d/<basename>.conf' convention as nginx and autologin.
+    cpuset_dropin = {'Slice': {'AllowedCPUs': system_cpus_string}}
 
     return {
         'systemd': {
-            'units': units,
+            'units': {
+                'left4me-web.service': {
+                    'Unit': {
+                        'Description': 'left4me web application',
+                        'After': 'network-online.target',
+                        'Wants': 'network-online.target',
+                    },
+                    'Service': {
+                        'Type': 'simple',
+                        'User': 'left4me',
+                        'Group': 'left4me',
+                        'WorkingDirectory': '/opt/left4me/src',
+                        'Environment': {
+                            'HOME=/var/lib/left4me',
+                            'PATH=/opt/left4me/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+                        },
+                        'EnvironmentFile': (
+                            '/etc/left4me/host.env',
+                            '/etc/left4me/web.env',
+                        ),
+                        'ExecStart': (
+                            '/opt/left4me/.venv/bin/gunicorn '
+                            f'--workers {workers} --threads {threads} '
+                            "--bind 127.0.0.1:8000 'l4d2web.app:create_app()'"
+                        ),
+                        'Restart': 'on-failure',
+                        'RestartSec': '3',
+                        # NoNewPrivileges intentionally NOT set: workers sudo to the helpers.
+                        'ProtectSystem': 'full',
+                        'ReadWritePaths': '/var/lib/left4me',
+                        'PrivateTmp': 'true',
+                    },
+                    'Install': {
+                        'WantedBy': {'multi-user.target'},
+                    },
+                },
+                'left4me-server@.service': {
+                    'Unit': {
+                        'Description': 'left4me server instance %i',
+                        'After': 'network-online.target',
+                        'Wants': 'network-online.target',
+                        'StartLimitBurst': '5',
+                        'StartLimitIntervalSec': '60s',
+                    },
+                    'Service': {
+                        'Type': 'simple',
+                        'User': 'left4me',
+                        'Group': 'left4me',
+                        'EnvironmentFile': (
+                            '/etc/left4me/host.env',
+                            '/var/lib/left4me/instances/%i/instance.env',
+                        ),
+                        'WorkingDirectory': '-/var/lib/left4me/runtime/%i/merged/left4dead2',
+                        'ExecStartPre': (
+                            '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
+                            '/usr/local/libexec/left4me/left4me-overlay mount %i'
+                        ),
+                        'ExecStart': (
+                            '/var/lib/left4me/runtime/%i/merged/srcds_run '
+                            '-game left4dead2 +hostport ${L4D2_PORT} $L4D2_ARGS'
+                        ),
+                        'ExecStopPost': (
+                            '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
+                            '/usr/local/libexec/left4me/left4me-overlay umount %i'
+                        ),
+                        'Restart': 'on-failure',
+                        'RestartSec': '5',
+                        'Slice': 'l4d2-game.slice',
+                        'Nice': '-5',
+                        'IOSchedulingClass': 'best-effort',
+                        'IOSchedulingPriority': '4',
+                        'OOMScoreAdjust': '-200',
+                        'MemoryHigh': '1.5G',
+                        'MemoryMax': '2G',
+                        'TasksMax': '256',
+                        'LimitNOFILE': '65536',
+                        'KillSignal': 'SIGINT',
+                        'TimeoutStopSec': '15s',
+                        'LogRateLimitIntervalSec': '0',
+                        'NoNewPrivileges': 'true',
+                        'PrivateTmp': 'true',
+                        'PrivateDevices': 'true',
+                        'ProtectHome': 'true',
+                        'ProtectSystem': 'strict',
+                        'ReadOnlyPaths': '/var/lib/left4me/installation /var/lib/left4me/overlays',
+                        'ReadWritePaths': '/var/lib/left4me/runtime/%i',
+                        'RestrictSUIDSGID': 'true',
+                        'LockPersonality': 'true',
+                    },
+                    'Install': {
+                        'WantedBy': {'multi-user.target'},
+                    },
+                },
+                'l4d2-game.slice': {
+                    'Unit': {
+                        'Description': 'left4me game-server slice',
+                        'Before': 'slices.target',
+                    },
+                    'Slice': {
+                        'CPUWeight': '1000',
+                        'IOWeight': '1000',
+                        'AllowedCPUs': game_cpus_string,
+                    },
+                },
+                'l4d2-build.slice': {
+                    'Unit': {
+                        'Description': 'left4me script-sandbox build slice',
+                        'Before': 'slices.target',
+                    },
+                    'Slice': {
+                        'CPUWeight': '10',
+                        'IOWeight': '10',
+                        'AllowedCPUs': system_cpus_string,
+                    },
+                },
+                'system.slice.d/99-left4me-cpuset.conf': cpuset_dropin,
+                'user.slice.d/99-left4me-cpuset.conf':   cpuset_dropin,
+            },
         },
     }

@@ -79,18 +79,24 @@ from defaults. None of these need to be declared per-node.
   metadata pipeline. The same `left4me` wrapper accepts any other flask
   subcommand: `sudo left4me seed-script-overlays <dir>`,
   `sudo left4me routes`, `sudo left4me shell`, etc.
-- **CPU isolation is managed by this bundle**, driven by one knob:
-  `left4me/system_core_count` (default `1`). The first N cores starting
-  at 0 are pinned to `system.slice` / `user.slice` / `l4d2-build.slice`;
-  the rest (up to `vm/threads - 1`) are pinned to `l4d2-game.slice`.
-  `l4d2-game.slice` and `l4d2-build.slice` carry `AllowedCPUs=` inline
-  on their unit definitions; `system.slice` and `user.slice` are pinned
-  via drop-ins registered under `systemd/units` with the
-  `'<parent>.d/<basename>.conf'` key convention (same shape nginx and
-  autologin use), landing at
+- **CPU isolation is managed by this bundle**, driven by one required
+  per-node knob: `left4me/system_cpus` — a set of int CPU ids that
+  pins `system.slice` / `user.slice` / `l4d2-build.slice`. The
+  complement (`set(range(vm/threads)) - system_cpus`) pins
+  `l4d2-game.slice`. On HT hosts, list both SMT siblings of every
+  physical core you want to reserve for system, otherwise games end
+  up sharing L1/L2 with system. Find pairings via
+  `/sys/devices/system/cpu/cpu<n>/topology/thread_siblings_list`. On
+  the prod node (`ovh.left4me`, 4 physical / 8 threads, pairings
+  (0,4) (1,5) (2,6) (3,7)) the node sets `'system_cpus': {0, 4}` to
+  reserve physical core 0 entirely. `l4d2-game.slice` and
+  `l4d2-build.slice` carry `AllowedCPUs=` inline on their unit
+  definitions; `system.slice` and `user.slice` get drop-ins registered
+  under `systemd/units` with the `'<parent>.d/<basename>.conf'` key
+  convention (same shape nginx and autologin use), landing at
   `/usr/local/lib/systemd/system/<slice>.d/99-left4me-cpuset.conf`.
-  The reactor raises if `vm/threads < 2` or if `system_core_count`
-  leaves no cores for games.
+  The reactor raises if `system_cpus` includes CPUs outside
+  `[0, vm/threads)` or leaves no cores for games.
 - **Kernel feature requirement:** kernel-overlayfs (`CONFIG_OVERLAY_FS`).
   Standard on debian-13.
 - **Game ports** open by the web app on demand in the range 27015-27115

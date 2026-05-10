@@ -43,6 +43,10 @@
         },
         'left4me': {
             'domain': 'left4.me',
+            # Both HT siblings of physical core 0 (cpu0+cpu4 per
+            # /sys/devices/system/cpu/cpu0/topology/thread_siblings_list).
+            # Keeps system work off the physical cores running game ticks.
+            'system_cpus': {0, 4},
         },
     },
 }
