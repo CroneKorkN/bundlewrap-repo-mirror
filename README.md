@@ -13,10 +13,6 @@ Raspberry pi as soundcard
 - OTG g_audio
 - https://audiosciencereview.com/forum/index.php?threads/raspberry-pi-as-usb-to-i2s-adapter.8567/post-215824
 
-# install bw fork
-
-pip3 install --editable git+file:///Users/mwiegand/Projekte/bundlewrap-fork@main#egg=bundlewrap
-
 # monitor timers
 
 ```sh
