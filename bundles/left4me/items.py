@@ -1,6 +1,8 @@
 # Items for the left4me bundle.
 # Systemd units come from metadata via bundles/systemd/ — there are no
-# .service or .slice files in this bundle's files/ tree.
+# .service or .slice files in this bundle's files/ tree. Cpuset drop-ins
+# for system.slice / user.slice are likewise emitted via systemd/units
+# in metadata.py (key: '<parent>.d/<basename>.conf').
 
 directories = {
     '/opt/left4me': {

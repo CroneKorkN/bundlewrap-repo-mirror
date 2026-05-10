@@ -79,12 +79,18 @@ from defaults. None of these need to be declared per-node.
   metadata pipeline. The same `left4me` wrapper accepts any other flask
   subcommand: `sudo left4me seed-script-overlays <dir>`,
   `sudo left4me routes`, `sudo left4me shell`, etc.
-- **CPU isolation drop-ins are not managed by this bundle.** The
-  upstream shell deploy generated `/etc/systemd/system/system.slice.d/
-  99-left4me-cpuset.conf` (and siblings for user/build/game slices)
-  dynamically based on `nproc --all`. That logic is incompatible with
-  static bundle metadata and is out of scope here. Apply CPU isolation
-  manually post-deploy if needed.
+- **CPU isolation is managed by this bundle**, driven by one knob:
+  `left4me/system_core_count` (default `1`). The first N cores starting
+  at 0 are pinned to `system.slice` / `user.slice` / `l4d2-build.slice`;
+  the rest (up to `vm/threads - 1`) are pinned to `l4d2-game.slice`.
+  `l4d2-game.slice` and `l4d2-build.slice` carry `AllowedCPUs=` inline
+  on their unit definitions; `system.slice` and `user.slice` are pinned
+  via drop-ins registered under `systemd/units` with the
+  `'<parent>.d/<basename>.conf'` key convention (same shape nginx and
+  autologin use), landing at
+  `/usr/local/lib/systemd/system/<slice>.d/99-left4me-cpuset.conf`.
+  The reactor raises if `vm/threads < 2` or if `system_core_count`
+  leaves no cores for games.
 - **Kernel feature requirement:** kernel-overlayfs (`CONFIG_OVERLAY_FS`).
   Standard on debian-13.
 - **Game ports** open by the web app on demand in the range 27015-27115

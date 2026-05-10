@@ -11,8 +11,18 @@ defaults = {
         'gunicorn_workers': 1,
         'gunicorn_threads': 32,
         'job_worker_threads': 4,
-        'port_range_start': 27015,
-        'port_range_end': 27115,
+        # Whole 27000-block: covers Steam's defaults (27015 game, 27005
+        # client/RCON) plus headroom for ad-hoc ports without further
+        # nftables changes. Mirrored into LEFT4ME_PORT_RANGE_{START,END}
+        # by web.env.mako and into the nftables input rule by the
+        # nftables_input reactor below.
+        'port_range_start': 27000,
+        'port_range_end': 27999,
+        # Cgroup-v2 cpuset isolation. The first `system_core_count` cores
+        # (starting at 0) go to system / user / l4d2-build; the rest (up to
+        # vm/threads - 1) go to l4d2-game. Bundle refuses to apply on hosts
+        # with < 2 cores or when system_core_count leaves none for games.
+        'system_core_count': 1,
     },
     'apt': {
         'packages': {
@@ -120,6 +130,26 @@ def systemd_units(metadata):
     workers = metadata.get('left4me/gunicorn_workers')
     threads = metadata.get('left4me/gunicorn_threads')
 
+    # cgroup-v2 cpuset. First `system_core_count` cores → system/user/build;
+    # the rest → game. Refuse to apply if there's no useful split.
+    vm_threads = metadata.get('vm/threads', metadata.get('vm/cores', 1))
+    if vm_threads < 2:
+        raise Exception(
+            f'left4me cpu isolation needs at least 2 cores/threads, host has {vm_threads}'
+        )
+    system_core_count = metadata.get('left4me/system_core_count')
+    game_core_count = vm_threads - system_core_count
+    if system_core_count < 1 or game_core_count < 1:
+        raise Exception(
+            f'left4me/system_core_count={system_core_count} on {vm_threads}-thread host '
+            f'leaves {game_core_count} cores for games; both must be >= 1'
+        )
+    system_cpus = '0' if system_core_count == 1 else f'0-{system_core_count - 1}'
+    game_cpus = (
+        str(system_core_count) if game_core_count == 1
+        else f'{system_core_count}-{vm_threads - 1}'
+    )
+
     web_service = {
         'Unit': {
             'Description': 'left4me web application',
@@ -222,6 +252,7 @@ def systemd_units(metadata):
         'Slice': {
             'CPUWeight': '1000',
             'IOWeight': '1000',
+            'AllowedCPUs': game_cpus,
         },
     }
 
@@ -233,16 +264,25 @@ def systemd_units(metadata):
         'Slice': {
             'CPUWeight': '10',
             'IOWeight': '10',
+            'AllowedCPUs': system_cpus,
         },
     }
 
+    units = {
+        'left4me-web.service':       web_service,
+        'left4me-server@.service':   server_template,
+        'l4d2-game.slice':           game_slice,
+        'l4d2-build.slice':          build_slice,
+    }
+    # Drop-ins on the upstream system.slice / user.slice (units we don't
+    # own). Same '<parent>.d/<basename>.conf' convention as nginx and
+    # autologin use elsewhere in this repo.
+    cpuset_dropin = {'Slice': {'AllowedCPUs': system_cpus}}
+    units['system.slice.d/99-left4me-cpuset.conf'] = cpuset_dropin
+    units['user.slice.d/99-left4me-cpuset.conf'] = cpuset_dropin
+
     return {
         'systemd': {
-            'units': {
-                'left4me-web.service':       web_service,
-                'left4me-server@.service':   server_template,
-                'l4d2-game.slice':           game_slice,
-                'l4d2-build.slice':          build_slice,
-            },
+            'units': units,
         },
     }
