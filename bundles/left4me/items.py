@@ -111,9 +111,15 @@ files = {
     '/etc/left4me/host.env': {
         'source': 'etc/left4me/host.env.mako',
         'content_type': 'mako',
-        'mode': '0644',
+        'mode': '0640',
         'owner': 'root',
-        'group': 'root',
+        # group=left4me so the alembic + seed-overlays actions (which run as
+        # `sudo -u left4me sh -c '. /etc/left4me/host.env'`) can source it.
+        # Same pattern as web.env below.
+        'group': 'left4me',
+        'needs': [
+            'group:left4me',
+        ],
     },
     '/etc/left4me/web.env': {
         'source': 'etc/left4me/web.env.mako',
