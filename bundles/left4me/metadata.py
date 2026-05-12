@@ -1,5 +1,6 @@
 assert node.has_bundle('nftables')
 assert node.has_bundle('systemd')
+assert node.has_bundle('systemd-timers')
 
 
 defaults = {
@@ -74,6 +75,28 @@ defaults = {
         'paths': {
             '/var/lib/left4me',
             '/etc/left4me',
+        },
+    },
+    'systemd-timers': {
+        # Daily re-fetch of Steam Workshop metadata + .vpk downloads for any
+        # item whose author published an update. The CLI just inserts a
+        # `refresh_workshop_items` job; the web worker picks it up next.
+        # Idempotent — a re-fire while a refresh is already queued/running
+        # is a no-op (see l4d2web/cli.py:workshop_refresh).
+        'left4me-workshop-refresh': {
+            'command': '/opt/left4me/.venv/bin/flask --app l4d2web.app:create_app workshop-refresh',
+            'when': '*-*-* 04:00:00',
+            'persistent': True,
+            'user': 'left4me',
+            'working_dir': '/opt/left4me/src',
+            'environment_files': (
+                '/etc/left4me/host.env',
+                '/etc/left4me/web.env',
+            ),
+            'after': {
+                'network-online.target',
+                'left4me-web.service',
+            },
         },
     },
 }

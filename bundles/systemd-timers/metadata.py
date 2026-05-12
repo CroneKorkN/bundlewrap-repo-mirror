@@ -44,6 +44,8 @@ def systemd(metadata):
             units[f'{name}.service']['Service']['KillMode'] = config['kill_mode']
         if config.get('RuntimeMaxSec'):
             units[f'{name}.service']['Service']['RuntimeMaxSec'] = config['RuntimeMaxSec']
+        if config.get('environment_files'):
+            units[f'{name}.service']['Service']['EnvironmentFile'] = config['environment_files']
 
         services[f'{name}.timer'] = {}
 
