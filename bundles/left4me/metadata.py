@@ -12,6 +12,12 @@ defaults = {
         'gunicorn_workers': 1,
         'gunicorn_threads': 32,
         'job_worker_threads': 4,
+        # Steam Web API key for the live-state panel's GetPlayerSummaries
+        # lookups (persona names + avatars). Empty default — nodes override
+        # in their own metadata with the actual key. If left empty in prod,
+        # the live-state panel still works but falls back to RCON in-game
+        # names and placeholder avatars.
+        'steam_web_api_key': '',
         # Whole 27000-block: covers Steam's defaults (27015 game, 27005
         # client/RCON) plus headroom for ad-hoc ports without further
         # nftables changes. Mirrored into LEFT4ME_PORT_RANGE_{START,END}

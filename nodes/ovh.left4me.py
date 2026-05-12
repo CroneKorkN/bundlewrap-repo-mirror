@@ -47,6 +47,7 @@
             # /sys/devices/system/cpu/cpu0/topology/thread_siblings_list).
             # Keeps system work off the physical cores running game ticks.
             'system_cpus': {0, 4},
+            'steam_web_api_key': 'encrypt$gAAAAABqA2whFHIw95XJcU9l8oWG-Lwe1ZQbYKDXa1iRI3Oopg3LZIgr--yksABXnKwfB2KIKM9y8o0hhIcUri7JEJjQvgh4IoG0J-IRPBEG56kiW5J4DKi8wW0ks-jeV7lZiW_j9o0z',
         },
     },
 }
