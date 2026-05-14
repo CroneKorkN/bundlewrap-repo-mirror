@@ -61,31 +61,12 @@ users = {
 # policy) so file ownership is deterministic across rebuilds and
 # backup restores. 980/981 are unused elsewhere in this repo.
 
-# Privileged helpers (mode 0755 root:root). Listed by sudoers as the only
-# commands left4me can invoke as root NOPASSWD.
-HELPERS = (
-    'left4me-systemctl',
-    'left4me-journalctl',
-    'left4me-overlay',
-    'left4me-script-sandbox',
-)
+# Privileged helpers are installed by the `install_left4me_scripts`
+# action (below) directly from the left4me git checkout — no verbatim
+# copy in this bundle's files/ tree. Sudoers (further below) lists the
+# specific paths that left4me may invoke as root NOPASSWD.
 
 files = {
-    '/usr/local/sbin/left4me': {
-        'source': 'usr/local/sbin/left4me',  # explicit — basename collides with sudoers
-        'mode': '0755',
-        'owner': 'root',
-        'group': 'root',
-    },
-    **{
-        f'/usr/local/libexec/left4me/{h}': {
-            'source': f'usr/local/libexec/left4me/{h}',
-            'mode': '0755',
-            'owner': 'root',
-            'group': 'root',
-        }
-        for h in HELPERS
-    },
     '/etc/left4me/sandbox-resolv.conf': {
         'source': 'etc/left4me/sandbox-resolv.conf',
         'mode': '0644',
@@ -190,12 +171,37 @@ git_deploy = {
             # update; the seed_overlays + service:restart cascade off
             # alembic also covers picking up the new code in gunicorn.
             'action:left4me_alembic_upgrade',
+            # Privileged-helper scripts: reinstall from the new checkout
+            # into /usr/local/{libexec,sbin}/ as root-owned. No-op when
+            # the checkout didn't actually change (action is triggered).
+            'action:install_left4me_scripts',
         ],
         # chown_src and pip_install are NOT in triggers — they run every
         # apply gated by their own `unless` guards, which makes the chain
         # self-healing after a partial failure. (Items in a triggers list
         # must be triggered:True, which would lose that property.)
     },
+}
+
+actions['install_left4me_scripts'] = {
+    # Copy privileged scripts from the deployed left4me checkout into
+    # /usr/local/{libexec,sbin}/ as root:root 0755. Source of truth for
+    # the file content is left4me's deploy/files/usr/local/ tree; this
+    # bundle no longer carries verbatim duplicates. The two install
+    # globs map source dirs 1:1 to deploy targets. Triggered only on
+    # git_deploy updates so a no-op apply doesn't re-copy.
+    'command': (
+        'install -m 0755 -o root -g root -t /usr/local/libexec/left4me/ '
+        '/opt/left4me/src/deploy/files/usr/local/libexec/left4me/*; '
+        'install -m 0755 -o root -g root -t /usr/local/sbin/ '
+        '/opt/left4me/src/deploy/files/usr/local/sbin/*'
+    ),
+    'triggered': True,
+    'cascade_skip': False,
+    'needs': [
+        'git_deploy:/opt/left4me/src',
+        'directory:/usr/local/libexec/left4me',
+    ],
 }
 
 actions['left4me_chown_src'] = {
