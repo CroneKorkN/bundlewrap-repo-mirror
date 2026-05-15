@@ -159,7 +159,15 @@ HARDENING_COMMON = {
 # socket binds.
 HARDENING_SERVER = {
     **HARDENING_COMMON,
-    'ProcSubset': 'pid',
+    # ProcSubset=pid was here but had to come out: it hides /proc/cpuinfo
+    # and /proc/sys/*, which breaks Source's tier0/cpu.cpp and (downstream)
+    # SteamAPI_Init's "create pipe" step — server then registers as LAN
+    # and rejects external clients with "LAN servers are restricted to
+    # local clients (class C)". PrivatePIDs=true (kernel-level PID
+    # namespace) remains the load-bearing peer-process isolation, and
+    # ProtectProc=invisible is the foreign-uid /proc hide. Losing
+    # ProcSubset=pid only exposes host kernel info (cpuinfo, meminfo,
+    # sysctls), which is not sensitive in this threat model.
     'NoNewPrivileges': 'true',
     'RestrictSUIDSGID': 'true',
     'PrivateUsers': 'true',
