@@ -83,6 +83,17 @@ defaults = {
             '/etc/left4me',
         },
     },
+    'sysctl': {
+        # Block ptrace except from CAP_SYS_PTRACE holders. Belt-and-braces
+        # with SystemCallFilter=~@debug + PrivateUsers=true in the gameserver
+        # unit. See:
+        #   left4me docs/superpowers/specs/2026-05-15-hardening-defenses-survey.md
+        'kernel': {
+            'yama': {
+                'ptrace_scope': '2',
+            },
+        },
+    },
     'systemd-timers': {
         # Daily re-fetch of Steam Workshop metadata + .vpk downloads for any
         # item whose author published an update. The CLI just inserts a
