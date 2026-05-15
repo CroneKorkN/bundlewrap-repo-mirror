@@ -190,6 +190,10 @@ HARDENING_SERVER = {
     'BindReadOnlyPaths': (
         '/var/lib/left4me/installation',
         '/var/lib/left4me/overlays',
+        # Workshop VPKs in overlays are symlinks into workshop_cache;
+        # without this bind they dangle inside the unit and Source
+        # silently fails to load the addons.
+        '/var/lib/left4me/workshop_cache',
         # Steam SDK: srcds dlopen's ~/.steam/sdk32/steamclient.so for
         # Steam master-server registration. Without this, SteamAPI_Init
         # fails and the server falls back to LAN-only mode regardless
