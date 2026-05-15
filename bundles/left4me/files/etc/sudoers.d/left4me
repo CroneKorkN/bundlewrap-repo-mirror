@@ -1,5 +1,0 @@
-Defaults:left4me !requiretty
-left4me ALL=(root) NOPASSWD: /usr/local/libexec/left4me/left4me-systemctl *
-left4me ALL=(root) NOPASSWD: /usr/local/libexec/left4me/left4me-journalctl *
-left4me ALL=(root) NOPASSWD: /usr/local/libexec/left4me/left4me-overlay mount *, /usr/local/libexec/left4me/left4me-overlay umount *
-left4me ALL=(root) NOPASSWD: /usr/local/libexec/left4me/left4me-script-sandbox

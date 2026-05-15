@@ -95,13 +95,6 @@ files = {
         'owner': 'root',
         'group': 'root',
     },
-    '/etc/sudoers.d/left4me': {
-        'source': 'etc/sudoers.d/left4me',
-        'mode': '0440',
-        'owner': 'root',
-        'group': 'root',
-        'test_with': 'visudo -cf {}',
-    },
     '/etc/left4me/host.env': {
         'source': 'etc/left4me/host.env.mako',
         'content_type': 'mako',
@@ -161,6 +154,17 @@ symlinks = {
             'action:left4me_daemon_reload',
         ],
     },
+    '/etc/sudoers.d/left4me': {
+        'target': '/opt/left4me/src/deploy/files/etc/sudoers.d/left4me',
+        'owner': 'root', 'group': 'root',
+        'needs': [
+            'action:left4me_chmod_sudoers',
+            'git_deploy:/opt/left4me/src',
+        ],
+        # sudo follows symlinks; with the target file at root:root 0440
+        # in a root-owned source tree, sudo accepts it. No daemon-reload
+        # equivalent — sudo re-reads /etc/sudoers.d/ on each invocation.
+    },
 }
 
 actions = {
@@ -195,6 +199,18 @@ actions = {
             'action:left4me_daemon_reload',
             'symlink:/etc/systemd/system/left4me-web.service.d/10-hardening.conf',
             'symlink:/etc/systemd/system/left4me-server@.service.d/10-hardening.conf',
+        ],
+    },
+    'left4me_chmod_sudoers': {
+        # sudo refuses sudoers.d entries that aren't 0440 (or 0400) root:root.
+        # git_deploy extracts as root with the in-repo file mode; this action
+        # is belt-and-braces in case the repo mode drifts. Idempotent via
+        # the `unless` gate.
+        'command': 'chmod 0440 /opt/left4me/src/deploy/files/etc/sudoers.d/left4me',
+        'unless': 'test "$(stat -c %a /opt/left4me/src/deploy/files/etc/sudoers.d/left4me)" = "440"',
+        'cascade_skip': False,
+        'needs': [
+            'git_deploy:/opt/left4me/src',
         ],
     },
     'left4me_dpkg_add_i386_arch': {
