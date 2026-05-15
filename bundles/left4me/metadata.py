@@ -34,8 +34,6 @@ defaults = {
             'curl': {},
             'ca-certificates': {},
             'python3': {},
-            'python3-venv': {},
-            'python3-pip': {},
             'python3-dev': {},
             # steamcmd is a 32-bit ELF; needs i386 multiarch + these libs.
             # `_` → `:` is bundlewrap's pkg_apt convention for multiarch

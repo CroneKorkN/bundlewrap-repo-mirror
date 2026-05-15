@@ -287,15 +287,17 @@ git_deploy = {
         'repo': node.metadata.get('left4me/git_url'),
         'rev': node.metadata.get('left4me/git_branch'),
         'triggers': [
-            # Rebuild + reinstall the packages whenever the checkout
-            # changes. pip_install does its own out-of-tree build (copies
-            # source to a left4me-owned tempdir before invoking pip), so
-            # the source tree itself stays root-owned and untouched.
-            # pip_install cascades into alembic_upgrade → web restart.
-            'action:left4me_pip_install',
+            # Re-sync the workspace whenever the checkout changes. uv reads
+            # the committed uv.lock at /opt/left4me/src and installs both
+            # workspace members (l4d2host, l4d2web) editable into
+            # /var/lib/left4me/.venv. Hatchling's PEP 660 editable install
+            # doesn't write to the source tree, so /opt/left4me/src stays
+            # root-owned and untouched. uv_sync cascades into
+            # alembic_upgrade → seed_overlays → web restart.
+            'action:left4me_uv_sync',
             # alembic upgrade head is idempotent — keeping it as a direct
             # trigger off git_deploy is belt-and-braces in case the
-            # pip_install cascade is ever short-circuited.
+            # uv_sync cascade is ever short-circuited.
             'action:left4me_alembic_upgrade',
             # Reload systemd unit definitions whenever the checkout changes;
             # handles updates to hardening drop-in content without requiring
@@ -325,56 +327,69 @@ actions['left4me_chmod_scripts'] = {
     ],
 }
 
-actions['left4me_create_venv'] = {
-    'command': 'sudo -u left4me /usr/bin/python3 -m venv /var/lib/left4me/.venv',
-    'unless':  'test -x /var/lib/left4me/.venv/bin/python',
+actions['left4me_install_uv'] = {
+    # uv is not in Debian Trixie's apt archive (only experimental/sid).
+    # Pin to a specific release; download the tarball + its SHA256
+    # sibling from astral-sh/uv releases, verify, install to
+    # /usr/local/bin. Idempotent via `unless` — only re-runs when the
+    # pinned version changes (bump the constant in two places below).
+    # Pattern matches left4me_install_steamcmd (curl+tar) elsewhere in
+    # this bundle. Bump cadence: as needed; both dev (brew uv) and
+    # prod should track the same minor.
+    'command': """set -e
+tmpdir=$(mktemp -d); trap "rm -rf $tmpdir" EXIT
+base=https://github.com/astral-sh/uv/releases/download/0.11.8
+tar=uv-x86_64-unknown-linux-gnu.tar.gz
+curl -fsSL -o $tmpdir/$tar        $base/$tar
+curl -fsSL -o $tmpdir/$tar.sha256 $base/$tar.sha256
+(cd $tmpdir && sha256sum -c $tar.sha256)
+tar -xzf $tmpdir/$tar -C $tmpdir --strip-components=1
+install -m 0755 $tmpdir/uv  /usr/local/bin/uv
+install -m 0755 $tmpdir/uvx /usr/local/bin/uvx
+""",
+    'unless': '/usr/local/bin/uv --version 2>/dev/null | grep -qx "uv 0.11.8"',
     'cascade_skip': False,
     'needs': [
-        'directory:/var/lib/left4me',
-        'pkg_apt:python3-venv',
-        'user:left4me',
+        'pkg_apt:curl',
     ],
-    'triggers': [
-        'action:left4me_pip_upgrade',
-    ],
+    # No triggers — install_uv is a one-shot bootstrap. uv_sync needs
+    # it (via `needs`), so the dependency runs install_uv first on a
+    # clean host. After that, this action is a no-op on every apply
+    # unless the version pin changes.
 }
 
-actions['left4me_pip_upgrade'] = {
-    'command': 'sudo -u left4me /var/lib/left4me/.venv/bin/python -m pip install --upgrade pip',
-    'triggered': True,
-    'cascade_skip': False,
-    'needs': [
-        'pkg_apt:python3-pip',
-    ],
-    # No triggers — pip_install is driven by git_deploy on actual code
-    # updates, not by venv setup. Keeps pip_upgrade scoped to exactly
-    # its purpose.
-}
-
-actions['left4me_pip_install'] = {
-    # Non-editable install of l4d2host + l4d2web into the venv. We have
-    # to copy the source to a left4me-writable tempdir first because
-    # setuptools.build_meta writes <pkg>.egg-info/ into the source dir
-    # during `get_requires_for_build_wheel`, and the source tree is
-    # root-owned. cp -r is fast (small tree, world-readable), the build
-    # itself happens in $tmpdir, and pip installs the resulting wheel
-    # into /var/lib/left4me/.venv/site-packages. --force-reinstall
-    # because the version string in pyproject.toml (0.1.0) doesn't
-    # change commit-to-commit; without it pip would skip on no-op.
-    # triggered:True so this only fires on actual git_deploy changes
-    # (the cp + build is too heavy to run on every apply).
-    'command': """sudo -u left4me sh -c '
-set -e
-tmpdir=$(mktemp -d -t left4me-build-XXXXXX)
-trap "rm -rf \\"$tmpdir\\"" EXIT
-cp -r /opt/left4me/src/l4d2host /opt/left4me/src/l4d2web "$tmpdir/"
-/var/lib/left4me/.venv/bin/pip install --force-reinstall "$tmpdir/l4d2host" "$tmpdir/l4d2web"
-'""",
+actions['left4me_uv_sync'] = {
+    # The whole "install/refresh the workspace" deploy step, in one
+    # action. uv reads /opt/left4me/src/uv.lock + the workspace's
+    # pyproject.toml and installs both members (l4d2host, l4d2web)
+    # editable into /var/lib/left4me/.venv. Hatchling's PEP 660
+    # editable install drops a .pth pointing at the source tree — no
+    # writes to source, so the root-owned /opt/left4me/src stays clean.
+    #
+    # UV_PROJECT_ENVIRONMENT redirects uv's default venv path
+    # (<project>/.venv) to our writable runtime location. HOME is set
+    # explicitly so uv's cache lands in /var/lib/left4me/.cache/uv
+    # instead of the inherited sudo HOME (which can be unwritable for
+    # the left4me user). cd /var/lib/left4me ensures uv's project-config
+    # walk-up doesn't trip over an unreadable parent (e.g., /root or
+    # /home/ckn). --frozen requires uv.lock to be present and
+    # consistent with pyproject.toml — refuses to silently update the
+    # lockfile during deploy.
+    'command': (
+        'sudo -u left4me sh -c "'
+        'cd /var/lib/left4me && '
+        'env HOME=/var/lib/left4me '
+        'UV_PROJECT_ENVIRONMENT=/var/lib/left4me/.venv '
+        '/usr/local/bin/uv sync --frozen --project /opt/left4me/src'
+        '"'
+    ),
     'triggered': True,
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',
-        'action:left4me_create_venv',
+        'action:left4me_install_uv',
+        'directory:/var/lib/left4me',
+        'user:left4me',
     ],
     'triggers': [
         'action:left4me_alembic_upgrade',
@@ -389,14 +404,14 @@ actions['left4me_alembic_upgrade'] = {
         'sudo -u left4me sh -c "'
         'cd /opt/left4me/src/l4d2web && '
         'set -a && . /etc/left4me/host.env && . /etc/left4me/web.env && set +a && '
-        'env JOB_WORKER_ENABLED=false PYTHONPATH=/opt/left4me/src '
+        'env JOB_WORKER_ENABLED=false '
         '/var/lib/left4me/.venv/bin/alembic -c /opt/left4me/src/l4d2web/alembic.ini upgrade head'
         '"'
     ),
     'triggered': True,
     'cascade_skip': False,
     'needs': [
-        'action:left4me_pip_install',
+        'action:left4me_uv_sync',
         'file:/etc/left4me/host.env',
         'file:/etc/left4me/web.env',
     ],
@@ -411,7 +426,7 @@ actions['left4me_seed_overlays'] = {
     'command': (
         'sudo -u left4me sh -c "'
         'set -a && . /etc/left4me/host.env && . /etc/left4me/web.env && set +a && '
-        'env JOB_WORKER_ENABLED=false PYTHONPATH=/opt/left4me/src '
+        'env JOB_WORKER_ENABLED=false '
         '/var/lib/left4me/.venv/bin/flask --app l4d2web.app:create_app '
         'seed-script-overlays /opt/left4me/src/examples/script-overlays'
         '"'

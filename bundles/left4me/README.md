@@ -82,8 +82,13 @@ Via `systemd/units` metadata in `metadata.py` (consumed by `bundles/systemd/`):
 
 ### Action chains — deploy lifecycle
 
-- `git_deploy` → `pip_install` (non-editable; setuptools writes egg-info to
-  a left4me-writable tempdir) → `alembic_upgrade` → `seed_overlays` + web restart.
+- `git_deploy` → `uv_sync` (`uv sync --frozen` against the workspace's
+  committed `uv.lock`; hatchling PEP 660 editable, doesn't touch source)
+  → `alembic_upgrade` → `seed_overlays` + web restart.
+- One-shot bootstrap: `install_uv` downloads a pinned `uv` binary
+  (SHA256-verified) into `/usr/local/bin` because `uv` isn't in Trixie's
+  apt archive. `unless`-gated, so it's a no-op once the version pin is
+  installed; re-runs only when the constant is bumped.
 - Idempotent gates: `chmod-sudoers` (0440 root:root), `chmod-scripts` (0755 root:root).
 - Post-git-deploy reloads: `systemctl daemon-reload`, `sysctl --system`.
 - Post-apply self-test: `verify-hardening-dropins` (asserts the drop-ins are
