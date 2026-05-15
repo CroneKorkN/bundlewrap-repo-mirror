@@ -248,8 +248,13 @@ def nftables_input(metadata):
     return {
         'nftables': {
             'input': {
+                # Players connect via UDP. TCP on the same port range is RCON
+                # — only the local web app should reach it. Loopback bypasses
+                # the input chain (iifname lo accept in bundles/nftables/...),
+                # so 127.0.0.1 RCON works without an explicit TCP accept here.
+                # External TCP on these ports stays blocked by the default
+                # input-chain drop.
                 f'udp dport {port_start}-{port_end} accept',
-                f'tcp dport {port_start}-{port_end} accept',
             },
         },
     }
@@ -352,7 +357,11 @@ def systemd_units(metadata):
                         ),
                         'WorkingDirectory': '-/var/lib/left4me/runtime/%i/merged/left4dead2',
                         'ExecStartPre': '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- /usr/local/libexec/left4me/left4me-overlay mount %i',
-                        'ExecStart': '/var/lib/left4me/runtime/%i/merged/srcds_run -game left4dead2 +hostport ${L4D2_PORT} $L4D2_ARGS',
+                        # +ip 0.0.0.0 binds RCON (TCP) to all interfaces incl. loopback;
+                        # without this, Source auto-selects the primary IP and the web
+                        # app's 127.0.0.1 RCON connect gets ECONNREFUSED. External TCP
+                        # on the game port range is firewall-blocked in nftables_input.
+                        'ExecStart': '/var/lib/left4me/runtime/%i/merged/srcds_run -game left4dead2 +ip 0.0.0.0 +hostport ${L4D2_PORT} $L4D2_ARGS',
                         'ExecStopPost': '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- /usr/local/libexec/left4me/left4me-overlay umount %i',
                         'Restart': 'on-failure',
                         'RestartSec': '5',
