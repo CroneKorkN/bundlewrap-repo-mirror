@@ -82,11 +82,11 @@ users = {
 # (981 — formerly l4d2-sandbox — was collapsed into 980 on 2026-05-15;
 # see left4me/docs/superpowers/plans/2026-05-15-uid-collapse.md.)
 
-# Privileged helpers are installed by the `install_left4me_scripts`
-# action (below) directly from the left4me git checkout at
-# `/opt/left4me/src/scripts/{libexec,sbin}/` — no verbatim copy in this
-# bundle's files/ tree. Sudoers (further below) lists the specific
-# paths that left4me may invoke as root NOPASSWD.
+# Privileged helpers are delivered via target-side symlinks (see the
+# `symlinks` dict below) pointing into the left4me checkout at
+# `/opt/left4me/src/deploy/scripts/{libexec,sbin}/`. No verbatim copy
+# in this bundle's files/ tree. Sudoers (further below) lists the
+# specific paths that left4me may invoke as root NOPASSWD.
 
 files = {
     '/etc/left4me/sandbox-resolv.conf': {
@@ -166,6 +166,39 @@ symlinks = {
         # equivalent — sudo re-reads /etc/sudoers.d/ on each invocation.
     },
 }
+
+# Helper script source paths (in left4me's checkout) → deployed-form paths.
+# Each gets a symlink item merged into the symlinks dict above.
+_LEFT4ME_LIBEXEC_SCRIPTS = (
+    'left4me-overlay',
+    'left4me-systemctl',
+    'left4me-journalctl',
+    'left4me-script-sandbox',
+)
+_LEFT4ME_SBIN_SCRIPTS = (
+    'left4me',
+)
+
+for _script in _LEFT4ME_LIBEXEC_SCRIPTS:
+    symlinks[f'/usr/local/libexec/left4me/{_script}'] = {
+        'target': f'/opt/left4me/src/deploy/scripts/libexec/{_script}',
+        'owner': 'root', 'group': 'root',
+        'needs': [
+            'directory:/usr/local/libexec/left4me',
+            'action:left4me_chmod_scripts',
+            'git_deploy:/opt/left4me/src',
+        ],
+    }
+
+for _script in _LEFT4ME_SBIN_SCRIPTS:
+    symlinks[f'/usr/local/sbin/{_script}'] = {
+        'target': f'/opt/left4me/src/deploy/scripts/sbin/{_script}',
+        'owner': 'root', 'group': 'root',
+        'needs': [
+            'action:left4me_chmod_scripts',
+            'git_deploy:/opt/left4me/src',
+        ],
+    }
 
 actions = {
     'left4me_sysctl_reload': {
@@ -264,10 +297,6 @@ git_deploy = {
             # trigger off git_deploy is belt-and-braces in case the
             # pip_install cascade is ever short-circuited.
             'action:left4me_alembic_upgrade',
-            # Privileged-helper scripts: reinstall from the new checkout
-            # into /usr/local/{libexec,sbin}/ as root-owned. No-op when
-            # the checkout didn't actually change (action is triggered).
-            'action:install_left4me_scripts',
             # Reload systemd unit definitions whenever the checkout changes;
             # handles updates to hardening drop-in content without requiring
             # a symlink change.
@@ -276,25 +305,23 @@ git_deploy = {
     },
 }
 
-actions['install_left4me_scripts'] = {
-    # Copy privileged scripts from the deployed left4me checkout into
-    # /usr/local/{libexec,sbin}/ as root:root 0755. Source of truth for
-    # the file content is left4me's scripts/{libexec,sbin}/ tree (these
-    # are application code, not deploy artifacts; left4me's deploy/ is
-    # reference material only). The two install globs map source dirs
-    # 1:1 to deploy targets. Triggered only on git_deploy updates so a
-    # no-op apply doesn't re-copy.
+actions['left4me_chmod_scripts'] = {
+    # sudo invokes the helpers by absolute path under /usr/local/...;
+    # those resolve to the checkout via the symlinks above. The target
+    # files must be executable (mode 0755). git_deploy extracts with
+    # the in-repo file modes; this action is belt-and-braces in case
+    # any helper's repo mode regresses to 0644.
     'command': (
-        'install -m 0755 -o root -g root -t /usr/local/libexec/left4me/ '
-        '/opt/left4me/src/scripts/libexec/*; '
-        'install -m 0755 -o root -g root -t /usr/local/sbin/ '
-        '/opt/left4me/src/scripts/sbin/*'
+        'chmod 0755 '
+        '/opt/left4me/src/deploy/scripts/libexec/* '
+        '/opt/left4me/src/deploy/scripts/sbin/*'
     ),
-    'triggered': True,
+    'unless': (
+        '! find /opt/left4me/src/deploy/scripts -type f \\! -perm 755 -print -quit 2>/dev/null | grep -q .'
+    ),
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',
-        'directory:/usr/local/libexec/left4me',
     ],
 }
 
