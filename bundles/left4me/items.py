@@ -56,6 +56,12 @@ directories = {
         'group': 'root',
         'mode': '0755',
     },
+    '/etc/systemd/system/left4me-web.service.d': {
+        'owner': 'root', 'group': 'root', 'mode': '0755',
+    },
+    '/etc/systemd/system/left4me-server@.service.d': {
+        'owner': 'root', 'group': 'root', 'mode': '0755',
+    },
 }
 
 groups = {
@@ -133,12 +139,39 @@ symlinks = {
             'action:left4me_sysctl_reload',
         ],
     },
+    '/etc/systemd/system/left4me-web.service.d/10-hardening.conf': {
+        'target': '/opt/left4me/src/deploy/files/etc/systemd/system/left4me-web.service.d/10-hardening.conf',
+        'owner': 'root', 'group': 'root',
+        'needs': [
+            'directory:/etc/systemd/system/left4me-web.service.d',
+            'git_deploy:/opt/left4me/src',
+        ],
+        'triggers': [
+            'action:left4me_daemon_reload',
+        ],
+    },
+    '/etc/systemd/system/left4me-server@.service.d/10-hardening.conf': {
+        'target': '/opt/left4me/src/deploy/files/etc/systemd/system/left4me-server@.service.d/10-hardening.conf',
+        'owner': 'root', 'group': 'root',
+        'needs': [
+            'directory:/etc/systemd/system/left4me-server@.service.d',
+            'git_deploy:/opt/left4me/src',
+        ],
+        'triggers': [
+            'action:left4me_daemon_reload',
+        ],
+    },
 }
 
 actions = {
     'left4me_sysctl_reload': {
         'command': 'sysctl --system >/dev/null',
         'triggered': True,
+    },
+    'left4me_daemon_reload': {
+        'command': 'systemctl daemon-reload',
+        'triggered': True,
+        'cascade_skip': False,
     },
     'left4me_dpkg_add_i386_arch': {
         # steamcmd is 32-bit and pulls libc6:i386 + lib32z1 from the i386 arch.
@@ -195,6 +228,10 @@ git_deploy = {
             # into /usr/local/{libexec,sbin}/ as root-owned. No-op when
             # the checkout didn't actually change (action is triggered).
             'action:install_left4me_scripts',
+            # Reload systemd unit definitions whenever the checkout changes;
+            # handles updates to hardening drop-in content without requiring
+            # a symlink change.
+            'action:left4me_daemon_reload',
         ],
     },
 }

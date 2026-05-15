@@ -108,123 +108,6 @@ defaults = {
 }
 
 
-# Hardening composition — proven via the hardening test plan (left4me
-# commit 461b8d0). See:
-#   docs/superpowers/specs/2026-05-15-hardening-threat-model.md
-#   docs/superpowers/specs/2026-05-15-hardening-defenses-survey.md
-#   docs/superpowers/specs/2026-05-15-hardening-test-plan.md
-#   docs/superpowers/specs/2026-05-15-hardening-refactor-design.md
-# (paths in the left4me repo)
-
-# Directives both managed units take verbatim.
-#
-# ProcSubset=pid is intentionally NOT in COMMON: it hides
-# /proc/sys/kernel/random/boot_id which journalctl reads at startup,
-# and the web unit invokes `sudo -n left4me-journalctl ...` to stream
-# live server logs into the UI. Server unit adds it back in
-# HARDENING_SERVER (srcds doesn't read journalctl).
-HARDENING_COMMON = {
-    'ProtectProc': 'invisible',
-    'ProtectKernelTunables': 'true',
-    'ProtectKernelModules': 'true',
-    'ProtectKernelLogs': 'true',
-    'ProtectClock': 'true',
-    'ProtectControlGroups': 'true',
-    'ProtectHostname': 'true',
-    'LockPersonality': 'true',
-    'ProtectSystem': 'strict',
-    'ProtectHome': 'true',
-    'PrivateTmp': 'true',
-    'RestrictNamespaces': 'true',
-    'RestrictRealtime': 'true',
-    'RemoveIPC': 'true',
-    'KeyringMode': 'private',
-    'UMask': '0027',
-    'RestrictAddressFamilies': 'AF_INET AF_INET6 AF_UNIX',
-}
-
-# Gameserver unit: COMMON + sudo-incompatible flags + filesystem
-# virtualization + i386 amendment + per-instance PID namespace + bound
-# socket binds.
-HARDENING_SERVER = {
-    **HARDENING_COMMON,
-    # ProcSubset=pid was here but had to come out: it hides /proc/cpuinfo
-    # and /proc/sys/*, which breaks Source's tier0/cpu.cpp and (downstream)
-    # SteamAPI_Init's "create pipe" step — server then registers as LAN
-    # and rejects external clients with "LAN servers are restricted to
-    # local clients (class C)". PrivatePIDs=true (kernel-level PID
-    # namespace) remains the load-bearing peer-process isolation, and
-    # ProtectProc=invisible is the foreign-uid /proc hide. Losing
-    # ProcSubset=pid only exposes host kernel info (cpuinfo, meminfo,
-    # sysctls), which is not sensitive in this threat model.
-    'NoNewPrivileges': 'true',
-    'RestrictSUIDSGID': 'true',
-    'PrivateUsers': 'true',
-    # PrivatePIDs is the test-plan amendment that closes D2.b: same-uid
-    # ProtectProc=invisible cannot hide gunicorn from srcds (both run
-    # as uid 980); a private PID namespace does.
-    'PrivatePIDs': 'true',
-    'PrivateIPC': 'true',
-    'PrivateDevices': 'true',
-    'CapabilityBoundingSet': '',
-    'AmbientCapabilities': '',
-    # srcds_linux is i386 (Source 2007 engine). Bare 'native' kills
-    # every 32-bit syscall and traps srcds_run in a respawn loop.
-    'SystemCallArchitectures': 'native x86',
-    'SystemCallFilter': (
-        '@system-service',
-        '~@debug @mount @raw-io @reboot @swap @cpu-emulation @obsolete @privileged',
-    ),
-    'TemporaryFileSystem': '/var/lib /etc /opt /home /root /srv /mnt /media',
-    'BindReadOnlyPaths': (
-        '/var/lib/left4me/installation',
-        '/var/lib/left4me/overlays',
-        # Workshop VPKs in overlays are symlinks into workshop_cache;
-        # without this bind they dangle inside the unit and Source
-        # silently fails to load the addons.
-        '/var/lib/left4me/workshop_cache',
-        # Steam SDK: srcds dlopen's ~/.steam/sdk32/steamclient.so for
-        # Steam master-server registration. Without this, SteamAPI_Init
-        # fails and the server falls back to LAN-only mode regardless
-        # of sv_lan=0 — clients then get "LAN servers are restricted
-        # to local clients (class C)". .steam holds symlinks into
-        # /var/lib/left4me/steam, so both paths need to be bound back
-        # through TemporaryFileSystem.
-        '/var/lib/left4me/.steam',
-        '/var/lib/left4me/steam',
-        '/etc/left4me/host.env',
-        '/etc/ssl',
-        '/etc/ca-certificates',
-        '/etc/resolv.conf',
-        '/etc/nsswitch.conf',
-        '/etc/alternatives',
-    ),
-    'BindPaths': '/var/lib/left4me/runtime/%i',
-    # Lock srcds bindable sockets to the game port range. Hard-coded
-    # range because systemd directive variable substitution is uneven.
-    'SocketBindAllow': (
-        'udp:27000-27999',
-        'tcp:27000-27999',
-    ),
-    # MemoryDenyWriteExecute=true permanently excluded — Source engine
-    # i386 .so files have text relocations that need mprotect(W+X)
-    # during the dynamic linker's relocation pass.
-}
-
-# Web unit: COMMON + sudo-compatible additions. EXCLUDES
-# NoNewPrivileges, PrivateUsers, RestrictSUIDSGID, empty
-# CapabilityBoundingSet, and ~@privileged in the syscall filter — all
-# sudo-incompatible until a future refactor replaces sudo with
-# systemctl-managed transient units.
-HARDENING_WEB = {
-    **HARDENING_COMMON,
-    'SystemCallArchitectures': 'native',
-    'SystemCallFilter': (
-        '@system-service',
-        '~@debug @mount @raw-io @reboot @swap @cpu-emulation @obsolete',
-    ),
-}
-
 
 @metadata_reactor.provides(
     'nginx/vhosts',
@@ -338,12 +221,9 @@ def systemd_units(metadata):
                         # only its instance dir).
                         'ReadWritePaths': '/var/lib/left4me',
 
-                        # Hardening profile — see HARDENING_WEB constant near top of
-                        # this file. NoNewPrivileges intentionally NOT set: workers
-                        # sudo to the helpers. PrivateUsers and RestrictSUIDSGID also
-                        # absent for the same reason. ProtectSystem tightens from
-                        # 'full' to 'strict' via HARDENING_COMMON.
-                        **HARDENING_WEB,
+                        # Hardening profile delivered via
+                        # /etc/systemd/system/left4me-web.service.d/10-hardening.conf
+                        # (target-side symlink into left4me/deploy/files/, owned by left4me).
                     },
                     'Install': {
                         'WantedBy': {'multi-user.target'},
@@ -390,9 +270,9 @@ def systemd_units(metadata):
                         'TimeoutStopSec': '15s',
                         'LogRateLimitIntervalSec': '0',
 
-                        # Hardening profile — see HARDENING_SERVER constant near top of
-                        # this file for per-directive rationale.
-                        **HARDENING_SERVER,
+                        # Hardening profile delivered via
+                        # /etc/systemd/system/left4me-server@.service.d/10-hardening.conf
+                        # (target-side symlink into left4me/deploy/files/, owned by left4me).
                     },
                     'Install': {
                         'WantedBy': {'multi-user.target'},
