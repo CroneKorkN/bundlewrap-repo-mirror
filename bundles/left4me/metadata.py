@@ -128,9 +128,14 @@ defaults = {
 # (paths in the left4me repo)
 
 # Directives both managed units take verbatim.
+#
+# ProcSubset=pid is intentionally NOT in COMMON: it hides
+# /proc/sys/kernel/random/boot_id which journalctl reads at startup,
+# and the web unit invokes `sudo -n left4me-journalctl ...` to stream
+# live server logs into the UI. Server unit adds it back in
+# HARDENING_SERVER (srcds doesn't read journalctl).
 HARDENING_COMMON = {
     'ProtectProc': 'invisible',
-    'ProcSubset': 'pid',
     'ProtectKernelTunables': 'true',
     'ProtectKernelModules': 'true',
     'ProtectKernelLogs': 'true',
@@ -154,6 +159,7 @@ HARDENING_COMMON = {
 # socket binds.
 HARDENING_SERVER = {
     **HARDENING_COMMON,
+    'ProcSubset': 'pid',
     'NoNewPrivileges': 'true',
     'RestrictSUIDSGID': 'true',
     'PrivateUsers': 'true',
