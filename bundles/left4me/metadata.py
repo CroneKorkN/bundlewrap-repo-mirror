@@ -182,6 +182,15 @@ HARDENING_SERVER = {
     'BindReadOnlyPaths': (
         '/var/lib/left4me/installation',
         '/var/lib/left4me/overlays',
+        # Steam SDK: srcds dlopen's ~/.steam/sdk32/steamclient.so for
+        # Steam master-server registration. Without this, SteamAPI_Init
+        # fails and the server falls back to LAN-only mode regardless
+        # of sv_lan=0 — clients then get "LAN servers are restricted
+        # to local clients (class C)". .steam holds symlinks into
+        # /opt/left4me/steam, so both paths need to be bound back
+        # through TemporaryFileSystem.
+        '/var/lib/left4me/.steam',
+        '/opt/left4me/steam',
         '/etc/left4me/host.env',
         '/etc/ssl',
         '/etc/ca-certificates',
