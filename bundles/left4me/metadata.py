@@ -326,20 +326,13 @@ def systemd_units(metadata):
                             '/var/lib/left4me/instances/%i/instance.env',
                         ),
                         'WorkingDirectory': '-/var/lib/left4me/runtime/%i/merged/left4dead2',
-                        'ExecStartPre': (
-                            '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
-                            '/usr/local/libexec/left4me/left4me-overlay mount %i'
-                        ),
-                        'ExecStart': (
-                            '/var/lib/left4me/runtime/%i/merged/srcds_run '
-                            '-game left4dead2 +hostport ${L4D2_PORT} $L4D2_ARGS'
-                        ),
-                        'ExecStopPost': (
-                            '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- '
-                            '/usr/local/libexec/left4me/left4me-overlay umount %i'
-                        ),
+                        'ExecStartPre': '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- /usr/local/libexec/left4me/left4me-overlay mount %i',
+                        'ExecStart': '/var/lib/left4me/runtime/%i/merged/srcds_run -game left4dead2 +hostport ${L4D2_PORT} $L4D2_ARGS',
+                        'ExecStopPost': '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- /usr/local/libexec/left4me/left4me-overlay umount %i',
                         'Restart': 'on-failure',
                         'RestartSec': '5',
+
+                        # Resource control (baseline from prior performance work).
                         'Slice': 'l4d2-game.slice',
                         'Nice': '-5',
                         'IOSchedulingClass': 'best-effort',
@@ -352,15 +345,10 @@ def systemd_units(metadata):
                         'KillSignal': 'SIGINT',
                         'TimeoutStopSec': '15s',
                         'LogRateLimitIntervalSec': '0',
-                        'NoNewPrivileges': 'true',
-                        'PrivateTmp': 'true',
-                        'PrivateDevices': 'true',
-                        'ProtectHome': 'true',
-                        'ProtectSystem': 'strict',
-                        'ReadOnlyPaths': '/var/lib/left4me/installation /var/lib/left4me/overlays',
-                        'ReadWritePaths': '/var/lib/left4me/runtime/%i',
-                        'RestrictSUIDSGID': 'true',
-                        'LockPersonality': 'true',
+
+                        # Hardening profile — see HARDENING_SERVER constant near top of
+                        # this file for per-directive rationale.
+                        **HARDENING_SERVER,
                     },
                     'Install': {
                         'WantedBy': {'multi-user.target'},
