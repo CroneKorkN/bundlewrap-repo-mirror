@@ -300,10 +300,18 @@ def systemd_units(metadata):
                         ),
                         'Restart': 'on-failure',
                         'RestartSec': '3',
-                        # NoNewPrivileges intentionally NOT set: workers sudo to the helpers.
-                        'ProtectSystem': 'full',
+
+                        # Web app writes broadly under /var/lib/left4me. Kept inline
+                        # because it's web-specific (server@ uses BindPaths to bind
+                        # only its instance dir).
                         'ReadWritePaths': '/var/lib/left4me',
-                        'PrivateTmp': 'true',
+
+                        # Hardening profile — see HARDENING_WEB constant near top of
+                        # this file. NoNewPrivileges intentionally NOT set: workers
+                        # sudo to the helpers. PrivateUsers and RestrictSUIDSGID also
+                        # absent for the same reason. ProtectSystem tightens from
+                        # 'full' to 'strict' via HARDENING_COMMON.
+                        **HARDENING_WEB,
                     },
                     'Install': {
                         'WantedBy': {'multi-user.target'},
