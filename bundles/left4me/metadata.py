@@ -101,7 +101,7 @@ defaults = {
         # Idempotent — a re-fire while a refresh is already queued/running
         # is a no-op (see l4d2web/cli.py:workshop_refresh).
         'left4me-workshop-refresh': {
-            'command': '/opt/left4me/.venv/bin/flask --app l4d2web.app:create_app workshop-refresh',
+            'command': '/var/lib/left4me/.venv/bin/flask --app l4d2web.app:create_app workshop-refresh',
             'when': '*-*-* 04:00:00',
             'persistent': True,
             'user': 'left4me',
@@ -199,10 +199,10 @@ HARDENING_SERVER = {
         # fails and the server falls back to LAN-only mode regardless
         # of sv_lan=0 — clients then get "LAN servers are restricted
         # to local clients (class C)". .steam holds symlinks into
-        # /opt/left4me/steam, so both paths need to be bound back
+        # /var/lib/left4me/steam, so both paths need to be bound back
         # through TemporaryFileSystem.
         '/var/lib/left4me/.steam',
-        '/opt/left4me/steam',
+        '/var/lib/left4me/steam',
         '/etc/left4me/host.env',
         '/etc/ssl',
         '/etc/ca-certificates',
@@ -330,14 +330,14 @@ def systemd_units(metadata):
                         'WorkingDirectory': '/opt/left4me/src',
                         'Environment': {
                             'HOME=/var/lib/left4me',
-                            'PATH=/opt/left4me/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+                            'PATH=/var/lib/left4me/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
                         },
                         'EnvironmentFile': (
                             '/etc/left4me/host.env',
                             '/etc/left4me/web.env',
                         ),
                         'ExecStart': (
-                            '/opt/left4me/.venv/bin/gunicorn '
+                            '/var/lib/left4me/.venv/bin/gunicorn '
                             f'--workers {workers} --threads {threads} '
                             "--bind 127.0.0.1:8000 'l4d2web.app:create_app()'"
                         ),

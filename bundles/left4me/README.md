@@ -44,10 +44,19 @@ from defaults. None of these need to be declared per-node.
   (`left4me-systemctl`, `left4me-journalctl`, `left4me-overlay`,
   `left4me-script-sandbox`) plus a tight sudoers file (validated with
   `visudo -cf` before install).
-- `git_deploy`s the left4me repo to `/opt/left4me/src`, builds a venv at
-  `/opt/left4me/.venv`, `pip install -e`s both `l4d2host` and `l4d2web`,
-  runs `alembic upgrade head` and `flask seed-script-overlays`, then
-  enables `left4me-web.service`.
+- `git_deploy`s the left4me repo to `/opt/left4me/src` (root-owned —
+  the source tree is read-only at runtime so left4me cannot rewrite
+  its own future hardening drop-ins / unit files under
+  `/opt/left4me/src/deploy/`). Builds a venv at `/var/lib/left4me/.venv`
+  and installs `l4d2host` + `l4d2web` non-editably (`pip install` copies
+  source to a left4me-writable tempdir first, since setuptools writes
+  egg-info into the source dir during the wheel build). Then runs
+  `alembic upgrade head` and `flask seed-script-overlays` and enables
+  `left4me-web.service`. Developer machines keep `pip install -e` via
+  direnv for fast iteration; only the production install model differs.
+  Runtime mutable state lives under `/var/lib/left4me/` (venv, steamcmd,
+  game installations, overlays); `/opt/left4me/` stays as a root-owned
+  deploy-artifact root.
 - Emits four systemd units via `systemd/units` metadata (consumed by
   `bundles/systemd/`):
   - `left4me-web.service` — gunicorn on `127.0.0.1:8000` (TLS terminates upstream).

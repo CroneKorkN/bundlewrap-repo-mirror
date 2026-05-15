@@ -6,12 +6,26 @@
 
 directories = {
     '/opt/left4me': {
-        'owner': 'left4me',
-        'group': 'left4me',
+        # Deploy-artifact root. Only /opt/left4me/src lives here; runtime
+        # state (.venv, steamcmd) lives under /var/lib/left4me/. Root-owned
+        # so left4me cannot drop new files alongside src/ (e.g. an attacker
+        # with web-compromise can't plant a 'scripts.d/' loaded by future
+        # deploy logic).
+        'owner': 'root',
+        'group': 'root',
+        'mode': '0755',
     },
     '/opt/left4me/src': {
-        'owner': 'left4me',
-        'group': 'left4me',
+        # Source checkout. Root-owned because the production install model
+        # is non-editable: pip_install copies the source to a left4me-owned
+        # tempdir before building, so the source tree on disk is never
+        # mutated at runtime and left4me only needs read access (which
+        # world-readable bits provide). Keeps left4me from being able to
+        # rewrite its own future hardening drop-ins / unit files under
+        # /opt/left4me/src/deploy/ (target-side symlink model in the
+        # deployment-responsibility reshape).
+        'owner': 'root',
+        'group': 'root',
     },
     '/etc/left4me': {
         'owner': 'root',
@@ -33,7 +47,10 @@ directories = {
     '/var/lib/left4me/runtime':        {'owner': 'left4me', 'group': 'left4me'},
     '/var/lib/left4me/workshop_cache': {'owner': 'left4me', 'group': 'left4me'},
     '/var/lib/left4me/tmp':            {'owner': 'left4me', 'group': 'left4me'},
-    '/opt/left4me/steam':              {'owner': 'left4me', 'group': 'left4me'},
+    '/var/lib/left4me/steam':          {'owner': 'left4me', 'group': 'left4me'},
+    # Note: the venv (/var/lib/left4me/.venv) is created by the
+    # left4me_create_venv action; declaring it here too would race with
+    # `python -m venv` which expects to create the directory itself.
     '/usr/local/libexec/left4me': {
         'owner': 'root',
         'group': 'root',
@@ -133,15 +150,15 @@ actions = {
         # tarball version from bw isn't useful.
         'command': (
             'sudo -u left4me sh -c "'
-            'cd /opt/left4me/steam && '
+            'cd /var/lib/left4me/steam && '
             'curl -fsSL https://media.steampowered.com/installer/steamcmd_linux.tar.gz | '
             'tar -xz'
             '"'
         ),
-        'unless': 'test -x /opt/left4me/steam/steamcmd.sh',
+        'unless': 'test -x /var/lib/left4me/steam/steamcmd.sh',
         'cascade_skip': False,
         'needs': [
-            'directory:/opt/left4me/steam',
+            'directory:/var/lib/left4me/steam',
             'pkg_apt:curl',
             'pkg_apt:libc6_i386',  # bw pkg_apt convention: _ → :
             'pkg_apt:lib32z1',
@@ -159,26 +176,21 @@ git_deploy = {
         'repo': node.metadata.get('left4me/git_url'),
         'rev': node.metadata.get('left4me/git_branch'),
         'triggers': [
-            # On a code-update apply, refresh the DB schema. pip_install
-            # would have triggered alembic in the create_venv path, but on
-            # a normal apply pip_install's `unless` skips (packages still
-            # importable from the previous editable install), and that
-            # would leave alembic_upgrade dormant. Wiring git_deploy →
-            # alembic directly ensures new migrations land whenever new
-            # code lands. alembic upgrade head is idempotent (no-op when
-            # already at head), so this is safe to fire on every code
-            # update; the seed_overlays + service:restart cascade off
-            # alembic also covers picking up the new code in gunicorn.
+            # Rebuild + reinstall the packages whenever the checkout
+            # changes. pip_install does its own out-of-tree build (copies
+            # source to a left4me-owned tempdir before invoking pip), so
+            # the source tree itself stays root-owned and untouched.
+            # pip_install cascades into alembic_upgrade → web restart.
+            'action:left4me_pip_install',
+            # alembic upgrade head is idempotent — keeping it as a direct
+            # trigger off git_deploy is belt-and-braces in case the
+            # pip_install cascade is ever short-circuited.
             'action:left4me_alembic_upgrade',
             # Privileged-helper scripts: reinstall from the new checkout
             # into /usr/local/{libexec,sbin}/ as root-owned. No-op when
             # the checkout didn't actually change (action is triggered).
             'action:install_left4me_scripts',
         ],
-        # chown_src and pip_install are NOT in triggers — they run every
-        # apply gated by their own `unless` guards, which makes the chain
-        # self-healing after a partial failure. (Items in a triggers list
-        # must be triggered:True, which would lose that property.)
     },
 }
 
@@ -204,26 +216,12 @@ actions['install_left4me_scripts'] = {
     ],
 }
 
-actions['left4me_chown_src'] = {
-    # Runs every apply (cheap — chown -R on a small tree). Self-heals
-    # whenever git_deploy extracts a new tarball as root-owned files.
-    # Not in any triggers list so doesn't need triggered:True.
-    'command': 'chown -R left4me:left4me /opt/left4me/src',
-    'unless': 'test -z "$(find /opt/left4me/src \\! -user left4me -print -quit 2>/dev/null)"',
-    'cascade_skip': False,
-    'needs': [
-        'git_deploy:/opt/left4me/src',
-        'user:left4me',
-        'group:left4me',
-    ],
-}
-
 actions['left4me_create_venv'] = {
-    'command': 'sudo -u left4me /usr/bin/python3 -m venv /opt/left4me/.venv',
-    'unless':  'test -x /opt/left4me/.venv/bin/python',
+    'command': 'sudo -u left4me /usr/bin/python3 -m venv /var/lib/left4me/.venv',
+    'unless':  'test -x /var/lib/left4me/.venv/bin/python',
     'cascade_skip': False,
     'needs': [
-        'directory:/opt/left4me',
+        'directory:/var/lib/left4me',
         'pkg_apt:python3-venv',
         'user:left4me',
     ],
@@ -233,29 +231,41 @@ actions['left4me_create_venv'] = {
 }
 
 actions['left4me_pip_upgrade'] = {
-    'command': 'sudo -u left4me /opt/left4me/.venv/bin/python -m pip install --upgrade pip',
+    'command': 'sudo -u left4me /var/lib/left4me/.venv/bin/python -m pip install --upgrade pip',
     'triggered': True,
     'cascade_skip': False,
     'needs': [
         'pkg_apt:python3-pip',
     ],
-    # No triggers — pip_install runs on every apply (gated by `unless`)
-    # rather than being chained from here. Keeps pip_upgrade scoped to
-    # exactly its purpose.
+    # No triggers — pip_install is driven by git_deploy on actual code
+    # updates, not by venv setup. Keeps pip_upgrade scoped to exactly
+    # its purpose.
 }
 
 actions['left4me_pip_install'] = {
-    # Single pip invocation installs both editable packages from the same
-    # checkout. Runs on every apply: pip install -e is fast on no-op, and
-    # any gate weaker than "egg-info matches pyproject.toml" can mask
-    # script regeneration — e.g. adding [project.scripts] later wouldn't
-    # be picked up if `unless` only checks importability.
-    'command': 'sudo -u left4me /opt/left4me/.venv/bin/pip install -e /opt/left4me/src/l4d2host -e /opt/left4me/src/l4d2web',
+    # Non-editable install of l4d2host + l4d2web into the venv. We have
+    # to copy the source to a left4me-writable tempdir first because
+    # setuptools.build_meta writes <pkg>.egg-info/ into the source dir
+    # during `get_requires_for_build_wheel`, and the source tree is
+    # root-owned. cp -r is fast (small tree, world-readable), the build
+    # itself happens in $tmpdir, and pip installs the resulting wheel
+    # into /var/lib/left4me/.venv/site-packages. --force-reinstall
+    # because the version string in pyproject.toml (0.1.0) doesn't
+    # change commit-to-commit; without it pip would skip on no-op.
+    # triggered:True so this only fires on actual git_deploy changes
+    # (the cp + build is too heavy to run on every apply).
+    'command': """sudo -u left4me sh -c '
+set -e
+tmpdir=$(mktemp -d -t left4me-build-XXXXXX)
+trap "rm -rf \\"$tmpdir\\"" EXIT
+cp -r /opt/left4me/src/l4d2host /opt/left4me/src/l4d2web "$tmpdir/"
+/var/lib/left4me/.venv/bin/pip install --force-reinstall "$tmpdir/l4d2host" "$tmpdir/l4d2web"
+'""",
+    'triggered': True,
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',
         'action:left4me_create_venv',
-        'action:left4me_chown_src',
     ],
     'triggers': [
         'action:left4me_alembic_upgrade',
@@ -271,7 +281,7 @@ actions['left4me_alembic_upgrade'] = {
         'cd /opt/left4me/src/l4d2web && '
         'set -a && . /etc/left4me/host.env && . /etc/left4me/web.env && set +a && '
         'env JOB_WORKER_ENABLED=false PYTHONPATH=/opt/left4me/src '
-        '/opt/left4me/.venv/bin/alembic -c /opt/left4me/src/l4d2web/alembic.ini upgrade head'
+        '/var/lib/left4me/.venv/bin/alembic -c /opt/left4me/src/l4d2web/alembic.ini upgrade head'
         '"'
     ),
     'triggered': True,
@@ -293,7 +303,7 @@ actions['left4me_seed_overlays'] = {
         'sudo -u left4me sh -c "'
         'set -a && . /etc/left4me/host.env && . /etc/left4me/web.env && set +a && '
         'env JOB_WORKER_ENABLED=false PYTHONPATH=/opt/left4me/src '
-        '/opt/left4me/.venv/bin/flask --app l4d2web.app:create_app '
+        '/var/lib/left4me/.venv/bin/flask --app l4d2web.app:create_app '
         'seed-script-overlays /opt/left4me/src/examples/script-overlays'
         '"'
     ),
