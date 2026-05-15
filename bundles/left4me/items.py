@@ -173,6 +173,30 @@ actions = {
         'triggered': True,
         'cascade_skip': False,
     },
+    'left4me_verify_hardening_dropins_loaded': {
+        # Post-apply self-test: confirm systemd actually picked up the
+        # hardening drop-ins we shipped via symlink. Catches the failure
+        # mode where the symlink lands but daemon-reload didn't take or
+        # someone manually unlinked the drop-in. For the gameserver template
+        # we query an imaginary instance — systemd resolves drop-in paths
+        # for `name@instance.service` against the template (`name@.service.d/`),
+        # so the instance need not exist or ever have run.
+        'command': (
+            'systemctl show left4me-server@verify.service -p DropInPaths --value '
+            '| tr " " "\\n" '
+            '| grep -qx /etc/systemd/system/left4me-server@.service.d/10-hardening.conf '
+            '&& '
+            'systemctl show left4me-web.service -p DropInPaths --value '
+            '| tr " " "\\n" '
+            '| grep -qx /etc/systemd/system/left4me-web.service.d/10-hardening.conf'
+        ),
+        'cascade_skip': False,
+        'needs': [
+            'action:left4me_daemon_reload',
+            'symlink:/etc/systemd/system/left4me-web.service.d/10-hardening.conf',
+            'symlink:/etc/systemd/system/left4me-server@.service.d/10-hardening.conf',
+        ],
+    },
     'left4me_dpkg_add_i386_arch': {
         # steamcmd is 32-bit and pulls libc6:i386 + lib32z1 from the i386 arch.
         # apt-get update is part of this action because newly-added foreign
