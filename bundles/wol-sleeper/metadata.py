@@ -45,17 +45,20 @@ defaults = {
 
 @metadata_reactor.provides(
     'wol-sleeper/mac',
+    'wol-sleeper/waker_command',
     'wol-sleeper/wake_command',
 )
 def wake_command(metadata):
     waker_hostname = repo.get_node(metadata.get('wol-sleeper/waker')).hostname
     mac = metadata.get(f"network/{metadata.get('wol-sleeper/network')}/mac")
-    ip = ip_interface(metadata.get(f"network/{metadata.get('wol-sleeper/network')}/ipv4")).ip
+    network = ip_interface(metadata.get(f"network/{metadata.get('wol-sleeper/network')}/ipv4"))
+    waker_command = f"/usr/bin/wakeonlan -i {network.network.broadcast_address} {mac}"
 
     return {
         'wol-sleeper': {
             'mac': mac,
-            'wake_command': f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} '/usr/bin/wakeonlan {mac}' && while ! ping {ip} -c1 -W3; do true; done",
+            'waker_command': waker_command,
+            'wake_command': f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} '{waker_command}' && while ! ping {network.ip} -c1 -W3; do true; done",
         },
     }
 

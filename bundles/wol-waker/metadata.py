@@ -17,7 +17,7 @@ def user(metadata):
                 'authorized_users': {
                     f'root@{ssh_client.name}': {
                         'commands': {
-                            '/usr/bin/wakeonlan ' + sleeper.metadata.get('wol-sleeper/mac')
+                            sleeper.metadata.get('wol-sleeper/waker_command')
                                 for sleeper in repo.nodes
                                 if sleeper.has_bundle('wol-sleeper')
                                 and sleeper.metadata.get('wol-sleeper/waker') == node.name
