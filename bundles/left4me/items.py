@@ -96,15 +96,6 @@ files = {
         'group': 'root',
         'test_with': 'visudo -cf {}',
     },
-    '/etc/sysctl.d/99-left4me.conf': {
-        'source': 'etc/sysctl.d/99-left4me.conf',
-        'mode': '0644',
-        'owner': 'root',
-        'group': 'root',
-        'triggers': [
-            'action:left4me_sysctl_reload',
-        ],
-    },
     '/etc/left4me/host.env': {
         'source': 'etc/left4me/host.env.mako',
         'content_type': 'mako',
@@ -126,6 +117,20 @@ files = {
         'group': 'left4me',
         'needs': [
             'group:left4me',
+        ],
+    },
+}
+
+symlinks = {
+    '/etc/sysctl.d/99-left4me.conf': {
+        'target': '/opt/left4me/src/deploy/files/etc/sysctl.d/99-left4me.conf',
+        'owner': 'root',
+        'group': 'root',
+        'needs': [
+            'git_deploy:/opt/left4me/src',
+        ],
+        'triggers': [
+            'action:left4me_sysctl_reload',
         ],
     },
 }
