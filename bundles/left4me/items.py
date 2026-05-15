@@ -62,9 +62,10 @@ users = {
 # backup restores. 980/981 are unused elsewhere in this repo.
 
 # Privileged helpers are installed by the `install_left4me_scripts`
-# action (below) directly from the left4me git checkout — no verbatim
-# copy in this bundle's files/ tree. Sudoers (further below) lists the
-# specific paths that left4me may invoke as root NOPASSWD.
+# action (below) directly from the left4me git checkout at
+# `/opt/left4me/src/scripts/{libexec,sbin}/` — no verbatim copy in this
+# bundle's files/ tree. Sudoers (further below) lists the specific
+# paths that left4me may invoke as root NOPASSWD.
 
 files = {
     '/etc/left4me/sandbox-resolv.conf': {
@@ -186,15 +187,16 @@ git_deploy = {
 actions['install_left4me_scripts'] = {
     # Copy privileged scripts from the deployed left4me checkout into
     # /usr/local/{libexec,sbin}/ as root:root 0755. Source of truth for
-    # the file content is left4me's deploy/files/usr/local/ tree; this
-    # bundle no longer carries verbatim duplicates. The two install
-    # globs map source dirs 1:1 to deploy targets. Triggered only on
-    # git_deploy updates so a no-op apply doesn't re-copy.
+    # the file content is left4me's scripts/{libexec,sbin}/ tree (these
+    # are application code, not deploy artifacts; left4me's deploy/ is
+    # reference material only). The two install globs map source dirs
+    # 1:1 to deploy targets. Triggered only on git_deploy updates so a
+    # no-op apply doesn't re-copy.
     'command': (
         'install -m 0755 -o root -g root -t /usr/local/libexec/left4me/ '
-        '/opt/left4me/src/deploy/files/usr/local/libexec/left4me/*; '
+        '/opt/left4me/src/scripts/libexec/*; '
         'install -m 0755 -o root -g root -t /usr/local/sbin/ '
-        '/opt/left4me/src/deploy/files/usr/local/sbin/*'
+        '/opt/left4me/src/scripts/sbin/*'
     ),
     'triggered': True,
     'cascade_skip': False,
