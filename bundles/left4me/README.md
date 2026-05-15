@@ -36,36 +36,74 @@ from defaults. None of these need to be declared per-node.
 
 ## What this bundle does
 
-- Creates system user `left4me` (uid/gid 980, home `/var/lib/left4me`,
-  mode 0755) — same uid hosts the web app, gameservers, and the
-  script-overlay sandbox unit (which drops privileges via systemd-run
-  with a fully hardened transient service).
-- Drops privileged helpers under `/usr/local/libexec/left4me/`
-  (`left4me-systemctl`, `left4me-journalctl`, `left4me-overlay`,
-  `left4me-script-sandbox`) plus a tight sudoers file (validated with
-  `visudo -cf` before install).
-- `git_deploy`s the left4me repo to `/opt/left4me/src` (root-owned —
-  the source tree is read-only at runtime so left4me cannot rewrite
-  its own future hardening drop-ins / unit files under
-  `/opt/left4me/src/deploy/`). Builds a venv at `/var/lib/left4me/.venv`
-  and installs `l4d2host` + `l4d2web` non-editably (`pip install` copies
-  source to a left4me-writable tempdir first, since setuptools writes
-  egg-info into the source dir during the wheel build). Then runs
-  `alembic upgrade head` and `flask seed-script-overlays` and enables
-  `left4me-web.service`. Developer machines keep `pip install -e` via
-  direnv for fast iteration; only the production install model differs.
-  Runtime mutable state lives under `/var/lib/left4me/` (venv, steamcmd,
-  game installations, overlays); `/opt/left4me/` stays as a root-owned
-  deploy-artifact root.
-- Emits four systemd units via `systemd/units` metadata (consumed by
-  `bundles/systemd/`):
-  - `left4me-web.service` — gunicorn on `127.0.0.1:8000` (TLS terminates upstream).
-  - `left4me-server@.service` — per-instance srcds template, started on
-    demand by the web app via the `left4me-systemctl` helper.
-  - `l4d2-game.slice` / `l4d2-build.slice` — cgroup slices for the
-    perf-baseline (CPU/IO weights, memory caps).
+The bundle delivers to `ovh.left4me` a mix of:
+
+### Target-side symlinks into the left4me checkout
+
+After `git_deploy:/opt/left4me/src` (root-owned — left4me cannot rewrite
+its own deployment artifacts at runtime), ckn-bw creates symlinks from
+canonical on-host paths into the checkout:
+
+| On-host path | Source in checkout |
+|---|---|
+| `/etc/sudoers.d/left4me` | `deploy/files/etc/sudoers.d/left4me` |
+| `/etc/sysctl.d/99-left4me.conf` | `deploy/files/etc/sysctl.d/99-left4me.conf` |
+| `/etc/systemd/system/left4me-web.service.d/10-hardening.conf` | `deploy/files/etc/systemd/system/left4me-web.service.d/10-hardening.conf` |
+| `/etc/systemd/system/left4me-server@.service.d/10-hardening.conf` | `deploy/files/etc/systemd/system/left4me-server@.service.d/10-hardening.conf` |
+| `/usr/local/libexec/left4me/{left4me-overlay,left4me-systemctl,left4me-journalctl,left4me-script-sandbox}` | `deploy/scripts/libexec/*` |
+| `/usr/local/sbin/left4me` | `deploy/scripts/sbin/left4me` |
+
+The hardening drop-ins and sudoers are the application's own security
+knowledge — they live in the left4me repo and are version-controlled there.
+The privileged helpers are also application code. The symlink pattern
+lets bw manage placement without duplicating content.
+
+Design rationale:
+`left4me/docs/superpowers/specs/2026-05-15-deployment-responsibility-design.md`.
+
+### Reactor-emitted units (per-host shape)
+
+Via `systemd/units` metadata in `metadata.py` (consumed by `bundles/systemd/`):
+
+- `left4me-web.service` — gunicorn on `127.0.0.1:8000`; worker/thread
+  counts from `web.env.mako`. TLS terminates upstream.
+- `left4me-server@.service` — per-instance srcds template; `SocketBindAllow=`
+  ranges from metadata.
+- `l4d2-game.slice` / `l4d2-build.slice` — cgroup slices with per-host
+  `AllowedCPUs=` from `left4me/system_cpus`.
+- `system.slice.d/99-left4me-cpuset.conf` + `user.slice.d/99-left4me-cpuset.conf`
+  — host CPU-set drop-ins, same source.
+
+### bw `files{}` — templated env files
+
+- `host.env.mako` → `/etc/left4me/host.env`
+- `web.env.mako` → `/etc/left4me/web.env`
+- `sandbox-resolv.conf` → `/etc/left4me/sandbox-resolv.conf`
+
+### Action chains — deploy lifecycle
+
+- `git_deploy` → `pip_install` (non-editable; setuptools writes egg-info to
+  a left4me-writable tempdir) → `alembic_upgrade` → `seed_overlays` + web restart.
+- Idempotent gates: `chmod-sudoers` (0440 root:root), `chmod-scripts` (0755 root:root).
+- Post-git-deploy reloads: `systemctl daemon-reload`, `sysctl --system`.
+- Post-apply self-test: `verify-hardening-dropins` (asserts the drop-ins are
+  loaded by the live units before declaring apply done).
+
+### System user
+
+`left4me` (uid/gid 980, home `/var/lib/left4me`, mode 0755) — the same uid
+hosts the web app, gameservers, and the script-overlay sandbox unit (which
+drops privileges via systemd-run with a fully hardened transient service).
+Runtime mutable state lives under `/var/lib/left4me/`; `/opt/left4me/`
+stays as a root-owned deploy-artifact root.
+
+### nftables / nginx / monitoring
+
 - Contributes uid-based DSCP/priority marks for srcds UDP egress to
   `nftables/output` (via `defaults`).
+- `derived_from_domain` reactor emits the corresponding `nginx/vhosts`,
+  `letsencrypt/domains`, and `monitoring/services/left4me-web` (HTTPS
+  health check).
 
 ## Gotchas
 
