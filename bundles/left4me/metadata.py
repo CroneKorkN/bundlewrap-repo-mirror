@@ -361,7 +361,11 @@ def systemd_units(metadata):
                         # without this, Source auto-selects the primary IP and the web
                         # app's 127.0.0.1 RCON connect gets ECONNREFUSED. External TCP
                         # on the game port range is firewall-blocked in nftables_input.
-                        'ExecStart': '/var/lib/left4me/runtime/%i/merged/srcds_run -game left4dead2 +ip 0.0.0.0 +hostport ${L4D2_PORT} $L4D2_ARGS',
+                        # +sv_lan 0 is required alongside +ip 0.0.0.0 — when the bind
+                        # IP is wildcard, Source can't auto-detect "public server" and
+                        # falls into LAN mode, rejecting non-RFC1918 clients with
+                        # "LAN servers are restricted to local clients (class C)".
+                        'ExecStart': '/var/lib/left4me/runtime/%i/merged/srcds_run -game left4dead2 +ip 0.0.0.0 +sv_lan 0 +hostport ${L4D2_PORT} $L4D2_ARGS',
                         'ExecStopPost': '+/usr/bin/nsenter --mount=/proc/1/ns/mnt -- /usr/local/libexec/left4me/left4me-overlay umount %i',
                         'Restart': 'on-failure',
                         'RestartSec': '5',
