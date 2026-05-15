@@ -1,6 +1,0 @@
--e git+https://github.com/CroneKorkN/bundlewrap.git@main#egg=bundlewrap
-pycryptodome
-PyNaCl
-PyYAML
-pyqrcode
-setuptools

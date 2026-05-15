@@ -29,21 +29,25 @@ fingerprint instead. This applies to AI agents and humans equally.
 
 ## Bundlewrap version
 
-The venv runs **editable** from the maintainer's fork:
+Bundlewrap is pinned to the `main` branch of the maintainer's fork
+[`github.com/CroneKorkN/bundlewrap`](https://github.com/CroneKorkN/bundlewrap)
+via `[tool.uv.sources]` in `pyproject.toml`:
 
-```
--e git+https://github.com/CroneKorkN/bundlewrap.git@main#egg=bundlewrap
+```toml
+[tool.uv.sources]
+bundlewrap = { git = "https://github.com/CroneKorkN/bundlewrap.git", branch = "main" }
 ```
 
-Pinned in `requirements.txt`. The fork's `main` tracks upstream
-`bundlewrap/bundlewrap` master; the fork's [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md)
+`uv sync` (run automatically by direnv on entry) builds `.venv/` from
+`pyproject.toml` + `uv.lock`. Non-editable — to pick up new fork commits,
+re-run `uv sync --upgrade-package bundlewrap` and commit the updated
+`uv.lock`. The fork's `main` tracks upstream `bundlewrap/bundlewrap` master;
+the fork's [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md)
 is the canonical agent-oriented bundlewrap-language reference.
 
-To pull upstream changes into the venv:
-
-```sh
-(cd .venv/src/bundlewrap && git pull)
-```
+To hack on bundlewrap itself from inside this checkout, clone the fork
+to a sibling path and override the source with an editable path dep —
+not part of the default workflow.
 
 ## Eval-loaded node and group files
 
@@ -109,10 +113,9 @@ These conventions look like dead code; they aren't. Don't clean them up.
 | Path | Why |
 |---|---|
 | `.secrets.cfg*`         | vault key material |
-| `.venv/`                | local Python environment |
+| `.venv/`                | uv-managed Python environment — uv owns rebuilds, don't hand-edit |
 | `.cache/`               | bw runtime cache |
 | `.bw_debug_history`     | shell history for `bw debug` |
-| `.envrc`                | direnv local-environment config |
 | `/.cocoindex_code/`     | local code index, not in git |
 | `README.md` (root)      | maintainer's personal TODO scratchpad — not project docs |
 
@@ -141,6 +144,7 @@ When the next bw major lands:
 1. Read the upstream migration guide.
 2. `git grep` for affected reactor / item patterns.
 3. Rewrite each (one commit per pattern is fine — see Working style).
-4. Bump `requirements.txt` last.
+4. Bump the bundlewrap source in `pyproject.toml` (or `uv.lock` via
+   `uv sync --upgrade-package bundlewrap`) last.
 
 Pattern from commit `186d503` (bw 4 → 5).

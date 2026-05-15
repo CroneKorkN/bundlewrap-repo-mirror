@@ -1,0 +1,18 @@
+[project]
+name = "ckn-bw"
+version = "0.0.0"
+description = "BundleWrap configuration for ckn personal/family infrastructure."
+requires-python = ">=3.14"
+dependencies = [
+    "bundlewrap",
+    "pycryptodome",
+    "PyNaCl",
+    "PyYAML",
+    "pyqrcode",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+bundlewrap = { git = "https://github.com/CroneKorkN/bundlewrap.git", branch = "main" }

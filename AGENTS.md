@@ -26,12 +26,14 @@ Five rules; follow these and you won't break things:
    `bw debug` exploration. See
    [`conventions.md#secrets`](docs/agents/conventions.md#secrets).
 3. **Don't touch the do-not-modify list.** `.secrets.cfg*`, `.venv`,
-   `.cache`, `.bw_debug_history`, `.envrc`, root `README.md`. Treat
+   `.cache`, `.bw_debug_history`, root `README.md`. Treat
    `hooks/` and `items/` (custom item types) with extra care: a
    broken hook or item type breaks every `bw` command repo-wide.
-4. **Use the fork.** The venv runs editable from
+4. **Use the fork.** Bundlewrap is pinned to the `main` branch of
    [`github.com/CroneKorkN/bundlewrap`](https://github.com/CroneKorkN/bundlewrap)
-   (branch `main`). Behavior tracks upstream `main`; the fork's
+   via `[tool.uv.sources]` in `pyproject.toml`; `uv sync` (run by
+   direnv on entry) installs it. Behavior tracks the fork's `main`;
+   the fork's
    [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md)
    is the canonical bundlewrap-language reference. See
    [`conventions.md#bundlewrap-version`](docs/agents/conventions.md#bundlewrap-version).
@@ -77,7 +79,7 @@ Five rules; follow these and you won't break things:
 |---|---|
 | Bundlewrap-language reference (item types, dep keywords, reactors) | Fork's [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md) — read first if new to bundlewrap |
 | Vault / demagify magic strings                                     | [`conventions.md#secrets`](docs/agents/conventions.md#secrets) |
-| Bundlewrap install (editable from the fork)                        | [`conventions.md#bundlewrap-version`](docs/agents/conventions.md#bundlewrap-version) |
+| Bundlewrap install (uv-pinned to the fork's `main`)                | [`conventions.md#bundlewrap-version`](docs/agents/conventions.md#bundlewrap-version) |
 | Group inheritance order, naming patterns                           | [`conventions.md#group-inheritance-order`](docs/agents/conventions.md#group-inheritance-order), [`#naming-conventions`](docs/agents/conventions.md#naming-conventions) |
 | Repo-specific bw command deltas (apt keys, suspended nodes, vault echo) | [`commands.md`](docs/agents/commands.md) |
 | Lib helpers                                                        | top-of-file docstrings in `libs/*.py` (`head -1 libs/*.py`) |
