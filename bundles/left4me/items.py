@@ -19,11 +19,13 @@ directories = {
         'mode': '0755',
     },
     '/var/lib/left4me': {
-        # left4me's home dir — useradd creates with 0700; loosen to 0711 so
-        # l4d2-sandbox can traverse (but not list) for bwrap bind-mounts.
+        # left4me's home dir — useradd creates with 0700; loosen to 0755 so
+        # the systemd-imposed FS view for transient script-sandbox units
+        # (running as left4me with TemporaryFileSystem=/var/lib + selective
+        # binds) can traverse on its way to the overlay bind targets.
         'owner': 'left4me',
         'group': 'left4me',
-        'mode': '0711',
+        'mode': '0755',
     },
     '/var/lib/left4me/installation':   {'owner': 'left4me', 'group': 'left4me'},
     '/var/lib/left4me/overlays':       {'owner': 'left4me', 'group': 'left4me'},
@@ -40,8 +42,7 @@ directories = {
 }
 
 groups = {
-    'left4me':      {'gid': 980},
-    'l4d2-sandbox': {'gid': 981},
+    'left4me': {'gid': 980},
 }
 
 users = {
@@ -51,15 +52,12 @@ users = {
         'home': '/var/lib/left4me',
         'shell': '/usr/sbin/nologin',
     },
-    'l4d2-sandbox': {
-        'uid': 981,
-        'gid': 981,
-        'shell': '/usr/sbin/nologin',
-    },
 }
-# UIDs/GIDs pinned in the system-package range (100-999, per Debian
+# UID/GID pinned in the system-package range (100-999, per Debian
 # policy) so file ownership is deterministic across rebuilds and
-# backup restores. 980/981 are unused elsewhere in this repo.
+# backup restores. 980 is unused elsewhere in this repo.
+# (981 — formerly l4d2-sandbox — was collapsed into 980 on 2026-05-15;
+# see left4me/docs/superpowers/plans/2026-05-15-uid-collapse.md.)
 
 # Privileged helpers are installed by the `install_left4me_scripts`
 # action (below) directly from the left4me git checkout at

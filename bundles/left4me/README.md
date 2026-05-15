@@ -36,9 +36,10 @@ from defaults. None of these need to be declared per-node.
 
 ## What this bundle does
 
-- Creates system users `left4me` (uid/gid 980, home `/var/lib/left4me`,
-  mode 0711) and `l4d2-sandbox` (uid/gid 981, no home, used by bwrap
-  script-overlay builds).
+- Creates system user `left4me` (uid/gid 980, home `/var/lib/left4me`,
+  mode 0755) — same uid hosts the web app, gameservers, and the
+  script-overlay sandbox unit (which drops privileges via systemd-run
+  with a fully hardened transient service).
 - Drops privileged helpers under `/usr/local/libexec/left4me/`
   (`left4me-systemctl`, `left4me-journalctl`, `left4me-overlay`,
   `left4me-script-sandbox`) plus a tight sudoers file (validated with
