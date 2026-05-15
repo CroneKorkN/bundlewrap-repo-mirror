@@ -108,6 +108,97 @@ defaults = {
 }
 
 
+# Hardening composition — proven via the hardening test plan (left4me
+# commit 461b8d0). See:
+#   docs/superpowers/specs/2026-05-15-hardening-threat-model.md
+#   docs/superpowers/specs/2026-05-15-hardening-defenses-survey.md
+#   docs/superpowers/specs/2026-05-15-hardening-test-plan.md
+#   docs/superpowers/specs/2026-05-15-hardening-refactor-design.md
+# (paths in the left4me repo)
+
+# Directives both managed units take verbatim.
+HARDENING_COMMON = {
+    'ProtectProc': 'invisible',
+    'ProcSubset': 'pid',
+    'ProtectKernelTunables': 'true',
+    'ProtectKernelModules': 'true',
+    'ProtectKernelLogs': 'true',
+    'ProtectClock': 'true',
+    'ProtectControlGroups': 'true',
+    'ProtectHostname': 'true',
+    'LockPersonality': 'true',
+    'ProtectSystem': 'strict',
+    'ProtectHome': 'true',
+    'PrivateTmp': 'true',
+    'RestrictNamespaces': 'true',
+    'RestrictRealtime': 'true',
+    'RemoveIPC': 'true',
+    'KeyringMode': 'private',
+    'UMask': '0027',
+    'RestrictAddressFamilies': 'AF_INET AF_INET6 AF_UNIX',
+}
+
+# Gameserver unit: COMMON + sudo-incompatible flags + filesystem
+# virtualization + i386 amendment + per-instance PID namespace + bound
+# socket binds.
+HARDENING_SERVER = {
+    **HARDENING_COMMON,
+    'NoNewPrivileges': 'true',
+    'RestrictSUIDSGID': 'true',
+    'PrivateUsers': 'true',
+    # PrivatePIDs is the test-plan amendment that closes D2.b: same-uid
+    # ProtectProc=invisible cannot hide gunicorn from srcds (both run
+    # as uid 980); a private PID namespace does.
+    'PrivatePIDs': 'true',
+    'PrivateIPC': 'true',
+    'PrivateDevices': 'true',
+    'CapabilityBoundingSet': '',
+    'AmbientCapabilities': '',
+    # srcds_linux is i386 (Source 2007 engine). Bare 'native' kills
+    # every 32-bit syscall and traps srcds_run in a respawn loop.
+    'SystemCallArchitectures': 'native x86',
+    'SystemCallFilter': (
+        '@system-service',
+        '~@debug @mount @raw-io @reboot @swap @cpu-emulation @obsolete @privileged',
+    ),
+    'TemporaryFileSystem': '/var/lib /etc /opt /home /root /srv /mnt /media',
+    'BindReadOnlyPaths': (
+        '/var/lib/left4me/installation',
+        '/var/lib/left4me/overlays',
+        '/etc/left4me/host.env',
+        '/etc/ssl',
+        '/etc/ca-certificates',
+        '/etc/resolv.conf',
+        '/etc/nsswitch.conf',
+        '/etc/alternatives',
+    ),
+    'BindPaths': '/var/lib/left4me/runtime/%i',
+    # Lock srcds bindable sockets to the game port range. Hard-coded
+    # range because systemd directive variable substitution is uneven.
+    'SocketBindAllow': (
+        'udp:27000-27999',
+        'tcp:27000-27999',
+    ),
+    # MemoryDenyWriteExecute=true permanently excluded — Source engine
+    # i386 .so files have text relocations that need mprotect(W+X)
+    # during the dynamic linker's relocation pass.
+}
+
+# Web unit: COMMON + sudo-compatible additions. EXCLUDES
+# NoNewPrivileges, PrivateUsers, RestrictSUIDSGID, empty
+# CapabilityBoundingSet, and ~@privileged in the syscall filter — all
+# sudo-incompatible until a future refactor replaces sudo with
+# systemctl-managed transient units.
+HARDENING_WEB = {
+    **HARDENING_COMMON,
+    'SystemCallArchitectures': 'native',
+    'SystemCallFilter': (
+        '@system-service',
+        '~@debug @mount @raw-io @reboot @swap @cpu-emulation @obsolete',
+    ),
+}
+
+
 @metadata_reactor.provides(
     'nginx/vhosts',
 )
