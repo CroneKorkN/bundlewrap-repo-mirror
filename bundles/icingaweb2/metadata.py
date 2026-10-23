@@ -11,7 +11,8 @@ defaults = {
             'php-imagick': {},
             'php-pgsql': {},
             'icingaweb2': {},
-            #'icingaweb2-module-monitoring': {}, # ?
+            # separate package since icingaweb2 2.12
+            'icingaweb2-module-monitoring': {},
         },
         'sources': {
             'icinga': {
