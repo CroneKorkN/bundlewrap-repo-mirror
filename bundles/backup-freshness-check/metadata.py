@@ -8,12 +8,34 @@ defaults = {
         'services': {
             'backup freshness': {
                 'vars.command': '/usr/lib/nagios/plugins/check_backup_freshness',
-                'check_interval': '6h',
+                'check_interval': '24h',
+                # a failed check would otherwise retry, and wake the server, every 30s
+                'retry_interval': '6h',
+                # the wakeup alone may take up to 10 minutes
+                'check_timeout': 900,
                 'vars.sudo': True,
             },
         },
     },
 }
+
+
+@metadata_reactor.provides(
+    'monitoring/services/backup freshness/vars.wake',
+)
+def wake(metadata):
+    if not node.has_bundle('wol-sleeper'):
+        return {}
+
+    return {
+        'monitoring': {
+            'services': {
+                'backup freshness': {
+                    'vars.wake': metadata.get('wol-sleeper/wake_command'),
+                },
+            },
+        },
+    }
 
 
 @metadata_reactor.provides(

@@ -19,6 +19,12 @@ else
     PREFIX="sudo "
 fi
 
+if [ -n "$SSHMON_WAKE" ] && ! sh -c "$SSHMON_WAKE" > /dev/null 2>&1
+then
+    echo 'check_by_sshmon: Wakeup failed' >&2
+    exit $UNKNOWN
+fi
+
 ssh sshmon@"$SSHMON_HOST" "$PREFIX$SSHMON_COMMAND"
 
 exitcode=$?
