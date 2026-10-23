@@ -161,6 +161,13 @@
                     },
                     'internal_dns': False,
                 },
+                'hcf.ckn.li': { # hochzeit carina fabi
+                    'content': 'nginx/redirect.conf',
+                    'context': {
+                        'target': 'https://cloud.sublimity.de/s/4xjDLnoH3tmCm3T',
+                    },
+                    'internal_dns': False,
+                },
             },
         },
         'nginx-rtmps': {
