@@ -1,5 +1,3 @@
-h = repo.libs.hashable.hashable
-
 defaults = {
     'apt': {
         'packages': {
@@ -88,13 +86,13 @@ defaults = {
                 'default': {},
             },
             'exec': {
-                # h({
-                #     'commands': [
-                #         f'sudo /usr/local/share/telegraf/procio',
-                #     ],
-                #     'data_format': 'influx',
-                #     'interval': '20s',
-                # }),
+                'procio': {
+                    'commands': [
+                        f'sudo /usr/local/share/telegraf/procio',
+                    ],
+                    'data_format': 'influx',
+                    'interval': '20s',
+                },
                 'pressure_stall': {
                     'commands': [
                         f'/usr/local/share/telegraf/pressure_stall',
