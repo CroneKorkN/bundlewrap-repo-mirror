@@ -26,7 +26,7 @@ def authorized_users(metadata):
 
             for command in options.get('commands', []):
                 users[name]['authorized_keys'].add(f'command="{command}" ' + authorized_user_public_key)
-            else:
+            if not options.get('commands'):
                 users[name]['authorized_keys'].add(authorized_user_public_key)
 
     return {
