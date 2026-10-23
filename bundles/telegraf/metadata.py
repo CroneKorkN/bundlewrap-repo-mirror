@@ -4,14 +4,6 @@ defaults = {
     'apt': {
         'packages': {
             'telegraf': {},
-            # needed by crystal plugins:
-            'libgc-dev': {},
-            'libevent-dev': {},
-            (
-                'libpcre2-8-0'
-                if node.os == 'debian' and node.os_version >= (13,)
-                else 'libpcre3'
-            ): {},
         },
         'sources': {
             'influxdata': {
