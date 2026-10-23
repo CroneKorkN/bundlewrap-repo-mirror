@@ -24,18 +24,12 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'build-server',
+    'build-server/download_server_ip',
 )
-def agent_conf(metadata):
+def download_server(metadata):
     download_server = repo.get_node(metadata.get('build-server/download_server'))
     return {
         'build-server': {
-            'architectures': {
-                architecture: {
-                    'ip': str(ip_interface(repo.get_node(conf['node']).metadata.get('network/internal/ipv4')).ip),
-                }
-                    for architecture, conf in metadata.get('build-server/architectures').items()
-            },
             'download_server_ip': str(ip_interface(download_server.metadata.get('network/internal/ipv4')).ip),
         },
     }

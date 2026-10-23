@@ -12,8 +12,6 @@
         'build-server',
     ],
     'bundles': [
-        'build-agent',
-        #'crystal',
         'gitea',
 #        'gollum',
         'grub',
@@ -53,11 +51,10 @@
             'hostname': 'build.sublimity.de',
             'architectures': {
                 'amd64': {
-                    'node': 'home.server',
                     'target': 'x86_64-unknown-linux-gnu',
                 },
+                # arm64 needs a cross linker and arm64 static libs (multiarch):
                 # 'arm64': {
-                #     'node': 'home.openhab',
                 #     'target': 'aarch64-unknown-linux-gnu',
                 # },
             },

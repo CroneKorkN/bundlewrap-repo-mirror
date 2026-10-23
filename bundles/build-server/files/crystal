@@ -10,6 +10,7 @@ REPO_NAME=$(jq -r .repository.name <<< $JSON)
 CLONE_URL=$(jq -r .repository.clone_url <<< $JSON)
 BUILD_FILE=$(jq -r .file <<< $ARGS)
 DATE=$(date --utc +%s)
+SSH_OPTIONS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
 cd ~
 rm -rf "$REPO_NAME"
@@ -20,13 +21,12 @@ shards install
 for ARCH in $(jq -r '.architectures | keys[]' <<< $CONFIG)
 do
   TARGET=$(jq -r .architectures.$ARCH.target <<< $CONFIG)
-  IP=$(jq -r .architectures.$ARCH.ip <<< $CONFIG)
-  BUILD_CMD=$(crystal build "$BUILD_FILE" --cross-compile --target="$TARGET" --release -o "$REPO_NAME")
+  BINARY="$REPO_NAME-$ARCH-$DATE"
 
-  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$REPO_NAME.o" "build-agent@$IP:~"
-  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "build-agent@$IP" $BUILD_CMD
-  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "build-agent@$IP:~/$REPO_NAME" .
-  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "downloads@$DOWNLOAD_SERVER" mkdir -p "~/$REPO_NAME"
-  scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "$REPO_NAME" "downloads@$DOWNLOAD_SERVER:~/$REPO_NAME/$REPO_NAME-$ARCH-$DATE"
-  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "downloads@$DOWNLOAD_SERVER" ln -sf "$REPO_NAME-$ARCH-$DATE" "~/$REPO_NAME/$REPO_NAME-$ARCH-latest"
+  # static, so the binary does not depend on the libraries of a debian release
+  crystal build "$BUILD_FILE" --static --release --target="$TARGET" -o "$BINARY"
+
+  ssh $SSH_OPTIONS "downloads@$DOWNLOAD_SERVER" mkdir -p "~/$REPO_NAME"
+  scp $SSH_OPTIONS "$BINARY" "downloads@$DOWNLOAD_SERVER:~/$REPO_NAME/$BINARY"
+  ssh $SSH_OPTIONS "downloads@$DOWNLOAD_SERVER" ln -sf "$BINARY" "~/$REPO_NAME/$REPO_NAME-$ARCH-latest"
 done
