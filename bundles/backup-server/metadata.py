@@ -11,10 +11,19 @@ defaults = {
             'authorized_keys': set(),
         },
     },
+    'backup-server': {
+        # auto-backup_ snapshots kept per received dataset (prune-snapshots)
+        'retention': {
+            'daily': 14,
+            'weekly': 8,
+            'monthly': 24,
+        },
+    },
     'sudoers': {
         'backup-receiver': {
             '/usr/bin/rsync',
             '/sbin/zfs',
+            '/opt/backup-server/prune-snapshots',
         },
     },
     'zfs': {
