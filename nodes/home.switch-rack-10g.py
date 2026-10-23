@@ -37,7 +37,8 @@
                     'vlan_group': 'home',
                 },
                 'sfp-sfpplus7': {
-                    'vlan_group': 'home',
+                    'vlan_group': 'carina',
+                    'comment': 'CARINA',
                 },
                 'sfp-sfpplus8': {
                     'vlan_group': 'infra',

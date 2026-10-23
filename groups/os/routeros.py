@@ -28,6 +28,7 @@
                 'wokeonlan': '5',
                 'gast': '9',
                 'rolf': '51',
+                'carina': '52',
             },
             'vlan_groups': {
                 'home': {
@@ -43,6 +44,7 @@
                         'gast',
                         'rolf',
                         'wokeonlan',
+                        'carina',
                     },
                 },
                 'internet': {
@@ -51,6 +53,10 @@
                 },
                 'wokeonlan': {
                     'untagged': 'wokeonlan',
+                    'tagged': set(),
+                },
+                'carina': {
+                    'untagged': 'carina',
                     'tagged': set(),
                 },
             },

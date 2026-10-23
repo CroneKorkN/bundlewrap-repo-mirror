@@ -11,7 +11,7 @@
     'bundles': [
         'kea-dhcpd',
         'wireguard',
-        'pppoe',
+        #'pppoe',
         'wol-waker',
     ],
     'metadata': {
@@ -57,12 +57,29 @@
                 'ipv4': '10.0.9.1/24',
                 'dhcp_server': True,
             },
-            'rolf': { # rolf local test
+            # 'rolf': { # rolf local test
+            #     'type': 'vlan',
+            #     'vlan_interface': 'internal',
+            #     'id': 51,
+            #     'ipv4': '192.168.179.1/24',
+            #     'dhcp_server': True,
+            # },
+            'carina': { # NOTFALL
                 'type': 'vlan',
                 'vlan_interface': 'internal',
-                'id': 51,
-                'ipv4': '192.168.179.1/24',
-                'dhcp_server': True,
+                'id': 52,
+                'ipv4':     '192.168.178.199/24',
+                'gateway4': '192.168.178.1',
+            },
+            # 'carina': {
+            #     'interface': 'enp1s0f1',
+            #     'ipv4':     '192.168.178.199/24',
+            #     'gateway4': '192.168.178.1',
+            # },
+        },
+        'nftables': {
+            'nat': {
+                'oifname carina masquerade',
             },
         },
         'bind': {
