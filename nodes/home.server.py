@@ -211,6 +211,11 @@
                 'hdd/bootshorn': {
                     'mountpoint': '/hdd/bootshorn',
                     'dedup': 'on',
+                    'backup': False,
+                },
+                # dataset from bundle samba (share windows-backup)
+                'hdd/samba/windows-backup': {
+                    'backup': False,
                 },
             },
         },
