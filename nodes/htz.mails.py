@@ -12,7 +12,6 @@
     ],
     'bundles': [
         'bind-acme',
-        'build-ci',
         'download-server',
         'islamicstate.eu',
         #'nginx-rtmps',

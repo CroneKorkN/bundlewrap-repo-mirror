@@ -21,12 +21,4 @@ files = {
             'download_server': node.metadata.get('build-server/download_server_ip'),
         },
     },
-    '/opt/build-server/strategies/ci': {
-        'content_type': 'mako',
-        'owner': 'build-server',
-        'mode': '0777', # FIXME
-        'context': {
-            'config_path': '/etc/build-server.json',
-        },
-    },
 }
