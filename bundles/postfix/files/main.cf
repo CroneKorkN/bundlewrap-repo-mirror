@@ -18,8 +18,8 @@ recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = all
 message_size_limit = ${10**8}
-# no hash subdirectories: postfix creates them with mode 0700, which masks the telegraf acl
-hash_queue_names =
+# deferred unhashed: postfix creates hash subdirectories with mode 0700, which masks the telegraf acl
+hash_queue_names = defer
 
 virtual_mailbox_domains = pgsql:/etc/postfix/virtual_mailbox_domains.cf
 virtual_mailbox_maps = pgsql:/etc/postfix/virtual_mailbox_maps.cf
