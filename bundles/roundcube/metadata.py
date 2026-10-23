@@ -21,7 +21,6 @@ defaults = {
             'php-zip': {},
             'php-curl': {},
             'php-gd': {},
-            'composer': {},
             'php-ldap': {},
         },
     },
@@ -66,7 +65,7 @@ def vhost(metadata):
                 metadata.get('mailserver/hostname'): {
                     'content': 'roundcube/vhost.conf',
                     'context': {
-                        'root': '/opt/roundcube',
+                        'root': '/opt/roundcube/public_html',
                     },
                 },
             },

@@ -174,7 +174,7 @@
         },
         'roundcube': {
             'product_name': 'Sublimity Mail',
-            'version': '1.6.11',
+            'version': '1.7.5',
             'installer': False,
         },
         'sysctl': {
