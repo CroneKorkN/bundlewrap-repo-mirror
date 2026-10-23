@@ -53,12 +53,18 @@ def wake_command(metadata):
     mac = metadata.get(f"network/{metadata.get('wol-sleeper/network')}/mac")
     network = ip_interface(metadata.get(f"network/{metadata.get('wol-sleeper/network')}/ipv4"))
     waker_command = f"/usr/bin/wakeonlan -i {network.network.broadcast_address} {mac}"
+    # wait on the internal address: the wakeonlan network is not routed to remote clients (wireguard);
+    # bounded, so a failed wakeup cannot block the next runs forever
+    internal_ip = ip_interface(metadata.get('network/internal/ipv4')).ip
 
     return {
         'wol-sleeper': {
             'mac': mac,
             'waker_command': waker_command,
-            'wake_command': f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} '{waker_command}' && while ! ping {network.ip} -c1 -W3; do true; done",
+            'wake_command': (
+                f"ssh -o StrictHostKeyChecking=no wol@{waker_hostname} '{waker_command}'"
+                f" && timeout 600 sh -c 'until ping -c1 -W3 {internal_ip} > /dev/null; do sleep 2; done'"
+            ),
         },
     }
 
