@@ -3,7 +3,6 @@ biff = no
 append_dot_mydomain = no
 readme_directory = no
 compatibility_level = 2
-smtpd_use_tls=yes
 smtpd_tls_session_cache_database = <%text>btree:${data_directory}/smtpd_scache</%text>
 smtp_tls_session_cache_database = <%text>btree:${data_directory}/smtp_scache</%text>
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
@@ -19,6 +18,8 @@ recipient_delimiter = +
 inet_interfaces = all
 inet_protocols = all
 message_size_limit = ${10**8}
+# no hash subdirectories: postfix creates them with mode 0700, which masks the telegraf acl
+hash_queue_names =
 
 virtual_mailbox_domains = pgsql:/etc/postfix/virtual_mailbox_domains.cf
 virtual_mailbox_maps = pgsql:/etc/postfix/virtual_mailbox_maps.cf
