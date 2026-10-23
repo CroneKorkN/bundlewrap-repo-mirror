@@ -13,5 +13,5 @@ for user, commands in node.metadata.get('sudoers').items():
             'user': user,
             'commands': commands,
         },
-        'mode': '500',
+        'mode': '0440',
     }
