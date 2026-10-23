@@ -9,6 +9,8 @@ $config['enable_installer'] = true;
 $config['db_dsnw'] = '${database['provider']}://${database['user']}:${database['password']}@${database['host']}/${database['name']}';
 $config['imap_host'] = 'ssl://${imap_host}';
 $config['imap_port'] = 993;
+# php's default_socket_timeout is 10s, moving many messages takes longer
+$config['imap_timeout'] = 120;
 #$config['imap_debug'] = true;
 $config['smtp_host'] = 'tls://${imap_host}';
 $config['smtp_port'] = 587;
