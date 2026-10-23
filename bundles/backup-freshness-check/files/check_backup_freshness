@@ -2,10 +2,10 @@
 
 import json
 from subprocess import check_output
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 
-now = datetime.now()
+now = datetime.now(timezone.utc)
 two_days_ago = now - timedelta(days=2)
 
 with open('/etc/backup-freshness-check.json', 'r') as file:
@@ -30,8 +30,9 @@ for dataset in config['datasets']:
         continue
 
     newest_backup_snapshot = snapshots[-1]
-    snapshot_datetime = datetime.utcfromtimestamp(
-        int(check_output(['zfs', 'list', '-p', '-H', '-o', 'creation', '-t', 'snapshot', newest_backup_snapshot]).decode())
+    snapshot_datetime = datetime.fromtimestamp(
+        int(check_output(['zfs', 'list', '-p', '-H', '-o', 'creation', '-t', 'snapshot', newest_backup_snapshot]).decode()),
+        timezone.utc,
     )
 
     if snapshot_datetime < two_days_ago:
