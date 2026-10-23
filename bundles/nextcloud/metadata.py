@@ -158,10 +158,15 @@ def config(metadata):
                     '127.0.0.1',
                     metadata.get('nextcloud/hostname'),
                 ],
+                # concrete provider classes; OC\Preview\Image is only their base class
                 'enabledPreviewProviders': [
-                    'OC\\Preview\\Image',
-                    'OC\\Preview\\Movie',
+                    'OC\\Preview\\BMP',
+                    'OC\\Preview\\GIF',
                     'OC\\Preview\\HEIC',
+                    'OC\\Preview\\JPEG',
+                    'OC\\Preview\\Movie',
+                    'OC\\Preview\\PNG',
+                    'OC\\Preview\\WebP',
                 ],
                 'preview_max_x': 1920,
                 'preview_max_y': 1920,
