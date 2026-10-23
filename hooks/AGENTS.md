@@ -48,7 +48,8 @@ head -1 hooks/*.py
   Iterate there until the import is clean, then commit.
 - **Hooks have access to the full repo (`repo`, `node`, `nodes`).**
   Don't make them block on network unless that's the explicit purpose
-  (e.g. `test_ptr_records.py` does `dig` against `9.9.9.9`).
+  (e.g. `test_ptr_records.py` resolves via DNS-over-HTTPS, since the
+  agent sandbox allows no UDP).
 - **Order is not guaranteed across hook files.** Two hooks that both
   define `apply_start` will both fire; don't assume which runs first.
 
