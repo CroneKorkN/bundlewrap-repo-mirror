@@ -10,6 +10,20 @@ defaults = {
 
 
 @metadata_reactor.provides(
+    'apt/packages',
+)
+def apt(metadata):
+    # mysqli, wordpress stops with "missing the MySQL extension" without it
+    return {
+        'apt': {
+            'packages': {
+                f"php{metadata.get('php/version')}-mysql": {},
+            },
+        },
+    }
+
+
+@metadata_reactor.provides(
     'wordpress',
 )
 def wordpress(metadata):
