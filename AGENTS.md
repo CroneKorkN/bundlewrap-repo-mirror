@@ -95,7 +95,7 @@ the thing you need:
 | Vault calls inside metadata reactors     | `bundles/dm-crypt/metadata.py` (compact, focused) |
 | Mako-templated files                     | `bundles/bind/items.py` (DNS zonefile rendering) |
 | Cross-bundle reactor writing             | `bundles/nextcloud/metadata.py` (writes into `apt.packages`, `archive.paths`) |
-| Custom `download:` items                 | `bundles/minecraft/items.py` |
+| Custom `download:` items                 | `bundles/gitea/items.py` |
 | Node file (single-purpose)               | `nodes/home.server.py` |
 | Group with `supergroups` chain           | `groups/os/debian-13.py` |
 
