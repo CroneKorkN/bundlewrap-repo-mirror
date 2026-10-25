@@ -71,6 +71,7 @@ files['/etc/bind/named.conf.local'] = {
     'content_type': 'mako',
     'context': {
         'type': node.metadata.get('bind/type'),
+        'public': node.metadata.get('bind/public'),
         'master_ip': node.metadata.get('bind/master_ip', None),
         'acls': {
             **master_node.metadata.get('bind/acls'),
@@ -111,6 +112,10 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
     }
 
     for zone_name, zone_conf in view_conf['zones'].items():
+        # dynamic zones are transferred from the master, which only serves public secondaries
+        if zone_conf.get('allow_update', False) and not node.metadata.get('bind/public'):
+            continue
+
         files[f"/var/lib/bind/{view_name}/{zone_name}"] = {
             'source': 'db',
             'content_type': 'mako',

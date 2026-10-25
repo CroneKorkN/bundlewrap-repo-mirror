@@ -11,6 +11,8 @@ defaults = {
         },
     },
     'bind': {
+        # public secondaries are listed as NS and receive notifies and transfers
+        'public': True,
         'slaves': {},
         'acls': {
             'our-nets': {
@@ -190,7 +192,9 @@ def slaves(metadata):
             'slaves': [
                 other_node.name
                     for other_node in repo.nodes
-                    if other_node.has_bundle('bind') and other_node.metadata.get('bind/master_node', None) == node.name
+                    if other_node.has_bundle('bind')
+                    and other_node.metadata.get('bind/master_node', None) == node.name
+                    and other_node.metadata.get('bind/public')
             ],
         },
     }

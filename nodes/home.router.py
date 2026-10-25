@@ -85,6 +85,8 @@
         'bind': {
             'master_node': 'htz.mails',
             'hostname': 'home.resolver.name',
+            # no static public ip: internal resolver only
+            'public': False,
         },
         'pppoe': {
             'interface': 'external',

@@ -39,6 +39,9 @@ view "${view_name}" {
   % endif
 
   % for zone_name, zone_conf in sorted(view_conf['zones'].items()):
+  % if zone_conf.get('allow_update', []) and not public:
+  <% continue %>
+  % endif
   zone "${zone_name}" {
     % if type == 'slave' and zone_conf.get('allow_update', []):
     type slave;
