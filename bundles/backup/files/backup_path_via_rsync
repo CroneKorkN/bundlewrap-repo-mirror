@@ -8,6 +8,8 @@ server=$(jq -r .server_hostname < /etc/backup/config.json)
 user=$(jq -r .server_user < /etc/backup/config.json)
 ssh="ssh -o ConnectTimeout=5 $user@$server"
 
+$ssh true || { echo "ERROR - cant ssh connect to $server"; exit 97; }
+
 if test -d "$path"
 then
   postfix="/"
