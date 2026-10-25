@@ -207,9 +207,8 @@ def pool_root_datasets(metadata):
     return {
         'zfs': {
             'datasets': {
-                # xattrs (acls too) in the dnode instead of hidden directories
+                # room for xattrs (acls too) in the dnode; xattr=on already means sa since openzfs 2.2
                 pool: {
-                    'xattr': 'sa',
                     'dnodesize': 'auto',
                 }
                     for pool in metadata.get('zfs/pools')

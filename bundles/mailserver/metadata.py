@@ -40,8 +40,8 @@ defaults = {
                 'mountpoint': '/var/vmail/index',
                 'compression': 'on',
                 'atime': 'off',
-                # xapian uses 8k pages, the index files are mostly appended or rewritten
-                'recordsize': '16384',
+                # xapian writes 8k pages, the dovecot index files are appended or rewritten whole
+                'recordsize': '8192',
                 'com.sun:auto-snapshot': 'false',
                 'backup': False,
             },
