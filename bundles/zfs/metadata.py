@@ -199,19 +199,3 @@ def auto_snapshots(metadata):
         },
     }
 
-
-@metadata_reactor.provides(
-    'zfs/datasets',
-)
-def pool_root_datasets(metadata):
-    return {
-        'zfs': {
-            'datasets': {
-                # room for xattrs (acls too) in the dnode; xattr=on already means sa since openzfs 2.2
-                pool: {
-                    'dnodesize': 'auto',
-                }
-                    for pool in metadata.get('zfs/pools')
-            },
-        },
-    }
