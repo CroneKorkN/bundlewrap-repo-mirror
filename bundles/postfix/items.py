@@ -13,6 +13,11 @@ file_options = {
 }
 
 files = {
+    # myorigin, the installer only writes it when asked interactively
+    '/etc/mailname': {
+        'content': node.metadata.get('hostname') + '\n',
+        **file_options,
+    },
     '/etc/postfix/main.cf': {
         'content_type': 'mako',
         'context': {
