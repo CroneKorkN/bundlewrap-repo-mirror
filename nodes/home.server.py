@@ -61,7 +61,7 @@
             'download_server': 'ovh.mails',
         },
         'gitea': {
-            'version': '8.0.3',
+            'version': '16.0.6',
             'domain': 'git.sublimity.de',
             'conf': {
                 'mailer': {
