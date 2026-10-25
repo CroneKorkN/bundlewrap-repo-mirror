@@ -24,7 +24,7 @@
         'samba',
         'smartctl',
         'steam-chat-logger',
-        #'steam-chat-viewer', # fix system pip error
+        'steam-chat-viewer',
         'systemd-swap',
         #'twitch-clip-download', # fix system pip error
         'raspberrymatic-cert',
