@@ -33,13 +33,15 @@ defaults = {
                 'mountpoint': '/var/vmail',
                 'compression': 'on',
                 'atime': 'off',
-                'recordsize': '16384',
+                # mails are written once and read whole, smaller records only add block pointers
+                'recordsize': '131072',
             },
             'tank/vmail/index': {
                 'mountpoint': '/var/vmail/index',
                 'compression': 'on',
                 'atime': 'off',
-                'recordsize': '4096',
+                # xapian uses 8k pages, the index files are mostly appended or rewritten
+                'recordsize': '16384',
                 'com.sun:auto-snapshot': 'false',
                 'backup': False,
             },
