@@ -7,8 +7,9 @@ $config['enable_installer'] = true;
 /* Local configuration for Roundcube Webmail */
 
 $config['db_dsnw'] = '${database['provider']}://${database['user']}:${database['password']}@${database['host']}/${database['name']}';
-$config['imap_host'] = 'ssl://${imap_host}';
-$config['imap_port'] = 993;
+# without tls: the name resolves to the server's own ip, which dovecot treats as secure like localhost;
+# keep the name, roundcube keys its users by it
+$config['imap_host'] = '${imap_host}:143';
 # php's default_socket_timeout is 10s, moving many messages takes longer
 $config['imap_timeout'] = 120;
 #$config['imap_debug'] = true;
