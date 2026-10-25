@@ -61,6 +61,3 @@ actions = {
 #         ],
 #     },
 # }
-
-#sudo su - www-data -s /bin/bash -c 'php /opt/freescout/artisan freescout:create-user --role admin --firstName M --lastName W --email freescout@freibrief.net --password gyh.jzv2bnf6hvc.HKG --no-interaction'
-#sudo su - www-data -s /bin/bash -c 'php /opt/freescout/artisan freescout:create-user --role admin --firstName M --lastName W --email freescout@freibrief.net --password gyh.jzv2bnf6hvc.HKG --no-interaction'

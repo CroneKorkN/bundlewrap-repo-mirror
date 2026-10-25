@@ -54,6 +54,3 @@ for name, conf in node.metadata.get('samba/shares').items():
             f"zfs_dataset:{node.metadata.get('zfs/storage_classes/hdd')}/samba/{name}",
         ],
     }
-
-
-# TTMx36kcLbdkdgOqvxjlX03tLCjgeyXq

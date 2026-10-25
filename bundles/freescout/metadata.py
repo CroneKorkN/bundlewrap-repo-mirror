@@ -1,6 +1,5 @@
 from base64 import b64decode
 
-# hash: SCRAM-SHA-256$4096:tQNfqQi7seqNDwJdHqCHbg==$r3ibECluHJaY6VRwpvPqrtCjgrEK7lAkgtUO8/tllTU=:+eeo4M0L2SowfyHFxT2FRqGzezve4ZOEocSIo11DATA=
 database_password = repo.vault.password_for(f'{node.name} postgresql freescout').value
 
 defaults = {
