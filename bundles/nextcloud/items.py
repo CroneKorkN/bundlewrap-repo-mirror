@@ -164,3 +164,15 @@ for app, app_config in node.metadata.get('nextcloud/app_config').items():
                 'action:upgrade_nextcloud',
             ],
         }
+
+# for the redis socket, php-fpm and cron run as www-data
+actions['nextcloud_redis_group'] = {
+    'command': 'usermod -aG redis www-data',
+    'unless': 'id -nG www-data | grep -qw redis',
+    'needs': [
+        'pkg_apt:redis-server',
+    ],
+    'triggers': [
+        f"svc_systemd:php{node.metadata.get('php/version')}-fpm.service:restart",
+    ],
+}

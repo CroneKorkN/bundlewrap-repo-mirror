@@ -50,3 +50,16 @@ actions = {
         },
     },
 }
+
+# for the redis socket
+actions['rspamd_redis_group'] = {
+    'command': 'usermod -aG redis _rspamd',
+    'unless': 'id -nG _rspamd | grep -qw redis',
+    'needs': [
+        'pkg_apt:rspamd',
+        'pkg_apt:redis-server',
+    ],
+    'triggers': [
+        'svc_systemd:rspamd:restart',
+    ],
+}

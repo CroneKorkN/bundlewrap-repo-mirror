@@ -45,7 +45,8 @@ def config(metadata):
             'port': '0',
             'tcp-backlog': '511',
             'unixsocket': f'/var/run/redis/{name}.sock',
-            'unixsocketperm': '777',
+            # clients join the redis group, see the nextcloud and rspamd bundles
+            'unixsocketperm': '770',
             'timeout': '0',
             'tcp-keepalive': '300',
             'daemonize': 'yes',
