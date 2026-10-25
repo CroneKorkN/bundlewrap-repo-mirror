@@ -11,10 +11,11 @@ defaults = {
         'sch_cake',
     },
     'nftables': {
-        # sorted before the port accepts, so nothing on the router is reachable from the internet;
+        # nothing on the router is reachable from the internet but dhcpv6 replies;
         # wireguard to htz.mails is initiated from here and passes as established
         'input': {
-            'iifname ppp0 drop',
+            'iifname ppp0 meta l4proto != udp drop',
+            'iifname ppp0 udp dport != 546 drop',
         },
         'forward': {
             'iifname ppp0 ct state new drop',
@@ -52,8 +53,18 @@ defaults = {
                 'Network': {
                     # keep the address and default route set by pppd
                     'KeepConfiguration': 'yes',
+                    # pppd negotiates the link-local address
                     'LinkLocalAddressing': 'no',
-                    'IPv6AcceptRA': 'no',
+                    'IPv6AcceptRA': 'yes',
+                    'DHCP': 'ipv6',
+                },
+                'IPv6AcceptRA': {
+                    'UseDNS': 'no',
+                },
+                'DHCPv6': {
+                    'PrefixDelegationHint': '::/56',
+                    'WithoutRA': 'solicit',
+                    'UseDNS': 'no',
                 },
                 'CAKE': {
                     # - no drops save

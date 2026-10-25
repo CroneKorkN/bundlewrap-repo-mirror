@@ -6,6 +6,9 @@ unit        0
 noipdefault                 # keine selbstgewählte lokale IP
 defaultroute                # erst wenn IPCP steht; networkd legt sie zu früh an
 
+# --- IPv6 Einstellungen ---
++ipv6                       # nur Link-Local, Präfix und Route holt systemd-networkd per DHCPv6/RA
+
 # --- Verbindungsmanagement ---
 # kein persist: pppd beendet sich beim Abbruch, systemd wählt neu ein
 

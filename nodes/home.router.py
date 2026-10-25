@@ -21,6 +21,7 @@
                 'interface': 'enp1s0f0',
                 'ipv4': '10.0.0.1/24',
                 'dhcp_server': True,
+                'ipv6_subnet_id': 0,
             },
             'iot': {
                 'type': 'vlan',
@@ -28,6 +29,7 @@
                 'id': 2,
                 'ipv4': '10.0.2.1/24',
                 'dhcp_server': True,
+                'ipv6_subnet_id': 2,
             },
             'external': {
                 'type': 'vlan',
@@ -42,6 +44,7 @@
                 'id': 4,
                 'ipv4': '10.0.4.1/24',
                 'dhcp_server': True,
+                'ipv6_subnet_id': 4,
             },
             'wakeonlan': {
                 'type': 'vlan',
@@ -49,6 +52,7 @@
                 'id': 5,
                 'ipv4': '10.0.5.1/24',
                 'dhcp_server': True,
+                'ipv6_subnet_id': 5,
             },
             'guest': {
                 'type': 'vlan',
@@ -56,6 +60,7 @@
                 'id': 9,
                 'ipv4': '10.0.9.1/24',
                 'dhcp_server': True,
+                'ipv6_subnet_id': 9,
             },
             # 'rolf': { # rolf local test
             #     'type': 'vlan',

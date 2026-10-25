@@ -84,6 +84,18 @@ def units(metadata):
                             }
                         })
 
+            # ipv6 from the prefix delegated to the uplink; dns stays with dhcpv4
+
+            if 'ipv6_subnet_id' in network_conf:
+                units[f'{network_name}.network']['Network']['DHCPPrefixDelegation'] = 'yes'
+                units[f'{network_name}.network']['Network']['IPv6SendRA'] = 'yes'
+                units[f'{network_name}.network']['DHCPPrefixDelegation'] = {
+                    'SubnetId': network_conf['ipv6_subnet_id'],
+                }
+                units[f'{network_name}.network']['IPv6SendRA'] = {
+                    'EmitDNS': 'no',
+                }
+
             # as vlan
 
             if interface_type == 'vlan':
