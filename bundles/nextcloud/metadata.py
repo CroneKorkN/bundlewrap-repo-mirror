@@ -200,6 +200,8 @@ def config(metadata):
                 'loglevel': 2,
                 'default_phone_region': 'DE',
                 'versions_retention_obligation': 'auto, 90',
+                # keep deleted files until emptied by hand
+                'trashbin_retention_obligation': 'disabled',
                 'simpleSignUpLink.shown': False,
                 'allow_local_remote_servers': True, # FIXME?
                 'maintenance_window_start': 1, # https://docs.nextcloud.com/server/29/admin_manual/configuration_server/background_jobs_configuration.html#maintenance-window-start

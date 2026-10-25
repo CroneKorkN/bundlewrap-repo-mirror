@@ -213,11 +213,12 @@
                     # previews can be regenerated, snapshots of them only pile up
                     'com.sun:auto-snapshot': 'false',
                 },
+                # the whole user dir, so uploads, versions and the trash bin move by renaming
                 'hdd/nextcloud/ckn': {
-                    'mountpoint': '/var/lib/nextcloud/ckn/files',
+                    'mountpoint': '/var/lib/nextcloud/ckn',
                 },
                 'hdd/nextcloud/ckn-privat': {
-                    'mountpoint': '/var/lib/nextcloud/ckn-privat/files',
+                    'mountpoint': '/var/lib/nextcloud/ckn-privat',
                 },
                 'hdd/bootshorn': {
                     'mountpoint': '/hdd/bootshorn',
