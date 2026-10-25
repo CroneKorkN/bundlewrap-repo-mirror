@@ -5,8 +5,9 @@ Usage: prune-snapshots [--dry-run] DATASET
 
 Keeps the newest snapshot per day, ISO week and month for the most recent days, weeks and months
 in /etc/backup-server/retention.json, and always the newest snapshot, which the next incremental
-receive builds on. Other snapshots of the dataset are never touched. Called by the clients'
-backup_path_via_zfs after each successful receive, so it runs while this server is awake.
+receive builds on. Other snapshots of the dataset are never touched. Run for every received
+dataset by prune-all-snapshots on an hourly, persistent timer, so it catches up whenever this
+server wakes up; the clients may not destroy snapshots themselves.
 Exit codes: 0 ok, 1 zfs failed, 2 usage.
 """
 from __future__ import annotations
@@ -19,7 +20,7 @@ import sys
 
 PREFIX = "auto-backup_"
 CONFIG = "/etc/backup-server/retention.json"
-# only datasets received from clients (tank/<client uuid>/...), as the backup user calls this via sudo
+# only datasets received from clients (tank/<client uuid>/...), never the server's own
 DATASET_RE = re.compile(r"\Atank/[0-9a-f-]{36}/[A-Za-z0-9._/-]+\Z")
 BUCKETS = {
     "daily": lambda d: d.strftime("%Y-%m-%d"),

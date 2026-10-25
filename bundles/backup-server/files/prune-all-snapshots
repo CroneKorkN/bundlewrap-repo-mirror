@@ -1,0 +1,11 @@
+#!/bin/bash
+# prune-snapshots for every dataset received from a client (tank/<client uuid>/...)
+
+set -u
+
+exit=0
+for dataset in $(zfs list -H -o name -r tank | grep -E '^tank/[0-9a-f-]{36}/')
+do
+  /opt/backup-server/prune-snapshots "$dataset" || exit=1
+done
+exit $exit

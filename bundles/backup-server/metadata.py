@@ -6,11 +6,6 @@ defaults = {
             'rsync': {},
         },
     },
-    'users': {
-        'backup-receiver': {
-            'authorized_keys': set(),
-        },
-    },
     'backup-server': {
         # auto-backup_ snapshots kept per received dataset (prune-snapshots)
         'retention': {
@@ -19,11 +14,13 @@ defaults = {
             'monthly': 24,
         },
     },
-    'sudoers': {
-        'backup-receiver': {
-            '/usr/bin/rsync',
-            '/sbin/zfs',
-            '/opt/backup-server/prune-snapshots',
+    'systemd-timers': {
+        # here rather than triggered by the clients, which may not destroy snapshots
+        'backup-prune-snapshots': {
+            'command': '/opt/backup-server/prune-all-snapshots',
+            'when': 'hourly',
+            # the server sleeps most of the day
+            'persistent': True,
         },
     },
     'zfs': {
@@ -114,18 +111,20 @@ def dns(metadata):
 
 
 @metadata_reactor.provides(
-    'users/backup-receiver/authorized_keys'
+    'users',
 )
-def backup_authorized_keys(metadata):
+def users(metadata):
+    # one user per client, its permissions are delegated per dataset, see items.py
     return {
         'users': {
-            'backup-receiver': {
+            repo.libs.backup.user_for(other_node): {
                 'authorized_keys': {
-                    other_node.metadata.get('users/root/pubkey')
-                        for other_node in repo.nodes
-                        if other_node.has_bundle('backup')
-                        and other_node.metadata.get('backup/server') == node.name
+                    other_node.metadata.get('users/root/pubkey'),
                 },
-            },
+            }
+                for other_node in repo.nodes
+                if not other_node.dummy
+                and other_node.has_bundle('backup')
+                and other_node.metadata.get('backup/server') == node.name
         },
     }

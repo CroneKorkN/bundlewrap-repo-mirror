@@ -5,7 +5,8 @@ set -eu
 path=$1
 uuid=$(jq -r .client_uuid < /etc/backup/config.json)
 server=$(jq -r .server_hostname < /etc/backup/config.json)
-ssh="ssh -o ConnectTimeout=5 backup-receiver@$server"
+user=$(jq -r .server_user < /etc/backup/config.json)
+ssh="ssh -o ConnectTimeout=5 $user@$server"
 
 source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
 target_dataset="tank/$uuid/$source_dataset"
@@ -13,7 +14,7 @@ target_dataset_parent=$(echo $target_dataset | rev | cut -d / -f 2- | rev)
 bookmark_prefix="auto-backup_"
 new_bookmark="$bookmark_prefix$(date +"%Y-%m-%d_%H:%M:%S")"
 
-for var in path uuid server ssh source_dataset target_dataset target_dataset_parent new_bookmark
+for var in path uuid server user ssh source_dataset target_dataset target_dataset_parent new_bookmark
 do
   [[ -z "${!var}" ]] && echo "ERROR - $var is empty" && exit 96
 done
@@ -22,10 +23,10 @@ $ssh true || (echo "ERROR - cant ssh connect to $server" && exit 97)
 
 echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $target_dataset"
 
-if ! $ssh sudo zfs list -t filesystem -H -o name | grep -q "^$target_dataset_parent$"
+if ! $ssh zfs list -t filesystem -H -o name | grep -q "^$target_dataset_parent$"
 then
   echo "CREATING PARENT DATASET..."
-  $ssh sudo zfs create -p -o mountpoint=none "$target_dataset_parent"
+  $ssh zfs create -p "$target_dataset_parent"
 fi
 
 zfs snap "$source_dataset@$new_bookmark"
@@ -34,12 +35,12 @@ if zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | 
 then
   echo "INITIAL BACKUP"
   # do in subshell, otherwise ctr+c will lead to 0 exitcode
-  $(zfs send -v "$source_dataset@$new_bookmark" | $ssh sudo zfs recv -F "$target_dataset")
+  $(zfs send -v "$source_dataset@$new_bookmark" | $ssh zfs recv -u -F "$target_dataset")
 else
   echo "INCREMENTAL BACKUP"
   last_bookmark=$(zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
   [[ -z "$last_bookmark" ]] && echo "ERROR - last_bookmark is empty" && exit 98
-  $(zfs send -v -L -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh sudo zfs recv "$target_dataset")
+  $(zfs send -v -L -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh zfs recv -u "$target_dataset")
 fi
 
 if [[ "$?" == "0" ]]
@@ -50,9 +51,6 @@ then
   do
     zfs destroy "$destroyable_bookmark"
   done
-
-  # the backup server thins out its snapshots by its own retention
-  $ssh sudo /opt/backup-server/prune-snapshots "$target_dataset" || echo "WARNING - pruning snapshots of $target_dataset failed"
 
   zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
   zfs destroy "$source_dataset@$new_bookmark" # keep snapshots?

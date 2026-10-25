@@ -28,6 +28,7 @@ files['/etc/backup/config.json'] = {
     'content': dumps(
         {
             'server_hostname': backup_node.metadata.get('backup-server/hostname'),
+            'server_user': repo.libs.backup.user_for(node),
             'client_uuid': node.metadata.get('id'),
             'paths': sorted(set(node.metadata.get('backup/paths'))),
         },
