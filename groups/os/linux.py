@@ -33,9 +33,10 @@
         'letsencrypt': {
             'acme_node': 'ovh.mails',
         },
-        # mail to root, relayed through the mail server
+        # relayed through the mail server: mail to root, sent as <node>@sender_domain
         'mail': {
             'root': 'i@ckn.li',
+            'sender_domain': 'sublimity.de',
         },
         'nameservers': {
             '172.30.0.1',

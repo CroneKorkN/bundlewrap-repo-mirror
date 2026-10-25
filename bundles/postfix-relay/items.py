@@ -34,7 +34,7 @@ if not node.has_bundle('postfix'):
         '/etc/postfix/sender_canonical': {
             'context': {
                 'hostname': escape(node.name),
-                'sender': f"{node.name}@{root.split('@')[1]}",
+                'sender': f"{node.name}@{node.metadata.get('mail/sender_domain')}",
             },
             **file_options,
         },
