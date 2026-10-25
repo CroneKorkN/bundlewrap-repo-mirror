@@ -33,7 +33,8 @@
                     'RTTSec': '100ms',
                 },
             },
-            # FIXME: from the switchover, until then 10.0.10.2 is htz.mails, the resolver of all nodes
+            # FIXME: from the switchover, until then 10.0.10.2 is htz.mails, the resolver of all nodes;
+            # afterwards move the resolver to the wireguard ip 172.30.0.1 and drop 10.0.10.0/24 with this dummy
             # 'internal': {
             #     'interface': 'internal',
             #     'type': 'dummy',
