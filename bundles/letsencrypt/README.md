@@ -31,7 +31,7 @@ by `letsencrypt/acme_node`). For the challenge to succeed:
    `_acme-challenge.<domain>` CNAME — Let's Encrypt validates from
    primary AND secondary geographic regions; both authoritative
    servers must agree. If a secondary NS is also a bw-managed node,
-   `bw apply` it after adding the domain (see e.g. `ovh.secondary`).
+   `bw apply` it after adding the domain (see e.g. `htz.secondary`).
 3. The bind-acme node's TSIG key must be reachable. `hook.sh` is
    rendered with the bind-acme server's `network/internal/ipv4` —
    for clients outside that LAN, the route must exist (typically via

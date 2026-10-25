@@ -11,11 +11,11 @@ entry, a new vhost, etc.), the change is only published once you
 apply BOTH:
 
 ```sh
-bw apply htz.mails        # primary (where the source records live)
-bw apply ovh.secondary    # secondary (renders its own zone files)
+bw apply ovh.mails        # primary (where the source records live)
+bw apply htz.secondary    # secondary (renders its own zone files)
 ```
 
-Until both have been applied, `bw verify ovh.secondary` will show
+Until both have been applied, `bw verify htz.secondary` will show
 stale zones and consumers that hit the secondary (Let's Encrypt's
 secondary-region validators in particular) will see NXDOMAIN. Even
 though the slave's named.conf.local declares `type slave;`, don't

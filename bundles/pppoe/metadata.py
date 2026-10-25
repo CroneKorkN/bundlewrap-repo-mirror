@@ -12,7 +12,7 @@ defaults = {
     },
     'nftables': {
         # nothing on the router is reachable from the internet but dhcpv6 replies;
-        # wireguard to htz.mails is initiated from here and passes as established
+        # wireguard to ovh.mails is initiated from here and passes as established
         'input': {
             'iifname ppp0 meta l4proto != udp drop',
             'iifname ppp0 udp dport != 546 drop',

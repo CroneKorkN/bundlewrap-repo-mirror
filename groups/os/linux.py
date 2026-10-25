@@ -28,7 +28,7 @@
             ],
         },
         'letsencrypt': {
-            'acme_node': 'htz.mails',
+            'acme_node': 'ovh.mails',
         },
         'nameservers': {
             '10.0.10.2',

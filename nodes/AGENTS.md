@@ -30,7 +30,7 @@ This loader shape has consequences:
 
 - **Filename = node name.** `home.server.py` defines the node `home.server`.
 - **Naming pattern: `<location>.<role>.py`.** Examples:
-  `home.server.py`, `htz.mails.py`, `ovh.left4me.py`,
+  `home.server.py`, `ovh.mails.py`, `ovh.left4me.py`,
   `mseibert.freescout.py`.
 - **`*.py_` parks a node** without loading it. Used to keep
   decommissioned-but-not-deleted configs in tree (e.g.

@@ -84,7 +84,7 @@ hold the per-axis groups; the node's own metadata wins last.
 
 | Where | Convention | Example |
 |---|---|---|
-| `nodes/*.py`     | `<location>.<role>.py`               | `home.server.py`, `htz.mails.py` |
+| `nodes/*.py`     | `<location>.<role>.py`               | `home.server.py`, `ovh.mails.py` |
 | `groups/*.py`    | one file per group; subdir = purpose | `groups/applications/nextcloud.py`, `groups/os/debian-13.py` |
 | `bundles/<name>` | lowercase, hyphen-separated          | `backup-server`, `bind-acme`, `routeros-monitoring` |
 | Custom items     | `items/<type>.py`                    | `items/download.py` |

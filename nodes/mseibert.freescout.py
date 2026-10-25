@@ -43,7 +43,7 @@
         'wireguard': {
             'my_ip': '172.30.0.238/32',
             's2s': {
-                'htz.mails': {
+                'ovh.mails': {
                     'allowed_ips': [
                         '10.0.0.0/24',
                         '10.0.2.0/24',

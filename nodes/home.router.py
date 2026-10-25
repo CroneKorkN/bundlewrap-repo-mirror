@@ -71,7 +71,7 @@
             # },
         },
         'bind': {
-            'master_node': 'htz.mails',
+            'master_node': 'ovh.mails',
             'hostname': 'home.resolver.name',
             # no static public ip: internal resolver only
             'public': False,
@@ -106,7 +106,7 @@
         'wireguard': {
             'my_ip': '172.30.0.2/32',
             's2s': {
-                'htz.mails': {
+                'ovh.mails': {
                     'allowed_ips': [
                         '10.0.10.0/24',
                         #'192.168.179.0/24', # while raspi at home

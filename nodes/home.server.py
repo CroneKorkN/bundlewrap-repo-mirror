@@ -58,7 +58,7 @@
                 #     'target': 'aarch64-unknown-linux-gnu',
                 # },
             },
-            'download_server': 'htz.mails',
+            'download_server': 'ovh.mails',
         },
         'gitea': {
             'version': '8.0.3',
