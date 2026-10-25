@@ -64,8 +64,9 @@ for name, conf in node.metadata.get('flask').items():
 
     actions[f'flask_{name}_create_virtualenv'] = {
         'cascade_skip': False,
-        'command': f'python3 -m venv /opt/{name}/venv',
-        'unless': f'test -d /opt/{name}/venv',
+        # --clear: a debian upgrade brings a new python, the venv's packages stay in the old one's site-packages
+        'command': f'python3 -m venv --clear /opt/{name}/venv',
+        'unless': f'/opt/{name}/venv/bin/python -c "import gunicorn"',
         'needs': [
             f'directory:/opt/{name}',
             'pkg_apt:python3-venv',
