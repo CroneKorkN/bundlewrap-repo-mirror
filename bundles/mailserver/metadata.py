@@ -81,6 +81,11 @@ def dns(metadata):
             }.items())]
         }
 
+    # receivers also check spf for the helo name
+    dns[metadata.get('mailserver/hostname')] = {
+        'TXT': ['v=spf1 a -all'],
+    }
+
     return {
         'dns': dns,
     }
