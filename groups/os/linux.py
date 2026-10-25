@@ -35,7 +35,7 @@
         },
         # relayed through the mail server: mail to root, sent as <node>@sender_domain
         'mail': {
-            'root': 'i@ckn.li',
+            'root': 'root@sublimity.de',
             'sender_domain': 'sublimity.de',
         },
         'nameservers': {
