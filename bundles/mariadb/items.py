@@ -20,6 +20,9 @@ files = {
     '/etc/mysql/conf.d/override.conf': {
         'content': repo.libs.ini.dumps(node.metadata.get('mariadb/conf')),
         'content_type': 'text',
+        'triggers': [
+            'svc_systemd:mariadb.service:restart',
+        ],
     },
 }
 
