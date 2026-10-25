@@ -5,6 +5,8 @@ home = '/var/lib/steam_chat_logger'
 
 directories = {
     '/opt/steam_chat_logger': {},
+    # git_deploy needs its target to exist
+    src: {},
     home: {
         'owner': 'steam_chat_logger',
         'mode': '0755',
