@@ -38,8 +38,8 @@ via `[tool.uv.sources]` in `pyproject.toml`:
 bundlewrap = { git = "https://github.com/CroneKorkN/bundlewrap.git", branch = "main" }
 ```
 
-`uv sync` (run automatically by direnv on entry) builds `.venv/` from
-`pyproject.toml` + `uv.lock`. Non-editable — to pick up new fork commits,
+`uv sync` builds `.venv/` from `pyproject.toml` + `uv.lock`; direnv runs
+it on entry where a `layout_uv` is defined, `uv run bw` syncs on its own. Non-editable — to pick up new fork commits,
 re-run `uv sync --upgrade-package bundlewrap` and commit the updated
 `uv.lock`. The fork's `main` tracks upstream `bundlewrap/bundlewrap` master;
 the fork's [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md)
@@ -62,23 +62,13 @@ Consequences:
   bundle code, not from node files.
 - **No statements.** No `if`/`for`/`def` at the top level. Use
   expressions (ternaries, comprehensions) instead.
-- **Silent drop on parse error.** Vanilla bundlewrap silently omits a
-  node/group whose file fails to eval. The maintainer patched
-  `groups.py` (commit `dc40295`) to print the error instead — but it
-  still skips the file. Symptom: `bw nodes` lists fewer nodes than you
-  expect. Cure: re-read the file and check for accidental imports or
-  syntax errors.
+- **A file that fails to eval aborts `bw`.** `groups.py` prints the
+  failing file first (commit `dc40295`), `nodes.py` only the traceback.
 
 ## Group inheritance order
 
-Metadata merges along this chain (from the fork's docs):
-
-```
-all → location → os → machine → applications → node
-```
-
-`groups/all.py` is the universal base; `groups/{locations,os,machine,applications}/`
-hold the per-axis groups; the node's own metadata wins last.
+Supergroups merge before their subgroups, the node wins last; see
+[`groups/README.md`](../../groups/README.md#inheritance-and-merge-order).
 
 ## Naming conventions
 
@@ -89,24 +79,14 @@ hold the per-axis groups; the node's own metadata wins last.
 | `bundles/<name>` | lowercase, hyphen-separated          | `backup-server`, `bind-acme`, `routeros-monitoring` |
 | Custom items     | `items/<type>.py`                    | `items/download.py` |
 
-Underscores in bundle names appear only in `_old`-suffixed leftovers
-(see below); don't introduce new ones.
+Bundle names use no underscores.
 
-## Suspension and soft-delete idioms
+## Suspension markers
 
-These conventions look like dead code; they aren't. Don't clean them up.
-
-- **`*.py_` parked node.** A node file whose name ends in `.py_` is
-  silently excluded from `bw nodes` (the loader only matches `*.py`).
-  Used to keep decommissioned-but-not-deleted node configs in tree.
-  Example: `nodes/htz.l4d2.py_`.
-- **"for now / disable / dummy / offline" markers.** Commits or comments
-  containing these phrases mark deliberate suspensions, not bugs. Check
-  `git log -- <file>` before re-enabling — the maintainer reverses
-  these manually when the underlying condition resolves.
-- **`_old` / `_old2` directories.** Recovery buffers during big
-  refactors. Don't delete them without asking, even if they look
-  orphaned.
+Commits or comments saying "for now", "disable", "dummy" or "offline"
+mark deliberate suspensions, not bugs. Check `git log -- <file>` before
+re-enabling; the maintainer reverses these when the underlying
+condition resolves.
 
 ## Files agents must not modify
 
@@ -133,7 +113,7 @@ affect `bw`'s behavior for the whole repo, not a single bundle.
   ≥10 recent commits means the subsystem is in flux; read the most
   recent diffs first — your assumptions about its metadata shape may
   already be stale.
-- **Branch names.** PRs go through self-hosted Gitea/Forgejo. Branch
+- **Branch names.** PRs go through the self-hosted Forgejo. Branch
   names are lowercase snake_case, descriptive
   (`debian-13`, `htz.mails_debian_13_squash`, `l4d2_the_next`).
 
