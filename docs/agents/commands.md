@@ -25,19 +25,6 @@ Before touching `data/apt/keys/`:
    `data/apt/keys/` and let `bundles/apt` consume it on the next
    apply.
 
-## `*.py_` suspended nodes are invisible to `bw nodes`
-
-The repo loader (`nodes.py`) only matches files ending in `.py`. Files
-ending in `.py_` are silently skipped. If `bw nodes` reports a node
-missing, check whether its file has been parked:
-
-```sh
-ls nodes/ | grep '\.py_$'
-```
-
-This is the [suspension idiom](conventions.md#suspension-and-soft-delete-idioms),
-not a bug.
-
 ## Vault output never leaves the terminal
 
 The fork's runbook calls out that `bw debug` resolves vault magic
