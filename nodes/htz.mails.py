@@ -44,8 +44,6 @@
                 'nadenau.net',
                 'naeder.net',
                 'wettengl.net',
-                'wingl.de',
-                'woodpipe.de',
                 'ckn.li',
                 'islamicstate.eu',
                 'hausamsilberberg.de',
