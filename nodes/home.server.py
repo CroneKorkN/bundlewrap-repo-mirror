@@ -139,10 +139,7 @@
         },
         'samba': {
             'shares': {
-                # rotated, the previous one was committed in a comment
-                'windows-backup': {
-                    'password': '!password_for:samba windows-backup 2',
-                },
+                'windows-backup': {},
             },
         },
         'ssh': {
