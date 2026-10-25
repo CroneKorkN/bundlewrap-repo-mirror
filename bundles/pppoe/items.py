@@ -9,6 +9,9 @@ files = {
         'needs': {
             'pkg_apt:pppoe',
         },
+        'triggers': {
+            'svc_systemd:pppoe-isp.service:restart',
+        },
     },
     '/etc/ppp/chap-secrets': {
         'content_type': 'mako',
@@ -20,6 +23,9 @@ files = {
         'needs': {
             'pkg_apt:pppoe',
         },
+        'triggers': {
+            'svc_systemd:pppoe-isp.service:restart',
+        },
     },
 }
 
@@ -28,11 +34,7 @@ svc_systemd = {
         'needs': {
             'file:/etc/ppp/peers/isp',
             'file:/etc/ppp/chap-secrets',
-        },
-    },
-    'qdisc-ppp0.service': {
-        'needs': {
-            'svc_systemd:pppoe-isp.service',
+            'file:/etc/systemd/network/ppp0.network',
         },
     },
 }

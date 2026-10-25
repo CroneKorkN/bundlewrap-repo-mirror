@@ -4,19 +4,10 @@ unit        0
 
 # --- IPv4 Einstellungen ---
 noipdefault                 # keine selbstgewählte lokale IP
-defaultroute                # Default-Route über ppp0 anlegen
-replacedefaultroute         # ersetzt vorherige Default-Route
-
-# --- IPv6 Einstellungen ---
-+ipv6                         # IPv6CP aktivieren
-ipv6cp-accept-local          # lokale IPv6 vom ISP übernehmen
-ipv6cp-accept-remote         # remote IPv6 vom ISP übernehmen
-ipv6cp-use-ipaddr            # statt Link-Local die zugewiesene IPv6 nutzen
-defaultroute6
+# Routen setzt systemd-networkd (ppp0.network)
 
 # --- Verbindungsmanagement ---
-persist                      # bei Abbruch automatisch neu verbinden
-maxfail 0                    # unbegrenzt Neuversuche
+# kein persist: pppd beendet sich beim Abbruch, systemd wählt neu ein
 
 # --- LCP‐Keepalive (zuverlässiger Ausfall-Check) ---
 lcp-echo-interval 20

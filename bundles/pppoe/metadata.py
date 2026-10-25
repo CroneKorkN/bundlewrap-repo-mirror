@@ -8,8 +8,19 @@ defaults = {
         'pppoe',
         'pppox',
         'ppp_generic',
+        'sch_cake',
     },
     'nftables': {
+        # sorted before the port accepts, so nothing on the router is reachable from the internet;
+        # wireguard to htz.mails is initiated from here and passes as established
+        'input': {
+            'iifname ppp0 drop',
+        },
+        'forward': {
+            'iifname ppp0 ct state new drop',
+            # pppoe has an mtu of 1492
+            'oifname ppp0 tcp flags syn tcp option maxseg size set rt mtu',
+        },
         'nat': {
             'oifname ppp0 masquerade',
         },
@@ -19,37 +30,44 @@ defaults = {
             'pppoe-isp.service': {
                 'Unit': {
                     'Description': 'PPPoE Internet Connection',
-                    'After': 'network.target',
+                    'BindsTo': 'sys-subsystem-net-devices-external.device',
+                    'After': 'sys-subsystem-net-devices-external.device',
                 },
                 'Service': {
-                    'Type': 'forking',
-                    'ExecStart': '/usr/sbin/pppd call isp',
-                    'Restart': 'on-failure',
+                    # pppd exits when the link drops, systemd redials
+                    'Type': 'notify',
+                    'ExecStart': '/usr/sbin/pppd call isp nodetach up_sdnotify',
+                    'Restart': 'always',
                     'RestartSec': 5,
                 },
             },
-            'qdisc-ppp0.service': {
-                'Unit': {
-                    'Description': 'setup queuing discipline for interface ppp0',
-                    'After': {
-                        'pppoe-isp.service',
-                        'sys-devices-virtual-net-ppp0.device',
-                    },
-                    'PartOf': 'pppoe-isp.service',
-                    'BindsTo': 'sys-devices-virtual-net-ppp0.device',
+            # pppd only dials, networkd configures the link it creates
+            'ppp0.network': {
+                'Match': {
+                    'Name': 'ppp0',
                 },
-                'Service': {
-                    'Type': 'oneshot',
-                    'ExecStart': '/sbin/tc qdisc replace root dev ppp0 cake bandwidth 37Mbit internet besteffort triple-isolate nat egress memlimit 256mb',
+                'Link': {
+                    'RequiredForOnline': 'no',
+                },
+                'Network': {
+                    # keep the address set by pppd
+                    'KeepConfiguration': 'yes',
+                    'LinkLocalAddressing': 'no',
+                    'IPv6AcceptRA': 'no',
+                },
+                'Route': {
+                    'Destination': '0.0.0.0/0',
+                },
+                'CAKE': {
                     # - no drops save
                     # - bis 37MBit keine retries bei: iperf3 --client 49.12.184.229 -t999 -i5 --bidir
-                    #'ExecStart': '/sbin/tc qdisc replace root dev ppp0 cake bandwidth 37Mbit internet besteffort nat egress memlimit 256mb',
-                    'RemainAfterExit': 'yes',
+                    'Bandwidth': '37M',
+                    'RTTSec': '100ms',
+                    'PriorityQueueingPreset': 'besteffort',
+                    'FlowIsolationMode': 'triple',
+                    'NAT': 'yes',
                 },
-                'Install': {
-                    'WantedBy': 'multi-user.target',
-                },
-            }
+            },
         },
     },
 }
