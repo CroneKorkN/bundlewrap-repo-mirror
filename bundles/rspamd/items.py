@@ -37,6 +37,10 @@ svc_systemd = {
     'rspamd': {
         'needs': {
             'pkg_apt:rspamd',
+            # rspamd uploads its lua scripts to redis at startup only: start and restart it after redis.
+            # a restart action that is not triggered does not skip this, triggered items never cascade
+            'svc_systemd:redis-server',
+            'svc_systemd:redis-server:restart',
         },
     },
 }
@@ -61,5 +65,17 @@ actions['rspamd_redis_group'] = {
     ],
     'triggers': [
         'svc_systemd:rspamd:restart',
+    ],
+}
+
+# a restarted redis has lost the uploaded scripts, so rspamd has to follow
+actions['rspamd_restart_after_redis'] = {
+    'command': 'systemctl restart rspamd',
+    'triggered': True,
+    'triggered_by': [
+        'svc_systemd:redis-server:restart',
+    ],
+    'needs': [
+        'svc_systemd:rspamd',
     ],
 }
