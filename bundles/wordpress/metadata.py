@@ -1,8 +1,9 @@
 defaults = {
     'php': {
         'php.ini': {
-            'cgi': {
-                'fix_pathinfo': '0',
+            'PHP': {
+                # php-fpm must not guess a script from a path that does not exist
+                'cgi.fix_pathinfo': '0',
             },
         },
     },
