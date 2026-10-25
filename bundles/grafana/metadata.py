@@ -36,10 +36,6 @@ defaults = {
                 'user': 'grafana',
                 'password': postgres_password,
             },
-            'remote_cache': {
-                'type': 'redis',
-                'connstr': 'addr=127.0.0.1:6379',
-            },
             'security': {
                 'admin_user': 'admin',
                 'admin_password': str(repo.vault.password_for(f'{node.name} grafana admin')),

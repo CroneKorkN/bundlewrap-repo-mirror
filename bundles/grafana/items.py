@@ -1,4 +1,3 @@
-assert node.has_bundle('redis')
 assert node.has_bundle('postgresql')
 
 from mako.template import Template

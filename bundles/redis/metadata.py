@@ -9,11 +9,8 @@ defaults = {
             '/var/lib/redis',
         },
     },
-    'redis': {
-        'server': {
-            'port': '6379',
-        },
-    },
+    # one instance per client bundle, each on its own socket, e.g. redis/nextcloud
+    'redis': {},
 }
 
 if node.has_bundle('zfs'):

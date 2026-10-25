@@ -124,9 +124,6 @@ defaults = {
             },
         },
     },
-    'redis': {
-        'icingaweb2': {},
-    },
 }
 
 
