@@ -65,6 +65,8 @@ for name, config in node.metadata.get('zfs/pools', {}).items():
                     "devices": config['devices'],
                 },
             ],
+            # disks often report 512 byte sectors while the storage below works in 4k
+            "ashift": config.get('ashift', 12),
         },
         "autotrim": False,
     }

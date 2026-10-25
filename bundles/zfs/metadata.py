@@ -198,3 +198,21 @@ def auto_snapshots(metadata):
             },
         },
     }
+
+
+@metadata_reactor.provides(
+    'zfs/datasets',
+)
+def pool_root_datasets(metadata):
+    return {
+        'zfs': {
+            'datasets': {
+                # xattrs (acls too) in the dnode instead of hidden directories
+                pool: {
+                    'xattr': 'sa',
+                    'dnodesize': 'auto',
+                }
+                    for pool in metadata.get('zfs/pools')
+            },
+        },
+    }
