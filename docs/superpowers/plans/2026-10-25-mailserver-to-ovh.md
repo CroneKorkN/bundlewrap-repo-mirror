@@ -46,14 +46,15 @@ Hetzner volume, 7,896 on the OVH disk; 4k fsync writes 227 vs 10,835.
 
 1. htz.mails: stop postfix, dovecot, rspamd, php8.4-fpm, nginx, postgresql,
    mariadb, redis-server, redis-rspamd.
-2. Snapshot `@migrate2` on all seven datasets, `zfs send -c -i @migrate1`
-   into the existing datasets on ovh.mails.
+2. On ovh.mails `zfs rollback -r` every dataset to `@migrate1`, dropping
+   the test changes and auto-snapshots since. Snapshot `@migrate2` on all
+   seven datasets on htz.mails, `zfs send -c -i @migrate1` into them.
 3. Rewrite the mail data so it gets the new record sizes; `zfs send` keeps
    the block sizes of the sender (vmail 16K, index 4K), neither `-L`,
    `recv -o` nor `zfs rewrite` change them. On ovh.mails, services still
    stopped, for `tank/vmail` and `tank/vmail/index`:
    - `zfs rename` the received dataset to `…-received`, unmount it
-   - create the dataset anew with the bundle properties
+   - create the dataset anew with the bundle properties (vmail now zstd)
    - `cp -a` the content over (local NVMe, a few minutes for ~20 GB)
    - destroy `…-received` after a check
 4. Repo:
