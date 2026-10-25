@@ -118,6 +118,7 @@ def users(metadata):
     return {
         'users': {
             repo.libs.backup.user_for(other_node): {
+                'full_name': f'backup of {other_node.name}',
                 'authorized_keys': {
                     other_node.metadata.get('users/root/pubkey'),
                 },
