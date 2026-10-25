@@ -48,7 +48,7 @@ bundles/<name>/
   reactor that derives from those knobs. Per-node random secrets
   belong in `defaults` via `repo.vault.random_bytes_as_base64_for(...)`
   keyed on the node — not in the node file. See
-  `bundles/left4me/metadata.py:10` (`secret_key` derived in defaults)
+  `bundles/left4me/metadata.py` (`secret_key` derived in defaults)
   and `bundles/postgresql/metadata.py:4` (vault-derived `password_for`
   at module scope).
 
@@ -99,9 +99,9 @@ bundles/<name>/
   invocation of `bw`. Heavy work or I/O slows the whole repo. Keep
   reactors pure and fast; pre-compute in `libs/` if you must.
 - **Static files vs templates.** `bundles/<x>/files/<f>` is static
-  unless the matching `file:` item declares `content_type='mako'`
-  (or a templating extension triggers it). To check, read the matching
-  `file:` entry in `items.py`.
+  unless the matching `file:` item declares `content_type='mako'` (or
+  `'jinja2'`); the file name never switches templating on. To check,
+  read the matching `file:` entry in `items.py`.
 - **`file:` `source` defaults to the destination basename.** For a
   destination of `/etc/foo/bar.conf` with no `source` key, bw looks
   for `bundles/<bundle>/files/bar.conf`. Only declare `source`
@@ -110,7 +110,7 @@ bundles/<name>/
   `/etc/foo/bar.conf`).
 - **Reactors writing across namespaces.** Some bundles' reactors write
   into other bundles' metadata namespaces (e.g. `nextcloud` writes
-  into `apt.packages`, `backup.paths`). When you change such a bundle,
+  into `zfs/datasets` and `nginx/vhosts`). When you change such a bundle,
   every consumer's metadata changes too. The bundle's `README.md`
   often calls these out — but the authoritative source is `metadata.py`
   itself; grep `'<other-bundle>':` in the reactors when in doubt.
