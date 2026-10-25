@@ -36,10 +36,17 @@ if node.has_bundle('zfs'):
         'datasets': {
             'tank/postgresql': {
                 'mountpoint': '/var/lib/postgresql',
-                'recordsize': '8192',
+                # 16k compresses better than the 8k pages, copy on write makes partial page writes cheap
+                'recordsize': '16384',
                 'atime': 'off',
             },
         },
+    }
+    # copy on write never tears a page and never reuses wal blocks in place
+    defaults['postgresql']['conf'] = {
+        'full_page_writes': 'off',
+        'wal_init_zero': 'off',
+        'wal_recycle': 'off',
     }
 
 
