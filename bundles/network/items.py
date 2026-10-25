@@ -1,3 +1,9 @@
+files = {
+    '/etc/resolv.conf': {
+        'content_type': 'mako',
+    },
+}
+
 for network_name, network_conf in node.metadata.get('network').items():
     if 'qdisc' in network_conf:
         svc_systemd[f'qdisc-{network_name}.service'] = {
