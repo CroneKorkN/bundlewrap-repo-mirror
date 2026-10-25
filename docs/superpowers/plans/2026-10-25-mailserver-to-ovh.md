@@ -75,6 +75,9 @@ Hetzner volume, 7,896 on the OVH disk; 4k fsync writes 227 vs 10,835.
 7. By hand: wireguard endpoint on wb.offsite-backups and ovh.left4me
    (dummy nodes), new QR codes for macbook, phone, ipad.
 8. Remove the nft rule and the `@migrate*` snapshots.
+9. Rotate the acme tsig key (it leaked into a session transcript on
+   2026-10-25): new date suffix in `bundles/bind/metadata.py`
+   (`bind key {key} 20250713`), applied together with bind.
 
 ## Phase 4: afterwards
 
