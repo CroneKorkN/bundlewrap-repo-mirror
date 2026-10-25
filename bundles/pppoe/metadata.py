@@ -16,6 +16,7 @@ defaults = {
         'input': {
             'iifname ppp0 meta l4proto != udp drop',
             'iifname ppp0 udp dport != 546 drop',
+            'iifname ppp0 udp dport 546 accept',
         },
         'forward': {
             'iifname ppp0 ct state new drop',
@@ -53,16 +54,20 @@ defaults = {
                 'Network': {
                     # keep the address and default route set by pppd
                     'KeepConfiguration': 'yes',
-                    # pppd negotiates the link-local address
-                    'LinkLocalAddressing': 'no',
+                    # pppd negotiates the link-local address, but networkd disables dhcpv6 and ra without this
+                    'LinkLocalAddressing': 'ipv6',
                     'IPv6AcceptRA': 'yes',
                     'DHCP': 'ipv6',
                 },
                 'IPv6AcceptRA': {
                     'UseDNS': 'no',
+                    # the telekom ra sets no managed flag, request the prefix anyway
+                    'DHCPv6Client': 'always',
                 },
                 'DHCPv6': {
                     'PrefixDelegationHint': '::/56',
+                    # the telekom answers an address request with NoAddrsAvail, which voids the whole reply
+                    'UseAddress': 'no',
                     'WithoutRA': 'solicit',
                     'UseDNS': 'no',
                 },
