@@ -23,13 +23,14 @@
         'redis',
         'samba',
         'smartctl',
-        #'steam-chat-logger', # fix system pip error
+        'steam-chat-logger',
         #'steam-chat-viewer', # fix system pip error
         'systemd-swap',
         #'twitch-clip-download', # fix system pip error
         'raspberrymatic-cert',
         'zfs',
         'routeros-monitoring',
+        'uv',
     ],
     'metadata': {
         'id': 'af96709e-b13f-4965-a588-ef2cd476437a',
@@ -136,14 +137,6 @@
                 hostnames=('homeassistant.ckn.li', '10.0.0.16'),
                 pubkey='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIE9SOqQ7tcJAOWOZkbQwFLOEfqpILuiDmeMHAEiY9G/I',
             ),
-        },
-        'steam_chat_logger': {
-            'STEAM_USERNAME': 'snake_452',
-            'STEAM_ID': 'STEAM_0:0:12376499',
-            'STEAM_PASSWORD': '!decrypt:encrypt$gAAAAABiUzERrXVNxzDaDW_4MgEmPtXkMHlTiz5uqCbu-22-2yKHRHMKvuGqAygpGbnwZucZcmZMox9KM89a6qlVKlE1ZPizTA==',
-            'IMAP_HOST': 'mail.sublimity.de',
-            'IMAP_USER': 'i@ckn.li',
-            'IMAP_PASSWORD': '!decrypt:encrypt$gAAAAABiUzcTVRL-Xb4RDjcwciZawYlmOa9Qy_hKz6sVWDlwZqUFLGRD8ERWoFCOWCM22Sq73Gc4nFuAblBB6wpbH5YEltLA6hmROGKpOFhI63ESLFwNgbY=',
         },
         'steam-chat-viewer': {
             'hostname': 'steam-chats.ckn.li',
