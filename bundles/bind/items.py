@@ -1,6 +1,13 @@
 from ipaddress import ip_address, ip_interface
-from datetime import datetime
 from hashlib import sha3_512
+
+
+
+def zone_serial(records):
+    # derived from the records, so all servers agree and one that missed an apply stands out;
+    # not monotonic, which only matters for zones transferred by axfr (dynamic zones keep their own)
+    content = repr(sorted((r['name'], r['type'], r['value']) for r in records))
+    return int(sha3_512(content.encode()).hexdigest()[:8], 16) % 2**31 or 1
 
 
 if node.metadata.get('bind/type') == 'master':
@@ -121,9 +128,10 @@ for view_name, view_conf in master_node.metadata.get('bind/views').items():
             'content_type': 'mako',
             'unless': f"test -f /var/lib/bind/{view_name}/{zone_name}" if zone_conf.get('allow_update', False) else 'false',
             'context': {
-                'serial': datetime.now().strftime('%Y%m%d%H'),
+                'serial': zone_serial(zone_conf['records']),
                 'records': zone_conf['records'],
-                'hostname': node.metadata.get('bind/hostname'),
+                # the primary as mname on every server, so all of them return the same soa
+                'hostname': master_node.metadata.get('bind/hostname'),
                 'type': node.metadata.get('bind/type'),
             },
             'owner': 'bind',
