@@ -56,5 +56,5 @@ non_smtpd_milters = inet:localhost:8891 inet:127.0.0.1:11332
 milter_protocol = 6
 milter_default_action = accept
 
-# rspamd
-milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_authen}
+# rspamd; opendkim signs only for authenticated senders it recognizes by {auth_type}
+milter_mail_macros = i {mail_addr} {client_addr} {client_name} {auth_type} {auth_authen}
