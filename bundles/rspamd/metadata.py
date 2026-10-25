@@ -8,11 +8,9 @@ defaults = {
         },
     },
     'redis': {
-        'rspamd': {
-            # every dump rewrites the whole bayes database, losing an hour of learning is fine
-            'save': {
-                '3600 1',
-            },
+        # every dump rewrites the whole bayes database, losing an hour of learning is fine
+        'save': {
+            '3600 1',
         },
     },
     'rspamd': {
@@ -24,8 +22,8 @@ defaults = {
             # rspamd uploads its lua scripts at startup only; if redis is still loading, bayes stays broken
             'rspamd.service.d/override.conf': {
                 'Unit': {
-                    'After': {'redis-rspamd.service'},
-                    'Wants': {'redis-rspamd.service'},
+                    'After': {'redis-server.service'},
+                    'Wants': {'redis-server.service'},
                 },
             },
         },

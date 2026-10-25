@@ -82,9 +82,6 @@ defaults = {
             },
         },
     },
-    'redis': {
-        'nextcloud': {},
-    },
     'systemd-timers': {
         'nextcloud-cron': {
             'command': '/usr/bin/php -f /opt/nextcloud/cron.php',
@@ -159,8 +156,10 @@ def config(metadata):
                 'memcache.local': '\\OC\\Memcache\\APCu',
                 'memcache.locking': '\\OC\\Memcache\\Redis',
                 'memcache.distributed': '\\OC\\Memcache\\Redis',
+                # debian's redis-server, see the redis bundle
                 'redis': {
-                    'host': '/var/run/redis/nextcloud.sock'
+                    'host': '/run/redis/redis-server.sock',
+                    'port': 0,
                 },
                 'trusted_domains': [
                     'localhost',
