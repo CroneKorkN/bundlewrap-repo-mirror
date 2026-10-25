@@ -9,6 +9,10 @@ defaults = {
                     'pkg_apt:zfsutils-linux',
                 },
             },
+            # cloud images boot it, but the headers dkms builds zfs against are for the generic kernel
+            'linux-image-cloud-amd64': {
+                'installed': False,
+            },
             'zfs-dkms': {
                 'backports': node.os_version < (11,),
                 'needed_by': {
