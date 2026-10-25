@@ -15,7 +15,7 @@ files = {
     '/opt/build-server/strategies/crystal': {
         'content_type': 'mako',
         'owner': 'build-server',
-        'mode': '0777', # FIXME
+        'mode': '0755',
         'context': {
             'config_path': '/etc/build-server.json',
             'download_server': node.metadata.get('build-server/download_server_ip'),
