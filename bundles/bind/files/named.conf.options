@@ -6,6 +6,9 @@ options {
   allow-query { any; };
 
   max-cache-size 30%;
+  # keep expired records and answer with them while the authoritative servers are unreachable
+  stale-cache-enable yes;
+  stale-answer-enable yes;
   # explicit: without the option a reload keeps the previous state
   querylog no;
 
