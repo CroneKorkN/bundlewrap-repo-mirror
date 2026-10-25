@@ -3,8 +3,8 @@
 ## What's here
 
 Operator scripts — invoked manually by the maintainer, **not** by
-bundlewrap itself. Each is a standalone Python (or shell) script that
-opens the repo via `Repository(dirname(dirname(realpath(__file__))))`.
+bundlewrap itself. Most open the repo via
+`Repository(dirname(dirname(realpath(__file__))))`.
 
 Discovery is by `ls bin/` plus the `# purpose:` header line at the top
 of each script:
@@ -22,10 +22,11 @@ head -2 bin/*
 - **Self-contained.** A script must work when run from anywhere — it
   resolves the repo via the script's own path, not `cwd`.
 - **Read-only by default.** Most operator scripts query/print state
-  (`passwords-for`, `wireguard-client-config`). Mutating scripts
-  (`upgrade_and_restart_all`, `mikrotik-firmware-updater`,
-  `sync_1password`) are the exception, not the rule, and prompt for
-  confirmation.
+  (`passwords-for`, `wireguard-client-config`).
+- **Some scripts change things without asking.** `upgrade_and_restart_all`
+  runs `apt full-upgrade` and reboots nodes, `sync_1password` writes to
+  1Password; only `mikrotik-firmware-updater` asks first (skip with
+  `--yes`). Never run them without the user's request.
 
 ## How to add a script
 
