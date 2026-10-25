@@ -67,8 +67,9 @@
                 'mailer': {
                     'ENABLED': True,
                     'FROM': 'gitea@sublimity.de',
-                    'MAILER_TYPE': 'smtp',
-                    'HOST': 'mail.sublimity.de:587',
+                    'PROTOCOL': 'smtp+starttls',
+                    'SMTP_ADDR': 'mail.sublimity.de',
+                    'SMTP_PORT': 587,
                     'USER': 'gitea@sublimity.de',
                     'PASSWD': '!decrypt:encrypt$gAAAAABjIlbZprmcIe_YktYgTU85VRSRz1MkyA7lNSDptWzGMrZ1N_YUXWoAIjWp4Lrmi8J0XYH9Pazhmz1vaIGUqUEsEnJXNh5n6-0Z0gcpePFC7x-Aj_M=',
                 },
