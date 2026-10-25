@@ -185,7 +185,8 @@
             'ram':  49152,
         },
         'zfs': {
-            'zfs_arc_max_percent': 80,
+            # leave room for the vms, postgresql and php
+            'zfs_arc_max_percent': 50,
             'storage_classes': {
                 'hdd': 'hdd',
             },
@@ -209,6 +210,8 @@
                 'tank/nextcloud-appdata': {
                     'mountpoint': '/var/lib/nextcloud/appdata_oci6dw1woodz',
                     'backup': False,
+                    # previews can be regenerated, snapshots of them only pile up
+                    'com.sun:auto-snapshot': 'false',
                 },
                 'hdd/nextcloud/ckn': {
                     'mountpoint': '/var/lib/nextcloud/ckn/files',
