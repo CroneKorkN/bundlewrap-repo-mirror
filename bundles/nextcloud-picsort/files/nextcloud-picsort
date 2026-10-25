@@ -117,22 +117,22 @@ def move_sorted(file: Path, target: Path) -> None:
     shutil.move(str(file), str(target))
     shutil.chown(str(target), user="www-data", group="www-data")
 
-def process_file(file: Path, source_root: Path, dest_root: Path, unsortable_root: Path) -> tuple[Path, str]:
+def process_file(file: Path, source_root: Path, dest_root: Path, unsortable_root: Path) -> Path | None:
     print(f"PROCESSING: {file}")
     ts = exiftool_timestamp(file)
 
     if ts is None:
         print(f"UNSORTABLE: {file}")
         move_unsortable(file, source_root, unsortable_root)
-        return file, "unsortable"
+        return None
 
     target = build_destination(dest_root, file, ts)
     print(f"DESTINATION: {target}")
     move_sorted(file, target)
-    return file, "sorted"
+    return target
 
 
-def scan_nextcloud(rel_source: str, rel_unsortable: str, rel_dest: str) -> None:
+def scan_nextcloud(rel_source: str, rel_unsortable: str, dest_dirs: set[Path]) -> None:
     print("SCANNING...")
     # run(["chown", "-R", "www-data:www-data", abs_source_path], check=True)
     # run(["chmod", "-R", "770", abs_source_path], check=True)
@@ -144,7 +144,11 @@ def scan_nextcloud(rel_source: str, rel_unsortable: str, rel_dest: str) -> None:
 
     run(["sudo", "-u", "www-data", "php", "/opt/nextcloud/occ", "files:scan", "--path", rel_source], check=True)
     run(["sudo", "-u", "www-data", "php", "/opt/nextcloud/occ", "files:scan", "--path", rel_unsortable], check=True)
-    run(["sudo", "-u", "www-data", "php", "/opt/nextcloud/occ", "files:scan", "--path", rel_dest], check=True)
+    # files:scan does not generate metadata on its own, without it the photos app lacks the date taken;
+    # --generate-metadata reads every scanned file, so only scan the directories that got new files
+    for dest_dir in sorted(dest_dirs):
+        rel_dest_dir = "/" + str(dest_dir.relative_to("/var/lib/nextcloud"))
+        run(["sudo", "-u", "www-data", "php", "/opt/nextcloud/occ", "files:scan", "--shallow", "--generate-metadata", "--path", rel_dest_dir], check=True)
 
     run(["systemctl", "start", "nextcloud-generate-new-previews.service"], check=True)
 
@@ -174,7 +178,6 @@ if __name__ == "__main__":
     rel_source_path = f"/{nc_user}/files/{source_subdir}"
     abs_source_path = f"/var/lib/nextcloud/{nc_user}/files/{source_subdir}"
 
-    rel_dest_path = f"/{nc_user}/files/{dest_subdir}"
     abs_dest_path = f"/var/lib/nextcloud/{nc_user}/files/{dest_subdir}"
 
     rel_unsortable_path = f"/{nc_user}/files/{unsortable_subdir}"
@@ -196,14 +199,17 @@ if __name__ == "__main__":
         print("FINISH.")
         raise SystemExit(0)
 
+    dest_dirs = set()
     with ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
         futures = {
             executor.submit(process_file, file, source_root, dest_root, unsortable_root): file
             for file in files
         }
         for future in as_completed(futures):
-            future.result()
+            target = future.result()
+            if target:
+                dest_dirs.add(target.parent)
 
-    scan_nextcloud(rel_source_path, rel_unsortable_path, rel_dest_path)
+    scan_nextcloud(rel_source_path, rel_unsortable_path, dest_dirs)
 
     print("FINISH.")
