@@ -64,7 +64,8 @@ def units(metadata):
 
             # type
 
-            if interface_type:
+            # dummy links report their type as ether
+            if interface_type and interface_type != 'dummy':
                 units[f'{network_name}.network']['Match']['Type'] = interface_type
 
             # ips
@@ -107,6 +108,16 @@ def units(metadata):
                     'VLAN': {
                         'Id': network_conf['id'],
                     }
+                }
+
+            # as dummy, for an address that is routed here but belongs to no physical link
+
+            if interface_type == 'dummy':
+                units[f"{network_name}.netdev"] = {
+                    'NetDev': {
+                        'Name': network_conf['interface'],
+                        'Kind': 'dummy',
+                    },
                 }
 
             # cake WIP
