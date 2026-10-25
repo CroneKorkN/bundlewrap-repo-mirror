@@ -27,7 +27,8 @@ files = {
 }
 
 svc_systemd = {
-    'redis': {
+    # debian's own instance on /etc/redis/redis.conf; the instances below have their own units
+    'redis-server': {
         'running': False,
         'enabled': False,
         'needs': [
@@ -52,7 +53,7 @@ for name, conf in node.metadata.get('redis').items():
 
     svc_systemd[f'redis-{name}'] = {
         'needs': [
-            'svc_systemd:redis',
+            'svc_systemd:redis-server',
             f'file:/etc/redis/{name}.conf',
         ],
     }
