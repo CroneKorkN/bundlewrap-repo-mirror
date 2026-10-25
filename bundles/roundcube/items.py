@@ -89,3 +89,9 @@ files['/opt/roundcube/plugins/password/config.inc.php'] = {
         'action:chown_roundcube',
     ],
 }
+files['/opt/roundcube/plugins/argon2_rehash/argon2_rehash.php'] = {
+    'source': 'argon2_rehash.php',
+    'needs': [
+        'action:chown_roundcube',
+    ],
+}

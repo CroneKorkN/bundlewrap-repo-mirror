@@ -35,6 +35,8 @@ defaults = {
         'plugins': [
             'managesieve',
             'password',
+            # after password, uses its config
+            'argon2_rehash',
         ],
         'des_key': repo.vault.password_for(f'{node.name} roundcube des_key', length=24),
     },
@@ -49,9 +51,6 @@ defaults = {
                 'owner': 'roundcube',
             },
         },
-    },
-    'sudoers': {
-        'www-data': ['/usr/bin/doveadm pw -s ARGON2ID'],
     },
 }
 
