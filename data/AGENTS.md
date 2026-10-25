@@ -10,8 +10,7 @@ data/
 ├── apt/keys/                   # binary GPG keys for apt sources
 ├── grafana/rows/               # Mako-templated dashboard panels (Python)
 ├── nginx/                      # nginx snippets shared across vhosts
-├── homeassistant/, mailman/, nextcloud/, ...
-└── network.py                  # repo-wide network metadata (one-off file)
+└── nextcloud/, yourls/, ...    # vhost templates, see nginx/vhosts content
 ```
 
 ## Two distinct content models
@@ -34,9 +33,6 @@ this reason.
 
 - **One subdir per consumer.** Subdir name = consumer bundle name
   (`data/apt/`, `data/nextcloud/`).
-- **`network.py` exception.** A single file at `data/network.py` holds
-  repo-wide network metadata; it doesn't belong to one bundle. Treat
-  it as cross-cutting infrastructure metadata.
 
 ## How to add data
 
