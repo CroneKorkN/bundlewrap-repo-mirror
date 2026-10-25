@@ -26,8 +26,8 @@ head -1 libs/*.py
 - **No magic-string demagification here.** Libs receive already-
   resolved values from bundles or nodes. Don't pass `!password_for:`
   strings into libs — they won't be resolved.
-- **`repo` and `vault` are globals available at runtime.** A few libs
-  (`wireguard.py`, etc.) reach `repo.vault.<verb>(...)` directly.
+- **`repo` and `vault` are globals available at runtime.**
+  `wireguard.py` reaches `repo.vault.<verb>(...)` directly.
   That's intentional inside libs, since libs run in the same loader
   scope as bundles.
 
