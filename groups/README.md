@@ -9,7 +9,7 @@ organized by axis:
 groups/
 ├── all.py                     # universal base (every node belongs)
 ├── applications/<x>.py        # role-shaped groups (mailserver, monitored, …)
-├── locations/<x>.py           # physical/network location (home, htz, …)
+├── locations/<x>.py           # physical/network location (home)
 ├── machine/<x>.py             # hardware kind (hardware, raspberry-pi)
 └── os/<x>.py                  # OS major/variant (debian-13, debian-13-pve, routeros, …)
 ```
@@ -19,9 +19,8 @@ groups/
 `groups.py` (top of the repo) walks `groups/` and runs `eval()` on each
 `*.py`. Same eval-as-expression rule as
 [`nodes/`](../nodes/README.md#loader-mechanism): one dict literal, no
-top-level imports, no statements. Errors print and the group is skipped
-— a real foot-gun, since a missing group silently changes node
-membership.
+top-level imports, no statements. An error prints the file and aborts
+`bw`.
 
 **Group files are *not* demagified.** Magic strings like
 `!password_for:<x>` only resolve in `nodes/*.py`. Inside a group file,
@@ -29,16 +28,17 @@ call `repo.vault.<verb>(...)` directly.
 
 ## Inheritance and merge order
 
-Metadata merges along this chain:
-
-```
-all → location → os → machine → applications → node
-```
-
 Per-axis subdirs are conventional, not enforced — `bw` doesn't read the
 subdir. Each group lists its `supergroups`, and `bw` resolves the DAG.
-Membership is set-union; metadata merge follows the order above, with
-the node's own `metadata` block winning last.
+
+- Membership is set-union.
+- Metadata: a supergroup's values come before its subgroups', so the
+  subgroup wins; the node's own `metadata` block wins last. Dicts merge,
+  sets unite.
+- Two groups with no supergroup relation that set the same key to
+  different values make `bw` fail with a conflict; set such a key in a
+  common supergroup or in the node.
+- Groups and node win over reactors, reactors over bundle defaults.
 
 ## Conventions
 
@@ -81,12 +81,12 @@ Pattern from prior debian-12 → debian-13 work:
 
 1. Add `groups/os/debian-N.py` and `groups/os/debian-N-common.py`
    parallel to the existing files. Don't edit in place.
-2. Add `data/apt/keys/debian-N-*.{asc,gpg}` for the new release's
-   signing keys. See
+2. Add `data/apt/keys/debian-N.asc` and `debian-N-security.asc` for the
+   new release's signing keys. See
    [`commands.md#apt-key-changes-need-offline-verification`](../docs/agents/commands.md#apt-key-changes-need-offline-verification)
    before pushing keys live.
 3. Bump dependent bundles that branch on `os_version` /
-   `os_codename` (`bundles/bind/items.py`, etc.).
+   `os_codename` (`grep -rln 'os_version\|os_codename' bundles`).
 4. Bump affected nodes' `groups` lists one at a time. Apply, watch.
 5. Delete the old OS group file once no node references it.
 
@@ -96,9 +96,6 @@ Pattern from prior debian-12 → debian-13 work:
   `bw nodes <node> -a groups`.
 - **Cycles.** A group can't be its own supergroup transitively;
   `bw test` catches this but the error message is terse.
-- **Silent eval failure.** A group file with a syntax error is skipped
-  and prints a one-line error. If a node loses bundles unexpectedly,
-  scan `groups.py` output for the error.
 
 ## See also
 
