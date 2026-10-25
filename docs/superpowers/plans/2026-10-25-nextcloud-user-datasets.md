@@ -37,6 +37,9 @@ Takes minutes; recognize only pauses, its queues survive.
 OCC="sudo -u www-data php /opt/nextcloud/occ"
 sudo systemctl stop recognize-worker-imagenet recognize-worker-faces recognize-worker-media
 sudo systemctl stop nextcloud-cron.timer nextcloud-generate-new-previews.timer nextcloud-picsort-ckn.timer nextcloud-scan-files.timer
+# the backup finds datasets by mountpoint, with a stale path it would rsync /var/lib/nextcloud/ckn/files
+sudo systemctl stop backup.timer
+while systemctl is-active -q backup.service; do sleep 30; done
 while pgrep -f /opt/nextcloud/cron.php; do sleep 10; done
 $OCC maintenance:mode --on
 sudo zfs snapshot hdd/nextcloud@before-remount
@@ -66,15 +69,16 @@ sudo chmod 0770 $D
 ### 2. Repo
 
 `nodes/home.server.py`: mountpoints to `/var/lib/nextcloud/ckn` and
-`/var/lib/nextcloud/ckn-privat`; `bw verify home.server -o bundle:zfs` must be
-clean, no apply needed.
+`/var/lib/nextcloud/ckn-privat`, then `bw apply home.server -o bundle:backup
+bundle:zfs`. The backup paths derive from the mountpoints; the backup keeps
+sending the same datasets incrementally, as their names stay the same.
 
 ### 3. Resume and check
 
 ```sh
 $OCC maintenance:mode --off
 $OCC files:scan ckn ckn-privat     # expect no new or removed files
-sudo systemctl start nextcloud-cron.timer nextcloud-generate-new-previews.timer nextcloud-picsort-ckn.timer nextcloud-scan-files.timer
+sudo systemctl start nextcloud-cron.timer nextcloud-generate-new-previews.timer nextcloud-picsort-ckn.timer nextcloud-scan-files.timer backup.timer
 ```
 
 Restart the recognize workers (same `systemd-run` calls as before).
