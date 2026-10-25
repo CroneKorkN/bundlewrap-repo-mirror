@@ -14,7 +14,8 @@ tar -xzf $tmpdir/$tar -C $tmpdir --strip-components=1
 install -m 0755 $tmpdir/uv  /usr/local/bin/uv
 install -m 0755 $tmpdir/uvx /usr/local/bin/uvx
 """,
-    'unless': f'/usr/local/bin/uv --version 2>/dev/null | grep -qx "uv {version}"',
+    # prints "uv 0.11.8 (x86_64-unknown-linux-gnu)"
+    'unless': f'/usr/local/bin/uv --version 2>/dev/null | grep -q "^uv {version} "',
     'cascade_skip': False,
     'needs': [
         'pkg_apt:curl',
