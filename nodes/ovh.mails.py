@@ -184,6 +184,11 @@
             },
         },
         'zfs': {
+            # php, postgres and rspamd need the rest; the old server starved its arc below 1G
+            'zfs_arc_max_percent': 40,
+            'kernel_params': {
+                'zfs_arc_min': str(2**30),
+            },
             'pools': {
                 'tank': {
                     'devices': [
