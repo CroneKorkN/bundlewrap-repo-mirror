@@ -110,7 +110,7 @@ bundles/<name>/
   `/etc/foo/bar.conf`).
 - **Reactors writing across namespaces.** Some bundles' reactors write
   into other bundles' metadata namespaces (e.g. `nextcloud` writes
-  into `apt.packages`, `archive.paths`). When you change such a bundle,
+  into `apt.packages`, `backup.paths`). When you change such a bundle,
   every consumer's metadata changes too. The bundle's `README.md`
   often calls these out — but the authoritative source is `metadata.py`
   itself; grep `'<other-bundle>':` in the reactors when in doubt.

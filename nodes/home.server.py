@@ -13,7 +13,6 @@
     ],
     'bundles': [
         'gitea',
-#        'gollum',
         'grub',
         'grafana',
         'icinga2',
@@ -74,11 +73,6 @@
                 },
             },
         },
-        'gollum': {
-            'domain': 'wiki.sublimity.de',
-            'wiki': 'https://git.sublimity.de/cronekorkn/wiki.git',
-            'version': '5.2.3',
-        },
         'grafana': {
             'hostname': 'grafana.sublimity.de',
             'influxdb_node': 'home.server',
@@ -103,12 +97,6 @@
                 'homeassistant.ckn.li': {
                     'scp': 'root@10.0.0.16:/ssl',
                 },
-            },
-        },
-        'mosquitto': {
-            'hostname': 'mqtt.sublimity.de',
-            'users': {
-                'openhab': {},
             },
         },
         'nextcloud': {
