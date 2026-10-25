@@ -10,7 +10,7 @@ groups/
 ├── all.py                     # universal base (every node belongs)
 ├── applications/<x>.py        # role-shaped groups (mailserver, monitored, …)
 ├── locations/<x>.py           # physical/network location (home, htz, …)
-├── machine/<x>.py             # hardware kind (hardware, hetzner-cloud, raspberry-pi)
+├── machine/<x>.py             # hardware kind (hardware, raspberry-pi)
 └── os/<x>.py                  # OS major/variant (debian-13, debian-13-pve, routeros, …)
 ```
 
