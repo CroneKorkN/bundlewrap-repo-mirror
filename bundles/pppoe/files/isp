@@ -4,7 +4,7 @@ unit        0
 
 # --- IPv4 Einstellungen ---
 noipdefault                 # keine selbstgewählte lokale IP
-# Routen setzt systemd-networkd (ppp0.network)
+defaultroute                # erst wenn IPCP steht; networkd legt sie zu früh an
 
 # --- Verbindungsmanagement ---
 # kein persist: pppd beendet sich beim Abbruch, systemd wählt neu ein

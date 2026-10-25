@@ -41,7 +41,7 @@ defaults = {
                     'RestartSec': 5,
                 },
             },
-            # pppd only dials, networkd configures the link it creates
+            # pppd dials and sets address and default route, networkd configures the rest of the link
             'ppp0.network': {
                 'Match': {
                     'Name': 'ppp0',
@@ -50,13 +50,10 @@ defaults = {
                     'RequiredForOnline': 'no',
                 },
                 'Network': {
-                    # keep the address set by pppd
+                    # keep the address and default route set by pppd
                     'KeepConfiguration': 'yes',
                     'LinkLocalAddressing': 'no',
                     'IPv6AcceptRA': 'no',
-                },
-                'Route': {
-                    'Destination': '0.0.0.0/0',
                 },
                 'CAKE': {
                     # - no drops save
