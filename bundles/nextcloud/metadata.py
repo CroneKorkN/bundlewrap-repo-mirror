@@ -76,8 +76,8 @@ defaults = {
         },
         'php.ini': {
             'PHP': {
-                # recognize's face clustering exceeded 3G at ~70k faces
-                'memory_limit': '16G',
+                # recognize's face clustering exceeded 3G at ~70k faces in cron, peaked at 2.7G alone
+                'memory_limit': '8G',
             },
             'apcu': {
                 # memcache.local is apcu, occ and cron fail without it
