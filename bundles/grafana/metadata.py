@@ -74,6 +74,7 @@ defaults = {
 
 @metadata_reactor.provides(
     'grafana/config/server/domain',
+    'grafana/config/server/root_url',
 )
 def domain(metadata):
     return {
@@ -81,6 +82,8 @@ def domain(metadata):
             'config': {
                 'server': {
                     'domain': metadata.get('grafana/hostname'),
+                    # behind nginx, otherwise links and the live websocket origin point to http://...:8300
+                    'root_url': f"https://{metadata.get('grafana/hostname')}/",
                 },
             },
         },
