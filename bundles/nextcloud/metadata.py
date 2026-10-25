@@ -75,7 +75,8 @@ defaults = {
         },
         'php.ini': {
             'PHP': {
-                'memory_limit': '3G', # face recognition requires 2G
+                # recognize's face clustering exceeded 3G at ~70k faces
+                'memory_limit': '16G',
             },
         },
     },
