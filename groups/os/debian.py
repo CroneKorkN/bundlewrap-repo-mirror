@@ -48,14 +48,6 @@
                 'mtr-tiny': {},
             },
         },
-        # iperf3
-        'nftables': {
-            'input': {
-                'tcp dport 5201 accept',
-                'udp dport 5201 accept',
-            },
-        },
-
     },
     'os': 'debian',
     'pip_command': 'pip3',
