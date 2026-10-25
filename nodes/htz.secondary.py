@@ -8,7 +8,6 @@
     ],
     'bundles': [
         'wireguard',
-        'zfs',
         'systemd-swap',
     ],
     'metadata': {
@@ -40,16 +39,6 @@
                         '10.0.2.0/24',
                         '10.0.9.0/24',
                         '10.0.10.0/24',
-                    ],
-                },
-            },
-        },
-        # FIXME: still holds the mail data of the time as htz.mails, drop with the node
-        'zfs': {
-            'pools': {
-                'tank': {
-                    'devices': [
-                        '/dev/disk/by-id/scsi-0HC_Volume_101332312',
                     ],
                 },
             },
