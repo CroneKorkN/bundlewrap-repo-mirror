@@ -22,9 +22,20 @@ files = {
         'content_type': 'mako',
         'context': {
             'hostname': node.metadata.get('mailserver/hostname'),
-            'debug': node.metadata.get('mailserver/debug')
+            'debug': node.metadata.get('mailserver/debug'),
+            'mynetworks': node.metadata.get('postfix/mynetworks'),
         },
         **file_options,
+    },
+    # mail to root, e.g. from cron
+    '/etc/aliases': {
+        'content': f"postmaster: root\nroot: {node.metadata.get('mail/root')}\n",
+        'needs': [
+            'pkg_apt:postfix',
+        ],
+        'triggers': [
+            'action:newaliases',
+        ],
     },
     '/etc/postfix/master.cf': {
         **file_options,
@@ -44,6 +55,11 @@ files = {
         'context': node.metadata.get('mailserver/database'),
         **file_options,
     },
+}
+
+actions['newaliases'] = {
+    'command': 'newaliases',
+    'triggered': True,
 }
 
 svc_systemd['postfix'] = {

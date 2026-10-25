@@ -35,6 +35,10 @@ files = {
         },
         **file_attributes,
     },
+    '/etc/opendkim/internal_hosts': {
+        'content': '\n'.join(['127.0.0.1', '::1', *sorted(node.metadata.get('postfix/mynetworks'))]) + '\n',
+        **file_attributes,
+    },
     '/etc/opendkim/signing_table': {
         'content_type': 'mako',
         'context': {
@@ -60,5 +64,6 @@ svc_systemd['opendkim'] = {
         'file:/etc/opendkim.conf',
         'file:/etc/opendkim/key_table',
         'file:/etc/opendkim/signing_table',
+        'file:/etc/opendkim/internal_hosts',
     ],
 }

@@ -33,6 +33,10 @@
         'letsencrypt': {
             'acme_node': 'ovh.mails',
         },
+        # mail to root, relayed through the mail server
+        'mail': {
+            'root': 'i@ckn.li',
+        },
         'nameservers': {
             '172.30.0.1',
             '172.30.0.3',

@@ -8,6 +8,7 @@
         'apt',
         'nftables',
         'pip',
+        'postfix-relay',
     ],
     'metadata': {
         'apt': {
