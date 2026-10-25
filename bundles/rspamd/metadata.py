@@ -23,6 +23,17 @@ defaults = {
         'web_password': repo.vault.password_for(node.name + ' rspamd web password'),
         'ip_whitelist': set(),
     },
+    'systemd': {
+        'units': {
+            # rspamd uploads its lua scripts at startup only; if redis is still loading, bayes stays broken
+            'rspamd.service.d/override.conf': {
+                'Unit': {
+                    'After': {'redis-rspamd.service'},
+                    'Wants': {'redis-rspamd.service'},
+                },
+            },
+        },
+    },
 }
 
 
