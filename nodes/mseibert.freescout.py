@@ -6,7 +6,7 @@
     'hostname': '159.69.117.89',
     'groups': [
         'backup',
-        'debian-12',
+        'debian-13',
         'monitored',
         'webserver',
         'freescout',

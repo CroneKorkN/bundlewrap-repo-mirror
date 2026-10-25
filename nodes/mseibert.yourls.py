@@ -5,7 +5,7 @@
     'hostname': '168.119.250.114',
     'groups': [
         'backup',
-        'debian-12',
+        'debian-13',
         'monitored',
         'webserver',
     ],

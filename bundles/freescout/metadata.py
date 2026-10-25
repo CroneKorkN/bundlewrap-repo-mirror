@@ -11,7 +11,6 @@ defaults = {
             'php-fpm': {},
             'php-mbstring': {},
             'php-xml': {},
-            'php-imap': {},
             'php-zip': {},
             'php-gd': {},
             'php-curl': {},
