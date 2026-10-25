@@ -6,6 +6,8 @@ options {
   allow-query { any; };
 
   max-cache-size 30%;
+  # explicit: without the option a reload keeps the previous state
+  querylog no;
 
 % if type == 'master':
   notify yes;
