@@ -19,11 +19,11 @@ Currently:
   name in `items.py` (`downloads = {...}`).
 - **Subclass `bundlewrap.items.Item`.** See the upstream
   [bundlewrap docs on writing item types](https://docs.bundlewrap.org/dev/items/)
-  for the contract: `ITEM_ATTRIBUTES`, `fix`, `sdict`, `cdict`,
-  `display_dicts`, etc.
-- **No metadata-reactor integration unless deliberate.** Item types
-  get to declare `NEEDS_STATIC` (cross-type ordering hints) — use it
-  sparingly; broad `NEEDS_STATIC` slows the whole DAG.
+  for the contract; in bundlewrap 5 that is `ITEM_ATTRIBUTES`,
+  `expected_state`, `actual_state`, `fix` and `display_on_create`,
+  `display_on_fix`, `display_on_delete`.
+- **Dependencies on other item types come from `get_auto_attrs`**,
+  as `download:` does for `pkg_apt:curl`.
 
 ## When to write a new custom item type vs. use `file:` (or
 `action:`, etc.)
@@ -45,16 +45,13 @@ the cost is paid forever.
 2. Create `items/<slug>.py` with an `Item` subclass.
 3. `bw test` — broken item types break the loader for every bundle
    that uses them, so test in isolation first.
-4. Document the contract in the file's module docstring.
+4. Document what the item does in its class docstring.
 
 ## Pitfalls
 
 - **Items affect the whole repo.** A change to `items/<x>.py` runs in
   every node's apply. Treat custom items the way you treat `libs/` —
   pure, fast, side-effect-free at import.
-- **`NEEDS_STATIC` is a coarse hammer.** It enforces ordering across
-  *all* nodes for *all* items of those types; don't add unless
-  you've actually hit ordering issues.
 
 ## See also
 
