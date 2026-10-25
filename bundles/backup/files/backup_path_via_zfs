@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 path=$1
 uuid=$(jq -r .client_uuid < /etc/backup/config.json)
@@ -8,9 +8,9 @@ server=$(jq -r .server_hostname < /etc/backup/config.json)
 user=$(jq -r .server_user < /etc/backup/config.json)
 ssh="ssh -o ConnectTimeout=5 $user@$server"
 
-source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2)
+source_dataset=$(zfs list -H -o mountpoint,name | grep -P "^$path\t" | cut -d $'\t' -f 2 || true)
 target_dataset="tank/$uuid/$source_dataset"
-target_dataset_parent=$(echo $target_dataset | rev | cut -d / -f 2- | rev)
+target_dataset_parent=${target_dataset%/*}
 bookmark_prefix="auto-backup_"
 new_bookmark="$bookmark_prefix$(date +"%Y-%m-%d_%H:%M:%S")"
 
@@ -19,45 +19,38 @@ do
   [[ -z "${!var}" ]] && echo "ERROR - $var is empty" && exit 96
 done
 
-$ssh true || (echo "ERROR - cant ssh connect to $server" && exit 97)
+$ssh true || { echo "ERROR - cant ssh connect to $server"; exit 97; }
 
 echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DATASET: $source_dataset, TARGET_DATASET: $target_dataset"
 
-if ! $ssh zfs list -t filesystem -H -o name | grep -q "^$target_dataset_parent$"
+# grep without -q reads to the end, an early exit would fail ssh with SIGPIPE under pipefail
+if ! $ssh zfs list -t filesystem -H -o name | grep -x "$target_dataset_parent" > /dev/null
 then
   echo "CREATING PARENT DATASET..."
   # -u: only root may mount, the parent inherits mountpoint=none anyway
   $ssh zfs create -p -u "$target_dataset_parent"
 fi
 
-zfs snap "$source_dataset@$new_bookmark"
+last_bookmark=$(zfs list -t bookmark -H -o name "$source_dataset" | { grep "^$source_dataset#$bookmark_prefix" || true; } | sort | tail -1 | cut -d '#' -f 2)
 
-if zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | wc -l | grep -q "^0$"
+zfs snap "$source_dataset@$new_bookmark"
+# the snapshot only serves this send, on success it lives on as a bookmark
+trap 'zfs destroy "$source_dataset@$new_bookmark"' EXIT
+
+if [[ -z "$last_bookmark" ]]
 then
   echo "INITIAL BACKUP"
-  # do in subshell, otherwise ctr+c will lead to 0 exitcode
-  $(zfs send -v "$source_dataset@$new_bookmark" | $ssh zfs recv -u -F "$target_dataset")
+  zfs send -v "$source_dataset@$new_bookmark" | $ssh zfs recv -u -F "$target_dataset"
 else
-  echo "INCREMENTAL BACKUP"
-  last_bookmark=$(zfs list -t bookmark -H -o name | grep "^$source_dataset#$bookmark_prefix" | sort | tail -1 | cut -d '#' -f 2)
-  [[ -z "$last_bookmark" ]] && echo "ERROR - last_bookmark is empty" && exit 98
-  $(zfs send -v -L -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh zfs recv -u "$target_dataset")
+  echo "INCREMENTAL BACKUP FROM $last_bookmark"
+  zfs send -v -L -i "#$last_bookmark" "$source_dataset@$new_bookmark" | $ssh zfs recv -u "$target_dataset"
 fi
 
-if [[ "$?" == "0" ]]
-then
+# the new bookmark first: interrupted in between, the next run still finds one to send from
+zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
+for old_bookmark in $(zfs list -t bookmark -H -o name "$source_dataset" | { grep "^$source_dataset#$bookmark_prefix" || true; } | grep -vx "$source_dataset#$new_bookmark" || true)
+do
+  zfs destroy "$old_bookmark"
+done
 
-  # delete old local bookmarks
-  for destroyable_bookmark in $(zfs list -t bookmark -H -o name "$source_dataset" | grep "^$source_dataset#$bookmark_prefix")
-  do
-    zfs destroy "$destroyable_bookmark"
-  done
-
-  zfs bookmark "$source_dataset@$new_bookmark" "$source_dataset#$new_bookmark"
-  zfs destroy "$source_dataset@$new_bookmark" # keep snapshots?
-  echo "SUCCESS"
-else
-  zfs destroy "$source_dataset@$new_bookmark"
-  echo "ERROR"
-  exit 99
-fi
+echo "SUCCESS"
