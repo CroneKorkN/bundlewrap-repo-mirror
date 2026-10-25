@@ -37,10 +37,10 @@ bundles/<name>/
 - **`metadata.py`** uses `defaults = {...}` for static seed values and
   `@metadata_reactor.provides(...)` for derived values. Reactors are
   pure functions of `(metadata,)` — no side effects, no I/O.
-- **Helpers go in [`libs/`](../libs/AGENTS.md)** when they're useful to
+- **Helpers go in [`libs/`](../libs/README.md)** when they're useful to
   more than one bundle. Don't duplicate logic across bundles.
 - **Custom item types** (e.g. `download:`) live in
-  [`items/`](../items/AGENTS.md), not per-bundle.
+  [`items/`](../items/README.md), not per-bundle.
 - **Bundles own application-wide knowledge; nodes carry only the few
   per-host knobs the bundle actually needs.** When designing a bundle,
   identify the per-node knobs (e.g. domain, uplink interface, a
@@ -63,9 +63,9 @@ bundles/<name>/
    the fork's
    [item-file-templates guide](https://github.com/CroneKorkN/bundlewrap/blob/main/docs/content/guide/item_file_templates.md).
 4. **Wire to nodes.** Either add an entry to the relevant
-   [`groups/<axis>/<x>.py`](../groups/AGENTS.md) (preferred for shared
+   [`groups/<axis>/<x>.py`](../groups/README.md) (preferred for shared
    bundles) or to the node's `bundles` list directly
-   ([`nodes/AGENTS.md`](../nodes/AGENTS.md)).
+   ([`nodes/README.md`](../nodes/README.md)).
 5. **Verify, in this order:**
    - `bw test` — repo-wide parse + cross-cutting hooks. Loads every
      bundle, but reactors don't fire for nodes that haven't opted into
@@ -197,8 +197,8 @@ work.
   idioms (vault, demagify, naming, do-not-touch list).
 - [`docs/agents/commands.md`](../docs/agents/commands.md) — repo-specific
   command deltas.
-- [`items/AGENTS.md`](../items/AGENTS.md) — custom item types
+- [`items/README.md`](../items/README.md) — custom item types
   (`download:`); when to write a new one vs use `file:`.
-- [`libs/AGENTS.md`](../libs/AGENTS.md) — shared helpers.
+- [`libs/README.md`](../libs/README.md) — shared helpers.
 - Fork's [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md)
   — bundlewrap-language reference + safety envelope.

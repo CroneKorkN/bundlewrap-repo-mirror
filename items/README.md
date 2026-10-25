@@ -58,7 +58,7 @@ the cost is paid forever.
 
 ## See also
 
-- [`bundles/AGENTS.md`](../bundles/AGENTS.md) — items are consumed by
+- [`bundles/README.md`](../bundles/README.md) — items are consumed by
   `items.py` in each bundle.
 - Fork's [`AGENTS.md`](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md)
   — built-in item-type catalogue.

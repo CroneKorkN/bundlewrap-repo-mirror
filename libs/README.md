@@ -60,7 +60,7 @@ head -1 libs/*.py
 
 ## See also
 
-- [`bundles/AGENTS.md`](../bundles/AGENTS.md) — when to extract a
+- [`bundles/README.md`](../bundles/README.md) — when to extract a
   helper into `libs/` instead of duplicating across bundles.
 - [`docs/agents/conventions.md`](../docs/agents/conventions.md) —
   vault, demagify, naming.

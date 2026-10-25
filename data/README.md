@@ -49,11 +49,11 @@ this reason.
   See [`commands.md#apt-key-changes-need-offline-verification`](../docs/agents/commands.md#apt-key-changes-need-offline-verification).
 - **Mako-templated Python data** evaluates at bundle render time. Side
   effects in those modules slow the whole repo (same caveat as
-  [`libs/`](../libs/AGENTS.md)).
+  [`libs/`](../libs/README.md)).
 
 ## See also
 
-- [`bundles/AGENTS.md`](../bundles/AGENTS.md) — when bundle `files/`
+- [`bundles/README.md`](../bundles/README.md) — when bundle `files/`
   beats `data/`.
 - [`docs/agents/commands.md`](../docs/agents/commands.md) — apt-key
   verification rule.

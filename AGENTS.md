@@ -18,7 +18,7 @@ machines. The root `README.md` is the maintainer's scratchpad, not documentation
 
 - The fork's [AGENTS.md](https://github.com/CroneKorkN/bundlewrap/blob/main/AGENTS.md) is the
   reference for the bundlewrap language.
-- Each top-level directory has an AGENTS.md; read it before changing files there.
+- Each top-level directory has a README.md; read it before changing files there.
 - Repo conventions are in `docs/agents/conventions.md`, repo-specific `bw` behaviour in
   `docs/agents/commands.md`.
 - Shared helpers live in `libs/`, reachable as `repo.libs.<module>`, each described in its

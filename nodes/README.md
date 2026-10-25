@@ -85,12 +85,12 @@ This loader shape has consequences:
   bundle's metadata block in the node file has more than 3-5 keys,
   the bundle is probably under-using `defaults` / reactors. Push the
   contribution into the bundle (see
-  [`bundles/AGENTS.md`](../bundles/AGENTS.md#conventions)) rather than
+  [`bundles/README.md`](../bundles/README.md#conventions)) rather than
   growing the node file.
 
 ## See also
 
-- [`groups/AGENTS.md`](../groups/AGENTS.md) — group-membership patterns,
+- [`groups/README.md`](../groups/README.md) — group-membership patterns,
   how metadata merges along the chain.
 - [`docs/agents/conventions.md`](../docs/agents/conventions.md) —
   demagify magic-strings, naming, eval-loader constraints.

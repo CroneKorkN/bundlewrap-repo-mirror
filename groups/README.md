@@ -18,7 +18,7 @@ groups/
 
 `groups.py` (top of the repo) walks `groups/` and runs `eval()` on each
 `*.py`. Same eval-as-expression rule as
-[`nodes/`](../nodes/AGENTS.md#loader-mechanism): one dict literal, no
+[`nodes/`](../nodes/README.md#loader-mechanism): one dict literal, no
 top-level imports, no statements. Errors print and the group is skipped
 — a real foot-gun, since a missing group silently changes node
 membership.
@@ -102,7 +102,7 @@ Pattern from prior debian-12 → debian-13 work:
 
 ## See also
 
-- [`nodes/AGENTS.md`](../nodes/AGENTS.md) — node files; how
+- [`nodes/README.md`](../nodes/README.md) — node files; how
   `groups: {...}` attaches groups.
 - [`docs/agents/conventions.md`](../docs/agents/conventions.md) —
   inheritance order, naming conventions, eval-loader constraints.
