@@ -62,4 +62,6 @@ def generate_deterministic_rsa_private_key(secret_bytes):
     return load_der_private_key(
         _cached_der(secret_bytes),
         password=None,
+        # generated here or decrypted with authentication, the consistency check costs ~65 ms per key
+        unsafe_skip_rsa_key_validation=True,
     )
