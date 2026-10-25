@@ -26,7 +26,8 @@ echo "BACKUP ZFS DATASET - PATH: $path, SERVER: $server, UUID: $uuid, SOURCE_DAT
 if ! $ssh zfs list -t filesystem -H -o name | grep -q "^$target_dataset_parent$"
 then
   echo "CREATING PARENT DATASET..."
-  $ssh zfs create -p "$target_dataset_parent"
+  # -u: only root may mount, the parent inherits mountpoint=none anyway
+  $ssh zfs create -p -u "$target_dataset_parent"
 fi
 
 zfs snap "$source_dataset@$new_bookmark"
