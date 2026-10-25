@@ -47,6 +47,22 @@ defaults = {
         'admin_user': 'admin',
         'admin_pass': repo.vault.password_for(f'{node.name} nextcloud admin pw').value,
         'config': {},
+        'app_config': {
+            'preview': {
+                'jpeg_quality': '75',
+            },
+            # pregenerate what is requested: requests round up to powers of 4, larger ones get the max preview
+            'previewgenerator': {
+                # files app, cropped
+                'squareSizes': '64 256',
+                # photos app: 64 as placeholder, 1024 in the grid and on covers, 256 in the grid on mobile
+                'fillWidthHeightSizes': '64 256 1024',
+                'widthSizes': '',
+                'heightSizes': '',
+                # in favour of the nextcloud-generate-new-previews timer
+                'job_max_previews': 0,
+            },
+        },
     },
     'php': {
         'post_max_size': '32G',
@@ -170,7 +186,6 @@ def config(metadata):
                 ],
                 'preview_max_x': 1920,
                 'preview_max_y': 1920,
-                'preview_max_scale_factor': 4,
                 'log_type': 'syslog',
                 'syslog_tag': 'nextcloud',
                 'logfile': '',

@@ -37,22 +37,9 @@ psql nextcloud -x -c "DELETE FROM oc_previews;"
 rm -rf /var/lib/nextcloud/appdata_oci6dw1woodz/preview/*
 ```
 
-https://docs.nextcloud.com/server/stable/admin_manual/configuration_files/previews_configuration.html#maximum-preview-size
-```php
-    'preview_max_x' => 1920,
-    'preview_max_y' => 1920,
-    'preview_max_scale_factor' => 4,
-```
-
-https://github.com/nextcloud/previewgenerator?tab=readme-ov-file#i-dont-want-to-generate-all-the-preview-sizes
-```sh
-sudo -u www-data php /opt/nextcloud/occ config:app:set --value="64 256" previewgenerator squareSizes
-sudo -u www-data php /opt/nextcloud/occ config:app:set --value="" previewgenerator fillWidthHeightSizes # changed
-sudo -u www-data php /opt/nextcloud/occ config:app:set --value="" previewgenerator widthSizes
-sudo -u www-data php /opt/nextcloud/occ config:app:set --value="" previewgenerator heightSizes
-sudo -u www-data php /opt/nextcloud/occ config:app:set preview jpeg_quality --value="75"
-sudo -u www-data php /opt/nextcloud/occ config:app:set --value=0 --type=integer previewgenerator job_max_previews # in favour of systemd timer
-```
+Preview sizes (`preview_max_*` in `nextcloud/config`, previewgenerator in `nextcloud/app_config`) are set in `metadata.py`:
+- https://docs.nextcloud.com/server/stable/admin_manual/configuration_files/previews_configuration.html#maximum-preview-size
+- https://github.com/nextcloud/previewgenerator?tab=readme-ov-file#i-dont-want-to-generate-all-the-preview-sizes
 
 gen previews
 ```sh

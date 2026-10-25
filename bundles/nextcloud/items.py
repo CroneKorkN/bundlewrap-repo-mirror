@@ -1,4 +1,5 @@
 import json
+from shlex import quote
 
 
 assert node.has_bundle('php')
@@ -146,3 +147,19 @@ actions['nextcloud_add_missing_inidces'] = {
         f'action:extract_nextcloud',
     ],
 }
+
+# APP CONFIG
+
+for app, app_config in node.metadata.get('nextcloud/app_config').items():
+    for key, value in app_config.items():
+        actions[f'nextcloud_app_config_{app}_{key}'] = {
+            'command': repo.libs.nextcloud.occ(
+                f'config:app:set {quote(app)} {quote(key)}',
+                value=quote(str(value)),
+                type='integer' if isinstance(value, int) else 'string',
+            ),
+            'unless': f'test "$({repo.libs.nextcloud.occ(f"config:app:get {quote(app)} {quote(key)}")})" = {quote(str(value))}',
+            'needs': [
+                'action:upgrade_nextcloud',
+            ],
+        }
