@@ -4,10 +4,6 @@ from ipaddress import ip_address, ip_interface
 defaults = {
     'apt': {
         'packages': {
-            'clamav': {},
-            'clamav-daemon': {},
-            'clamav-freshclam': {},
-            'clamav-unofficial-sigs': {},
             'rspamd': {},
         },
     },

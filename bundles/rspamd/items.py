@@ -33,27 +33,10 @@ for f in listdir(join(f'{repo.path}/bundles/rspamd/files/local.d')):
         },
     }
 
-for f in listdir(join(f'{repo.path}/bundles/rspamd/files/override.d')):
-    files[f'/etc/rspamd/override.d/{f}'] = {
-        'content_type': 'mako',
-        'source': f'override.d/{f}',
-        'triggers': {
-            'svc_systemd:rspamd:restart',
-        },
-    }
-
 svc_systemd = {
     'rspamd': {
         'needs': {
             'pkg_apt:rspamd',
-        },
-    },
-    # FIXME: broken since debian 12
-    'clamav-clamonacc': {
-        'enabled': False,
-        'running': False,
-        'needs': {
-            'pkg_apt:clamav',
         },
     },
 }
