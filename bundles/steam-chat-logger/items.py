@@ -21,6 +21,14 @@ directories = {
             'zfs_dataset:tank/steam-chat-logger'
         ],
     },
+    # avatars/<hash>_full.jpg, nginx serves them to the viewer
+    f'{home}/avatars': {
+        'owner': 'steam_chat_logger',
+        'mode': '0755',
+        'needs': [
+            'zfs_dataset:tank/steam-chat-logger'
+        ],
+    },
 }
 
 files = {
