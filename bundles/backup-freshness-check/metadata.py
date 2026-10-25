@@ -24,14 +24,17 @@ defaults = {
     'monitoring/services/backup freshness/vars.wake',
 )
 def wake(metadata):
-    if not node.has_bundle('wol-sleeper'):
+    # read before deciding: bw rejects reactors that return without requesting metadata
+    wake_command = metadata.get('wol-sleeper/wake_command', None)
+
+    if not wake_command:
         return {}
 
     return {
         'monitoring': {
             'services': {
                 'backup freshness': {
-                    'vars.wake': metadata.get('wol-sleeper/wake_command'),
+                    'vars.wake': wake_command,
                 },
             },
         },
