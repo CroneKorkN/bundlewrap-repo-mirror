@@ -16,9 +16,11 @@ def record_matches_view(value, type, name, zone, view, metadata):
     if metadata.get(f'bind/views/{view}/is_internal'):
         if ip_address(value).is_private:
             return True
+        # a private address in either family keeps the name internal, otherwise
+        # dual-stack clients would follow a public AAAA next to a private A
         elif not list(filter(
             lambda other_value: ip_address(other_value).is_private,
-            _values_from_all_nodes(type, name, zone),
+            _values_from_all_nodes('A', name, zone) | _values_from_all_nodes('AAAA', name, zone),
         )):
             return True
     else:
