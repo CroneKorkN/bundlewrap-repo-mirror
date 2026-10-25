@@ -22,8 +22,11 @@
     'metadata': {
         'dns': {},
         'hosts': {
-            '10.0.10.2': [
+            # the wireguard ips of the nameservers, reachable from every node
+            '172.30.0.1': [
                 'resolver.name',
+            ],
+            '172.30.0.3': [
                 'secondary.resolver.name',
             ],
         },
@@ -31,7 +34,8 @@
             'acme_node': 'ovh.mails',
         },
         'nameservers': {
-            '10.0.10.2',
+            '172.30.0.1',
+            '172.30.0.3',
         },
         'systemd-timers': {
             'trim': {

@@ -108,7 +108,6 @@
             's2s': {
                 'ovh.mails': {
                     'allowed_ips': [
-                        '10.0.10.0/24',
                         #'192.168.179.0/24', # while raspi at home
                         '10.0.227.0/24', # mseibert.freescout
                         '10.0.228.0/24', # mseibert.yourls

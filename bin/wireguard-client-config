@@ -23,7 +23,6 @@ data = server_node.metadata.get(f'wireguard/clients/{args.client}')
 vpn_network = ip_interface(server_node.metadata.get('wireguard/my_ip')).network
 allowed_ips = [
     vpn_network,
-    ip_interface(server_node.metadata.get('network/internal/ipv4')).network,
 ]
 for peer in server_node.metadata.get('wireguard/s2s').values():
     for network in peer['allowed_ips']:

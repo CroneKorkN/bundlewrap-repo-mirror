@@ -33,8 +33,9 @@ by `letsencrypt/acme_node`). For the challenge to succeed:
    servers must agree. If a secondary NS is also a bw-managed node,
    `bw apply` it after adding the domain (see e.g. `htz.secondary`).
 3. The bind-acme node's TSIG key must be reachable. `hook.sh` is
-   rendered with the bind-acme server's `network/internal/ipv4` —
-   for clients outside that LAN, the route must exist (typically via
+   rendered with the bind-acme server's internal address
+   (`repo.libs.ip.internal_ip`: `network/internal/ipv4`, else the
+   wireguard ip) — for clients outside that LAN, the route must exist (typically via
    wireguard `s2s` peer membership).
 
 ## Negative-cache penalty

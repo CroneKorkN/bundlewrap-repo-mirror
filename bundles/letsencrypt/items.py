@@ -1,6 +1,5 @@
 assert node.has_bundle('nginx')
 
-from ipaddress import ip_interface
 
 delegated = 'delegate_to_node' in node.metadata.get('letsencrypt')
 acme_node = repo.get_node(node.metadata.get('letsencrypt/acme_node'))
@@ -28,7 +27,7 @@ files = {
     '/etc/dehydrated/hook.sh': {
         'content_type': 'mako',
         'context': {
-            'server': ip_interface(acme_node.metadata.get('network/internal/ipv4')).ip,
+            'server': repo.libs.ip.internal_ip(acme_node.metadata),
             'zone': acme_node.metadata.get('bind/acme_zone'),
             'acme_key_name': 'acme',
             'acme_key': acme_node.metadata.get('bind/views/external/keys/acme/token'),

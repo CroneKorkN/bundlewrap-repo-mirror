@@ -1,5 +1,3 @@
-from ipaddress import ip_interface
-
 directories = {
     '/etc/icinga2': {
        'purge': True,
@@ -256,7 +254,7 @@ for other_node in repo.nodes:
         'context': {
             'host_name': other_node.name,
             'host_settings': {
-                'address': str(ip_interface(other_node.metadata.get('network/internal/ipv4', None) or other_node.metadata.get('wireguard/my_ip')).ip),
+                'address': repo.libs.ip.internal_ip(other_node.metadata),
             },
             'services': other_node.metadata.get('monitoring/services'),
         },

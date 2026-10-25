@@ -33,13 +33,6 @@
                     'RTTSec': '100ms',
                 },
             },
-            # the resolver address of all nodes, it sat on the hetzner private network;
-            # FIXME: move the resolver to the wireguard ip 172.30.0.1 and drop 10.0.10.0/24 with this dummy
-            'internal': {
-                'interface': 'internal',
-                'type': 'dummy',
-                'ipv4': '10.0.10.2/24',
-            },
         },
         'systemd-swap': 2*2**30,
         'bind': {

@@ -1,4 +1,4 @@
-"""ip: A/AAAA-record derivation from a node's `network` metadata + cross-node IP collection."""
+"""ip: A/AAAA-record derivation from a node's `network` metadata, cross-node IP collection, a node's internal address."""
 
 from ipaddress import ip_address, ip_interface
 
@@ -48,3 +48,10 @@ def get_all_ips(nodes):
             ips.add(str(ip_interface(node.metadata.get('wireguard/my_ip')).ip))
 
     return ips
+
+
+def internal_ip(metadata):
+    """The address other nodes reach this node at: its internal network, else its wireguard ip."""
+    return str(ip_interface(
+        metadata.get('network/internal/ipv4', None) or metadata.get('wireguard/my_ip')
+    ).ip)

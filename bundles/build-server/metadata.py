@@ -1,5 +1,3 @@
-from ipaddress import ip_interface
-
 defaults = {
     'flask': {
         'build-server' : {
@@ -30,7 +28,7 @@ def download_server(metadata):
     download_server = repo.get_node(metadata.get('build-server/download_server'))
     return {
         'build-server': {
-            'download_server_ip': str(ip_interface(download_server.metadata.get('network/internal/ipv4')).ip),
+            'download_server_ip': repo.libs.ip.internal_ip(download_server.metadata),
         },
     }
 
