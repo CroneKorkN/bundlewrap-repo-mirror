@@ -38,13 +38,6 @@ view "${view_name}" {
   };
   % endif
 
-  forward only;
-  forwarders {
-    1.1.1.1;
-    9.9.9.9;
-    8.8.8.8;
-  };
-
   % for zone_name, zone_conf in sorted(view_conf['zones'].items()):
   zone "${zone_name}" {
     % if type == 'slave' and zone_conf.get('allow_update', []):

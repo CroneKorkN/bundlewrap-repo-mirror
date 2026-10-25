@@ -6,7 +6,6 @@ options {
   allow-query { any; };
 
   max-cache-size 30%;
-  querylog yes;
 
 % if type == 'master':
   notify yes;
