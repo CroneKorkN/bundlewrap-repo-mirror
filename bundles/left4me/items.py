@@ -327,37 +327,6 @@ actions['left4me_chmod_scripts'] = {
     ],
 }
 
-actions['left4me_install_uv'] = {
-    # uv is not in Debian Trixie's apt archive (only experimental/sid).
-    # Pin to a specific release; download the tarball + its SHA256
-    # sibling from astral-sh/uv releases, verify, install to
-    # /usr/local/bin. Idempotent via `unless` — only re-runs when the
-    # pinned version changes (bump the constant in two places below).
-    # Pattern matches left4me_install_steamcmd (curl+tar) elsewhere in
-    # this bundle. Bump cadence: as needed; both dev (brew uv) and
-    # prod should track the same minor.
-    'command': """set -e
-tmpdir=$(mktemp -d); trap "rm -rf $tmpdir" EXIT
-base=https://github.com/astral-sh/uv/releases/download/0.11.8
-tar=uv-x86_64-unknown-linux-gnu.tar.gz
-curl -fsSL -o $tmpdir/$tar        $base/$tar
-curl -fsSL -o $tmpdir/$tar.sha256 $base/$tar.sha256
-(cd $tmpdir && sha256sum -c $tar.sha256)
-tar -xzf $tmpdir/$tar -C $tmpdir --strip-components=1
-install -m 0755 $tmpdir/uv  /usr/local/bin/uv
-install -m 0755 $tmpdir/uvx /usr/local/bin/uvx
-""",
-    'unless': '/usr/local/bin/uv --version 2>/dev/null | grep -qx "uv 0.11.8"',
-    'cascade_skip': False,
-    'needs': [
-        'pkg_apt:curl',
-    ],
-    # No triggers — install_uv is a one-shot bootstrap. uv_sync needs
-    # it (via `needs`), so the dependency runs install_uv first on a
-    # clean host. After that, this action is a no-op on every apply
-    # unless the version pin changes.
-}
-
 actions['left4me_uv_sync'] = {
     # The whole "install/refresh the workspace" deploy step, in one
     # action. uv reads /opt/left4me/src/uv.lock + the workspace's
@@ -387,7 +356,7 @@ actions['left4me_uv_sync'] = {
     'cascade_skip': False,
     'needs': [
         'git_deploy:/opt/left4me/src',
-        'action:left4me_install_uv',
+        'action:install_uv',
         'directory:/var/lib/left4me',
         'user:left4me',
     ],
