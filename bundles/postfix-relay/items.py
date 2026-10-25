@@ -22,13 +22,17 @@ if not node.has_bundle('postfix'):
             },
             **file_options,
         },
-        # every local recipient, root above all
-        '/etc/postfix/virtual_alias': {
+        # every local recipient, root above all; canonical rewrites the to header too, for filtering
+        '/etc/postfix/recipient_canonical': {
             'context': {
                 'hostname': escape(node.name),
                 'root': root,
             },
             **file_options,
+        },
+        # replaced by recipient_canonical
+        '/etc/postfix/virtual_alias': {
+            'delete': True,
         },
         # a sender in a domain of the mail server, which signs it
         '/etc/postfix/sender_canonical': {

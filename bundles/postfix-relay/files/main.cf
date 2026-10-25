@@ -10,5 +10,5 @@ inet_interfaces = loopback-only
 inet_protocols = ipv4
 mynetworks = 127.0.0.0/8
 smtp_tls_security_level = may
-virtual_alias_maps = regexp:/etc/postfix/virtual_alias
+recipient_canonical_maps = regexp:/etc/postfix/recipient_canonical
 sender_canonical_maps = regexp:/etc/postfix/sender_canonical
