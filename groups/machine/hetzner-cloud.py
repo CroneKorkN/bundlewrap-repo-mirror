@@ -1,5 +1,0 @@
-{
-    'bundles': [
-        'hetzner-cloud',
-    ],
-}
