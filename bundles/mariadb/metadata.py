@@ -25,7 +25,8 @@ defaults = {
                 'innodb_use_native_aio': '0',
                 'innodb_read_io_threads': '10',
                 'innodb_write_io_threads': '10',
-                'innodb_buffer_pool_size': '26G',
+                # the databases here are small, 26G was more than any node's ram
+                'innodb_buffer_pool_size': '256M',
                 'innodb_flush_log_at_trx_commit': '1',
                 'innodb_log_file_size': '1G',
                 'innodb_flush_neighbors': '0',
