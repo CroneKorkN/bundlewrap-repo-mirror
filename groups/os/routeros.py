@@ -1,5 +1,3 @@
-# https://ftp-master.debian.org/keys.html
-
 {
     'username': 'admin',
     'supergroups': [
