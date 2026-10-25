@@ -47,6 +47,8 @@ if node.has_bundle('zfs'):
         'full_page_writes': 'off',
         'wal_init_zero': 'off',
         'wal_recycle': 'off',
+        # random reads are served from the arc or ssds
+        'random_page_cost': '1.1',
     }
 
 
@@ -54,7 +56,10 @@ if node.has_bundle('zfs'):
     'postgresql/conf',
 )
 def conf(metadata):
-    conf = {}
+    conf = {
+        # jit compilation only pays off for long analytical queries
+        'jit': 'off',
+    }
 
     def limit(value, min=float('-inf'), max=float('inf'), unit=None):
         result = int(builtins.max([builtins.min([max, value]), min]))
@@ -62,7 +67,7 @@ def conf(metadata):
 
     ram = metadata.get('vm/ram', None)
     if ram:
-        conf['max_connections'] = limit(ram/50, min=100)
+        conf['max_connections'] = limit(ram/50, min=100, max=200)
         conf['shared_buffers'] = limit(ram/20, min=128, unit='MB')
         conf['work_mem'] = limit(ram/500, min=4, max=64, unit='MB')
         conf['temp_buffers'] = limit(ram/500, min=8, max=64, unit='MB')
