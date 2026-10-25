@@ -153,10 +153,11 @@ actions['nextcloud_add_missing_inidces'] = {
 for app, app_config in node.metadata.get('nextcloud/app_config').items():
     for key, value in app_config.items():
         actions[f'nextcloud_app_config_{app}_{key}'] = {
+            # occ asks for confirmation when --type changes the stored type, so only pass it where needed
             'command': repo.libs.nextcloud.occ(
                 f'config:app:set {quote(app)} {quote(key)}',
                 value=quote(str(value)),
-                type='integer' if isinstance(value, int) else 'string',
+                **({'type': 'integer'} if isinstance(value, int) else {}),
             ),
             'unless': f'test "$({repo.libs.nextcloud.occ(f"config:app:get {quote(app)} {quote(key)}")})" = {quote(str(value))}',
             'needs': [
