@@ -12,7 +12,12 @@ defaults = {
         },
     },
     'redis': {
-        'rspamd': {},
+        'rspamd': {
+            # every dump rewrites the whole bayes database, losing an hour of learning is fine
+            'save': {
+                '3600 1',
+            },
+        },
     },
     'rspamd': {
         'web_password': repo.vault.password_for(node.name + ' rspamd web password'),
