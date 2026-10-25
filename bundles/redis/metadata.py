@@ -131,6 +131,8 @@ def units(metadata):
                 'Group': 'redis',
                 'RuntimeDirectory': f'redis',
                 'RuntimeDirectoryMode': '2755',
+                # shared by all instances, stopping one would remove the others' sockets
+                'RuntimeDirectoryPreserve': 'yes',
                 
                 'UMask': '007',
                 'PrivateTmp': 'yes',
