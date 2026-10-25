@@ -1,18 +1,13 @@
 #!/bin/bash
+# every pool: degraded or faulted vdevs, but also read, write or checksum errors on a pool that is still ONLINE
 
-for result in "$(zpool list -H -o name,health tank)"
-do
-    name=$(cut -f1 <<< $result)
-    health=$(cut -f2 <<< $result)
+status=$(/usr/sbin/zpool status -x 2>&1)
 
-    if [ "$health" != ONLINE ]
-    then
-        errors="$errors\"$name\" health is \"$health\"\n"
-    fi
-done
-
-if [ "$errors" != "" ]
+if [ "$status" = "all pools are healthy" ]
 then
-    echo $errors
-    exit 2
+    echo "$status"
+    exit 0
 fi
+
+echo "$status"
+exit 2
