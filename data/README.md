@@ -8,7 +8,7 @@ maps to a consumer:
 ```
 data/
 ├── apt/keys/                   # binary GPG keys for apt sources
-├── grafana/rows/               # Mako-templated dashboard panels (Python)
+├── grafana/rows/               # dashboard rows as python dict literals
 ├── nginx/                      # nginx snippets shared across vhosts
 └── nextcloud/, yourls/, ...    # vhost templates, see nginx/vhosts content
 ```
@@ -21,7 +21,7 @@ Same directory shape, different content kinds. When you add a new
 | Model | Example | Consumer |
 |---|---|---|
 | **Binary / static**          | `data/apt/keys/*.{asc,gpg}` | `bundles/apt` reads files at apply time |
-| **Python module / template** | `data/grafana/rows/*.py`, `data/routeros-monitoring/*.py` | bundle `import`s and renders |
+| **Python literal / template** | `data/grafana/rows/*.py`, `data/*/vhost.conf` | grafana reads the rows with `eval()`, nginx renders the vhosts with mako |
 
 If a data asset is read by **exactly one bundle**, prefer
 `bundles/<x>/files/` instead of `data/<x>/`. `data/` is for
@@ -31,8 +31,9 @@ this reason.
 
 ## Conventions
 
-- **One subdir per consumer.** Subdir name = consumer bundle name
-  (`data/apt/`, `data/nextcloud/`).
+- **One subdir per consumer or per subject.** `data/apt/` belongs to
+  the apt bundle; `data/<app>/vhost.conf` is a vhost template the nginx
+  bundle renders for the node that sets `nginx/vhosts/<host>/content`.
 
 ## How to add data
 
@@ -47,8 +48,8 @@ this reason.
 
 - **Apt keys** trigger an offline-verify rule before they're committed.
   See [`commands.md#apt-key-changes-need-offline-verification`](../docs/agents/commands.md#apt-key-changes-need-offline-verification).
-- **Mako-templated Python data** evaluates at bundle render time. Side
-  effects in those modules slow the whole repo (same caveat as
+- **Python data is `eval()`ed** at item build time. Keep it plain
+  literals, no side effects (same caveat as
   [`libs/`](../libs/README.md)).
 
 ## See also
