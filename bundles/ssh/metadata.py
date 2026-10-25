@@ -55,6 +55,10 @@ def hostnames(metadata):
         if network.get('ipv6', None):
             ips.add(str(ip_interface(network['ipv6']).ip))
 
+    # icinga and the nameservers reach nodes without an internal network through wireguard
+    if metadata.get('wireguard/my_ip', None):
+        ips.add(str(ip_interface(metadata.get('wireguard/my_ip')).ip))
+
     domains = {
         domain
             for domain, records in metadata.get('dns').items()
