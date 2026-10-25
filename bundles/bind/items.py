@@ -80,6 +80,7 @@ files['/etc/bind/named.conf.local'] = {
         'type': node.metadata.get('bind/type'),
         'public': node.metadata.get('bind/public'),
         'master_ip': node.metadata.get('bind/master_ip', None),
+        'forward_zones': node.metadata.get('bind/forward_zones'),
         'acls': {
             **master_node.metadata.get('bind/acls'),
             **{

@@ -38,6 +38,12 @@
         'bind': {
             'hostname': 'resolver.name',
             'acme_zone': 'acme.sublimity.de',
+            # spamhaus answers queries from ovh networks with 127.255.255.254, so ask through htz.secondary
+            'forward_zones': {
+                'spamhaus.org': {
+                    '172.30.0.3',
+                },
+            },
             'zones': {
                 'sublimity.de',
                 'freibrief.net',

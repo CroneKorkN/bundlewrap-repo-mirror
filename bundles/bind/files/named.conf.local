@@ -30,6 +30,14 @@ view "${view_name}" {
   % if view_conf['is_internal']:
   recursion yes;
   include "/etc/bind/zones.rfc1918";
+  % for zone_name, forwarders in sorted(forward_zones.items()):
+
+  zone "${zone_name}" {
+    type forward;
+    forward only;
+    forwarders { ${' '.join(f'{ip};' for ip in sorted(forwarders))} };
+  };
+  % endfor
   % else:
   recursion no;
   rate-limit {

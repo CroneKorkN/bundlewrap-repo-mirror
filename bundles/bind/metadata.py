@@ -14,6 +14,8 @@ defaults = {
         # public secondaries are listed as NS and receive notifies and transfers
         'public': True,
         'slaves': {},
+        # zone: forwarders, resolved through other servers in the internal view
+        'forward_zones': {},
         'acls': {
             'our-nets': {
                 '127.0.0.1',
