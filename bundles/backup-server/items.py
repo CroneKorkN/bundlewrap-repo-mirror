@@ -35,7 +35,7 @@ for other_node in repo.nodes:
     permissions = 'create,mount,receive,rollback'
     actions[f'zfs_allow_{user}'] = {
         'command': f'zfs allow -u {user} {permissions} {base_dataset}',
-        'unless': f"zfs allow {base_dataset} | grep -qx '\s*user {user} {permissions}'",
+        'unless': f"zfs allow {base_dataset} | grep -qx '[[:space:]]*user {user} {permissions}'",
         'needs': [
             f'user:{user}',
             f'zfs_dataset:{base_dataset}',
