@@ -13,7 +13,7 @@ defaults = {
             'password': database_password,
         },
         'test_password': repo.vault.password_for(f'{node.name} test_pw mailserver'),
-        'domains': [],
+        'domains': set(),
     },
     'postgresql': {
         'roles': {
