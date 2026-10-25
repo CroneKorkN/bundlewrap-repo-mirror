@@ -165,6 +165,14 @@
                 'ipv4': {
                     'ip_forward': 1,
                 },
+                'ipv6': {
+                    'conf': {
+                        'vmbr0': {
+                            # proxmox forwards on the bridge, the kernel ignores router advertisements unless 2
+                            'accept_ra': 2,
+                        },
+                    },
+                },
             },
         },
         'systemd-swap': 24_000_000_000,
