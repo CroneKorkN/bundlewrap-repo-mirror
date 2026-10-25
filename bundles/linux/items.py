@@ -1,5 +1,3 @@
-from shlex import quote
-
 def generate_sysctl_key_value_pairs_from_json(json_data, parents=[]):
     if isinstance(json_data, dict):
         for key, value in json_data.items():
@@ -32,12 +30,3 @@ files= {
 svc_systemd = {
     'systemd-sysctl.service': {},
 }
-
-for path, value in key_value_pairs:
-    actions[f'reload_sysctl.conf_{path}'] = {
-        'command': f"sysctl --values {'.'.join(path)}  | grep -q {quote('^'+value+'$')}",
-        'needs': [
-            f'action:systemd-sysctl.service',
-            f'action:systemd-sysctl.service:restart',
-        ],
-    }
