@@ -44,45 +44,60 @@ Hetzner volume, 7,896 on the OVH disk; 4k fsync writes 227 vs 10,835.
 
 ## Phase 3: switchover (30-60 min maintenance)
 
-1. htz.mails: stop postfix, dovecot, rspamd, php8.4-fpm, nginx, postgresql,
-   mariadb, redis-server, redis-rspamd.
-2. On ovh.mails `zfs rollback -r` every dataset to `@migrate1`, dropping
-   the test changes and auto-snapshots since. Snapshot `@migrate2` on all
-   seven datasets on htz.mails, `zfs send -c -i @migrate1` into them.
-3. Rewrite the mail data so it gets the new record sizes; `zfs send` keeps
-   the block sizes of the sender (vmail 16K, index 4K), neither `-L`,
-   `recv -o` nor `zfs rewrite` change them. On ovh.mails, services still
-   stopped, for `tank/vmail` and `tank/vmail/index`:
-   - `zfs rename` the received dataset to `…-received`, unmount it
-   - create the dataset anew with the bundle properties (vmail now zstd)
-   - `cp -a` the content over (local NVMe, a few minutes for ~20 GB)
-   - destroy `…-received` after a check
-4. Repo:
-   - ovh.mails: bind master, `bind-acme`, backup group, `internal` dummy
-     with 10.0.10.2, wireguard hub with the peers and clients of htz.mails,
-     the hardcoded A/AAAA of ckn.li, sublimity.de, freibrief.net
-   - htz.mails → htz.secondary (same id): bind slave of ovh.mails,
-     wireguard peer, without the mail roles
-   - all references to htz.mails: `acme_node` (groups/os/linux.py),
-     `master_node` (home.router), `download_server` (home.server),
-     wireguard peers (home.router, mseibert.*), `bin/wireguard-client-config`
-5. Apply ovh.mails, htz.secondary, home.router, mseibert.freescout,
-   mseibert.yourls, home.server.
-6. Providers:
-   - INWX: glue `resolver.name` → OVH, `secondary.resolver.name` → Hetzner
+Branch `mail-ovh-switch` holds the repo side: ovh.mails as bind master,
+wireguard hub, acme node and resolver (10.0.10.2 on a dummy), htz.mails
+renamed to htz.secondary (bind slave, wireguard peer, no mail roles), all
+references repointed. Nodes whose config changes (`bw hash` against
+master): ovh.mails, htz.secondary, home.router, home.backups,
+mseibert.freescout, mseibert.yourls; by hand: wb.offsite-backups,
+ovh.left4me.
+
+1. htz.mails: `systemctl disable --now` postfix, dovecot, rspamd,
+   opendkim, php8.4-fpm, nginx, postgresql, mariadb, redis-server,
+   redis-rspamd; senders queue and retry.
+2. ovh.mails: stop the same services, `zfs rollback -r tank/<ds>@migrate1`
+   for all seven datasets (drops test changes and auto-snapshots).
+3. htz.mails: `zfs snapshot` `@migrate2` on all seven, send
+   `zfs send -c -i @migrate1 <ds>@migrate2` through wireguard into
+   `zfs recv -u` on ovh.mails (same nc scheme, ports 9001-9007).
+4. ovh.mails, rewrite for the new record sizes (`zfs send` keeps the
+   sender's block sizes, neither `-L`, `recv -o` nor `zfs rewrite` change
+   them):
+   - `zfs rename tank/vmail/index tank/index-received`,
+     `zfs rename tank/vmail tank/vmail-received`, both to `/mnt/…-received`
+   - `zfs create` `tank/vmail` (zstd, 128K, atime off, `/var/vmail`) and
+     `tank/vmail/index` (8K, atime off, no auto-snapshot, `/var/vmail/index`)
+   - `cp -a` both contents over, compare file counts, destroy `…-received`
+5. ovh.mails: remap file owners from the htz ids to the local ones, exactly
+   once and before any apply (`/tmp/remap_ids.py`, map built by user and
+   group name; a second run would remap the already local ids).
+6. Merge the branch, push.
+7. Apply ovh.mails (now with bind), then htz.secondary, home.router,
+   mseibert.freescout, mseibert.yourls, home.backups (wake it first).
+   On htz.secondary check that 10.0.10.2 is gone from the private network
+   interface, otherwise remove the old `internal.network` unit.
+8. Providers (Martin):
+   - INWX: glue `resolver.name` → 51.68.189.180 / 2001:41d0:701:1100::751a,
+     `secondary.resolver.name` → 49.12.184.229 / 2a01:4f8:c013:51f2::1
    - OVH: PTR 51.68.189.180 and 2001:41d0:701:1100::751a → mail.sublimity.de
-   - Hetzner: PTR to the new name
-7. By hand: wireguard endpoint on wb.offsite-backups and ovh.left4me
-   (dummy nodes), new QR codes for macbook, phone, ipad.
-8. Remove the nft rule and the `@migrate*` snapshots.
-9. Rotate the acme tsig key (it leaked into a session transcript on
-   2026-10-25): new date suffix in `bundles/bind/metadata.py`
-   (`bind key {key} 20250713`), applied together with bind.
+   - Hetzner: PTR to secondary.htz.ckn.li
+9. By hand: wireguard on wb.offsite-backups and ovh.left4me (new endpoint
+   and hub key), new QR codes for macbook, phone, ipad
+   (`bin/wireguard-client-config`).
+10. Remove the nft rule for 9001-9007 and the `@migrate*` snapshots, the
+    `/etc/hosts` test entries (ovh.mails, Mac).
+
+The acme tsig key that leaked into a session transcript derives from the
+master's id, so it changes with the new master; the old one stops working
+once htz.secondary runs as slave.
 
 ## Phase 4: afterwards
 
-- Monitoring, first nightly backup, DMARC reports and delivery to Gmail.
+- Monitoring, first nightly backup, DMARC reports and delivery to Gmail,
+  a send test to mail-tester.com.
 - Measure Roundcube again.
+- Optimize: Roundcube `imap_cache` and `messages_cache`, measured before and
+  after. Old spam and the inbox stay as they are.
 - After one or two weeks: keep htz.secondary or shut it down (then a second
   nameserver, e.g. OVH secondary DNS).
 - Move the resolver to the wireguard ip 172.30.0.1 and drop 10.0.10.0/24
@@ -90,6 +105,6 @@ Hetzner volume, 7,896 on the OVH disk; 4k fsync writes 227 vs 10,835.
 
 ## Rollback
 
-Until step 6 htz.mails stays untouched apart from stopped services: start
-them again and do not apply the repo changes. Mail delivered to ovh.mails
+Until step 6 htz.mails stays untouched apart from stopped services: enable
+and start them again and do not merge the branch. Mail delivered to ovh.mails
 in the meantime has to be copied back by hand.
