@@ -13,12 +13,6 @@ class Download(Item):
     Download a file and verify its Hash.
     """
     BUNDLE_ATTRIBUTE_NAME = "downloads"
-    NEEDS_STATIC = [
-        "pkg_apt:",
-        "pkg_pacman:",
-        "pkg_yum:",
-        "pkg_zypper:",
-    ]
     ITEM_ATTRIBUTES = {
         'url': None,
         'sha256': None,
