@@ -1,21 +1,17 @@
-# debian's redis-server.service, one instance per node. clients reach it on SOCKET and join the redis group,
-# see the nextcloud and rspamd bundles; a second client on the same node would take its own database number.
+# one instance of debian's redis-server@.service per client, each a key in the redis metadata with its overrides.
+# a client reaches its instance on /run/redis-<name>/redis-server.sock and joins the redis group,
+# see the nextcloud and rspamd bundles.
 
-SOCKET = '/run/redis/redis-server.sock'
-
-# the unit passes --supervised systemd --daemonize no and expects this pidfile
+# the unit passes --supervised systemd --daemonize no; paths per instance follow below
 CONFIG = {
     'bind': '127.0.0.1 -::1',
     'protected-mode': 'yes',
     'port': '0',
     'tcp-backlog': '511',
-    'unixsocket': SOCKET,
     'unixsocketperm': '770',
     'timeout': '0',
     'tcp-keepalive': '300',
-    'pidfile': '/run/redis/redis-server.pid',
     'loglevel': 'notice',
-    'logfile': '/var/log/redis/redis-server.log',
     'databases': '16',
     'always-show-logo': 'no',
     'save': {
@@ -26,8 +22,6 @@ CONFIG = {
     'stop-writes-on-bgsave-error': 'yes',
     'rdbcompression': 'yes',
     'rdbchecksum': 'yes',
-    'dbfilename': 'dump.rdb',
-    'dir': '/var/lib/redis',
     'lazyfree-lazy-eviction': 'no',
     'lazyfree-lazy-expire': 'no',
     'lazyfree-lazy-server-del': 'no',
@@ -65,8 +59,6 @@ CONFIG = {
     'rdb-save-incremental-fsync': 'yes',
 }
 
-config = {**CONFIG, **node.metadata.get('redis')}
-
 directories = {
     '/etc/redis': {
         'purge': True,
@@ -86,8 +78,39 @@ directories = {
     },
 }
 
-files = {
-    '/etc/redis/redis.conf': {
+files = {}
+
+svc_systemd = {
+    # the unnamed instance has no client
+    'redis-server': {
+        'running': False,
+        'enabled': False,
+        'masked': True,
+        'needs': [
+            'pkg_apt:redis-server',
+        ],
+    },
+}
+
+for name, overrides in node.metadata.get('redis').items():
+    config = {
+        **CONFIG,
+        # paths the template unit expects or allows
+        'unixsocket': f'/run/redis-{name}/redis-server.sock',
+        'pidfile': f'/run/redis-{name}/redis-server.pid',
+        'logfile': f'/var/log/redis/redis-server-{name}.log',
+        'dir': f'/var/lib/redis/{name}',
+        'dbfilename': 'dump.rdb',
+        **overrides,
+    }
+
+    directories[f'/var/lib/redis/{name}'] = {
+        'owner': 'redis',
+        'group': 'redis',
+        'mode': '0750',
+    }
+
+    files[f'/etc/redis/redis-{name}.conf'] = {
         'content': '\n'.join(
             f'{key} {value}'
                 for key, values in sorted(config.items())
@@ -96,15 +119,14 @@ files = {
         ) + '\n',
         'owner': 'redis',
         'triggers': [
-            'svc_systemd:redis-server:restart',
+            f'svc_systemd:redis-server@{name}:restart',
         ],
-    },
-}
+    }
 
-svc_systemd = {
-    'redis-server': {
+    svc_systemd[f'redis-server@{name}'] = {
         'needs': [
-            'file:/etc/redis/redis.conf',
+            f'file:/etc/redis/redis-{name}.conf',
+            f'directory:/var/lib/redis/{name}',
+            'svc_systemd:redis-server',
         ],
-    },
-}
+    }

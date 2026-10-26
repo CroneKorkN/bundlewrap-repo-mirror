@@ -82,6 +82,12 @@ defaults = {
             },
         },
     },
+    'redis': {
+        # cache and file locks only, nextcloud rebuilds both
+        'nextcloud': {
+            'save': '""',
+        },
+    },
     'systemd-timers': {
         'nextcloud-cron': {
             'command': '/usr/bin/php -f /opt/nextcloud/cron.php',
@@ -125,9 +131,9 @@ defaults = {
             f'recognize-worker-{name}.service': {
                 'Unit': {
                     'Description': f'nextcloud recognize worker ({name})',
-                    'After': {'postgresql.service', 'redis-server.service'},
+                    'After': {'postgresql.service', 'redis-server@nextcloud.service'},
                     # php reads the redis socket from the config at start only
-                    'PartOf': 'redis-server.service',
+                    'PartOf': 'redis-server@nextcloud.service',
                 },
                 'Service': {
                     'User': 'www-data',
@@ -191,9 +197,9 @@ def config(metadata):
                 'memcache.local': '\\OC\\Memcache\\APCu',
                 'memcache.locking': '\\OC\\Memcache\\Redis',
                 'memcache.distributed': '\\OC\\Memcache\\Redis',
-                # debian's redis-server, see the redis bundle
+                # its own instance, see the redis bundle
                 'redis': {
-                    'host': '/run/redis/redis-server.sock',
+                    'host': '/run/redis-nextcloud/redis-server.sock',
                     'port': 0,
                 },
                 'trusted_domains': [

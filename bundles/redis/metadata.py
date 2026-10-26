@@ -9,7 +9,8 @@ defaults = {
             '/var/lib/redis',
         },
     },
-    # settings that differ from CONFIG in items.py, e.g. rspamd's save interval; a key replaces the default
+    # one instance per client: {name: settings that differ from CONFIG in items.py}; a key replaces the default.
+    # a cache sets save to '""' and leaves nothing for the backup
     'redis': {},
 }
 
