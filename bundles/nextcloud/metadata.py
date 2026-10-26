@@ -119,6 +119,41 @@ defaults = {
             },
         },
     },
+    # recognize's classifiers as dedicated background-job workers, so they don't wait for cron
+    'systemd': {
+        'units': {
+            f'recognize-worker-{name}.service': {
+                'Unit': {
+                    'Description': f'nextcloud recognize worker ({name})',
+                    'After': {'postgresql.service', 'redis-server.service'},
+                    # php reads the redis socket from the config at start only
+                    'PartOf': 'redis-server.service',
+                },
+                'Service': {
+                    'User': 'www-data',
+                    # --stop_after lets a leaking worker restart fresh
+                    # systemd unescapes ExecStart, so the class names carry doubled backslashes
+                    'ExecStart': '/usr/bin/php /opt/nextcloud/occ background-job:worker --interval=10 --stop_after=24h ' + ' '.join(
+                        f'OCA\\\\Recognize\\\\BackgroundJobs\\\\{job}' for job in jobs
+                    ),
+                    'Restart': 'always',
+                    'RestartSec': '10s',
+                },
+            }
+                for name, jobs in {
+                    'imagenet': ['ClassifyImagenetJob'],
+                    'faces': ['ClassifyFacesJob'],
+                    'media': ['ClassifyLandmarksJob', 'ClassifyMovinetJob', 'ClassifyMusicnnJob'],
+                }.items()
+        },
+        'services': {
+            f'recognize-worker-{name}.service': {
+                'enabled': True,
+                'running': True,
+            }
+                for name in ['imagenet', 'faces', 'media']
+        },
+    },
 }
 
 
