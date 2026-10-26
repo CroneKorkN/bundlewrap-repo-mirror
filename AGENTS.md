@@ -7,7 +7,8 @@ machines. The root `README.md` is the maintainer's scratchpad, not documentation
 
 - Never run `bw apply`, `bw run` or `bw lock` unless the user asked for that run, interactive
   mode included.
-- Never print a value behind a vault magic string such as `!password_for:`, `bw debug` included.
+- Never print a secret: no value behind a vault magic string such as `!password_for:`, `bw debug`
+  included, and no config file on a node in full or with context lines, only the keys needed.
 - Never edit `.secrets.cfg*`.
 - Run `bw test` after touching `hooks/` or `items/`: a broken hook or item type breaks every
   `bw` command.
