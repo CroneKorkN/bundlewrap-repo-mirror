@@ -9,4 +9,4 @@ argin2 hashes
 logs
 ----
 
-`journalctl -u postfix@-.service -u dovecot.service -u rspamd.service -o cat -f`
+`journalctl -u postfix.service -u dovecot.service -u rspamd.service -o cat -f`
