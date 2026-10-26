@@ -25,6 +25,11 @@ Before touching `data/apt/keys/`:
    `data/apt/keys/` and let `bundles/apt` consume it on the next
    apply.
 
+## Sleeping nodes
+
+Nodes with the `wol-sleeper` bundle suspend when idle. `bw apply` and `bw run` wake them through
+`hooks/wake_on_lan.py`; before a plain `ssh`, run `./bin/wake <node>`.
+
 ## Vault output never leaves the terminal
 
 The fork's runbook calls out that `bw debug` resolves vault magic
