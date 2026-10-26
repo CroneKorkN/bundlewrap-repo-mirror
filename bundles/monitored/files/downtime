@@ -31,6 +31,28 @@ for _ in range(10):
     else:
         break
 
+# after a wakeup, wait until icinga sees the host up: ending the downtime while it still
+# holds the host down sends a problem notification, followed by the recovery a minute later
+
+if action == 'remove':
+    for _ in range(30):
+        session.post(
+            f'{api_url}/actions/reschedule-check',
+            headers={'Accept': 'application/json'},
+            json={'type': 'Host', 'filter': f'host.name=="{node_name}"', 'force': True},
+        ).raise_for_status()
+        sleep(10)
+        response = session.get(
+            f'{api_url}/objects/hosts/{node_name}',
+            headers={'Accept': 'application/json'},
+            params={'attrs': 'state'},
+        )
+        response.raise_for_status()
+        if response.json()['results'][0]['attrs']['state'] == 0:
+            break
+    else:
+        print('host still down in icinga after 5 minutes, removing the downtime anyway')
+
 # look for existing downtimes
 
 response = session.get(
