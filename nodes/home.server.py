@@ -23,7 +23,7 @@
         'redis',
         'samba',
         'smartctl',
-        'steam-chat-logger',
+        #'steam-chat-logger', # Steam asked to verify the account, paused
         'steam-chat-viewer',
         'systemd-swap',
         #'twitch-clip-download', # fix system pip error
