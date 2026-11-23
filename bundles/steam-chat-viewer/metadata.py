@@ -16,6 +16,19 @@ defaults = {
             },
         },
     },
+    # the database belongs to steam-chat-logger; declared here too so the viewer works while the logger is paused
+    'postgresql': {
+        'roles': {
+            'steam_chat_logger': {
+                'password': repo.vault.password_for(f'{node.name} postgresql steam_chat_logger'),
+            },
+        },
+        'databases': {
+            'steam_chat_logger': {
+                'owner': 'steam_chat_logger',
+            },
+        },
+    },
     'users': {
         'steam_chat_viewer': {},
     },
