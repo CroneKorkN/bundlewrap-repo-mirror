@@ -57,6 +57,7 @@
                 'left4.me',
                 'elimu-kwanza.de',
                 'cronekorkn.de',
+                'crone.tv',
                 'direkt.oranienschule.de',
                 'foerderkreis.oranienschule-wiesbaden-wiki.de',
             },
@@ -158,6 +159,13 @@
                     'internal_dns': False,
                 },
                 'cronekorkn.de': {
+                    'content': 'nginx/redirect.conf',
+                    'context': {
+                        'target': 'https://www.twitch.tv/cronekorkn_',
+                    },
+                    'internal_dns': False,
+                },
+                'crone.tv': {
                     'content': 'nginx/redirect.conf',
                     'context': {
                         'target': 'https://www.twitch.tv/cronekorkn_',
