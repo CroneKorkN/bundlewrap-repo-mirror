@@ -61,6 +61,8 @@ def nginx(metadata):
                     'content': 'steam-chat-viewer/vhost.conf',
                     'context': {
                         'target': 'http://127.0.0.1:4001',
+                        # the receiver of steam-chat-logger, where the node has that bundle
+                        'import_port': metadata.get('steam-chat-logger/import_port', None),
                     },
                 },
             },

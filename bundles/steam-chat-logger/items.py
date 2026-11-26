@@ -1,5 +1,3 @@
-# login once: steam-chat-logger-login, then scan the QR code in the Steam app
-
 src = '/opt/steam_chat_logger/src'
 home = '/var/lib/steam_chat_logger'
 
@@ -36,9 +34,15 @@ files = {
     '/opt/steam_chat_logger/steam_chat_logger.py': {
         'delete': True,
     },
+    # left from the logger's own steam logins; the browser userscript delivers the chats now
     '/usr/local/bin/steam-chat-logger-login': {
-        'content': f'#!/bin/sh\ncd {home} && exec sudo -u steam_chat_logger {home}/.venv/bin/python {src}/login.py\n',
-        'mode': '0755',
+        'delete': True,
+    },
+    f'{home}/refresh_token': {
+        'delete': True,
+    },
+    f'{home}/oauth_token': {
+        'delete': True,
     },
 }
 
@@ -61,6 +65,9 @@ actions = {
         ),
         'triggered': True,
         'cascade_skip': False,
+        'triggers': [
+            'svc_systemd:steam-chat-logger.service:restart',
+        ],
         'needs': [
             f'git_deploy:{src}',
             'action:install_uv',

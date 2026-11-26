@@ -1,4 +1,16 @@
 defaults = {
+    'steam-chat-logger': {
+        'import_port': 4002,
+        'import_token': repo.vault.password_for(f'{node.name} steam-chat-logger import'),
+    },
+    'monitoring': {
+        'services': {
+            # the userscript delivers once a day and steam keeps about 14 days: 4 days leave time to react
+            'steam chat import': {
+                'vars.command': "/bin/sh -c 'find /var/lib/steam_chat_logger/last_import -mtime -4 | grep -q . || exit 2'",
+            },
+        },
+    },
     'postgresql': {
         'roles': {
             'steam_chat_logger': {
@@ -8,6 +20,16 @@ defaults = {
         'databases': {
             'steam_chat_logger': {
                 'owner': 'steam_chat_logger',
+            },
+        },
+    },
+    'systemd': {
+        'services': {
+            'steam-chat-logger.service': {
+                'needs': [
+                    'action:steam_chat_logger_uv_sync',
+                    'postgres_db:steam_chat_logger',
+                ],
             },
         },
     },
@@ -25,21 +47,31 @@ defaults = {
 
 
 @metadata_reactor.provides(
-    'systemd-timers/steam-chat-logger',
+    'systemd/units/steam-chat-logger.service',
 )
-def systemd_timer(metadata):
+def receiver(metadata):
     return {
-        'systemd-timers': {
-            'steam-chat-logger': {
-                'command': '/var/lib/steam_chat_logger/.venv/bin/python /opt/steam_chat_logger/src/steam_chat_logger.py',
-                'when': 'hourly',
-                'user': 'steam_chat_logger',
-                'env': {
-                    'DB_NAME': 'steam_chat_logger',
-                    'DB_USER': 'steam_chat_logger',
-                    'DB_PASSWORD': metadata.get('postgresql/roles/steam_chat_logger/password'),
+        'systemd': {
+            'units': {
+                'steam-chat-logger.service': {
+                    'Unit': {
+                        'Description': 'receives steam chat exports from the browser userscript',
+                        'After': 'network.target',
+                    },
+                    'Service': {
+                        'Environment': {
+                            'DB_NAME=steam_chat_logger',
+                            'DB_USER=steam_chat_logger',
+                            f"DB_PASSWORD={metadata.get('postgresql/roles/steam_chat_logger/password')}",
+                            f"IMPORT_PORT={metadata.get('steam-chat-logger/import_port')}",
+                            f"IMPORT_TOKEN={metadata.get('steam-chat-logger/import_token')}",
+                        },
+                        'User': 'steam_chat_logger',
+                        'WorkingDirectory': '/var/lib/steam_chat_logger',
+                        'ExecStart': '/var/lib/steam_chat_logger/.venv/bin/python /opt/steam_chat_logger/src/receiver.py',
+                        'Restart': 'on-failure',
+                    },
                 },
-                'working_dir': '/var/lib/steam_chat_logger',
             },
         },
     }
